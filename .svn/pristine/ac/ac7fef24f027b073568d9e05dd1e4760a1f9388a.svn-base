@@ -1,0 +1,250 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/enter/pbancInsert.css" />
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+</head>
+<body>
+	<h2>공고 등록</h2>
+     <div class="background">
+            <!-- 담 당자 정보 -->
+			<section class="section">
+			    <h4>담당자 정보</h4>
+			    <h5>먼저 인사담당자님과 기업 정보가 맞는지 확인해주세요</h5>
+			    <form action="#" method="post">
+			        <div class="form-group">
+			            <label for="name">담당자 성함 <b>*</b></label>
+			            <input type="text" id="name" name="name" required>
+			        </div>
+			        <div class="form-group multi-input">
+			            <label for="phone">전화번호 <b>*</b></label>
+			            <input type="tel" id="phone1" name="phone1" required>
+			            <input type="tel" id="phone2" name="phone2" required>
+			            <input type="tel" id="phone3" name="phone3" required>
+			        </div>
+			        <div class="form-group multi-input">
+			            <label for="mobile">휴대폰 번호</label>
+			            <input type="tel" id="mobile1" name="mobile1" required>
+			            <input type="tel" id="mobile2" name="mobile2" required>
+			            <input type="tel" id="mobile3" name="mobile3" required>
+			        </div>
+			        <div class="form-group">
+			            <label for="email">이메일 주소 <b>*</b></label>
+			            <input type="email" id="email" name="email" required>
+			        </div>
+			        <div class="form-group">
+			            <label for="industry">업종 <b>*</b></label>
+			            <select id="industry" name="industry" required>
+		            		<option>업종</option>
+			            </select>
+			        </div>
+			        <div class="form-group">
+			            <label for="location">대표 근무지역 <b>*</b></label>
+			            <input type="text" id="location1" name="location1" required>
+			            <input type="text" id="location2" name="location2" required>
+			            <button type="button" class="map-button">지도 위치 확인</button>
+			        </div>
+			        <div id="map"></div>
+			    </form>
+			</section>
+            <!-- 모집 정보 -->
+			<section class="section">
+              	<h4>모집분야</h4>
+			    <h5>어떤일을 담당할 직원을 찾으시나요?</h5>
+	              <div class="form-group">
+	                  <label for="jobType">모집분야명 <b>*</b></label>
+	                  <input type="text" id="jobType" name="jobType" placeholder="예: 앱개발자" required>
+	                  <input type="number" id="applicants" name="applicants" min="0" placeholder="0" required>
+	                  <label for="applicants">명 모집</label>
+	              </div>
+	              <div class="form-group radio-group">
+	                  <label>경력여부 <b>*</b></label>
+	                  <div>
+	                      <select>
+	                      	<option>신입</option>
+	                      </select>
+	                  </div>
+	              </div>
+	              <div class="form-group">
+	                  <label for="task">담당업무</label>
+	                  <input type="text" id="task" name="task" placeholder="예: 앱 개발 및 유지보수">
+	              </div>
+	              <h6><b class="bb">추가하기</b>를 클릭하면 직급 직책/우대 조건 등을 선택할 수 있습니다.</h6>
+	              <div class="form-group">
+	                  <label for="work">근무부서</label>
+	                  <input type="text" id="work" name="work" placeholder="예: 개발팀">
+	              </div>
+	              <div class="form-group">
+	                  <label for="grade">직급/직책</label>
+	                  <select>
+	                  	<option>사원</option>
+	                  </select>
+	              </div>
+	              <div class="form-group">
+	                  <label for="required">필수 조건</label>
+	                  <input type="text" id="required" name="required" placeholder="예: 해당 직무 근무 경험">
+	                  <button type="button" class="add-btn">추가</button>
+	              </div>
+	              <div class="form-group">
+	                  <label for="prefer">우대 조건</label>
+	                  <input type="text" id="prefer" name="prefer" placeholder="예: 정보처리기사 자격증 보유자">
+	                  <button type="button" class="add-btn">추가</button>
+	              </div>
+	              <div class="form-group">
+	                  <button type="button" class="add-button">모집분야 추가</button>
+	              </div>
+          	</section>
+
+             <!-- 자격/조건 정보 -->
+            <section class="section">
+              	<h4>자격/조건</h4>
+			    <h5>어떤일을 담당할 직원을 찾으시나요?</h5>
+                <div class="form-group">
+                    <label for="education">지원자 학력 <b>*</b></label>
+                    <select id="education" name="education">
+                        <option value="대학교졸업">대학교졸업(4년)</option>
+                        <option value="고등학교졸업">고등학교졸업</option>
+                        <option value="선택">선택</option>
+                    </select>
+                    <select id="additional-education" name="additional-education">
+                        <option value="기타">기타 학력사항</option>
+                    </select>
+                    <input type="checkbox" id="graduate" name="graduate">
+                    <label for="graduate">졸업예정자 지원가능</label>
+                </div>
+                <div class="form-group">
+                    <label for="gender">지원자 성별</label>
+                    <select id="gender" name="gender">
+                        <option value="성별무관">성별무관</option>
+                        <option value="남성">남성</option>
+                        <option value="여성">여성</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="age">지원자 연령</label>
+                    <select id="age" name="age">
+                        <option value="연령무관">연령무관</option>
+                        <option value="20대">20대</option>
+                        <option value="30대">30대</option>
+                    </select>
+                    <select id="age-range" name="age-range">
+                        <option value="전체">전체</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="salary">연봉/급여 <b>*</b></label>
+                    <select id="salary-type" name="salary-type">
+                        <option value="연봉">연봉</option>
+                        <option value="월급">월급</option>
+                    </select>
+                    <input type="text" id="salary-amount" name="salary-amount" placeholder="3,000~3,200만원">
+                    <input type="text" id="additional-salary" name="additional-salary" placeholder="기타 급여사항">
+                </div>
+                	<p class="sal-standard">최저시급 9,860원, 주 40시간 기준 최저연봉 2,060,740원 <a class="sal-line">최저임금제도 안내</a><br>
+								최저임금을 준수하지 않는 경우, 공고 강제 마감 및 행정처분을 받을 수 있습니다.</p>
+                
+                <div class="form-group">
+                    <label>근무형태 <b>*</b></label>
+                    <div class="checkbox-group">
+                        <select>
+                        	<option>정규직</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="workday">근무요일</label>
+                    <input type="text" id="workday" name="workday" placeholder="주 5일 (월~금)">
+                </div>
+                <div class="form-group">
+                    <label for="worktime">근무시간</label>
+                    <select>
+                    	<option>오전 9시 ~ 오후 6시</option>
+                    </select>
+                </div>
+            </section>
+            
+           <!-- 채용절차 -->
+            <section class="section">
+                <h4>채용절차</h4>
+			    <h5>채용절차는 어떻게 되나요?</h5>
+                <div class="form-group">
+                    <label for="position">공고 대표 직무 <b>*</b></label>
+                    <input type="text" id="position" name="position" placeholder="예: 개발자">
+                </div>
+                <div class="form-group">
+                    <label for="period">지원 접수 기간 <b>*</b></label>
+                    <input type="date" id="start-date" name="start-date">
+                    <input type="date" id="end-date" name="end-date">
+                </div>
+                <div class="form-group">
+                    <label>지원 접수 방법 <b>*</b></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-button">
+                            <input type="checkbox" id="online" name="apply-method" value="사람인접수">
+                            <label for="online">사람인접수</label>
+                        </div>
+                        <div class="checkbox-button">
+                            <input type="checkbox" id="homepage" name="apply-method" value="홈페이지">
+                            <label for="homepage">홈페이지</label>
+                        </div>
+                        <div class="checkbox-button">
+                            <input type="checkbox" id="mail" name="apply-method" value="우편">
+                            <label for="mail">우편</label>
+                        </div>
+                        <div class="checkbox-button">
+                            <input type="checkbox" id="visit" name="apply-method" value="방문">
+                            <label for="visit">방문</label>
+                        </div>
+                        <div class="checkbox-button">
+                            <input type="checkbox" id="call" name="apply-method" value="전화">
+                            <label for="call">전화</label>
+                        </div>
+                        <div class="checkbox-button">
+                            <input type="checkbox" id="fax" name="apply-method" value="FAX">
+                            <label for="fax">FAX</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="application-form">지원서 양식 <b>*</b></label>
+                    <select id="application-form" name="application-form">
+                        <option value="이력서">사람인 이력서</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>전형절차 <b>*</b></label>
+                    <div class="step-group">
+                      <select>
+                      	<option>서류합격</option>
+                      </select>
+                    </div>
+                </div>
+            </section>
+            <!-- 공고 내용 -->
+            <section class="section">
+                <h4>공고내용</h4>
+			    <h5>공고내용을 입력해주세요</h5>
+                <div class="form-group">
+                    <label for="title">공고 제목 <b>*</b></label>
+                    <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    <label for="content">공고 내용 <b>*</b></label>
+                    <textarea id="content" name="content" rows="15" placeholder="내용을 작성해주세요."></textarea>
+                </div>
+            </section>
+            <!-- 버튼 섹션 -->
+            <section class="button-section">
+                <button type="button" class="btn cancel-btn">취소</button>
+                <button type="button" class="btn save-btn">임시 저장</button>
+                <button type="submit" class="btn submit-btn">공고 등록</button>
+            </section>
+            
+        </div>
+</body>
+</html>

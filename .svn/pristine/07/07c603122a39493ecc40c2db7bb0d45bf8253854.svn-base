@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.ChatMapper">
+	
+	<resultMap type="chatRoomVO" id="chatRoomMap">
+		<result property="roomNo" column="ROOM_NO"/>
+		<result property="senderUser" column="SENDER_USER"/>
+		<result property="receiveUser" column="RECEIVE_USER"/>
+		<result property="roomCreateDate" column="ROOM_CREATE_DATE"/>
+	</resultMap>
+
+
+    <!-- 채팅방 생성 쿼리 -->
+    <insert id="createChatRoom" useGeneratedKeys="true" keyProperty="roomNo">
+        <selectKey keyProperty="roomNo" resultType="String" order="BEFORE">
+            SELECT 'R_' || LPAD(chat_room_seq.NEXTVAL, 6, '0') AS roomNo FROM dual
+        </selectKey>
+        
+        INSERT INTO CHAT_ROOM (ROOM_NO, SENDER_USER, RECEIVE_USER, ROOM_CREATE_DATE)
+        VALUES (#{roomNo}, #{senderUser}, #{receiveUser}, CURRENT_TIMESTAMP)
+    </insert>
+
+    <!-- 채팅방 존재 여부 확인 쿼리 -->
+	<select id="findChatRoom" resultMap="chatRoomMap">
+	    SELECT * FROM CHAT_ROOM 
+	    WHERE (SENDER_USER = #{senderUser} AND RECEIVE_USER = #{receiveUser})
+	       OR (SENDER_USER = #{receiveUser} AND RECEIVE_USER = #{senderUser})
+	</select>
+
+	<!-- 회원 채팅목록 조회 쿼리 -->
+	<select id="memFindChatRoom" resultType="chatRoomVO">
+	    SELECT * 
+	    FROM CHAT_ROOM 
+	    WHERE SENDER_USER = #{mbrId} OR RECEIVE_USER = #{mbrId}
+	</select>
+	
+	<resultMap id="chatMsgMap" type="chatMsgVO">
+		<result property="msgId" column="MSG_ID"/>
+		<result property="roomNo" column="ROOM_NO"/>
+		<result property="senderUser" column="SENDER_USER"/>
+		<result property="msgContent" column="MSG_CONTENT"/>
+		<result property="readYn" column="READ_YN"/>
+		<result property="msgDate" column="MSG_DATE"/>
+	</resultMap>
+	
+	<!-- 채팅히스토리 -->
+	<select id="memChatHistory" resultMap="chatMsgMap">
+	    SELECT MSG_ID, ROOM_NO, SENDER_USER, MSG_CONTENT, READ_YN, MSG_DATE
+	    FROM CHAT_MSG
+	    WHERE ROOM_NO = #{roomNo}
+	    ORDER BY MSG_DATE
+	</select>    
+	
+	<insert id="insertChatMessage" parameterType="chatMsgVO">
+	    INSERT INTO CHAT_MSG (MSG_ID, ROOM_NO, SENDER_USER, MSG_CONTENT, READ_YN, MSG_DATE)
+	    VALUES (CHAT_MESSAGE_SEQ.NEXTVAL, #{roomNo}, #{senderUser}, #{msgContent}, 1, CURRENT_TIMESTAMP)
+	</insert>
+		
+	<!-- 읽음 유무췤! -->
+	<update id="readYn" parameterType="map">
+	    UPDATE CHAT_MSG
+	    SET READ_YN = 0
+	    WHERE ROOM_NO = #{roomNo}
+	    AND SENDER_USER != #{username}  <!-- 자신이 보낸 메시지는 제외 -->
+	    AND READ_YN = 1
+	</update>
+
+	<!-- 마지막 메시지와 시간을 가져오는 쿼리 -->
+	<select id="lastMsg" parameterType="string" resultType="chatMsgVO">
+	    SELECT MSG_CONTENT, MSG_DATE, SENDER_USER
+	    FROM (
+	        SELECT MSG_CONTENT, MSG_DATE, SENDER_USER
+	        FROM CHAT_MSG
+	        WHERE ROOM_NO = #{roomNo}
+	        ORDER BY MSG_DATE DESC
+	    )
+	    WHERE ROWNUM = 1
+	</select>
+
+
+	
+	<!-- 읽지 않은 메시지 수를 가져오는 쿼리 -->
+	<select id="countUnreadMsg" parameterType="string" resultType="int">
+	    SELECT COUNT(*)
+	    FROM CHAT_MSG
+	    WHERE ROOM_NO = #{roomNo}
+	    AND READ_YN = 1
+	</select>
+	
+</mapper>

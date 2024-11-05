@@ -1,0 +1,33 @@
+package kr.or.ddit.oustouservice.impl;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.mapper.OustouMapper;
+import kr.or.ddit.oustou.service.OustouService;
+import kr.or.ddit.vo.OustouVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class OustouServiceImpl implements OustouService {
+	
+	@Inject
+	OustouMapper oustouMapper;
+	
+	/**
+	 * 외주 메인 카테고리 출력 
+	 */
+	@Override
+	public List<OustouVO> caregoryList(){
+		
+		
+		return this.oustouMapper.caregoryList();
+		
+	}
+	
+
+}

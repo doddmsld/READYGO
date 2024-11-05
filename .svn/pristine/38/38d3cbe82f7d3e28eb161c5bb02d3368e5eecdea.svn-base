@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+* {
+    font-family: pretendard;
+    color : #232323;
+}
+div#nav {
+    text-align: center;
+}
+.img {
+    border-radius: 999px;
+    height: 142px;
+    width: 142px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* 회원이름 */
+#mbrNm{
+	font-size : 20px;
+	font-weight : 700;
+	text-align : center;
+	color : #232323;
+}
+/* 회원 상단 프로필 소개 */
+#introduce p{
+	text-align : center;
+	font-size : 16px;
+	color : #232323;
+}
+div#introduce {
+    margin: 55px 0px 20px 0px;
+}
+#introduce2 p{
+	font-size : 16px;
+	color : #232323;
+	margin-left: 236px;
+}
+hr{
+	width : 1400px;
+}
+
+/* 프로필 내용 */
+#container{
+	background:#F4F4F4;
+}

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="oustou">
+
+
+	<select id="caregoryList" resultType="oustouVO">
+	   SELECT COM_CODE_GRP, COM_CODE_NM 
+		 FROM (
+		     SELECT COM_CODE_GRP, COM_CODE_NM 
+		     FROM CODE 
+		     WHERE COM_CODE_GRP = 'OULC'
+		     ORDER BY DBMS_RANDOM.RANDOM
+		  )
+		 WHERE ROWNUM <= 5
+	<select id="caregoryList" resultType="oustouVO">
+	
+	
+	</select>
+</mapper>

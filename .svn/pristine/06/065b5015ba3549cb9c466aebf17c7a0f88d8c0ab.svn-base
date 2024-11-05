@@ -1,0 +1,103 @@
+package kr.or.ddit.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import kr.or.ddit.mapper.MemAplctMapper;
+import kr.or.ddit.service.MemAplctService;
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.PbancVO;
+import kr.or.ddit.vo.ScrapVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class MemAplctServiceImpl implements MemAplctService {
+
+    @Inject
+    MemAplctMapper memAplctMapper;
+
+    // 입사 지원 목록
+	@Override
+	public List<ApplicantVO> aplctList(Map<String, Object> map) {
+		return this.memAplctMapper.aplctList(map);
+	}
+
+	// 전체 입사 행 수 
+	@Override
+	public int getTotal(String mbrId) {
+		return this.memAplctMapper.getTotal(mbrId);
+	}
+
+	// 입사 지원 취소 사유 항목
+	@Override
+	public List<CodeVO> cancelList() {
+		return this.memAplctMapper.cancelList();
+	}
+	
+	// 특정 공고 입사 지원 취소 사유 update
+	@Override
+	@Transactional
+	public int aplctDelete(Map<String, Object> map) {
+		return this.memAplctMapper.aplctDelete(map);
+	}
+	
+    // 입사 지원 관리 목록
+	@Override
+	public List<ApplicantVO> aplctManage(Map<String, Object> map) {
+		return this.memAplctMapper.aplctManage(map);
+	}
+
+	// 상태 미평가 행의 수
+	@Override
+	public int getNotTotal(String mbrId) {
+		return this.memAplctMapper.getNotTotal(mbrId);
+	}
+	
+	// 상태 서류합격 행의 수
+	@Override
+	public int getDocTotal(String mbrId) {
+		return this.memAplctMapper.getDocTotal(mbrId);
+	}
+
+	// 상태 최종합격 행의 수
+	@Override
+	public int getFinTotal(String mbrId) {
+		return this.memAplctMapper.getFinTotal(mbrId);
+	}
+	
+
+	// 내가 스크랩한 공고 조회
+	@Override
+	public List<PbancVO> scrapList(Map<String, Object> map) {
+		return this.memAplctMapper.scrapList(map);
+	}
+
+	// 스크랩한 전체 행의 수
+	@Override
+	public int getScrapTotal(String mbrId) {
+		return this.memAplctMapper.getScrapTotal(mbrId);
+	}
+	// 공고 스크랩 추가
+	@Override
+	public int addScrap(ScrapVO scrapVO) {
+		return this.memAplctMapper.addScrap(scrapVO);
+	}
+	// 스크랩한 공고 삭제
+	@Override
+	public int delScrap(Map<String, Object> map) {
+		return this.memAplctMapper.delScrap(map);
+	}
+
+	// 공고 스크랩 여부 확인
+	@Override
+	public int scrapYN(Map<String, Object> map) {
+		return this.memAplctMapper.scrapYN(map);
+	}
+	
+}

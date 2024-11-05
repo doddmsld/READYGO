@@ -1,0 +1,281 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+<
+style
+>
+ @charset "UTF-8";
+
+* {
+    font-family: pretendard;
+}
+
+/*전체적인 위치*/
+.layout {
+	 display: flex;
+    flex-direction: column; /* 세로 방향 설정 */
+    width: 1100px;
+    justify-content: center; /* 가로 가운데 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.dettit{
+	width: 100%;
+}
+.detcontent{
+	display: flex;
+    align-items: flex-start; /* 상단에 맞추어 정렬 */
+}
+
+
+/*결제 내용 전체*/
+.main {
+	margin: 20px;
+}
+
+/*주문 내역*/ 
+.info {
+	display: flex;
+	flex-direction: column; /* 세로 방향 설정 */
+	justify-content: center; /* 가로 가운데 정렬 */
+	border: 1px solid #e0e0e0;
+	border-radius: 10px; /* 둥근 정도 */
+	padding: 20px;
+}
+
+.title1{
+	font-weight: bold;
+	margin: 10px;
+}
+
+.summary {
+	display: flex;
+	align-items: flex-start;
+	margin-bottom: 20px;
+}
+/*상품 이미지 */
+.thumbnail img {
+	width: 80px;
+	height: 60px;
+	border-radius: 10px;
+}
+
+/*상품 제목 판매자 정보*/
+.description {
+	margin-left: 10px;
+}
+
+.seller {
+	display: flex;
+	align-items: center;
+}
+
+.seller img {
+	width: 100px;
+	height: 70px;
+	border-radius: 10PX;
+	margin-right: 10px;
+}
+
+.name {
+	font-size: 14px;
+	color: #888;
+}
+
+/*상품 기본 가격 및 정보 */
+.tableAll{
+	border-top: none;
+	font-size: 14px;
+}
+
+.center {
+	text-align: center;
+}
+
+.right {
+	text-align: right;
+}
+
+
+/*결제 방법 */
+.payment {
+	border: 1px solid #e0e0e0;
+	margin-top: 30px;
+	border-radius: 10px; /* 둥근 정도*/
+	flex-direction: column; /* 세로 방향 설정 */
+	padding: 20px;
+}
+
+.methods {
+	display: flex;
+    flex-wrap: wrap; /* 다음 줄로 넘어가도록 설정 */
+    align-items: flex-start; /* 왼쪽 정렬 */
+    padding: 10px;
+}
+
+.methods .btn {
+	border : 1px solid #e0e0e0;
+	width : 120px;
+	padding: 10px;
+	border-radius: 5px;
+	font-size: 14px;
+	text-align: center;
+	cursor: pointer;
+	 margin: 10px 20px; /* 각 버튼 주위에 여백 추가 */
+}
+
+.methods .btn:hover {
+	background-color: #f9f9f9;
+}
+
+
+/*세금 계산 서 박스 */
+.billAll {
+	border: 1px solid #e0e0e0;
+	margin-top: 20px;
+	padding : 20px;
+	border-radius: 10px; /* 둥근 정도*/
+	padding: 20px;ㄴ
+}
+
+.descriptions {
+	padding: 10px;
+	font-size: 8px;
+	color: #666;
+}
+
+.descriptions li {
+	margin-bottom: 10px;
+	font-size: 12PX;
+}
+
+.checkbox-wrapper {
+	margin-top: 30px;
+}
+
+.checkbox {
+	display: flex;
+	align-items: center;
+}
+#taxApplyCheckbox{
+	margin: 10PX;
+}
+.label p{
+	font-size: 24px;
+}
+
+.label2 p{
+	font-size: 20px;
+	margin-left: 10PX;
+}
+
+/*금액 안내*/
+.summary-main{
+ 	display: flex;
+    justify-content: center; /* 가로 중앙 정렬 (선택 사항) */
+    align-items: center; /* 세로 중앙 정렬 */
+ 	border: 1px solid #24D59E; 
+ 	border-radius: 10px; /*둥근 정도 */
+ 	margin: 20px;
+ 	position: sticky; /*스크롤이 움직이면 움직임*/
+    top: 40px; /* 스크롤할 때 상단에서 20px 간격을 유지하며 고정됨 */
+    width: 400px;
+    height: 450px;
+}
+
+
+.price-wrapper1 .price-wrapper2 .price-wrapper3 .total-wrapper{  
+      display: flex;  
+      margin-bottom: 10px;  
+      font-size: 16px;   
+      width: 500px; 
+     
+ }  
+
+
+.label{
+	text-align: left;
+	font-size: 15px;
+} 
+.price { 
+	 text-align: right;
+     font-size: 15px;
+     color: #333; 
+ } 
+.toprice p{
+	text-align: right;
+     font-size: 22px; /*총 결제 금액 폰트 크기 증가 */
+     color: #333; 
+}
+
+
+
+.divider { 
+     border-bottom: 1px solid #e0e0e0; /*구분선을 위한 연한 회색 */
+     margin: 15px 0; 
+     width: 280px;
+ } 
+
+.agreement-wrapper {
+     margin-top: 5s0px; 
+     text-align: center; 
+	 font-size: 12px; /*작은 폰트 크기 */
+     color: #999;  /* 텍스트 색상은 회색 */
+     
+ } 
+
+
+.plainAll {
+    text-align: center; /* 텍스트와 버튼을 중앙 정렬 */
+    margin-top: 20px;
+}
+
+.payBtn {
+    width: 100%; /*버튼을 전체 너비로 설정*/
+    background-color: #00c389; /*버튼 색상*/
+    border: none;
+    color: white; /*버튼 텍스트 색상*/
+    font-size: 16px;
+    font-weight: bold; /*버튼 텍스트 굵게*/
+    padding: 15px; /*버튼 패딩*/
+    border-radius: 5px; /*둥근 버튼*/
+    cursor: pointer; /*클릭 가능한 포인터로 설정*/
+}
+
+.payBtn:hover {
+    background-color: #00a873; /*버튼에 마우스를 올렸을 때 색상 변경*/
+}
+
+.service-details {
+	list-style: none;
+	padding:15px;
+	margin: 10px 0;
+	border: 1px solid #e0e0e0;
+	background: #e8e8e8;
+	border-radius: 8px;
+}
+
+.service-details li {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 5px;
+	font-size: 14px;
+}
+
+.service-details2 {
+	list-style: none;
+	padding:15px;
+	margin: 10px 0;
+}
+
+.service-details2 li {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 5px;
+	font-size: 20px;
+}

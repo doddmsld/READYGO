@@ -1,0 +1,15 @@
+package kr.or.ddit.service;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.ResumeVO;
+import kr.or.ddit.vo.RsmAcademicVO;
+
+public interface MemResumeService {
+	public ResumeVO openResume(String mbrId);
+	public List<ResumeVO> resumeList(Map<String, Object> map);
+	public ResumeVO resumebasInfo(ResumeVO resumeVO);
+	public ResumeVO updateHope(ResumeVO resumeVO);
+	public RsmAcademicVO acbgPost(RsmAcademicVO rsmAcademicVO);
+}

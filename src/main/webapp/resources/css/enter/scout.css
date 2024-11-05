@@ -1,0 +1,500 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+.announcement-container {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: -10px;
+}
+h2 {
+    text-align: left;
+    margin-top:50px;
+	color: #232323;
+	margin: 0px 0px 0px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+thead th {
+    text-align: center;
+    padding: 8px;
+    border-bottom: 2px solid #ddd;
+    font-weight: 500;
+    font-size: 18px;
+    color: #232323;
+}
+.ptag{
+	text-align: left;
+    font-weight: 500;
+    font-size: 20px;
+    color: #232323;
+    margin-left: 5px;
+}
+tbody td {
+    padding: 9px 6px;
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+.title{
+	color: #232323;
+	font-weight: 500;
+}
+.sub {
+    font-size: 12px;
+    color: #636e72; /* 분류 텍스트 색상 */
+    margin-top: 5px;
+}
+.ymd{
+	font-size: 14px;
+    color: #636e72; /* 분류 텍스트 색상 */
+    text-align: center;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.pagination button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pagination button:hover {
+    background-color: #ddd;
+}
+.details-button {
+   width : 100px;
+   height : 30px;
+   border : 1px solid #A7A7A7;
+   color : #666363;
+   background:white;
+   border-radius : 7px;   
+   font-size : 16px;
+   font-weight : 400;
+   margin-top: 10px;
+}
+.details-button:hover {
+    background-color: #ECECEC;
+}
+
+.filter-dropdown select {
+    height: 40px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 16px;
+}
+.filter-dropdown button {
+    height: 30px;
+    padding: 5px 10px;
+    background-color: #00b894;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.filter-dropdown button:hover {
+    background-color: #008c9e;
+}
+.date-info {
+    color: #636e72;
+    font-size: 12px;
+}
+.pagination button.active {
+    background-color: #24D59E;;
+    color: white;
+}
+
+.btnclass{
+	display: flex;
+	justify-content:flex-end;
+	margin: 0px !important;
+	margin-top: 30px !important;
+}	
+select{
+	border-radius: 5px;
+	font-size: 14px;
+}
+
+thead, tfoot {
+    border-top: 2px solid #232323;
+}
+
+/* 페이징 css 시작*/
+.page-link {
+	color: black;
+	border-radius: 7px;
+	margin: 5px;
+}
+/* 버튼클릭했을 때! */
+.page-item.active .page-link {
+	font-weight: 700;
+	color: #24D59E;
+	background-color: rgba(44, 207, 195, 0.11);
+	border-radius: 7px;
+}
+
+.write_date {
+	text-align: right;
+}
+
+.page-item.active .page-link {
+	border-color: #dee2e6;
+}
+
+a.page-link:hover {
+	color: #000000;
+	background-color: #dee2e6;
+}
+/* 페이징 css 끝*/
+.pageTable{
+	border-bottom: 1px solid white !important;
+	padding: 0px !important;
+}
+.search{
+	display: flex;
+	justify-content: flex-end;
+}
+.search input[type="text"], .search input[type="date"]{
+	width: 20%;
+	padding: 13px;
+	font-size: 16px;
+	border: 1px solid #232323;
+	border-radius: 5px;
+	height: 40px;
+	border: 1px solid #ddd;
+	color: #757575;
+}
+.search button#proposal-date{
+	width: 120px;
+	font-size: 16px;
+	border: 1px solid #232323;
+	border-radius: 5px;
+	height: 40px;
+	border: 1px solid #ddd;
+	color: #757575;
+	margin-right: 5px;
+}
+.search button#proposal-date:hover{
+	background: #ECECEC;
+}
+.search input[type="text"]{
+	margin-right: 5px;
+}
+.search button {
+	text-align : center;
+	background-color: white;
+	border: 1px solid #24D59E; /*민트*/
+	color: #24D59E;
+	border-radius: 5px;
+	cursor: pointer;
+	height: 40px;
+	width: 70px;
+	margin-left: 5px;
+}
+
+.search button:hover {
+	background-color: #24D59E;
+	color: white;
+}
+.search-box{
+	margin-top : 15px;
+	display: flex;
+	justify-content: space-between;
+	
+}
+.gubun-select{
+	border-radius: 5px;
+	font-size: 14px;
+	height: 40px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 16px;
+    margin-right: 5px;
+}
+.sel-cls{
+	display: flex;
+}
+.th-left{
+	text-align: left;
+}
+
+.cal-btn{
+   width : 120px;
+   height : 40px;
+	background: white;
+	color: #232323;
+	border: 1px solid #B5B5B5;
+   border-radius : 7px;
+   font-size : 16px;
+   font-weight : 400;
+   justify-content: center;
+}
+
+.cal-btn:hover{
+	background: #ECECEC;
+	border: 1px solid #B5B5B5;
+}	
+#keywordInput{
+	text-align: center;
+	width: 125px;
+}
+#dateInput{
+	text-align: center;
+	width: 155px;	
+}
+.gubun-select-date{
+	border-radius: 5px;
+	font-size: 14px;
+	height: 40px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 16px;
+    margin-right: 5px;
+}
+.aplctIN{
+	display: flex; 
+	align-items: center; 
+	justify-content: flex-start;
+}
+.aplctImg img{
+	border-radius: 50%;
+	width: 45px;
+	height: 45px;
+	margin-right: 5px;
+}
+
+#announcementSelect{
+	margin-right: 5px;
+}
+.kingTitle{
+	display: flex; 
+	align-items: baseline; 
+	margin-bottom: 40px;
+}
+.scout-button {
+	background: white;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+	width: 110px;
+	padding: 8px 15px;
+	margin-bottom: 10px;
+	font-size: 14px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+.scout-button:hover {
+	background-color: #24D59E;
+	color: white;
+}
+
+.profileGo {
+	background: white;
+	color: #232323;
+	border: 1px solid #B5B5B5;
+	padding: 8px 15px;
+	cursor: pointer;
+	width: 110px;
+	margin-bottom: 10px;
+	font-size: 14px;
+	border-radius: 5px;
+}
+
+.profileGo:hover {
+	background: #ECECEC;
+	border: 1px solid #B5B5B5;
+}
+.btn{
+	justify-content: space-around
+}
+.td-btn{
+	text-align: center;
+}
+#proposal-date{
+	text-align: center;
+	width:110px;
+}
+
+/* 모달 내 버튼 컨테이너 정렬 */
+#scoutForm div:last-child {
+	display: flex;
+	justify-content: space-between; /* 버튼을 양쪽에 배치 */
+}
+.sc-modal{
+	margin-top: 20px;	
+}
+
+#ok-btn {
+	background: white;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+	width: 140px;
+	padding: 8px 15px;
+	margin-bottom: 10px;
+	font-size: 16px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+
+#ok-btn:hover {
+	background-color: #24D59E;
+	color: white;
+}
+.file-name {
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 14px;
+    color: #333;
+}
+.go:hover{
+	color:#232323;
+}
+.go-listAplct{
+	text-decoration: underline;
+}
+.scout-down-img{
+	width: 20px;
+	height: 20px;
+	transition: all 0.3s ease;
+}
+.excel-cls{
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 20px;
+}
+.total{
+	margin-left: 20px;
+	margin-bottom: -3px;
+	color: #666;
+}
+
+
+
+/*스카우트 제안 모달 스타일 (기업 -> 회원)시작 ---- 민주  사용*/
+.modal {
+	display: none; /* 기본적으로 숨김 */
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	min-height: 100%;
+	overflow: hidden;
+	background-color: rgba(0, 0, 0, 0.4);
+	z-index: 999;
+}
+.modal-content { 
+	background-color: #fefefe;
+	margin: 5% auto; 
+	border: 1px solid #888;
+	width: 35%; 
+	height:750px;
+	overflow: auto;
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); 
+	border-radius: 8px;	
+	z-index: 999;
+}
+.close {/* 닫기 버튼 스타일 */
+	color: white;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+	margin-right: 35px;
+	margin-top: 30px;
+	
+}
+.close:hover, .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+.scout-div {
+	margin-left: 35px;
+	margin-right: 35px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+#content {
+	height: 130px; 
+	resize: vertical;
+}
+#cancel-btn, #scoutForm button[type="submit"] {
+	padding: 10px 0;
+	font-size: 16px;
+	cursor: pointer;
+	width: 120px;
+	height: 45px;
+	border-radius: 7px;
+	margin-bottom: 30px;
+}
+#scoutForm div:last-child {
+	display: flex;
+	justify-content: space-between;
+}
+.scout-title {
+	font-size: 18px !important;
+	font-weight: 500 !important;
+}
+#cancel-btn {
+	background: white;
+	color: #232323;
+	border: 1px solid #B5B5B5;
+}
+#cancel-btn:hover {
+	background: #ECECEC;
+	border: 1px solid #B5B5B5;
+}
+#submit-btn {
+	background: white;
+	border: 1px solid #24D59E;
+	color: #24D59E;
+	border-radius: 7px;
+}
+#submit-btn:hover {
+	background: #24D59E;
+	border: none;
+	color: white;
+}
+#title, #jobPost, #content {
+	border: 1px solid #B5B5B5;
+	border-radius: 7px;
+	width: 100%;
+	padding: 10px;
+	font-size: 16px;
+	box-sizing: border-box;
+}
+.scout-h2 {
+	color: #232323;
+	font-size: 26px;
+	color: white;
+	margin-left: 35px;
+	margin-top: 35px;
+}
+#title:focus, #jobPost:focus, #content:focus {
+   border-color: #24D59E;
+   outline: none;
+}
+.modal-content::-webkit-scrollbar { /* 전체 스크롤바 스타일 */
+    width: 5px; /* 스크롤바의 너비 설정 */
+}
+.modal-content::-webkit-scrollbar-track { /* 스크롤바의 배경 스타일 */
+    background: #f1f1f1; /* 스크롤 트랙 색상 */
+    border-radius: 5px; /* 트랙의 모서리 둥글게 설정 */
+}
+.modal-content::-webkit-scrollbar-thumb { /* 스크롤바의 막대 스타일 */
+    background: #c1c1c1; 
+    border-radius: 5px; 
+}
+.modal-content::-webkit-scrollbar-thumb:hover { /* 스크롤바의 막대에 마우스를 올렸을 때의 스타일 */
+    background:#c1c1c1;
+}
+#title{
+	color: #232323;	
+}
+/*스카우트 제안 모달 스타일 (기업 -> 회원)끝 ---- 민주  사용*/

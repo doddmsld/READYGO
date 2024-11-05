@@ -1,0 +1,76 @@
+package kr.or.ddit.security;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+
+import kr.or.ddit.vo.UserVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class CustomLoginSuccessHandler extends 
+	SavedRequestAwareAuthenticationSuccessHandler {
+	
+	@Override
+	public void onAuthenticationSuccess(HttpServletRequest request,
+			HttpServletResponse response, Authentication auth)
+			throws ServletException, IOException {
+		//~했을때.로그인을.성공
+		log.info("onAuthenticationSuccess");
+		
+//		User customUser = (User)auth.getPrincipal();
+		
+//		log.info("username : " + customUser.getUsername());
+//		log.info("auth : " + auth.getAuthorities());
+//		
+//	    request.getSession().setAttribute("username", customUser.getUsername());//요거추가함
+		
+	    User userDetail = (User) auth.getPrincipal();
+	    
+	    if (userDetail instanceof CustomUser) {
+	        CustomUser customUser = (CustomUser) userDetail;
+	        // 사용자 유형에 맞게 세션에 저장
+	        if (customUser.getMemVO() != null) {
+	            request.getSession().setAttribute("memVO", customUser.getMemVO());
+	        } else if (customUser.getEntVO() != null) {
+	            request.getSession().setAttribute("entVO", customUser.getEntVO());
+	        } else if (customUser.getAdminVO() != null) {
+	            request.getSession().setAttribute("adminVO", customUser.getAdminVO());
+	        }
+	    }
+
+	    
+		
+		List<String> roleNames = new ArrayList<String>();
+		auth.getAuthorities().forEach(authority->{
+			roleNames.add(authority.getAuthority());
+		});
+		log.info("roleNames : " + roleNames);
+		
+		if (roleNames.contains("ROLE_ADMIN")) {
+		    response.sendRedirect("/");
+		    return; 
+		} else if (roleNames.contains("ROLE_ENTER")) {
+		    response.sendRedirect("/enter/main");
+		    return;
+		} else if (roleNames.contains("ROLE_MEMENTER")) {
+		    response.sendRedirect("/enter/main");
+		    return;
+		} else if (roleNames.contains("ROLE_MEMBER")) {
+		    response.sendRedirect("/");
+		    return;
+		}
+		
+		super.onAuthenticationSuccess(request, response, auth);
+		
+	}
+	
+}

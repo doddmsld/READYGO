@@ -1,0 +1,37 @@
+package kr.or.ddit.oustou.service;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.CodeGrpVO;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.OutsouVO;
+
+
+
+public interface OutsouMainService {
+	
+	/* 메인 부분 */
+	public List<OutsouVO> getCategory();//조회수가 많은 카테고리 5개 
+	
+	public List<OutsouVO> getnewList();//메인 새로운 게시글 5개 
+	
+	public List<OutsouVO> getBestList();  //메인 조회수 높은글  게시글 5개 (BEST )
+	
+	//리뷰글 가져오기
+	
+	
+	/* 카테고리별 화면  */
+	public List<OutsouVO> geCategoryist(Map<String, Object> map);//카테고리 글 목록 + 페이지네이션
+	
+	public int getTotal(Map<String, Object> map); //카테고리별 총 수량 
+
+	public List<CodeVO> getSrleList(); //기술 수준 ㅋ코드 
+
+	public List<CodeVO> getSrteList(); //인재 수준 코드
+	
+	
+	
+
+	
+}

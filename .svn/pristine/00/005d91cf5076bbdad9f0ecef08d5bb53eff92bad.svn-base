@@ -1,0 +1,103 @@
+package kr.or.ddit.oustou.controller;
+
+
+import java.util.List;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.vo.OustouVO;
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
+@Controller
+@RequestMapping("/oustou")
+public class OustouController {
+
+	/*외주 메인*/
+	@GetMapping("/main")
+	public String main() {
+		
+		//공콩 코드에서 중분류카테고리 가져오기
+		
+		//외주 목록에서 최신글 가져오기 (컴퓨터 현재날짜에서 최신 순 5개 )
+		
+		//외주목록에서 조회수높은거 가져오기(5개)
+
+		//게시판에서 리뷰 목록 가져오기 3~5개 정보 (좋아요 많은 순 )
+		return "oustou/main";
+	}
+	
+	
+	/**
+	 * 외주 게시판 목록
+	 * 
+	 * 
+	 */
+	@GetMapping("/list")
+	public String list() {
+		
+//		List<OustouVO> oustouVO = this.oustouSrevice.list();
+//		
+//		model.addAttribute("oustouVO",oustouVO);
+		
+		return "oustou/list";
+	}
+	
+	
+	/**
+	 * 외주 게시판 등록폼 
+	 */
+	@GetMapping("/regist")
+	public String regit() {
+		
+//		List<OustouVO> oustouVO = this.oustouSrevice.list();
+//		
+//		model.addAttribute("oustouVO",oustouVO);
+		
+		return "oustou/regist";
+	}
+	
+	
+	/**
+	 * 외주 게시판 등록실행 
+	 */
+	
+	
+	/**
+	 * 외주 게시판 수정 폼 
+	 */
+	
+	/**
+	 * 외주 게시판 수정 실행 
+	 */
+	
+	
+	/**
+	 * 외주 게시판 삭제 실행
+	 */
+	
+	
+	/**
+	 * 외주 게시판 상세
+	 * 요청 URI : /readyUP/oustou/detail
+	 * 요청파라미터 : {outordNo=1}
+	 * @return
+	 */
+	@GetMapping("/detail")
+	public String detail(@RequestParam("outorNo") String outorNo, Model model) {
+		log.info("detail->outordNo : " + outorNo);
+		
+		
+		
+		
+		return "oustou/detail";
+		
+		
+	}
+
+}

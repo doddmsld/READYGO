@@ -1,0 +1,48 @@
+package kr.or.ddit.api;
+
+
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailAttachment;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.MultiPartEmail;
+import org.apache.commons.mail.SimpleEmail;
+
+public class CommonsMail_Gmail {
+	public static void main(String[] args) {
+		// 이메일 객체 생성
+		Email email = new SimpleEmail();
+
+		// SMTP 서버 설정
+		email.setHostName("smtp.gmail.com");
+		email.setSmtpPort(587); // Gmail SMTP 포트
+		email.setAuthenticator(new DefaultAuthenticator("seongbae123@gmail.com", "zvmf uzqu szwh ymzz")); // 발신자 Gmail 계정 인증
+		email.setStartTLSRequired(true); // TLS 사용
+		try {
+			email.setFrom("seongbae123@gmail.com");
+		} catch (EmailException e1) {
+			e1.printStackTrace();
+		}
+
+		try {
+			
+			// 이메일 내용 설정
+			email.setSubject("메일 제목");
+			email.setMsg("메일 내용");
+
+			// 수신자 이메일 설정
+			email.addTo("lovely3529@naver.com");			
+
+			// 이메일 전송
+			email.send();
+
+			System.out.println("Email sent successfully!");
+		} catch (EmailException e) {
+			e.printStackTrace();
+		}
+	}
+}
+
+
+
+

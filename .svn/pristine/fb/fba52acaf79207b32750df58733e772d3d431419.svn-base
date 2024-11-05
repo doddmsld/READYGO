@@ -1,0 +1,80 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="sec"%>
+<!-- 외주 css 파일 -->
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/oustou/regist.css" />
+
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+
+<%
+    String selectedCategory = request.getParameter("category1");
+%>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    let selectedCategory = '<%= selectedCategory %>';
+    console.log(selectedCategory);
+    if (selectedCategory === 'OUCL02') { // "취업·입시" 선택 시
+        $(".form-group2_1").show();  // 가격과 가격 설명을 포함한 항목 보이기
+        $(".category").hide();       // 다른 항목 숨기기
+        $(".category2_2").hide();    // 파일 제공 체크박스 숨기기
+    } else {
+        // 다른 카테고리가 선택되었을 때 필요한 로직을 추가할 수 있습니다.
+    }
+});
+</script>
+
+<form name="registForm" id="registForm" action="/oustou/regist/regist2" method="post">
+	<div class="GigFormInput2">
+		<div class="form-group2_1">
+			<div>
+				<label class="label2">가격정보</label>
+			</div>
+			<div class="form-sub-group2_1">
+				<div class="category2_1">
+					<label class="label2_1">금액(VAT포함)</label> 
+					<input type="text" class="title_2"
+							placeholder="최소 10,000원 이상 입력해주세요"/>
+				</div>
+				<div class="category2_1">
+					<label class="label2_1">금액 설명</label> 
+					<input type="text" class="title_2"
+							placeholder="금액에 대한 상세설명을 입력해주세요" maxlength="60"/>
+				</div>
+				<div class="category">
+					<label class="label2_1">작업 기간</label> 
+					<select id="category1" name="category1" class="title_2" required>
+						<option value="" selected disabled>선택해주세요</option>
+						<option value="OUCL01">IT·프로그래밍</option>
+						<option value="OUCL02">취업·입시</option>
+					</select>
+				</div>
+				<div class="category">
+					<label class="label2_1">수정 횟수</label> 
+					<select id="category1" name="category1" class="title_2" required>
+						<option value="" selected disabled>선택해주세요</option>
+						<option value="OUCL01">IT·프로그래밍</option>
+						<option value="OUCL02">취업·입시</option>
+					</select>
+				</div>
+				<div class="category2_2">
+					<label class="label2_2">수정가능 파일 제공</label>
+					<p>의뢰인에게 소스파일을 제공할 경우 체크해주세요</p>
+					<input type="checkbox" class="title_3"/>
+				</div>
+				<div class="category2_1">
+					<label class="label2_1">기능 추가</label> 
+					<input type="text" class="title_2"
+							placeholder="추가하고 싶은 기능의 수량을 작성해주세요"/>
+				</div>
+			</div>
+		</div>
+
+
+		
+	</div>
+			<input type="submit" id="save" value="저장" />
+</form>

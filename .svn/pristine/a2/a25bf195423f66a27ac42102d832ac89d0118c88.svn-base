@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.UserMapper">
+	<resultMap type="userVO" id="userMap">
+		<result property="userId" column="USER_ID"/>
+		<result property="userPwd" column="USER_PWD"/>
+		<result property="enabled" column="ENABLED"/>
+		<result property="userType" column="USER_TYPE"/>
+		<collection property="userAuthVOList" resultMap="userAuthMap"></collection>
+	</resultMap>
+	<resultMap type="userAuthVO" id="userAuthMap">
+		<result property="userId" column="USER_ID"/>
+		<result property="auth" column="AUTH"/>
+	</resultMap>
+
+	<select id="userLogin" parameterType="String" resultMap="userMap">
+		SELECT A.MBR_ID AS USER_ID,
+		       A.MBR_PSWD AS USER_PWD,
+		       A.ENABLED AS ENABLED,
+		       A.USER_TYPE AS USER_TYPE,
+		       B.AUTH AS AUTH
+		FROM MEMBER A, AUTH_MEM B
+		WHERE A.MBR_ID = B.MBR_ID
+		AND A.ENABLED = '1'
+		AND A.MBR_ID = #{username}  
+		    UNION ALL
+		SELECT A.ENT_ID,
+		       A.ENT_PSWD,
+		       A.ENABLED,
+		       A.USER_TYPE,
+		       B.AUTH
+		FROM ENTER A, AUTH_ENT B
+		WHERE A.ENT_ID = B.ENT_ID
+		AND A.ENABLED = '1'
+		AND A.ENT_ID = #{username} 
+		 UNION ALL
+		SELECT A.ADM_ID,
+		       A.ADM_PSWD,
+		       A.ENABLED,
+		       A.USER_TYPE,
+		       B.AUTH
+		FROM ADMIN A, AUTH_ADMIN B
+		WHERE A.ADM_ID = B.ADM_ID
+		AND A.ENABLED = '1'
+		AND A.ADM_ID = #{username} 
+	</select>
+	
+	<select id="idChk" resultType="int" parameterType="String">
+		SELECT 
+		    (SELECT COUNT(*) FROM MEMBER WHERE MBR_ID = #{username}) +
+		    (SELECT COUNT(*) FROM ENTER WHERE ENT_ID = #{username}) +
+		    (SELECT COUNT(*) FROM ADMIN WHERE ADM_ID = #{username}) AS TotalCount
+		FROM DUAL
+	</select>
+	
+	<select id="codeSelect" resultType="codeVO" parameterType="String">
+		SELECT A.COM_CODE, A.COM_CODE_GRP, A.COM_CODE_NM, 
+		       A.COM_CODE_DESC, A.USE_YN, A.UPPER_COM_CODE, 
+		       A.UPPER_COM_CODE_GRP
+		FROM CODE A, CODE_GRP B
+		WHERE A.COM_CODE_GRP = B.COM_CODE_GRP
+		AND B.USE_YN = 1
+		AND A.COM_CODE_GRP = #{comCodeGrp}
+	</select>
+</mapper>

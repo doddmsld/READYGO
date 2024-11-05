@@ -1,0 +1,326 @@
+<%@ page language="java" contentType="text/html;charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard.css">
+
+<title>회원 헤더</title>
+
+<!-- Bootstrap core CSS -->
+<link href="resources/css/bootstrap.min.css" rel="stylesheet">
+<!-- Additional CSS Files -->
+<link rel="stylesheet" href="../resources/assets/css/fontawesome.css">
+<link rel="stylesheet"
+	href="../resources/assets/css/templatemo-cyborg-gaming.css">
+<link rel="stylesheet" href="../resources/assets/css/owl.css">
+<link rel="stylesheet" href="../resources/assets/css/animate.css">
+<link rel="stylesheet"
+	href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+
+<script>
+$(function() {
+    // 프로필 영역 클릭 시 메뉴를 보여주거나 숨김
+    $("#headerUser").on("click", function(event) {
+        event.preventDefault(); // 링크 기본 동작 막기
+        $("#userMenu").toggle(); // 메뉴 토글
+    });
+
+    // 메뉴 외부 클릭 시 메뉴 숨김 처리
+    $(document).on("click", function(event) {
+        if (!$(event.target).closest("#headerUser").length) {
+            $("#userMenu").hide();
+        }
+    });
+});
+</script>
+<script>
+//쿠키에 값을 저장하는 함수
+function setCookie(name, value, days) {
+  var date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  var expires = "expires=" + date.toUTCString();
+  document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+// 쿠키에서 값을 가져오는 함수
+function getCookie(name) {
+  var nameEQ = name + "=";
+  var ca = document.cookie.split(';');
+  for (var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+// 쿠키에 공고 번호(pbancNo)를 추가하는 함수
+function addPbancToCookie(pbancNo) {  // pbancNo로 함수 인자 변경
+  addCookie(pbancNo);  // 기존에 작성한 addCookie 함수 호출
+  displayPbancs();  // 추가 후 화면에 업데이트
+}
+
+// 기존 addCookie 함수 (기존 작성 코드)
+function addCookie(pbancNo) {
+  var items = getCookie('PbancItems');  // 쿠키에서 PbancItems를 가져옴
+  var maxItemNum = 5;  // 최대 저장 가능한 아이템 개수
+  var expire = 7;  // 쿠키 값을 저장할 기간 (7일)
+  
+  if (items) {
+    var itemArray = items.split(',');
+    if (itemArray.indexOf(pbancNo) != -1) {
+      // 이미 존재하는 경우 종료
+      console.log('Already exists.');
+    } else {
+      // 새로운 값 저장 및 최대 개수 유지하기
+      itemArray.unshift(pbancNo);
+      if (itemArray.length > maxItemNum) itemArray.length = 5;  // 최대 5개까지 저장
+      items = itemArray.join(',');
+      setCookie('PbancItems', items, expire);  // 쿠키에 저장
+    }
+  } else {
+    // 신규 pbancNo 값을 저장하기
+    setCookie('PbancItems', pbancNo, expire);  // 쿠키에 신규 값 저장
+  }
+}
+
+// 쿠키에 저장된 공고 번호 목록(pbancNo)을 화면에 표시하는 함수
+function displayPbancs() {
+  var items = getCookie('PbancItems');  // 쿠키에서 PbancItems를 가져오기
+  var pbancList = document.getElementById('pbancList');  // HTML에서 리스트 요소 선택
+  pbancList.innerHTML = '';  // 리스트 초기화
+
+  if (items) {
+    var itemArray = items.split(',');
+    itemArray.forEach(function(pbancNo) {
+      var listItem = document.createElement('li');  // 새로운 리스트 아이템 생성
+      listItem.textContent = "공고 번호: " + pbancNo;  // 공고 번호 텍스트 설정
+      pbancList.appendChild(listItem);  // 리스트에 아이템 추가
+    });
+  } else {
+    pbancList.innerHTML = '<li>최근 본 공고가 없습니다.</li>';  // 쿠키에 공고가 없을 때
+  }
+}
+
+// 페이지 로드 시 쿠키에 저장된 공고 목록을 표시
+window.onload = function() {
+  displayPbancs();
+};
+
+</script>
+<!-- ***** Header Area Start ***** -->
+<header class="header-area header-sticky" style="margin-right: 0px;">
+	<div class="container" style="margin-top: 0px;">
+		<div class="row" style="margin-left: 0px;">
+			<div class="col-12">
+				<nav class="main-nav" style="margin-left: 290px;">
+					<!-- ***** Logo Start ***** -->
+					<div class="logo">
+						<a href="/"><img src="../resources/images/logo.png" alt="logo"></a>
+					</div>	
+					<!-- ***** Logo End ***** -->
+					<!-- ***** Menu Start ***** -->
+					<ul class="navGen" style="margin-left: -120px;">
+						<sec:authorize access="isAnonymous()">
+			                <li class="iconSize">
+				                <a href="#">
+				                    <img src="../resources/images/Chat.png" alt="채팅 아이콘" />
+				                </a>
+				            </li>
+				            <li class="iconSize">
+				                <a href="#">
+				                    <img src="../resources/images/inform.png" alt="알림 아이콘" />
+				                </a>
+				            </li>
+				            <li><a href="/security/login">로그인</a></li>
+				            <p>|</p>
+				            <li><a href="/security/signin">회원가입</a></li>
+		                </sec:authorize>
+		                <sec:authorize access="isAuthenticated()">
+					    	<sec:authentication property="principal.memVO" var="memVO"/>
+			                <li class="iconSize">
+				                <a href="#">
+				                    <img src="../resources/images/Chat.png" alt="채팅 아이콘" />
+				                </a>
+				            </li>
+				            <li class="iconSize">
+				                <a href="#">
+				                    <img src="../resources/images/inform.png" alt="알림 아이콘" />
+				                </a>
+				            </li>
+				            <form action="/logout" method="post">
+				            	<button type="submit">로그아웃</button>
+					            <sec:csrfInput />
+				            </form>
+					            <li id="headerUser"><a href="#">${memVO.mbrNm} 
+					            	<c:if test="${memVO.fileDetailVOList[0].filePathNm==null}">
+	                        			<img src="/resources/images/member/기본프로필.png" alt="기본프로필.png"  />
+			                    	</c:if>
+			                    	<c:if test="${memVO.fileDetailVOList[0].filePathNm!=null}">
+				                        <img src="${memVO.fileDetailVOList[0].filePathNm}" alt="${memVO.fileDetailVOList[0].orgnlFileNm}" />
+			                    	</c:if></a></li>
+			                    	
+			                    	    <!-- 프로필 메뉴 -->
+			                    	<li>
+									    <ul id="userMenu">
+									        <li><a href="/member/profile?mbrId=${memVO.mbrId}" class="menulist" href="/mypage">내 프로필</a></li>
+									        <li><a href="/member/detail?mbrId=${memVO.mbrId}" class="menulist" href="#">마이페이지</a></li>
+									        <li><a class="menulist" href="/member/resume">이력서/자소서관리</a></li>
+									        <li><a class="menulist" href="#">스크랩</a></li><br>
+<!-- 									    <li><a class="menulist" href="#">최근 본 공고</a></li> -->
+ 									  		<li><span class="recentView"
+ 									  			data-toggle="modal" data-target="#modalPbanc" >최근 본 공고</span></li> 
+									        <li><a class="menulist" href="#">레디Up</a></li>
+									    </ul>
+									</li>
+												                    	
+		                </sec:authorize>
+					</ul>
+					<a class='menu-trigger'> <span>Menu</span>
+					</a>
+					<!-- ***** Menu End ***** -->
+				</nav>
+			</div>
+		</div>
+		<!--          <nav> -->
+		<!-- 			<ul id="nav2"> -->
+		<!-- 				<li><a href="#">채용정보</a></li> -->
+		<!-- 				<li><a href="#">기업정보</a></li> -->
+		<!-- 				<li><a href="#">커리어성장</a></li> -->
+		<!-- 				<li><a href="#">커뮤니티</a></li> -->
+		<!-- 				<li><a href="#">인재</a></li> -->
+		<!-- 				<li><a href="#">레디Up</a></li> -->
+		<!-- 				<li>가능성은 무한, 준비는 Readyz Go!</li> -->
+		<!-- 			</ul> -->
+		<!-- 		</nav> -->
+	</div>
+</header>
+<!-- ***** Header Area End ***** -->
+<!-- ///////////////////////////////// 최근 본 공고 모달 ///////////////////////////////// -->
+<div class="modal fade" id="modalPbanc"> 
+  <div class="modal-dialog" style="margin-top: 270px;">
+    <div class="modal-content">
+      <form id="EditForm" action="/member/prfUpdateAjax?${_csrf.parameterName}=${_csrf.token}" method="post">
+        <div class="modal-header">
+          <span id="title">최근 본 공고</span>
+        </div>
+        <div class="modal-body">
+          <!-- 최근 본 공고 목록을 표시할 곳 -->
+          <ul id="pbancList">
+            <!-- 여기에 JavaScript로 공고 목록이 추가됩니다 -->
+          </ul>
+        </div>
+        <div id="control">
+          <!-- 예시: 모달을 닫는 버튼 -->
+          <button type="button" class="EditCont" data-dismiss="modal">닫기</button>
+        </div>
+        <sec:csrfInput />
+      </form>
+    </div>
+    <!-- /.modal-content -->
+  </div>
+  <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
+
+</div>
+<style>
+*{
+	font-family: pretendard; 
+}
+#nav2 li {
+	margin: 10px;
+	margin-left: 50px;
+	display: inline-block;
+}
+
+#nav2 {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-top: 1px solid #D6D6D6;
+	border-bottom: 1px solid #D6D6D6;
+}
+
+/* .logo{ */
+/* 	margin-left: 280px; */
+/* } */
+
+nav.main-nav, ul {
+	align-items: center; /* 수직 중앙 정렬 */
+}
+
+#nav2 li:last-child {
+	border-left: 2px solid #D6D6D6;
+	padding-left: 55px;
+	color: #24D59E;
+}
+
+.iconSize img {
+	width: 30px;
+	height: 30px;
+}
+
+.navGen {
+	display: flex;
+	justify-content: flex-end;
+	width: 700px;
+	margin-left : -170px;
+}
+
+/* 프로필 메뉴 css */
+#userMenu{
+	margin-top: 28px;
+    margin-left: -124px;
+    width: 130px;
+    display:none; 
+    position:absolute; 
+    background-color: white; 
+    list-style: none; 
+    padding: 4px; 
+    border: 1px solid #ccc;
+    text-align:center;
+    border-radius :5px;
+
+}
+#userMenu li a{
+	color: #2f2f2f; 
+	font-size: 12px; 
+	font-family: pretendard; 
+	font-weight: 500;
+
+}
+.navGen li a{
+	display: block;
+    font-weight: 400;
+    font-size: 12px;
+    text-transform: capitalize;
+    color: #666;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    border: transparent;
+    padding: 13px 10px;
+    border-radius: 18px;
+    letter-spacing: .3px;
+}
+.navGen li a:hover{
+  color: #2f2f2f;
+  background-color: none;
+}
+.recentView{
+	color: #2f2f2f;
+    font-size: 12px;
+    font-family: pretendard;
+    font-weight: 500;
+    cursor:pointer;
+}
+</style>
+
+
+

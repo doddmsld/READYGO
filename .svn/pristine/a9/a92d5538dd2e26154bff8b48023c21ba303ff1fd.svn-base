@@ -1,0 +1,75 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>공고 관리</title>
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/enter/pbanc.css" />
+</head>
+<body>
+    <div class="announcement-container">
+        
+        <h2>공고 관리</h2>
+        <div class="filter-dropdown">
+            <select>
+                <option>공고 등록 최신순</option>
+                <option>공고 마감일순</option>
+            </select>
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>기업명</th>
+                    <th>공고명 및 분류</th>
+                    <th><p class="ptag">등록일자</p></th>
+                    <th><p class="ptag">마감일자</p></th>
+		            <th style="text-align: center;">상세 보기</th>
+                </tr>
+            </thead>
+            <tbody>
+                <c:forEach var="pbanc" items="${pbancList}" varStatus="status">
+                    <tr>
+                        <td>${status.index + 1}</td>
+                        <td>
+                        	기업명 DB연동해야됩니다.
+<%--                         ${pbanc.entNm} --%>
+                        </td>
+                        <td>
+                            <div class="title">${pbanc.pbancTtl}</div>
+                            <div class="industry">업종 DB연동해야됩니다.</div>
+<%--                             <div class="industry">${pbanc.comCodeNm}</div> --%>
+                        </td>
+                        <td>
+                            <div><fmt:formatDate value="${pbanc.pbancWrtDt}" pattern="yyyy.MM.dd" /></div>
+                        </td>
+                        <td>
+                            <div><fmt:formatDate value="${pbanc.pbancMdfcnDt}" pattern="yyyy.MM.dd" /></div>
+                        </td>
+						<td class="detail-cell">
+		                        <button class="details-button">상세 보기</button>
+	                    </td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+		<div class="btnclass">
+        <button class="insert-button">공고 등록</button>
+		</div>
+        <div class="pagination">
+            <button>&lt;&lt;</button>
+            <button>&lt;</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>4</button>
+            <button>5</button>
+            <button>&gt;</button>
+            <button>&gt;&gt;</button>
+        </div>
+    </div>
+</body>
+</html>

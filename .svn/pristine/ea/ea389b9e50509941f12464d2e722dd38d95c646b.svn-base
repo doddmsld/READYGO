@@ -1,0 +1,195 @@
+<style>
+ @charset "UTF-8";
+
+*{
+	font-family: pretendard;
+}
+/*전체 높이 넓이*/
+.inquiryRow{
+	width: 1300px;
+	margin: 0px auto;
+	display: flex;
+	flex-direction: column;
+	
+}
+/*상단 제목*/
+
+.registTitle{
+	margin-top: 40px;
+	width: 1200px;
+	height: 60px;
+	margin: 10px;
+	margin-bottom: 30px;
+}
+/*전체*/
+.registAll{
+	display: flex;
+	justify-content: center;
+	width: 1300px;
+	height :800px;
+	margin: 0px auto;
+	margin-top: 40px;
+   
+}
+}
+/*등록 정보 전체 */
+.regist{
+	width: 1300px;
+	padding: 20px;
+}
+             
+.smRegust{
+	width: 1000px;
+	margin: 0px auto;
+	border :1px solid rgba(0, 0, 0, 0.1);
+	border-radius : 0px 0px 12px 12px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	border-top: solid 4px #24D59E;
+}
+.size {
+    width: 860px;
+    margin: 0 auto; 
+}
+.title-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    margin-top: 30px;
+    margin-bottom: 40px;
+}
+
+#pstOthbcscope{
+	height:50px;
+	text-align: center;
+	border-radius: 8px;
+	width: 150px;
+}
+
+.input-title {
+    font-size: 15px;
+    border-radius: 8px;
+    border: 1px solid #D9D9D9;
+    height: 50px;
+    width: 700px;
+}
+
+.content-group{
+	display: flex;
+	flex-direction: column; 
+	margin-top: 40px;
+}
+
+#file-input{
+	background: white;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+	width : 100px;
+	height : 40px;
+	border-radius : 7px;
+    font-size : 16px;
+    font-weight : 400;
+    margin-left: 10px;
+    transition: all 0.3s ease 0s;
+    text-align: center;
+    padding-top: 6px;
+    margin-top: 20px;
+}
+
+/*버튼*/
+#editBox{
+	display: flex;
+    align-items: flex-end;
+    margin-top:30px;
+    margin-bottom: 30px;
+    margin-left: 650px;
+}
+
+.cancel{
+	width : 100px;
+	height : 40px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background:white;
+	border-radius : 7px;	
+	font-size : 16px;
+	font-weight : 400;
+	transition: all 0.3s ease 0s;
+}
+.cancel:hover {
+	background: #ECECEC;
+	border: 1px solid #B5B5B5;
+}
+
+
+
+#savebtn{
+	background: white;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+	width : 100px;
+	height : 40px;
+	border-radius : 7px;
+    font-size : 16px;
+    font-weight : 400;
+    margin-left:5px;
+    transition: all 0.3s ease 0s;
+}
+#savebtn:hover {
+background-color: #24D59E;
+color: white;
+}
+
+
+#file-list {
+    display: flex;
+     flex-wrap:wrap;
+    margin-left: 10px;
+}
+
+#file-input:hover {
+background-color: #24D59E;
+color: white;
+}
+
+#file-list button {
+	background: white;
+	color: #232323;
+	border: 1px solid #B5B5B5;
+	transition: all 0.3s ease 0s;
+	height: 25px;
+	width:25px;
+	text-align: center;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+#file-list button:hover {
+	background: #ECECEC;
+	border: 1px solid #B5B5B5;
+}
+#file-list {
+    display: flex;
+}
+
+
+
+
+/*ck에디터*/
+.ck-placeholder {
+color: #aaa;
+white-space: pre-wrap; /* 줄바꿈 처리 */
+font-size: 12px;
+}
+
+/* 3.CKEditor 높이 조절 style 추가(2개 다 해야함) */
+
+.ck-editor__main .ck-content {
+height: 300px;
+
+}
+
+
+
+
+
+

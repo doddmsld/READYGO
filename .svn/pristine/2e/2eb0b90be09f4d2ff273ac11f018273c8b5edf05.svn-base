@@ -1,0 +1,1667 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+	color: #232323;
+	transition: all 0.3s ease 0s;
+}
+@media ( min-width : 1200px) {
+	.container, .container-lg, .container-md, .container-sm, .container-xl {
+		max-width: 61%;
+	}
+}
+
+::placeholder {
+	color: #b4b4b4;
+	font-weight: 300;
+}
+
+div#nav {
+	text-align: center;
+	margin-top: -32px;
+	background: none;;
+	height: 238px;
+}
+
+.container {
+	margin-top: 30px;
+}
+
+.row {
+	display: flex;
+	flex-wrap: nowrap;
+	margin-left: -105px;
+}
+
+.col-left {
+	margin: 0px 33px 0px 50px;
+}
+
+.img {
+	border-radius: 999px;
+	height: 142px;
+	width: 142px;
+	object-fit: cover;
+	box-shadow: 0 8px 8px rgba(0, 0, 0, 0.1);
+	margin-top: -75px;
+
+}
+section.content {
+	background: #f1f1f1;
+}
+.formsize{
+	display: flex;
+	flex-direction: column;
+}
+
+/* 회원이름 */
+#mbrNm {
+	font-size: 20px;
+	font-weight: 700;
+	text-align: center;
+	color: #232323;
+	margin-top: 65px;
+	margin-bottom: -38px;
+}
+/* 회원 상단 프로필 소개 */
+#introduce p {
+	text-align: center;
+	font-size: 14px;
+	color: #232323;
+}
+
+div#introduce {
+	margin: 30px 0px 20px 0px;
+	text-align:center;
+}
+
+#introduce2 p {
+	font-size: 16px;
+	color: #232323;
+	margin-left: 330px;
+}
+
+#introduce2 {
+	padding-bottom: 25px;
+}
+
+#introduce2 input {
+	margin-top: 15px;
+	font-size: 14px;
+	color: #232323;
+	border: none;
+	width: 56%;
+    margin-right: 3px;
+}
+
+hr {
+	width: 1250px;
+}
+#proflContent{
+	text-align: center;
+    width: 35%;
+    border: none;
+}
+/* 프로필 내용 */
+.content-wrapper {
+	background: #f1f1f1;
+	height: auto;
+	padding-bottom: 30px;
+}
+
+#topPro {
+	background: #ffffff;
+	box-shadow:0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.content-wrapper>.content {
+	padding: 0px -0px;
+}
+
+.container-fluid {
+	width: 100%;
+	padding-right: 0;
+	padding-left: 0;
+	margin-right: auto;
+	margin-left: auto;
+}
+#prfBusiness {
+    color: #24d59e;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 14px;
+    border: none;
+    background: none;
+    padding: 0px 0px 2px 0px;
+}
+
+/* 한 줄 소개 수정 모달창 */
+.UpdateCont,.UpdateBusi {
+	width: 60px;
+	height: 35px;
+	background: white; color : #24D59E; border : 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+
+.UpdateCont:hover,.UpdateBusi:hover {
+	width: 60px;
+	height: 35px;
+	background-color: #24D59E; color : white;
+	border: 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: white;
+}
+.EditCont,.EditBusi{
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+.EditCont:hover,.EditBusi:hover{
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+#control{
+	display: flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 15px;
+}
+span#title {
+    font-size: 16px;
+    font-weight: 700;
+}
+.modal-header {
+    display: flex;
+    justify-content: space-around;
+}
+.modal-body {
+    display: flex;
+    justify-content: space-around;
+}
+.modal-content {
+	width: 540px;
+    height: 340px;
+    border-radius: 5px;    
+}
+
+#modalCont{
+	width: 485px;
+	height: 100px;
+}
+
+/* 업종 모달창 */
+#chkBox{
+	display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 7px;
+}
+input#busiChk {
+    margin-right: 5px;
+    margin-bottom: 15px;
+}
+#busiNm {
+    display: flex;
+    width: 135px;
+    margin: 5px;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 500;
+    gap: 5px;
+}
+.modal-business {
+	width: 640px;
+	height: 400px;
+	margin-left:-150px;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .5);
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    pointer-events: auto;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: .3rem;
+    box-shadow: 0 .25rem .5rem rgba(0, 0, 0, .5);
+    outline: 0;
+}
+#controlBusi{
+	text-align: center;
+	padding-top: 15px;
+}
+
+
+
+/* 경력 */
+h5 {
+	width: 100px;
+	color: #232323;
+}
+
+.editTool {
+	display: flex;
+	justify-content: flex-end;
+}
+
+#careerBox {
+	background: white;
+	padding: 20px;
+	width: 855px;
+	margin-top: 30px;
+	height: auto;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#career {
+	margin: -9px 0px 0px 55px;
+	width: 715px;
+}
+
+.title {
+	font-size: 18px;
+	font-weight: 700;
+	color: #232323;
+	border: none;
+}
+
+.careerEnt {
+	margin-top: 8px;
+	border: none;
+	color: #666363;
+	font-size: 16px;
+	font-weight: 550;
+}
+
+.careerBegYm {
+	margin-top: -5px;
+	border: none;
+	font-size: 14px;
+	margin-bottom: 15px;
+	width: 62px;
+}
+
+#careerBegYm {
+	width: 100px;
+}
+
+.careerEndYm {
+	margin-top: -5px;
+	border: none;
+	font-size: 14px;
+	margin-bottom: 15px;
+	width: 62px;
+}
+
+#careerEndYm {
+	width: 100px;
+}
+
+#boxhr {
+	width: 700px;
+	margin-left: 0px;
+	border-radius: 5px;
+}
+
+span#title {
+    font-weight: 600;
+    font-size: 18px;
+}
+#updateAjax {
+	width: 60px;
+	height: 35px;
+	background: white; color : #24D59E; border : 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+
+#updateAjax:hover {
+	width: 60px;
+	height: 35px;
+	background-color: #24D59E; color : white;
+	border: 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: white;
+}
+form#edit_Form {
+    margin-left: 30px;
+}
+
+/* 학력 */
+#edit_ACForm{
+    margin-left: 30px;
+}
+#acbgBox {
+	background: white;
+	padding: 20px;
+	width: 855px;
+	height: auto;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.acbg-item {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+
+#acbg {
+	margin: -9px 0px 0px 55px;
+	width: 715px;
+}
+
+.acbgMjrNm {
+	margin-top: 8px;
+	border: none;
+	color: #666363;
+	font-size: 16px;
+	font-weight: 550;
+}
+
+.acbgMtcltnym {
+	margin-top: -5px;
+	border: none;
+	font-size: 14px;
+	margin-bottom: 15px;
+	width: 62px;
+}
+
+#acbgMtcltnym {
+	width: 100px;
+}
+
+.acbgGrdtnym {
+	margin-top: -5px;
+	border: none;
+	font-size: 14px;
+	margin-bottom: 15px;
+	width: 62px;
+}
+
+#acbgGrdtnym {
+	width: 100px;
+}
+
+#boxhr {
+	width: 700px;
+	margin-left: 0px;
+	border-radius: 5px;
+}
+
+#schoolBox {
+	display: flex;
+}
+
+#prseSeCd, #acdeSeCd{
+	width: 150px;
+	height: 36px;
+	border-radius: 5px;
+	border: 1px solid #D9D9D9;
+	padding: 7px;
+}
+.prseSeCdSelect, .prseSeCdSelect {
+	width: 150px;
+	height: 39px;
+	border-radius: 5px;
+	border: 1px solid #D9D9D9;
+	padding: 7px;
+	font-size:14px;	
+}
+
+#acbgSchlNm, #acbgMjrNm {
+	width: 360px;
+}
+
+#acspSeCd {
+	width: 545px;
+	height: 36px;
+	border-radius: 5px;
+	border: 1px solid #D9D9D9;
+	padding: 7px;
+	width: 520px;
+}
+.acspSeCdSelect {
+	width: 545px;
+	height: 39px;
+	border-radius: 5px;
+	border: 1px solid #D9D9D9;
+	padding: 7px;
+	width: 520px;
+	font-size:14px;	
+}
+
+#addAcbgAjax {
+	width: 60px;
+	height: 35px;
+	background: white;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+}
+
+#addAcbgAjax:hover {
+	width: 60px;
+	height: 35px;
+	border: none;
+	background-color: #24D59E;
+	color: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+}
+
+.cancelAcbgAjax {
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+.cancelAcbgAjax:hover {
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+
+/* 학력 수정 */
+div#addAcbgForm {
+	display: flex;
+	flex-direction: column;
+	font-size: 14px;
+	margin-left: 80px;
+}
+
+#addAcbgForm label {
+	font-size: 16px;
+	color: #666363;
+}
+
+#cancelAcbglAjax {
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+#cancelAcbglAjax:hover {
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+
+#updateAcbgAjax {
+	width: 60px;
+	height: 35px;
+	font-size: 14px;
+	background: white;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+
+#updateAcbgAjax:hover {
+	width: 60px;
+	height: 35px;
+	font-size: 14px;
+	background-color: #24D59E; color : white;
+	border: none;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: white;
+}
+.acspSeCd{
+	margin-top: 8px;
+    border: none;
+    color: #666363;
+    font-size: 16px;
+    font-weight: 550;
+}
+.spcBox {
+    display: flex;
+    flex-direction: row;
+}
+/* 활동 */
+#actBox {
+	background: white;
+	padding: 20px;
+	width: 855px;
+	height: auto;
+	border-radius: 8px;
+	margin-top: 30px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.act-item {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+
+#act {
+	margin: -9px 0px 0px 55px;
+	width: 715px;
+}
+
+.actAuspcengn {
+	margin-top: 8px;
+	border: none;
+	color: #666363;
+	font-size: 16px;
+	font-weight: 550;
+}
+
+.actBeginYm {
+	margin-top: -5px;
+	border: none;
+	font-size: 14px;
+	margin-bottom: 15px;
+	width: 62px;
+}
+
+#actBeginYm {
+	width: 100px;
+}
+
+.actEndYm {
+	margin-top: -5px;
+	border: none;
+	font-size: 14px;
+	margin-left: -3px;
+	margin-bottom: 15px;
+	width: 62px;
+}
+
+#actEndYm {
+	width: 100px;
+}
+
+.edit-control.actNc {
+	width: 80%;
+	height: auto;
+	overflow-wrap: break-word;
+	resize: none;
+	border: none;
+}
+
+#boxhr {
+	width: 700px;
+	margin-left: 0px;
+	border-radius: 5px;
+}
+#addActAjax {
+	width: 60px;
+	height: 35px;
+	background: white; 
+	color : #24D59E; 
+	border : 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+#addActAjax:hover {
+	width: 60px;
+	height: 35px;
+	background: white; 
+	background-color: #24D59E;
+	color: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	border: 1px solid #24D59E;
+}
+
+#updateActAjax {
+	width: 60px;
+	height: 35px;
+	background: white; 
+	color : #24D59E; 
+	border : 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+
+#updateActAjax:hover {
+	width: 60px;
+	height: 35px;
+	border: none;
+	background-color: #24D59E;
+	color: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+}
+
+.cancelActAjax {
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+.cancelActAjax:hover {
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+#cancelActAjax {
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+#cancelActAjax:hover {
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+
+div#addActForm {
+	display: flex;
+	flex-direction: column;
+	font-size: 14px;
+	margin-left: 80px;
+}
+
+#addActForm label {
+	font-size: 16px;
+	color: #666363;
+}
+
+textarea {
+	border-radius: 5px;
+	border: 1px solid #D9D9D9;
+	resize: none; /* 사용자가 수동으로 크기를 조정할 수 없도록 설정 */
+	overflow: hidden;
+}
+
+#editACTForm {
+	display: flex;
+	flex-direction: column;
+}
+textarea#actNc {
+    width: 70%;
+    padding-left: 10px;
+    font-size:14px;
+}
+#edit_ACTForm{
+    display: flex;
+    flex-direction: column;
+    margin-left: 30px;
+}
+
+/* 수상 */
+#wnpzBox {
+	background: white;
+	padding: 20px;
+	height: auto;
+	border-radius: 8px;
+	margin-top: 25px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.wnpz-item {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+
+#wnpz {
+	margin: -9px 0px 0px 24px;
+    width: 275px;
+}
+
+.wnpzAuspcengn {
+	margin-top: 8px;
+	border: none;
+	color: #666363;
+	font-size: 16px;
+	font-weight: 550;
+}
+
+.wnpzPssrpYm {
+	margin-top: -5px;
+	border: none;
+	font-size: 14px;
+	margin-bottom: 15px;
+	width: 85px;
+}
+
+#wnpzPssrpYm {
+	width: 100px;
+}
+
+.edit-control.actNc {
+	width: 80%;
+	height: auto;
+	overflow-wrap: break-word;
+	resize: none;
+	border: none;
+}
+
+#boxhr {
+	width: 700px;
+	margin-left: 0px;
+	border-radius: 5px;
+}
+
+#addWnpzAjax {
+	width: 60px;
+	height: 35px;
+	background: white; color : #24D59E; border : 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+
+#addWnpzAjax:hover {
+	width: 60px;
+	height: 35px;
+	background-color: #24D59E; color : white;
+	border: 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: white;
+}
+
+.cancelWnpzAjax {
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+.cancelWnpzAjax:hover {
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+
+div#addWnpzForm {
+	display: flex;
+	flex-direction: column;
+	font-size: 14px;
+	margin-left: 73px;
+}
+.wnzInp {
+	width: 225px;
+	padding: 7px;
+    border-radius: 5px;
+    border: 1px solid #D9D9D9;
+    font-size: 14px;
+}
+
+#addWnpzForm label {
+	font-size: 16px;
+	color: #232323;
+}
+
+#editWnpzForm {
+	display: flex;
+	flex-direction: column;
+	font-size: 14px;
+	margin-left: 50px;
+}
+
+#updateWnpzAjax {
+	width: 60px;
+	height: 35px;
+	background: white; 
+	color : #24D59E; 
+	border : 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+
+#updateWnpzAjax:hover {
+	width: 60px;
+	height: 35px;
+	background-color: #24D59E; 
+	color : white;
+	border: 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: white;
+}
+
+#cancelWnpzAjax {
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+#cancelWnpzAjax:hover {
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+
+
+
+
+
+div#addActForm {
+	display: flex;
+	flex-direction: column;
+	font-size: 14px;
+	margin-left: 80px;
+}
+
+#addActForm label {
+	font-size: 16px;
+	color: #232323;
+}
+
+textarea {
+	border-radius: 5px;
+	border: 1px solid #D9D9D9;
+}
+
+#editWNPZForm {
+	display: flex;
+	flex-direction: column;
+}
+
+/* 버튼 */
+#addBtn {
+	border: none;
+	background: none;
+	font-size: 16px;
+	color: #24D59E;
+}
+.scoutYN{
+	width: 250px;
+    position: relative;
+    left: 1330px;
+}
+#scout {
+	font-size: 14px;
+	font-weight: 500;
+	padding: 8px;
+	border-radius: 5px;
+	border:1px solid #24D59E;
+	background: white; 
+	color : #24D59E; 
+	border : 1px solid #24D59E;
+}
+#scoutSel {
+    word-wrap: normal;
+    width: 173px;
+    padding: 10px 0px 10px 0px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+div#addForm {
+	display: flex;
+	flex-direction: column;
+	font-size: 14px;
+	margin-left: 80px;
+}
+
+#addForm label {
+	font-size: 16px;
+	color: #232323;
+}
+
+.add {
+	padding: 7px;
+	width: 385px;
+	border-radius: 5px;
+	border: 1px solid #D9D9D9;
+	font-size:14px;
+}
+
+#addAjax {
+	width: 60px;
+	height: 35px;
+	background: white; color : #24D59E; border : 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+
+#addAjax:hover {
+	width: 60px;
+	height: 35px;
+	background-color: #24D59E; color : white;
+	border: 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: white;
+}
+input[type="submit"] {
+	width: 60px;
+	height: 35px;
+	background: white; 
+	color : #24D59E; 
+	border : 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+input[type="submit"]:hover{
+	width: 60px;
+	height: 35px;
+	background-color: #24D59E; color : white;
+	border: 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: white;
+}
+
+#cancelAjax {
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+#cancelAjax:hover {
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+.cancelCareerAjax{
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+.cancelCareerAjax:hover {
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+
+#workChk {
+	margin: -29px 3px 0px 263px;
+	font-size: 14px;
+	font-weight: 600;
+	color: #232323;
+	display: flex;
+	align-items: center;
+}
+
+#stuChk {
+	margin: -29px 3px 0px 263px;
+	font-size: 14px;
+	font-weight: 600;
+	color: #232323;
+	display: flex;
+	align-items: center;
+}
+
+input[type=checkbox] {
+	width: 16px;
+	height: 16px;
+}
+
+#spcBox {
+	display: flex;
+}
+
+.carInp {
+	width: 500px;
+	font-size :14px;
+}
+
+
+/* 자격증 */
+#crtfctBox {
+	background: white;
+	padding: 20px;
+	height: auto;
+	border-radius: 8px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	margin-top:30px;
+}
+
+#crtfct {
+	margin: -9px 0px 0px 24px;
+	width: 275px;
+}
+
+.crtfct-item {
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+
+.crtfctPblcnoffic {
+	margin-top: 8px;
+	border: none;
+	color: #666363;
+	font-size: 16px;
+	font-weight: 550;
+}
+
+.crtfctAcqsDate {
+	margin-top: -5px;
+	border: none;
+	font-size: 14px;
+	margin-bottom: 15px;
+	width: 85px;
+}
+
+#crtfctAcqsDate {
+	width: 100px;
+}
+
+#boxhr {
+	width: 700px;
+	margin-left: 0px;
+	border-radius: 5px;
+}
+
+#addCrtAjax {
+	width: 60px;
+	height: 35px;
+	background: white; color : #24D59E; border : 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+
+#addCrtAjax:hover {
+	width: 60px;
+	height: 35px;
+	background-color: #24D59E; color : white;
+	border: 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: white;
+}
+
+#cancelCrtAjax {
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+#cancelCrtAjax:hover {
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+
+.crtInp {
+	width: 225px;
+	font-size:14px;
+}
+
+div#addCrtForm {
+	display: flex;
+	flex-direction: column;
+	font-size: 14px;
+	margin-left: 73px;
+}
+
+.sedit {
+	display: flex;
+	margin-left: 247px;
+	margin-top: -28px;
+}
+
+.sdel {
+	margin-top: -28px;
+}
+
+.slabel {
+	width: 150px;
+	font-size:16px;
+}
+
+/* 자격증 수정 */
+#editCRTForm {
+	display: flex;
+	flex-direction: column;
+	font-size: 14px;
+	margin-left: 50px;
+}
+
+#cancelCrtfctAjax {
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+#cancelCrtfctAjax:hover {
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+
+#updateCrtfctAjax {
+	width: 60px;
+	height: 35px;
+	background: white; color : #24D59E; border : 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+
+#updateCrtfctAjax:hover {
+	width: 60px;
+	height: 35px;
+	background-color: #24D59E; color : white;
+	border: 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: white;
+}
+.cancelCrtfctAjax{
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+.cancelCrtfctAjax:hover{
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+.viewEnd{
+	display: flex;
+    justify-content: flex-end;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 19px;
+    width: 715px;
+    position: relative;
+    right: 35px;
+}
+.viewEnd2 {
+    margin-left: -6px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid #cccccc;
+    margin-bottom: 19px;
+    padding-left: 115px;
+    width: 280px;
+}
+
+/* 스킬 */
+#skillBox {
+    background: white;
+    padding: 20px;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%; /* 부모 컨테이너 너비에 맞게 설정 */
+    box-sizing: border-box;
+    overflow: hidden; /* 박스 밖으로 넘치는 부분을 숨김 */
+}
+
+#skill {
+	margin-left:120px;
+	margin-top:-27px;
+}
+
+.resetBtn{
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+.resetBtn:hover{
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+.submitBtn{
+	width: 60px;
+	height: 35px;
+	background: white; color : #24D59E; border : 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+.submitBtn:hover{
+	width: 60px;
+	height: 35px;
+	background: white; color : #24D59E; border : 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+.btnForm{
+	
+}
+.reg1label{
+	margin-left: 3px;
+}
+.search-results {
+	overflow: auto; /* 또는 scroll */
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none;
+	position: relative;
+    bottom: 17px;
+	height: auto;
+	width: 300px;
+	font-size: 14px;
+	max-height: 250px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.search-results::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera */
+}
+.selected-skill {
+    float: left;
+    padding: 2px 10px 2px 10px;
+    background-color: rgba(44, 207, 195, 0.11);
+    border: solid 1px #24D59E;
+    width: auto;
+    height: 28px;
+    border-radius: 40px;
+    font-size: 14px;
+    margin: 0px 10px 10px 0px;
+    cursor: pointer;
+}
+.viewskEnd {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    width: 100%;
+}
+.selectedSkills{
+/* 	border: solid 1px #24D59E; */
+	border-radius:8px;
+	height: auto;
+	overflow: auto; /* 또는 scroll */
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none;
+	padding : 10px 0px 10px 10px;
+}
+
+#skillSearch{
+	font-size:14px;
+	width: 300px;
+	height: 40px;	
+}
+.conBox {
+	
+}
+.idForm{
+    display: flex;
+    flex-wrap: nowrap;
+    margin-left: -110px;
+}
+#skNm{
+    float: left;
+    padding: 2px 10px 2px 10px;
+    background-color: rgba(44, 207, 195, 0.11);
+    border: solid 1px #24D59E;
+    width: auto;
+    height: 28px;
+    border-radius: 40px;
+    font-size: 14px;
+    margin: 0px 10px 10px 0px;
+    cursor: pointer;
+    
+}
+#addSkBtn {
+	border: none;
+	background: none;
+	font-size: 16px;
+	color: #24D59E;
+}
+#skillForm {
+    display: flex;
+    flex-wrap: wrap; /* 스킬이 넘치면 자동으로 줄 바꿈 */
+    gap: 10px; /* 스킬 간의 간격 설정 */
+}
+.form-group {
+    margin-bottom: 1rem;
+    position: relative;
+    left: 117px;
+    width: 71%;
+}
+.scBox{
+	position: relative;
+    overflow: scroll;
+    left: 117px;
+}
+/* 스킬 끝*/
+
+
+
+
+
+/* 아이콘 */
+/* 수정 */
+.material-symbols-outlined {
+	font-size: 25px;
+	color: #24D59E;
+	font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 48;
+	cursor: pointer;
+}
+#searic {
+    font-size: 32px;
+    position: relative;
+    top: 52px;
+    left: 200px;
+}
+.tool {
+	margin-left: 760px;
+}
+
+.tool2 {
+	margin-left: 270px;
+	height: 30px;
+}
+
+.required {
+	color: red;
+}
+
+
+#charCount{
+	color: #24D59E;
+}
+#countp{
+	color:#232323;
+	font-size: 14px;
+}
+#warning {
+    color: red;
+    display: none;
+    margin-left: 20px;
+}
+span#title {
+    font-size: 18px;
+    font-weight: 700;
+}
+/* 프로필 이미지 */
+#camera {
+    font-size: 35px;
+    position: relative;
+    left: 60px;
+    bottom: 36px;
+    cursor: pointer;
+    color: #666363;
+    font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 1, 'opsz' 24;
+}
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 1,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 24
+}
+#Isave{
+    width: 40px;
+    height: 30px;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 3px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+#Isave:hover {
+    width: 40px;
+    height: 30px;
+    background-color: #24D59E; 
+    color : white;
+	border: 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 3px;
+	color: white;
+}
+#Icancel{
+    width: 40px;
+    height: 30px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+#Icancel:hover {
+    width: 40px;
+    height: 30px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+#IChange2{
+	display: block;
+    position: relative;
+    left: 125px;
+    bottom: 30px;
+}
+#pImg{
+	cursor: pointer;
+}
+
+
+.modal-open {
+    overflow: hidden;
+    padding-right: 0px;
+}
+.modal .fade .show{
+	padding-right:0px;
+}
+#scout{
+	pointer-events: none;
+	
+}

@@ -1,0 +1,277 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/enter/pbancDetail.css" />
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<body>
+	<div class="pbancDetailContainer">
+	
+          <!-- 채용 정보 헤더 -->
+          <header class="job-header">
+              <h2>채용정보</h2>
+              <div class="up-del-btn">
+              <button type="button" class="btnDel">공고 삭제</button>
+              <button type="button" class="btnUp">공고 수정</button>
+              </div>
+          </header>
+          <!-- 채용 정보 요약 -->
+          <section class="job-summary">
+		  <hr class="hr">
+		  	  <h5>DB그룹</h5>
+              <h4>공고 제목 넣기</h4>
+              <hr class="hrhr">
+              <div class="summary">
+		        <div class="form-group">
+		            <div class="left-1">
+		            	<p class="left">지원자격</p>
+		            </div>
+		            <div class="left-2">
+		            	<p class="p-size-left">경력</p>
+		            	<p class="p-size-right">신입</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">학력</p>
+			            <p class="p-size-right">학력무관</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">성별</p>
+			            <p class="p-size-right">성별무관</p>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <div class="left-1">
+		            	<p class="left">근무조건</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">지역</p>
+			            <p class="p-size-right">대전</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">급여</p>
+			            <p class="p-size-right">3000만원 이상</p>
+		            </div>
+		            <div class="left-2">
+		            	<p class="p-size-left">근무형태</p>
+		            	<p class="p-size-right">어쩌고저쩌고</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">근무시간</p>
+			            <p class="p-size-right">오전 9시 ~ 오후 6시</p>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <div class="left-1">
+		            	<p class="left">채용 절차</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">전형절차</p>
+			            <p class="p-size-right">서류-일반면접-최종합격</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">지원서 양식</p>
+			            <p class="p-size-right">Ready Go 이력서</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">지원 접수 방법</p>
+			            <p class="p-size-right">Ready Go 접수</p>
+		            </div>
+					<div class="left-2">
+		            	<p class="p-size-left">지원 접수 기간</p>
+		            	<p class="p-size-right">2024.09.20 ~ 2024.10.25</p>
+		            </div>		            
+		        </div>
+		       </div> 
+              <hr class="hr">
+          </section>
+
+          <!-- 지원 버튼 -->
+          <div class="action-buttons">
+              <button type="button" class="btn bookmark-btn">스크랩</button>
+              <button type="button" class="btn apply-btn">입사지원</button>
+          </div>
+
+          <!-- 탭 메뉴 -->
+          <nav class="tab-menu">
+              <button type="button" class="tab-btn">상세정보</button>
+              <button type="button" class="tab-btn">접수기간</button>
+              <button type="button" class="tab-btn">기업정보</button>
+          </nav>
+
+          <!-- 상세 정보 섹션 -->
+          <section class="job-details">
+          	<img class="img-header" src="../resources/images/enter/공고등록헤더이미지.jpg">
+		  	  <h5 class="job-det-h5">기업명</h5>
+              <h4 class="job-det-h4">공고 제목 넣기</h4>
+              <div class="detail-content">
+	              <h6 class="job-det-h6">
+	              	<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;공고 내용</h6>
+	             	<textarea rows="auto" cols="110" class="detail-ta">어렵고 복잡한, 그렇지만 우리 일상 생활에 깊숙이 관여하고 있는 금융.핀다는 소수만 누릴 수 있던 금융의 정보 접근성과 혜택을 모든 사람들이 누리고 더 나은 금융 선택을 할 수 있도록 돕고자 합니다.
+	             	</textarea>
+	             	
+	              <h6 class="job-det-h7">
+	              	<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;모집 분야 및 담당 업무</h6>
+	             	<div class="det-content">
+		             	<p class="detail-p">ㆍ 모집분야명 </p>
+		             	<input type="text" value="" class="input-detail"/>
+	             	</div>
+	             	<div class="det-content">
+	             		<p class="detail-p">ㆍ 모집인원</p>
+	             		<input type="text" value="" class="input-detail"/>
+	             	</div>
+	             	<div class="det-content">
+	             		<p class="detail-p">ㆍ 경력여부</p>
+	             		<input type="text" value="" class="input-detail"/>
+					</div>
+	             	<div class="det-content">
+	             		<p class="detail-p">ㆍ 담당업무</p>
+	             		<input type="text" value="" class="input-detail"/>
+	             	</div>
+	             	<div class="det-content">	
+	             		<p class="detail-p">ㆍ 근무부서</p>
+	             		<input type="text" value="" class="input-detail"/>
+	             	</div>
+	             	<div class="det-content">	
+	             		<p class="detail-p">ㆍ 직급/직책</p>
+	             		<input type="text" value="" class="input-detail"/>
+					</div>
+					
+	              <h6 class="job-det-h7">
+	              	<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;자격/조건</h6>
+	              	<div class="det-content">
+	              		<p class="detail-p">ㆍ 지원자 학력</p>
+	              		<input type="text" value="" class="input-detail"/>
+	              	</div>
+	             	<div class="det-content">
+		              	<p class="detail-p">ㆍ 지원자 성별</p>
+		              	<input type="text" value="" class="input-detail"/>
+		            </div>
+	             	<div class="det-content">
+		              	<p class="detail-p">ㆍ 지원자 연령</p>
+		              	<input type="text" value="" class="input-detail"/>
+					</div>
+	             	<div class="det-content">
+		              	<p class="detail-p">ㆍ 연봉/급여</p>
+		              	<input type="text" value="" class="input-detail"/>
+		            </div>
+	             	<div class="det-content">	
+		             	<p class="detail-p">ㆍ 근무형태</p>
+		             	<input type="text" value="" class="input-detail"/>
+		            </div>
+	             	<div class="det-content">
+		             	<p class="detail-p">ㆍ 근무요일</p>	 
+		             	<input type="text" value="" class="input-detail"/>             	
+		            </div>
+	             	<div class="det-content"> 	
+		             	<p class="detail-p">ㆍ 근무시간</p>	
+		             	<input type="text" value="" class="input-detail"/>
+	             	</div>
+	             	              	
+	              <h6 class="job-det-h7">
+	              	<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;복지 및 혜택</h6>
+		            <textarea rows="auto" cols="110" class="detail-ta">커피 및 간식 무료 제공, 안마의자, 점심시간 2시간
+	             	</textarea>
+	              <h6 class="job-det-h7">
+	              	<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;채용절차</h6>
+		          <div class="det-content"> 
+		              <p class="detail-p">ㆍ 공고 대표 직무</p>
+		              <input type="text" value="" class="input-detail"/>
+		          </div>
+	              <div class="det-content">     
+		              <p class="detail-p">ㆍ 지원 접수 기간</p>
+		              <input type="text" value="" class="input-detail"/>
+		          </div>
+	              <div class="det-content"> 
+		              <p class="detail-p">ㆍ 지원 접수 방법</p>
+		              <input type="text" value="" class="input-detail"/>
+		          </div>
+	              <div class="det-content"> 
+		              <p class="detail-p">ㆍ 지원서 양식</p>
+		              <input type="text" value="" class="input-detail"/>
+		          </div>
+	              <div class="det-content">
+		              <p class="detail-p">ㆍ 전형절차</p>
+		              <input type="text" value="" class="input-detail"/>
+		          </div>    
+	              <p class="detail-content">* 면접일정은 추후 통보됩니다.</p>
+	              
+	              <h6 class="job-det-h7">
+	              	<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;유의사항</h6>
+	              <p class="detail-content">* 허위 사실이 발견될 경우 채용이 취소될 수 있습니다.</p>
+              </div>
+          </section>
+          
+          
+          <!-- 기업 정보 요약 -->
+          <section class="job-summary">
+		  <hr class="hr">
+              <div class="summary">
+		        <div class="form-group2">
+		            <div class="left-1">
+		            	<p class="left">기업명 넣기</p>
+		            </div>
+		            <div class="left-2">
+		            	<img class="sum-img"
+		            	src="../resources/images/enter/db그룹.jpg"/>
+		            </div>
+		       	 </div>
+		       	 <div class="com-det-cont">
+			        <div class="form-group3">
+			            <div class="left-1">
+			            	<p class="left">기업정보</p>
+			            </div>
+			            <div class="all">
+				            <div class="left-com">
+					            <div class="left-2">
+					            	<p class="p-size-left">업종</p>
+					            	<p class="p-size-right">앱개발</p>
+					            </div>
+					            <div class="left-2">
+						            <p class="p-size-left">사원 수</p>
+						            <p class="p-size-right">500명</p>
+					            </div>
+					            <div class="left-2">
+						            <p class="p-size-left">기업형태</p>
+						            <p class="p-size-right">대기업</p>
+					            </div>
+					            <div class="left-2">
+						            <p class="p-size-left">설립일자</p>
+						            <p class="p-size-right">1999.02.19</p>
+					            </div>
+				            </div>
+				            <div class="right-com">
+					            <div class="left-2">
+						            <p class="p-size-left">홈페이지</p>
+						            <p class="p-size-right">www.minjoo.co.kr</p>
+					            </div>
+					            <div class="left-2">
+						            <p class="p-size-left">대표자명</p>
+						            <p class="p-size-right">방만두</p>
+					            </div>
+					            <div class="left-2">
+					            	<p class="p-size-left">팩스번호</p>
+					            	<p class="p-size-right">042-202-1020</p>
+					            </div>
+				            </div>
+			            </div>
+			       	 </div>
+			       	 <div class="form-group4">
+			            <div class="left-2">
+			            	<a href="#"><button class="pro-btn">기업 프로필</button></a>
+			            </div>
+			            <div class="left-2">
+			            	<a href="#"><button class="hp-btn">기업 홈페이지</button></a>
+			            </div>
+			       	 </div>
+			       </div>	 
+				</div>
+              <hr class="hr">
+          </section>          
+         </div> 
+</body>
+</html>

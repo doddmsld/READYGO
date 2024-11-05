@@ -1,0 +1,34 @@
+package kr.or.ddit.oustou.service;
+
+import java.util.List;
+
+import kr.or.ddit.vo.BoardVO;
+import kr.or.ddit.vo.DeclarationVO;
+import kr.or.ddit.vo.OsAplyVO;
+
+public interface OutsouReviewService {
+
+	
+	//서비스등록 폼 
+	public List<OsAplyVO> reviewRegist(String mbrId);
+	
+	//게시글 등록 실행
+	public int reviewRegistPost(BoardVO boardVO, String outordNo);
+	
+	//게시글 상세 
+	public BoardVO reviewDetail(String pstSn);
+
+	//게시글 신고
+	public int boardReport(DeclarationVO declarationVO);
+
+	//댓글 신고
+	public int replyReport(DeclarationVO declarationVO);
+	
+	//게시글 삭제
+	public int reviewDeletePost(String pstSn);
+
+	//게시글 수정 폼
+	public BoardVO reviewUpdate(String pstSn);
+
+	public int reviewUpdatePost(BoardVO boardVO);
+}

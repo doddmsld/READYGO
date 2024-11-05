@@ -1,0 +1,126 @@
+package kr.or.ddit.security;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.mapper.UserMapper;
+import kr.or.ddit.service.LoginService;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.MemberVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Controller
+@RequestMapping("/security")
+public class LoginController {
+	
+	//<security:form-login login-page="/login" />
+	//요청URI : /login
+	//요청방식 : get
+	//오류 메시지와 로그아웃 메시지를 파라미터로 사용해보자(없을 수도 있음)
+	
+	@Inject
+	LoginService loginService;
+	
+	@Inject
+	UserMapper userMapper;
+	
+	@Inject
+	BCryptPasswordEncoder bcryptPasswordEncoder;
+	
+	@Inject
+	UserService userService;
+	
+	@GetMapping("/login")
+	public String loginForm(String error, String logout, Model model) {
+		log.info("error : " + error);
+		log.info("logout : " + logout);
+		log.info("logout : " + model);
+		
+		if(error != null) {
+			model.addAttribute("error", "Login Error");
+		}
+		
+		if(logout != null) {
+			model.addAttribute("logout", "Logout!!");
+		}
+		//forwarding
+		return "security/loginForm";
+	}
+	
+	@GetMapping("/memSignin")
+	public String memSignIn(Model model) {
+		log.info("회원가입 페이지에 왔다");
+		List<CodeVO> codeVOList = userMapper.codeSelect("GEND");
+		//forwarding
+		model.addAttribute("codeVOList", codeVOList);
+		return "security/memSignin";
+	}
+	
+	@GetMapping("/signin")
+	public String signin() {
+		log.info("회원가입 페이지에 왔다");
+		return "security/signin";
+	}
+	
+	@ResponseBody
+	@PostMapping("/idChkAjax")
+	public boolean idChkAjax(@RequestBody String username) {
+		log.info("아이디 체크 => " + username);
+		boolean chk = true;
+		int result = loginService.idChk(username);
+		if(result > 0) chk = false;
+		//forwarding
+		return chk;
+	}
+	
+	@ResponseBody
+	@PostMapping("/memSigninPostAjax")
+	public String memSigninPost(@ModelAttribute MemberVO memVO,
+			Model model) {
+		log.info("memVO => " + memVO);
+		String encodePWd = bcryptPasswordEncoder.encode(memVO.getMbrPswd());
+		memVO.setMbrPswd(encodePWd);
+		userService.insertMember(memVO);
+		
+		//forwarding
+		return memVO.getMbrId();
+	}
+	
+	@GetMapping("/entSignin")
+	public String entSignIn(Model model) {
+		log.info("기업 회원가입 페이지에 왔다");
+		List<CodeVO> codeVOList = userMapper.codeSelect("ENST");
+		List<CodeVO> codeVOList2 = userMapper.codeSelect("INSE");
+		//forwarding
+		model.addAttribute("codeVOList", codeVOList);
+		model.addAttribute("codeVOList2", codeVOList2);
+		return "security/entSignin";
+	}
+	
+	@ResponseBody
+	@PostMapping("/entSigninPostAjax")
+	public String entSigninPostAjax(@ModelAttribute EnterVO entVO,
+			Model model) {
+		log.info("entVO => " + entVO);
+		String encodePWd = bcryptPasswordEncoder.encode(entVO.getEntPswd());
+		entVO.setEntPswd(encodePWd);
+		userService.insertEnter(entVO);
+		
+		//forwarding
+		return entVO.getEntNm();
+	}
+	
+}

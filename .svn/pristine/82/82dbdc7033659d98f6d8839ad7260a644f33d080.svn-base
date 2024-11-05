@@ -1,0 +1,163 @@
+package kr.or.ddit.oustou.service.impl;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.ddit.mapper.OutsouReviewMapper;
+import kr.or.ddit.oustou.service.OutsouReviewService;
+import kr.or.ddit.util.UploadController;
+import kr.or.ddit.vo.BoardOsVO;
+import kr.or.ddit.vo.BoardVO;
+import kr.or.ddit.vo.DeclarationVO;
+import kr.or.ddit.vo.FileDetailVO;
+import kr.or.ddit.vo.OsAplyVO;
+import kr.or.ddit.vo.OutsouVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class OutsouReviewServiceImpl implements OutsouReviewService {
+	
+	@Inject
+	OutsouReviewMapper outsouReviewMapper;
+	
+	//파일 처리를 위함
+	@Inject
+	UploadController uploadController;
+	
+	@Override
+	public List<OsAplyVO> reviewRegist(String mbrId) {
+		return this.outsouReviewMapper.getProduct(mbrId);
+	}
+	
+	//게시글 등록 실행 
+	@Override
+	public int reviewRegistPost(BoardVO boardVO, String outordNo) {
+		
+		int result = 0;
+		//0. 메인 이미지 처리 
+		MultipartFile[] multipartFiles = boardVO.getPstFileFile();
+		log.info("multipartFiles == > " + multipartFiles);
+		// 메인 이미지
+		if (multipartFiles == null || multipartFiles.length == 0 || multipartFiles[0].isEmpty()) {
+		    log.info("새로운 파일이 업로드되지 않았습니다. 세팅 안해");
+		    boardVO.setPstFile("2"); // fileGroupNo의 값을 세팅
+		} else {
+		    // 새로운 파일 업로드 처리
+		    String fileGroupSn = this.uploadController.multiImageUpload(multipartFiles, "/board");
+		    log.info("mainFile->fileGroupSn : " + fileGroupSn);
+		    boardVO.setPstFile(fileGroupSn); // fileGroupNo의 값을 세팅
+		}
+	
+		
+		result += this.outsouReviewMapper.insertReviewRegist(boardVO);
+		
+		//외주 번호
+		//String outsuNo =
+		//게시글 번호 
+		String PstSn = boardVO.getPstSn();
+		BoardOsVO boardOsVO =  new BoardOsVO();
+		boardOsVO.setOutordNo(outordNo);
+		boardOsVO.setPstSn(PstSn);
+		
+		
+		result += this.outsouReviewMapper.insertoutsouNo(boardOsVO);
+		
+		return result;
+	}
+	
+	//게시글상세 
+	@Override
+	public BoardVO reviewDetail(String pstSn) {
+		
+		//게시글 상세 정보 가져오기
+		BoardVO boardVO = this.outsouReviewMapper.getReviewDetail(pstSn);
+	    
+	    //조회수 증가 
+		this.outsouReviewMapper.InqCnt(pstSn);
+		
+		
+		// 콤마로 묶인 DETAIL_FILE_PATHS를 배열로 변환
+	    if (boardVO.getPstFile() != null) {
+	        String filePaths = boardVO.getPstFile();
+	        
+	        // 콤마로 분리하여 경로 문자열을 리스트로 변환
+	        List<String> pstFileList = Arrays.asList(filePaths.split(","));
+	        
+	        // FileDetailVO 객체 리스트 생성
+	        List<FileDetailVO> fileDetailVOList = new ArrayList<>();
+	        
+	        // 각 경로에 대해 FileDetailVO 객체 생성 후 리스트에 추가
+	        for (String pstFile : pstFileList) {
+	            FileDetailVO fileDetailVO = new FileDetailVO();
+	            fileDetailVO.setFilePathNm(pstFile);  // 파일 경로 설정
+	            fileDetailVOList.add(fileDetailVO);    // 리스트에 추가
+	        }
+	        
+	        boardVO.setFileDetailVOList(fileDetailVOList);
+	    }
+		
+		return boardVO;
+	}
+	
+	
+	//게시글 수정 폼 
+	@Override
+	public BoardVO reviewUpdate(String pstSn) {
+		return this.outsouReviewMapper.getReviewDetail(pstSn);
+	}
+	
+	//게시글 수정 실행 
+	@Override
+	public int reviewUpdatePost(BoardVO boardVO) {
+		
+		//기존의 파일 이있는 경우 
+		BoardVO boVO = outsouReviewMapper.getReviewDetail(boardVO.getPstFile());
+		log.info("reviewUpdatePost->boVO : " + boVO);
+		
+		
+		//0. 메인 이미지 처리 
+		MultipartFile[] multipartFiles = boardVO.getPstFileFile();
+		log.info("multipartFiles == > " + multipartFiles);
+		// 메인 이미지
+		if (multipartFiles[0].getOriginalFilename().length() < 1) {
+		    log.info("새로운 파일이 업로드되지 않았습니다. 세팅 안해");
+		} else {
+		    // 새로운 파일 업로드 처리
+		    String fileGroupSn = this.uploadController.multiImageUpload(multipartFiles, "/board");
+		    log.info("mainFile->fileGroupSn : " + fileGroupSn);
+		    boardVO.setPstFile(fileGroupSn); // fileGroupNo의 값을 세팅
+		    
+		}
+	
+		int result =  this.outsouReviewMapper.reviewUpdatePost(boardVO);
+		return result;
+	}
+			
+	//게시글 삭제
+	@Override
+	public int reviewDeletePost(String pstSn) {
+		return this.outsouReviewMapper.reviewDeletePost(pstSn);
+	}
+	
+	@Override
+	public int boardReport(DeclarationVO declarationVO) {
+		return this.outsouReviewMapper.boardReport(declarationVO);
+	}
+
+	@Override
+	public int replyReport(DeclarationVO declarationVO) {
+		return this.outsouReviewMapper.replyReport(declarationVO);
+	}
+
+}

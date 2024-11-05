@@ -1,0 +1,41 @@
+package kr.or.ddit.vo;
+
+import java.util.Date;
+import java.util.List;
+
+import lombok.Data;
+
+@Data
+public class PbancVO {
+	private String pbancSttus;
+	private String pbancNo;
+	private String entId;
+	private String pbancPicNm;
+	private String pbancPicTelno;
+	private String pbancPicMbtlnum;
+	private String pbancPicEml;
+	private String pbancAplctEduCd;
+	private String pbancRprsrgn;
+	private String pbancTtl;
+	private String pbancWorkstleCd;
+	private int pbancApntcpd;
+	private String pbancSalary;
+	private String pbancWorkHrCd;
+	private String pbancWorkDayCd;
+	private String pbancRcptMthdCd;
+	private String pbancAppofeForm;
+	private String pbancRprsDty;
+	private String pbancRcptPd;
+	private Date pbancBgngDt;
+	private Date pbancDdlnDt;
+	private String pbancTmplt;
+	private Date pbancWrtDt;
+	private Date pbancMdfcnDt;
+	private Date pbancDelDt;
+	private int pbancScrapCo;
+	private String pbancDelYn;
+	private int pbancRdcnt;
+	
+	private List<PbancVO> PbancVOList;
+	
+}

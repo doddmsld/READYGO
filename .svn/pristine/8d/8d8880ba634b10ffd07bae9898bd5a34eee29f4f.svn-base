@@ -1,0 +1,374 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>  
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<link type="text/css" href="/resources/ckeditor5/sample/css/sample.css" rel="stylesheet" media="screen" />
+<script type="text/javascript" src="/resources/ckeditor5/ckeditor.js"></script>
+<sec:authentication property="principal" var="prc"/>
+<script type="text/javascript">
+document.querySelector('#registForm').addEventListener('submit', function(event) {
+    const selectElement = document.querySelector('#pstOthbcscope');
+    const selectedValue = selectElement.value;
+    
+    if (selectedValue === "") {
+        alert('공개범위를 선택해주세요.');
+        event.preventDefault(); // 폼 제출을 막습니다
+    }
+});
+
+$(function(){
+    // CKEditor 글 복제
+    $(".ck-blurred").keydown(function(){
+        $("#pstCn").val(window.editor.getData());
+    });
+
+    $("#uploadFile").on("change", handleImg);
+
+    $(".ck-blurred").focusout(function(){
+        $("#perDet").val(window.editor.getData());
+    });
+
+});
+    
+ClassicEditor.create(document.querySelector('#pstCnTemp'))
+    .then(editor => {
+        editor.enableReadOnlyMode('#pstCnTemp');
+        window.editor = editor;
+        
+        // 폼 제출 전 CKEditor의 내용을 textarea에 동기화
+        document.querySelector('#registForm').addEventListener('submit', function(event) {
+            document.querySelector('#pstCn').value = editor.getData();
+        });
+    })
+    .catch(error => {
+        console.error(error);
+    });
+$(document).ready(function(){
+    // 댓글 등록 버튼 클릭 시
+    $('#submitComment').on("click", function(event) {
+        event.preventDefault(); // 폼 제출 막기
+        
+        const commentContent = $('#commentContent').val();  // 댓글 내용
+        const pstSn = $('#pstSn').val();  // 게시글 번호
+        
+        if (commentContent === "") {
+            alert("댓글을 입력하세요.");
+            return;
+        }
+
+        // Ajax로 댓글 등록 요청
+        $.ajax({
+            url: '/board/inquiryBoard/registReplyPost',
+            type: 'POST',
+            data: {
+                commentContent: commentContent,
+                pstSn: pstSn
+            },
+            success: function(response) {
+                loadComments(); // 성공 시 댓글 목록 갱신
+                $('#commentContent').val(''); // 댓글 입력창 초기화
+            },
+            error: function(xhr, status, error) {
+                alert('댓글 등록 실패: ' + error);
+            }
+        });
+    });
+
+    // 댓글 목록 로딩
+    function loadComments() {
+        const pstSn = $('#pstSn').val();
+
+        $.ajax({
+            url: '/board/inquiryBoard/replyList',
+            type: 'GET',
+            data: { pstSn: pstSn },
+            success: function(response) {
+                $('#commentsList').html(response); // 댓글 목록 업데이트
+            },
+            error: function(xhr, status, error) {
+                alert('댓글 목록 로딩 실패: ' + error);
+            }
+        });
+    }
+
+    // 페이지 로드 시 댓글 목록 불러오기
+    loadComments();
+});
+
+</script>
+<style>
+.content-wrapper {
+    background-color: white;
+    font-family: pretendard;
+}
+.ck.ck-toolbar {
+    display: none !important;
+}
+.ck-editor__main .ck-content {
+    height: 450px;
+    border: 1px solid #black; 
+}
+.btn-default {
+    background-color: #24D59E;
+    border-color: none;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+.btn-default:hover,
+.btn-default:focus {
+    background-color: white;
+    color: #24D59E;
+    border-color: #24D59E;
+}
+.btn-list {
+    width: 116px;
+    height: 40px;
+    margin-right: auto;
+}
+.category {
+    width: 110px; 
+    font-size: 12px;
+}
+.btn-edit,.btn-delete {
+    width: 116px;
+    height: 40px;
+}
+.form-group {
+    border-color: black;
+}
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.ck-placeholder {
+    color: #aaa;
+    white-space: pre-wrap; 
+    font-size: 12px;
+}
+.title {
+    flex: 1;
+    font-size: 15px;
+    border-radius: 8px; 
+    border: 1px solid #D9D9D9; 
+    height:50px;
+}
+.btn-file{
+    width: 116px;
+    height: 50px;
+}
+.card {
+    margin-bottom: 20px;
+}
+.card-body {
+    padding: 15px;
+}
+.comment-item {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+}
+.comment-form-container .card-body {
+    max-height: 200px; /* 원하는 높이로 조정 */
+    overflow-y: auto; /* 내용이 넘치면 스크롤이 생기도록 */
+}
+
+.comment-list-container .card-body {
+    max-height: 300px; /* 원하는 높이로 조정 */
+    overflow-y: auto; /* 내용이 넘치면 스크롤이 생기도록 */
+}
+
+</style>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2 main" style="margin-left: 150px;">
+            <div class="col-sm-6">
+                <h1>문의 게시판<br></h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2" style="display: flex; flex-direction: column; align-items: center;">
+        <form name="deletePost" id="deletePost" action="/board/inquiryBoard/deletePost" method="post">
+            <div class="col-12" style="margin:10px;">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="pstTtl" id="pstTtl" value="${boardVO.pstTtl}" readonly>
+                </div>
+                <br>
+                <div class="form-group" style="border-color: black;" id="pstCnTemp" name="pstCnTemp">
+                    <div id="pstCn" name="pstCn">${boardVO.pstCn}</div>
+                </div>
+                <div id="mbrId" name="mbrId">작성자 : ${boardVO.mbrId}</div>
+                <div id="pstMdfcnDt" name="pstMdfcnDt">마지막 수정 일 : ${boardVO.pstMdfcnDt}</div>
+                <div id="pstInqCnt" name="pstInqCnt">조회수 : ${boardVO.pstInqCnt}</div>
+                <div class="form-actions" style="margin-top: 20px;">
+                    <button type="button" class="btn btn-default btn-list" onclick="location.href='/board/inquiryBoard/inquiryList'">게시글 목록</button>
+                    <select class="form-control category" name="pstOthbcscope" id="pstOthbcscope" style="margin-left: 10px;">
+                        <option value="" selected hidden>${boardVO.pstOthbcscope}</option>
+                        <!-- 옵션 목록을 여기에 추가하세요 -->
+                    </select>
+                    <button type="button" class="btn btn-default btn-edit" onclick="location.href='/board/inquiryBoard/inquiryUpdate?seNo=${boardVO.seNo}&pstSn=${boardVO.pstSn}'" style="margin-left: 10px;">게시글 수정</button>
+                    <button type="submit" class="btn btn-default btn-delete" style="margin-left: 10px;">게시글 삭제</button>
+                </div>
+                <sec:csrfInput/>
+                <!-- 게시글 식별 정보 추가 -->
+                <input type="hidden" name="pstSn" value="${boardVO.pstSn}">
+            </div>
+        </form>
+
+<!-- 댓글 입력 폼 -->
+<div class="card card-primary comment-form-container">
+    <div class="card-body">
+        <form name="replyRegistPost" id="replyRegistPost" action="/board/inquiryBoard/registReplyPost" method="post">
+            <div class="form-group">
+                <input type="text" id="commentContent" name="commentContent" class="form-control ck-blurred" placeholder="댓글을 입력하세요" rows="5">
+            </div>
+            <div class="form-actions" style="margin-top: 10px;">
+                <button type="submit" id="submitComment" class="btn btn-danger">댓글 등록</button>
+            </div>
+            <sec:csrfInput/>
+            <input type="hidden" id="pstSn" name="pstSn" value="${boardVO.pstSn}"/>
+        </form>
+    </div>
+</div>
+
+<!-- 댓글 목록 -->
+<div class="card card-primary comment-list-container">
+    <div class="card-header">
+        <h3 class="card-title">댓글 목록</h3>
+    </div>
+    <div class="card-body" id="commentsList">
+        <c:if test="${empty commentsList}">
+            <p>댓글이 없습니다.</p>
+        </c:if>
+<c:forEach var="comment" items="${commentsList}">
+    <div class="comment-item" data-cmnt-no="${comment.cmntNo}">
+        <p>
+            <strong>${comment.mbrId}</strong> (${comment.cmntRegDt})
+            <c:if test="${prc.username == comment.mbrId}">
+                <button type="button" class="btn-edit-comment" data-id="${comment.cmntNo}">수정</button>
+                <button type="button" class="btn-delete-comment" data-id="${comment.cmntNo}">삭제</button>
+            </c:if>
+        </p>
+        <p class="comment-content">${comment.cmntCn}</p>
+        <!-- 댓글 수정 폼 -->
+        <div class="edit-comment-form" style="display: none;">
+            <input type="text" class="edit-comment-text" value="${comment.cmntCn}">
+            <button type="button" class="btn-save-edit">저장</button>
+            <button type="button" class="btn-cancel-edit">취소</button>
+        </div>
+    </div>
+</c:forEach>
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+    // 댓글 수정 버튼 클릭 시
+    $(document).on("click", '.btn-edit-comment', function() {
+        const commentItem = $(this).closest('.comment-item');
+        commentItem.find('.comment-content').hide(); // 댓글 내용 숨기기
+        commentItem.find('.edit-comment-form').show(); // 수정 폼 표시하기
+    });
+
+    // 댓글 수정 저장 버튼 클릭 시
+    $(document).on("click", '.btn-save-edit', function() {
+        const commentItem = $(this).closest('.comment-item');
+        const cmntNo = commentItem.data('cmnt-no');
+        const pstSn = $('#pstSn').val();
+        const cmntCn = commentItem.find('.edit-comment-text').val();
+
+        $.ajax({
+            url: '/board/inquiryBoard/updateComment',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                cmntNo: cmntNo,
+                pstSn: pstSn,
+                cmntCn: cmntCn
+            }),
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(response) {
+                if (response === "success") {
+                    commentItem.find('.comment-content').text(cmntCn).show(); // 댓글 내용 업데이트 및 표시
+                    commentItem.find('.edit-comment-form').hide(); // 수정 폼 숨기기
+                } else {
+                    alert('댓글 수정 실패');
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('댓글 수정 실패: ' + error);
+            }
+        });
+    });
+
+    // 댓글 수정 취소 버튼 클릭 시
+    $(document).on("click", '.btn-cancel-edit', function() {
+        const commentItem = $(this).closest('.comment-item');
+        commentItem.find('.comment-content').show(); // 댓글 내용 표시
+        commentItem.find('.edit-comment-form').hide(); // 수정 폼 숨기기
+    });
+
+    // 댓글 삭제 버튼 클릭 시
+    $(document).on("click", '.btn-delete-comment', function() {
+        if (confirm('댓글을 삭제하시겠습니까?')) {
+            const cmntNo = $(this).data('id');
+            const pstSn = $('#pstSn').val();
+            
+            $.ajax({
+                url: '/board/inquiryBoard/deleteComment',
+                type: 'POST',
+                data: {
+                    cmntNo: cmntNo,
+                    pstSn: pstSn
+                },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+                },
+                success: function(response) {
+                    if (response === "success") {
+                        location.reload(); // 댓글 삭제 후 목록 갱신.. 리로드로할게...
+                    } else {
+                        alert('댓글 삭제 실패');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('댓글 삭제 실패: ' + error);
+                }
+            });
+        }
+    });
+});
+
+ClassicEditor.create(document.querySelector('#pstCnTemp'))
+    .then(editor => {
+        editor.enableReadOnlyMode('#pstCnTemp');
+        window.editor = editor;
+        
+        // 폼 제출 전 CKEditor의 내용을 textarea에 동기화
+        document.querySelector('#registForm').addEventListener('submit', function(event) {
+            document.querySelector('#pstCn').value = editor.getData();
+        });
+    })
+    .catch(error => {
+        console.error(error);
+    });
+</script>

@@ -1,0 +1,13 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+// 프로필 업종
+@Data
+public class PrfBusinessVO {
+	private String tpbizSeCd;	// 업종 구분 코드
+	private String mbrId;		// 회원 아이디
+	private String tpbizNm;		// 업종 분야 명
+	private String getBusinessCodesStr;
+
+}

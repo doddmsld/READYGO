@@ -1,0 +1,121 @@
+package kr.or.ddit.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import kr.or.ddit.service.MemAplctService;
+import kr.or.ddit.util.ArticlePage3;
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.CodeVO;
+import lombok.extern.slf4j.Slf4j;
+import oracle.jdbc.proxy.annotation.Post;
+
+@Controller
+@Slf4j
+@RequestMapping("/member")
+public class MemAplctController {
+	
+	@Inject
+	MemAplctService memAplctService;
+	
+	// 입사 지원 목록
+	@GetMapping("/aplctList")
+	public ModelAndView aplctList(ModelAndView mav,
+	        @RequestParam("mbrId") String mbrId,
+	        @RequestParam(value = "currentPage", required = false, defaultValue="1") Integer currentPage) {  // Integer로 변경
+
+
+	    Map<String, Object> map = new HashMap<String,Object>();
+	    map.put("mbrId", mbrId);
+	    map.put("currentPage", currentPage);
+	    
+	    // 입사 지원 목록
+	    List<ApplicantVO> aplctVOList = this.memAplctService.aplctList(map);
+	    log.info("aplctList->aplctVOList : " + aplctVOList);
+	    
+	    mav.addObject("mbrId", mbrId);
+	    
+	    // 전체 행의 수
+	    int total = this.memAplctService.getTotal();
+	    log.info("aplctList -> total : " + total);
+	    
+	    // 페이지네이션 객체
+	    ArticlePage3<ApplicantVO> articlePage = new ArticlePage3<ApplicantVO>(total, currentPage, 5, aplctVOList, map);
+	    
+	    mav.addObject("articlePage", articlePage);
+	    
+	    // 뷰 리졸버
+	    mav.setViewName("member/mypage/aplctList");
+	    
+	    return mav;
+	}
+
+	
+	// 입사 지원 관리
+	@GetMapping("/aplctManage")
+	public ModelAndView aplctManage(ModelAndView mav,
+	        @RequestParam("mbrId") String mbrId,
+	        @RequestParam(value = "currentPage", required = false, defaultValue="1") Integer currentPage) {  // Integer로 변경
+
+
+	    Map<String, Object> map = new HashMap<String,Object>();
+	    map.put("mbrId", mbrId);
+	    map.put("currentPage", currentPage);
+	    
+	    // 입사 지원 목록
+	    List<ApplicantVO> aplctVOList = this.memAplctService.aplctList(map);
+	    // 입사 지원 취소 항목
+	    List<CodeVO> cancelList = this.memAplctService.cancelList();
+
+	    mav.addObject("mbrId", mbrId);
+	    mav.addObject("cancelList",cancelList);
+	    
+	    // 전체 행의 수
+	    int total = this.memAplctService.getTotal();
+	    log.info("aplctList -> total : " + total);
+	    
+	    // 페이지네이션 객체
+	    ArticlePage3<ApplicantVO> articlePage = new ArticlePage3<ApplicantVO>(total, currentPage, 5, aplctVOList, map);
+	    
+	    mav.addObject("articlePage", articlePage);
+	    
+	    // 뷰 리졸버
+	    mav.setViewName("member/mypage/aplctManage");
+	    
+	    return mav;
+	}
+	
+	// 특정 공고 입사 지원 취소 사유 update
+	@PostMapping("/aplctCancel")
+	public ModelAndView aplctCancel(ModelAndView mav,
+							@RequestParam("mbrId") String mbrId,
+							@RequestParam("pbancNo") String pbancNo) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("mbrId", mbrId);
+		map.put("pbancNo", pbancNo);
+		
+		int result = this.memAplctService.aplctCancel(map);
+		
+		mav.addObject("mbrId",mbrId);
+		mav.addObject("pbancNo",pbancNo);
+		
+		log.info("aplctCancel-> result",result);
+		
+		mav.setViewName("redirect:/member/mypage/aplctManage");
+		
+		return mav;
+	}
+	
+		
+}

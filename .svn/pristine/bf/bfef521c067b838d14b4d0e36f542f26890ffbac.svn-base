@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MemCoverLetterMapper">
+	<select id="selectCoverLetterList" parameterType="Map" resultType="coverLetterSaveVO">
+		WITH T AS
+			(	SELECT ROW_NUMBER() OVER(ORDER BY COALESCE(CL_EDT_DT, CL_WRT_DT) DESC) RNUM,
+					   CL_STRG_NO, MBR_ID, CL_TTL, CL_CN, CL_WRT_DT, CL_EDT_DT
+				  FROM COVER_LETTER_SAVE
+				 WHERE 1 = 1 
+				   AND MBR_ID = #{mbrId}
+				    <if test="keywordInput != null and keywordInput != ''">
+			            AND (
+			            LOWER(CL_TTL) LIKE '%' || LOWER(#{keywordInput}) || '%'
+			            )
+			        </if>
+			        <if test="state == null and state == ''">
+				         ORDER BY COALESCE(CL_EDT_DT, CL_WRT_DT) DESC
+			        </if>
+			        <if test="state == 'new'">
+				         ORDER BY COALESCE(CL_EDT_DT, CL_WRT_DT) DESC
+			        </if>
+			        <if test="state == 'old'">
+				         ORDER BY COALESCE(CL_EDT_DT, CL_WRT_DT) ASC
+			        </if>
+			)
+			SELECT * FROM T
+			WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 4 + 1 AND #{currentPage} * 4	
+	</select>
+	<select id="selectCoverLetterListNonePaging" parameterType="Map" resultType="coverLetterSaveVO">
+		SELECT ROW_NUMBER() OVER(ORDER BY TO_NUMBER(CL_STRG_NO) ASC) RNUM,
+			   CL_STRG_NO, MBR_ID, CL_TTL, CL_CN, CL_WRT_DT, CL_EDT_DT
+		  FROM COVER_LETTER_SAVE
+		 WHERE 1 = 1 
+		   AND MBR_ID = #{mbrId}
+		 ORDER BY RNUM ASC
+	</select>
+	<select id="selectOneCoverLetter" parameterType="Map" resultType="coverLetterSaveVO">
+		SELECT CL_STRG_NO, MBR_ID, CL_TTL, CL_CN, CL_WRT_DT, CL_EDT_DT
+		  FROM COVER_LETTER_SAVE
+		 WHERE 1 = 1 
+		   AND MBR_ID = #{mbrId} 
+		   AND CL_STRG_NO = #{clStrgNo} 
+	</select>
+	
+	<select id="selectCLTotal" parameterType="Map" resultType="int">
+		SELECT NVL(COUNT(*),0)
+		  FROM COVER_LETTER_SAVE
+		 WHERE MBR_ID = #{mbrId}
+		  <if test="keywordInput != null and keywordInput != ''">
+	            AND (
+	            LOWER(CL_TTL) LIKE '%' || LOWER(#{keywordInput}) || '%'
+	            )
+	        </if>
+	        <if test="state == null and state == ''">
+		         ORDER BY COALESCE(CL_EDT_DT, CL_WRT_DT) DESC
+	        </if>
+	        <if test="state == 'new'">
+		         ORDER BY COALESCE(CL_EDT_DT, CL_WRT_DT) DESC
+	        </if>
+	        <if test="state == 'old'">
+		         ORDER BY COALESCE(CL_EDT_DT, CL_WRT_DT) ASC
+	        </if>
+	</select>
+	
+	<insert id="insertCoverLetter" parameterType="coverLetterSaveVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="clStrgNo">
+			SELECT NVL(MAX(TO_NUMBER(CL_STRG_NO)), 0)+1
+  			  FROM COVER_LETTER_SAVE
+		</selectKey>
+		INSERT INTO COVER_LETTER_SAVE (CL_STRG_NO, MBR_ID, CL_TTL, CL_CN)
+		VALUES (#{clStrgNo}, #{mbrId}, #{clTtl}, #{clCn})
+	</insert>
+	
+	<update id="updateCoverLetter" parameterType="coverLetterSaveVO">
+		UPDATE COVER_LETTER_SAVE
+		   SET CL_TTL = #{clTtl}, 
+		       CL_CN = #{clCn}, 
+		       CL_EDT_DT = SYSDATE
+		 WHERE MBR_ID = #{mbrId}
+		   AND CL_STRG_NO = #{clStrgNo}
+	</update>
+	
+	<delete id="deleteCoverLetter" parameterType="Map">
+		DELETE
+		  FROM COVER_LETTER_SAVE
+		 WHERE 1 = 1 
+		   AND CL_STRG_NO = ${clStrgNo}
+		   AND MBR_ID = #{mbrId}
+	</delete>
+</mapper>

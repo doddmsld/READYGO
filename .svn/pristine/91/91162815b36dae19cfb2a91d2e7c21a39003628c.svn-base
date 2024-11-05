@@ -1,0 +1,6 @@
+package kr.or.ddit.mapper;
+
+public interface FAQMapper {
+
+	public String list();
+}

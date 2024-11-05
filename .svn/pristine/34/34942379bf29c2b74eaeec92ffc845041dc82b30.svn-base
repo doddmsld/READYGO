@@ -1,0 +1,14 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+@Data
+public class RsmCertificateVO {
+	private String crtfctNo;  // 자격증 번호
+	private String rsmNo; // 이력서 번호
+	private String crtfctNm; // 자격증 명
+	private String crtfctPblcnoffic; // 자격증 발행처
+	private String crtfctAcqsSe; // 자격증 취득 구분
+	private String crtfctAcqsYm; // 자격증 취득 년월
+	private int crtfctScr; //자격증 점수
+}

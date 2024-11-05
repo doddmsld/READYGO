@@ -1,0 +1,336 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<link rel="stylesheet" href="/resources/css/security/loginForm.css">
+
+<style type="text/css">
+.main .signFrom{
+	border : solid 1px gray;
+}
+.idForm{
+	justify-content: space-between;
+	align-items: flex-end;
+	max-width: 400px;
+	margin-left: 0px;
+}
+.id{
+	width: 260px;
+}
+.idForm .btn-sign{
+margin-bottom: 4px;
+}
+.card{
+	height: 1190px;
+}
+</style>
+<script type="text/javascript">
+function execDaumPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            var fullAddr = data.address;
+            var extraAddr = '';
+
+            if (data.addressType === 'R') { 
+                if (data.bname !== '') {
+                    extraAddr += data.bname;
+                }
+                if (data.buildingName !== '') {
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                fullAddr += (extraAddr !== '' ? ' (' + extraAddr + ')' : '');
+            }
+
+            $('#mbrZip').val(data.zonecode);
+            $('#mbrAddr').val(fullAddr);
+            $('#mbrAddrDtl').focus();
+        }
+    }).open();
+}
+let saveNum;
+$(function(){
+	
+	$("#idchk").on("click", function(){
+		let mbrId = $("#mbrId").val();
+		console.log(mbrId);
+		$.ajax({
+			url : "/security/idChkAjax",
+			contentType:"text/plain;charset=utf-8", 
+			data : mbrId,
+			type : 'post',
+			dataType : 'text',
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+			},
+			success : function(result) {
+				console.log(result);
+				if(result == 'true') {
+                    $("#idChkResult").html("사용 가능").css('color', 'green');
+                } if(result == 'false') {
+                    $("#idChkResult").html("ID 중복 - 사용불가").css('color', 'red');
+                }
+				
+			}
+		})
+	})
+	
+	$('#signinBtn').on('click', function(event){
+	    var idchk = $('#idChkResult').html().trim();
+	    
+	    if(idchk !== "사용 가능"){
+	        alert("ID 중복되거나 중복체크를 하지 않았습니다.");
+	        event.preventDefault();
+	        return false;
+	    }
+	    if($('#mbrPswd').val().trim() === "") {
+	    	alert("비밀번호를 입력해 주세요.");
+	    	$('#mem_pass').focus();
+	    	event.preventDefault();
+	    	return false;
+	    }
+	    if($("#mbrPswdChk").val().trim() === "" || $("#mbrPswd").val().trim() !== $("#mbrPswdChk").val().trim()){
+	        alert("비밀번호와 비밀번호 확인이 다릅니다. 다시 확인하세요.");
+	        event.preventDefault(); // 폼 제출을 막음
+	        return false;   // 서버로 전송을 하지 않는다.
+	    }
+	    if ($('#mbrNm').val().trim() === "") {
+	        alert("이름을 입력해 주세요.");
+	        $('#mbrNm').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrBrdt').val().trim() === "") {
+	    	alert("생년월일을 입력해 주세요.");
+	    	$('#mbrBrdt').focus();
+	    	event.preventDefault();
+	    	return false;
+	    }
+	    if ($('#mbrSexdstnCd').val().trim() === "") {
+	        alert("성별을 입력해 주세요.");
+	        $('#mbrSexdstnCd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrEml').val().trim() === "") {
+	        alert("이메일을 입력해 주세요.");
+	        $('#mbrEml').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrTelno').val().trim() === "") {
+	        alert("휴대폰 번호를 입력해 주세요.");
+	        $('#mbrTelno').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrZip').val().trim() === "") {
+	        alert("우편번호를 입력해 주세요.");
+	        $('#mbrZip').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrAddr').val().trim() === "") {
+	        alert("주소를 입력해 주세요.");
+	        $('#mbrAddr').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrAddrDtl').val().trim() === "") {
+	        alert("상세 주소를 입력해 주세요.");
+	        $('#mbrAddrDtl').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+
+//	    if ($('#chk input[type="checkbox"]:not(:checked)').length > 0) {
+//	        alert("이용 약관을 모두 동의 해주세요");
+//	        event.preventDefault(); // 폼 제출을 막음
+//	        return false;
+// 	    }
+
+	    let formData = new FormData();
+		let mbrId = $("#mbrId").val();
+		let mbrPswd = $("#mbrPswd").val();
+		let mbrNm = $("#mbrNm").val();
+		let mbrBrdt = $("#mbrBrdt").val();
+		let mbrSexdstnCd = $("#mbrSexdstnCd").val();
+		let mbrEml = $("#mbrEml").val();
+		let mbrTelno = $("#mbrTelno").val();
+		let mbrAddr = $("#mbrAddr").val();
+		let mbrZip = $("#mbrZip").val();
+		let mbrAddrDtl = $("#mbrAddrDtl").val();
+		formData.append("mbrId",mbrId);
+		formData.append("mbrPswd",mbrPswd);
+		formData.append("mbrNm",mbrNm);
+		formData.append("mbrBrdt",mbrBrdt);
+		formData.append("mbrSexdstnCd",mbrSexdstnCd);
+		formData.append("mbrEml",mbrEml);
+		formData.append("mbrTelno",mbrTelno);
+		formData.append("mbrAddr",mbrAddr);
+		formData.append("mbrZip",mbrZip);
+		formData.append("mbrAddrDtl",mbrAddrDtl);
+		
+		$.ajax({
+			url : "/security/memSigninPostAjax",
+			processData:false,
+			contentType:false,
+			data:formData,
+			type:"post",
+			dataType:"text",
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+			},
+			success : function(result) {
+				console.log("result : " + result);
+				// success, error, warning, info, question
+				var Toast = Swal.mixin({
+				      toast: true,
+				      position: 'top-end',
+				      showConfirmButton: false,
+				      timer: 3000
+				});
+				
+				Toast.fire({
+					icon:'success',
+					title:'회원가입 되었습니다.'
+				});
+				
+				// 3초 후에 이동
+				setTimeout(function(){
+					location.href="/";
+				},3000)
+			}
+		})
+	})
+})
+</script>
+<div class="main">
+	<div class="login-box">
+		<div class="card">
+			<div class="login-logo row">
+				<div>
+					<p>Welcome to ReadyGo<br />
+					<h2>회원가입</h2></p>
+				</div>
+				<div>
+					<p>계정이 있으신가요?<br />
+					<a id="signin" href="/security/login" style="font-size: 14px;">로그인</a></p>
+				</div>
+			</div>
+			<div class="card-body login-card-body">
+				<!-- 
+				[스프링 시큐리티 로그인 폼 규칙]
+				1. 아이디   : name속성값이 username
+				2. 비밀번호 : name속성값이 password
+				3. form태그의 action속성값이 /login, method속성값이 post
+				4. csrf 처리
+				5. submit 버튼
+				 -->
+				<form id="mf" action="/security/memSignInPost" method="post">
+					<div class="row idForm">
+						<div class="form-group mb-2 id">
+							<label for="mbrId">아이디&nbsp;&nbsp;&nbsp;&nbsp;<span id="idChkResult"></span></label>
+							<input type="text" class="form-control" 
+								placeholder="아이디를 입력하세요" 
+								name="mbrId" id="mbrId" required />
+						</div>
+						<div class="form-group mb-1">
+							<button type="button" class="btn btn-block btn-sign" id="idchk">아이디 중복검사</button>
+						</div>
+					</div>
+					<div class="form-group mb-3">
+						<label for="mbrPswd">비밀번호</label>
+						<input type="password" class="form-control" 
+							placeholder="비밀번호를 입력하세요." 
+							name="mbrPswd" id="mbrPswd" required />
+					</div>
+					<div class="form-group mb-3">
+						<label for="mbrPswdChk">비밀번호 확인</label>
+						<input type="password" class="form-control" 
+							placeholder="비밀번호를 입력하세요." 
+							name="mbrPswdChk" id="mbrPswdChk" required />
+					</div>
+					<div class="form-group nb">
+						<label for="mbrNm">이름</label>
+						<input type="text" class="form-control" 
+							placeholder="이름을 입력하세요" 
+							name="mbrNm" id="mbrNm" required />
+					</div>
+					<div class="row idForm">
+						<div class="form-group nb">
+							<label for="mbrBrdt" id="reg1label">생년월일</label>
+							<input type="text" class="form-control" 
+								placeholder="ex)19990518" 
+								name="mbrBrdt" id="mbrBrdt" required />
+						</div>
+						<div class="form-group nb">
+							<label for="mbrSexdstnCd" id="reg1label">성별</label>
+							<select class="form-control" name="mbrSexdstnCd" id="mbrSexdstnCd">
+								<option value="" disabled selected">성별선택*</option>
+								<c:forEach var="codeVO" items="${codeVOList }" varStatus="stus">
+									<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+								</c:forEach>
+							</select> 
+						</div>
+					</div>
+					<div class="form-group mb-3">
+						<label for="mbrEml">이메일</label>
+						<input type="text" class="form-control" 
+							placeholder="이메일을 입력하세요" 
+							name="mbrEml" id="mbrEml" required />
+					</div>
+					<div class="row idForm">
+						<div class="form-group mb-2 id">
+							<label for="mbrTelno">휴대폰번호 및 인증</label>
+							<input type="text" class="form-control" 
+								placeholder="전화번호를 입력하세요" 
+								name="mbrTelno" id="mbrTelno" required />
+						</div>
+						<div class="form-group mb-1">
+							<button type="button" class="btn btn-block btn-sign">인증번호 전송</button>
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group mb-2 id">
+							<input type="text" class="form-control" 
+								placeholder="인증번호를 입력하세요" 
+								name="authNum" id="authNum" required />
+						</div>
+						<div class="form-group mb-1">
+							<button type="button" class="btn btn-block btn-sign">확인</button>
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group mb-2 id">
+							<label for="mbrAddr">주소</label>
+							<input type="text" class="form-control" 
+								placeholder="기본 주소" 
+								name="mbrAddr" id="mbrAddr" required />
+						</div>
+						<div class="form-group mb-1">
+							<button type="button" class="btn btn-block btn-sign" onclick="execDaumPostcode();">우편번호 찾기</button>
+						</div>
+					</div>
+					<div class="form-group mb-3">
+						<input type="text" class="form-control" 
+								placeholder="우편번호" 
+								name="mbrZip" id="mbrZip" required />
+					</div>
+					<div class="form-group mb-3">
+						<input type="mbrAddrDtl" class="form-control" 
+							placeholder="상세 주소" 
+							name="mbrAddrDtl" id="mbrAddrDtl" required />
+					</div>
+					<div class="col-12">
+						<button type="button" id="signinBtn" class="btn btn-block btn-login">회원가입</button>
+					</div>
+					<!-- csrf : Cross Site(크로스 사이트) Request(요청) Forgery(위조) -->
+					<sec:csrfInput/>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

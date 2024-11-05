@@ -1,0 +1,15 @@
+package kr.or.ddit.impl_DO;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.service_DO.FAQService;
+
+@Service
+public class FAQServiceImpl implements FAQService {
+
+	public String list() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

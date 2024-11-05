@@ -1,0 +1,56 @@
+package kr.or.ddit.enter.entservice;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.EnterEmpYcntVO;
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PbancVO;
+import kr.or.ddit.vo.ProposalVO;
+
+public interface EnterService {
+	/*기업프로필*/	
+	public EnterVO profile(String entId); // 기업 프로필 조회
+	public List<EnterEmpYcntVO> empYcnt(String entId); // 기업 프로필 - 연도별 입사자수
+	
+	/*기업정보수정*/
+	public EnterVO edit(String entId); // 기업정보수정 폼
+	public List<CodeVO> getIndutyList(); // 기업 정보수정 - 업종리스트
+	public List<CodeVO> getEntStleCdList(); // 기업 정보수정- 기업형태
+	public int editPost(EnterVO enterVO); // 기업정보수정 실행
+	
+	/*기업탈퇴*/
+	public int deleteAjax(String entId);
+	
+	/*인재*/
+	public List<CodeVO> getSkillList();// 인재-스킬
+	public List<MemberVO> getInjaeList(Map<String, Object> map);// 인재리스트
+	public List<MemberVO> getRecommendList(Map<String, Object> map); //기업추천인재
+	public List<PbancVO> pbancList(String entId); //스카우트제안 - 공고 
+	public int getTotalInjae(Map<String, Object> map);
+	
+	/*공고관리*/
+	public List<PbancVO> getPbancList(Map<String, Object> map);
+	public int getTotalPbanc(Map<String, Object> map);
+	
+	/*지원자리스트*/
+	public List<ApplicantVO> aplctList(Map<String, Object> map);
+	public int getTotalListAplct(Map<String, Object> map);
+	public int updateAplctSt(Map<String, Object> map);
+	
+	/*스카우트 제안*/
+	public List<ProposalVO> scoutList(Map<String, Object> map);
+	public int getTotal(Map<String, Object> map); //전체 행의수
+	
+	
+	
+	
+	
+
+
+	
+
+}

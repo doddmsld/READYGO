@@ -1,0 +1,439 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MemberMapper">
+
+	<!-- 회원(MemberVO) : 파일그룹(fileDetailVO) = 1 : N -->
+	<resultMap type="memberVO" id="memberMap">
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="mbrPswd" column="MBR_PSWD"/>
+		<result property="mbrNm" column="MBR_NM"/>
+		<result property="mbrBrdt" column="MBR_BRDT"/>
+		<result property="mbrSexdstnCd" column="MBR_SEXDSTN_CD"/>
+		<result property="mbrEml" column="MBR_EML"/>
+		<result property="mbrTelno" column="MBR_TELNO"/>
+		<result property="mbrZip" column="MBR_ZIP"/>
+		<result property="mbrAddr" column="MBR_ADDR"/>
+		<result property="mbrAddrDtl" column="MBR_ADDR_DTL"/>
+		<result property="mbrJoinYmd" column="MBR_JOIN_YMD"/>
+		<result property="mbrWhdwlYmd" column="MBR_WHDWL_YMD"/>
+		<result property="enabled" column="ENABLED"/>
+		<result property="mbrWarnCo" column="MBR_WARN_CO"/>
+		<result property="mbrAcnutno" column="MBR_ACNUTNO"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="userType" column="USER_TYPE"/>
+		<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+		<result property="mbrSexdstnCdNm" column="MBR_SEXDSTN_CD_NM"/>
+		<collection property="userAuthVOList" resultMap="userAuthMap"></collection>
+		<collection property="fileDetailVOList" resultMap="fileDetailMap"></collection>
+	</resultMap>
+	
+	<resultMap type="userAuthVO" id="userAuthMap">
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="auth" column="AUTH"/>
+	</resultMap>
+	
+	<!-- 파일 그룹 -->
+	<resultMap type="fileDetailVO" id="fileDetailMap">
+		<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="orgnlFileNm" column="ORGNL_FILE_NM"/>
+		<result property="strgFileNm" column="STRG_FILE_NM"/>
+		<result property="filePathNm" column="FILE_PATH_NM"/>
+		<result property="fileSz" column="FILE_SZ"/>
+		<result property="fileExtnNm" column="FILE_EXTN_NM"/>
+		<result property="fileMime" column="FILE_MIME"/>
+		<result property="fileFancysize" column="FILE_FANCYSIZE"/>
+		<result property="fileStrgYmd" column="FILE_STRG_YMD"/>
+		<result property="fileDwnldCnt" column="FILE_DWNLD_CNT"/>
+	</resultMap>
+	
+<!-- SETTLE : OUTSOU = 1 : 1 -->
+<resultMap type="settlementVO" id="settlementMap">
+	<result property="setleAmt" column="SETLE_AMT"/>
+	<result property="stlmNo" column="STLM_NO"/>
+	<result property="outordNo" column="OUTORD_NO"/>
+	<result property="mbrId" column="MBR_ID"/>
+	<result property="setleMn" column="SETLE_MN"/>
+	<result property="setleYmd" column="SETLE_YMD"/>
+</resultMap>
+	
+<resultMap type="outsouVO" id="outsouMap">
+	<result property="outordNo" column="OUTORD_NO"/>
+	<result property="outordTtl" column="OUTORD_TTL"/>
+	<result property="outordLclsf" column="OUTORD_LCLSF"/>
+	<result property="outordMlsfc" column="OUTORD_MLSFC"/>
+	<result property="outordAmt" column="OUTORD_AMT"/>
+	<result property="outordAmtExpln" column="OUTORD_AMT_EXPLN"/>
+	<result property="outordExpln" column="OUTORD_EXPLN"/>
+	<result property="outordProvdprocss" column="OUTORD_PROVDPROCSS"/>
+	<result property="outordRefndregltn" column="OUTORD_REFNDREGLTN"/>
+	<result property="outordMainFile" column="OUTORD_MAIN_FILE"/>
+	<result property="outordDetailFile" column="OUTORD_DETAIL_FILE"/>
+	<result property="outordDmndmatter" column="OUTORD_DMNDMATTER"/>
+	<result property="outordWrtde" column="OUTORD_WRTDE"/>
+	<result property="outordUpdde" column="OUTORD_UPDDE"/>
+	<result property="outordDelYn" column="OUTORD_DEL_YN"/>
+	<association property="settlementVO" resultMap="settlementMap"></association>
+</resultMap>
+
+<resultMap type="pbancVO" id="pbancMap">
+		<result property="pbancSttus" column="PBANC_STTUS"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="pbancPicNm" column="PBANC_PIC_NM"/>
+		<result property="pbancPicTelno" column="PBANC_PIC_TELNO"/>
+		<result property="pbancPicMbtlnum" column="PBANC_PIC_MBTLNUM"/>
+		<result property="pbancPicEml" column="PBANC_PIC_EML"/>
+		<result property="pbancAplctEduCd" column="PBANC_APLCT_EDU_CD"/>
+		<result property="pbancRprsrgn" column="PBANC_RPRSRGN"/>
+		<result property="pbancTtl" column="PBANC_TTL"/>
+		<result property="pbancWorkstleCd" column="PBANC_WORKSTLE_CD"/>
+		<result property="pbancApntcpd" column="PBANC_APNTCPD"/>
+		<result property="pbancSalary" column="PBANC_SALARY"/>
+		<result property="pbancWorkHrCd" column="PBANC_WORK_HR_CD"/>
+		<result property="pbancWorkDayCd" column="PBANC_WORK_DAY_CD"/>
+		<result property="pbancRcptMthdCd" column="PBANC_RCPT_MTHD_CD"/>
+		<result property="pbancAppofeForm" column="PBANC_APPOFE_FORM"/>
+		<result property="pbancRprsDty" column="PBANC_RPRS_DTY"/>
+		<result property="pbancRcptPd" column="PBANC_RCPT_PD"/>
+		<result property="pbancBgngDt" column="PBANC_BGNG_DT"/>
+		<result property="pbancBgngDts" column="PBANC_BGNG_DTS"/>
+		<result property="pbancDdlnDt" column="PBANC_DDLN_DT"/>
+		<result property="pbancDdlnDts" column="PBANC_DDLN_DTS"/>
+		<result property="pbancDlnDt" column="PBANC_DLN_DT"/>
+		<result property="pbancTmplt" column="PBANC_TMPLT"/>
+		<result property="pbancWrtDt" column="PBANC_WRT_DT"/>
+		<result property="pbancMdfcnDt" column="PBANC_MDFCN_DT"/>
+		<result property="pbancDelDt" column="PBANC_DEL_DT"/>
+		<result property="pbancScrapCo" column="PBANC_SCRAP_CO"/>
+		<result property="pbancDelYn" column="PBANC_DEL_YN"/>
+		<result property="pbancRdcnt" column="PBANC_RDCNT"/>
+		<result property="pbancBeforeWrt" column="PBANC_BEFORE_WRT"/>
+		<result property="pbancWorkstleNm" column="PBANC_WORKSTLE_NM"/>
+		<result property="rcritCareerNm" column="RCRIT_CAREER_NM"/>
+		<result property="pbancRprsrgnNm" column="PBANC_RPRSRGN_NM"/>
+</resultMap>	
+
+	<select id="selectOne" parameterType="String" resultMap="memberMap">
+		SELECT A.MBR_ID, A.MBR_PSWD, A.MBR_NM, A.MBR_BRDT, 
+		       A.MBR_SEXDSTN_CD, A.MBR_EML, A.MBR_TELNO, A.MBR_ZIP, 
+		       A.MBR_ADDR, A.MBR_ADDR_DTL, A.MBR_JOIN_YMD, A.MBR_WHDWL_YMD, 
+		       A.ENABLED, A.MBR_WARN_CO, A.MBR_ACNUTNO, 
+		       A.ENT_ID, A.USER_TYPE,
+		       B.AUTH,
+               C.FILE_GROUP_SN,
+               C.FILE_SN, C.ORGNL_FILE_NM, C.STRG_FILE_NM, C.FILE_PATH_NM, 
+               C.FILE_SZ, C.FILE_EXTN_NM, C.FILE_MIME, C.FILE_FANCYSIZE, C.FILE_STRG_YMD, 
+               C.FILE_DWNLD_CNT,
+               get_common_code_name(A.MBR_SEXDSTN_CD) AS MBR_SEXDSTN_CD_NM
+		FROM MEMBER A LEFT OUTER JOIN AUTH_MEM B ON (A.MBR_ID = B.MBR_ID)
+			 LEFT OUTER JOIN FILE_DT C ON(A.FILE_GROUP_SN = C.FILE_GROUP_SN)
+		WHERE A.MBR_ID = #{username}
+	</select>
+	
+	
+<!-- 회원 상세 -->
+<select id="detail" parameterType="String" resultMap="memberMap">
+	SELECT M.MBR_ID, M.MBR_PSWD, M.MBR_NM, M.MBR_BRDT, M.MBR_SEXDSTN_CD, 
+	       M.MBR_EML, M.MBR_TELNO, M.MBR_ZIP, M.MBR_ADDR, M.MBR_ADDR_DTL, 
+	       M.MBR_JOIN_YMD, M.MBR_WHDWL_YMD, M.ENABLED, M.MBR_WARN_CO, 
+	       M.MBR_ACNUTNO, M.ENT_ID, M.USER_TYPE, M.FILE_GROUP_SN,
+	       F.FILE_SN, F.ORGNL_FILE_NM, F.STRG_FILE_NM, F.FILE_PATH_NM, 
+	       F.FILE_SZ, F.FILE_EXTN_NM, F.FILE_MIME, F.FILE_FANCYSIZE, F.FILE_STRG_YMD, 
+	       F.FILE_DWNLD_CNT
+	  FROM MEMBER M LEFT OUTER JOIN FILE_DT F ON(M.FILE_GROUP_SN = F.FILE_GROUP_SN)
+	WHERE 1 = 1
+	AND M.MBR_ID=#{mbrId}
+</select>
+
+<!-- 개인정보 수정 -->
+<update id="editPost" parameterType="memberVO">
+	UPDATE MEMBER
+	  SET MBR_NM=#{mbrNm}, MBR_BRDT=#{mbrBrdt}, MBR_TELNO=#{mbrTelno}, MBR_EML=#{mbrEml}
+	      , MBR_ZIP=#{mbrZip}, MBR_ADDR=#{mbrAddr}, MBR_ADDR_DTL=#{mbrAddrDtl}
+	      <if test="fileGroupSn!=null and fileGroupSn!=''">
+	      	, FILE_GROUP_SN=#{fileGroupSn}
+	      </if>
+	 WHERE MBR_ID=#{mbrId}
+</update>
+
+<!-- 회원 탈퇴 -->
+<update id="deletePost" parameterType="String">
+	UPDATE MEMBER
+	   SET MBR_WHDWL_YMD = SYSDATE,
+	   	   ENABLED ='0'
+	 WHERE MBR_ID=#{mbrId}
+</update>
+
+<!-- 회원 검색기록 -->
+<select id="searchHistory" parameterType="String" resultType="searchVO">
+		SELECT SEARCH_NO, SEARCH_NM, SEARCH_DATE
+		FROM SEARCH
+		WHERE MBR_ID = #{mbrId}
+		ORDER BY SEARCH_DATE
+</select>
+
+<!-- 회원 검색기록 저장-->
+<insert id="searchInsert" parameterType="hashMap">
+	INSERT INTO SEARCH (SEARCH_NO, MBR_ID, SEARCH_NM, SEARCH_DATE)
+	VALUES (
+    	(SELECT COALESCE(MAX(TO_NUMBER(SEARCH_NO)), 0) + 1 FROM SEARCH)
+    	, #{mbrId}, #{searchNm}, SYSDATE
+	)
+</insert>
+<!-- 회원 검색기록 선택 삭제 -->
+<delete id="searchDelete" parameterType="String">
+	DELETE FROM SEARCH
+	WHERE SEARCH_NO = #{searchNo}
+</delete>
+<!-- 회원 검색기록 전체 삭제-->
+<delete id="searchDeleteAll" parameterType="String">
+	DELETE FROM SEARCH
+	WHERE MBR_ID = #{mbrId}
+</delete>
+
+<!-- 프로필에서 이미지 수정 -> 멤버에 있는 파일 그룹번호 수정 -->
+<update id="editPrfImg" parameterType="memberVO">
+    UPDATE member
+    SET FILE_GROUP_SN = #{fileGroupSn}
+    WHERE MBR_ID = #{mbrId}
+</update>
+
+<!-- 회원 비밀번호 변경 -->
+<update id="updatePswd" parameterType="memberVO">
+	UPDATE MEMBER
+	  SET MBR_PSWD=#{mbrPswd}
+	WHERE MBR_ID=#{mbrId}
+</update>
+
+<!-- 마이페이지 결제한 외주 목록 -->
+<select id="setleList" parameterType="hashMap" resultMap="settlementMap">
+	WITH T AS
+	  (
+	  SELECT ROW_NUMBER() OVER(ORDER BY S.STLM_NO DESC) RNUM 
+		    , S.STLM_NO, S.OUTORD_NO, S.MBR_ID, S.SETLE_MN , S.SETLE_YMD
+		    , S.SETLE_STTUS, S.SETLE_AMT
+		    , O.OUTORD_TTL, O.OUTORD_LCLSF, O.OUTORD_MLSFC, O.OUTORD_AMT, O.OUTORD_AMT_EXPLN
+		    , O.OUTORD_EXPLN, O.OUTORD_PROVDPROCSS, O.OUTORD_REFNDREGLTN,
+		    (SELECT F.FILE_PATH_NM
+	           FROM FILE_DT F
+	          WHERE F.FILE_GROUP_SN = O.OUTORD_MAIN_FILE
+	            AND ROWNUM = 1) AS OUTORD_MAIN_FILE,
+		     O.OUTORD_DETAIL_FILE
+		    , O.OUTORD_DMNDMATTER, O.OUTORD_WRTDE, O.OUTORD_UPDDE, O.OUTORD_DEL_YN, O.OUTORD_RDCNT
+		  FROM SETTLEMENT S, OUTSOU O
+		 WHERE 1 = 1
+           AND (S.OUTORD_NO = O.OUTORD_NO)
+		   AND (S.MBR_ID = #{mbrId})
+		   AND (O.OUTORD_DEL_YN='N')
+		    <if test="keywordInput != null and keywordInput != ''">
+           AND (
+               O.OUTORD_TTL LIKE '%' || #{keywordInput} || '%' OR
+               S.SETLE_AMT LIKE '%' || #{keywordInput} || '%'  OR
+               S.SETLE_MN LIKE '%' || #{keywordInput} || '%' 
+           )
+            </if>
+            <if test="dateInput1 != '' and dateInput2 != ''">
+            <![CDATA[
+            AND TO_DATE(S.SETLE_YMD, 'YYYY-MM-DD') >= TO_DATE(#{dateInput1})
+		    AND TO_DATE(S.SETLE_YMD, 'YYYY-MM-DD') <= TO_DATE(#{dateInput2})
+	 		]]>
+	 	</if>
+	  )
+	SELECT * FROM T
+	WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 5 + 1 AND #{currentPage} * 5
+</select>
+
+<!-- 결제한 외주 전체 행의 수 -->
+<select id="getSetleTotal" parameterType="map" resultType="int">
+	SELECT COUNT(*)
+	  FROM SETTLEMENT S
+	 LEFT JOIN OUTSOU O ON O.OUTORD_NO = S.OUTORD_NO
+	 WHERE 1 = 1
+	   AND (S.OUTORD_NO = O.OUTORD_NO)
+	   AND (S.MBR_ID=#{mbrId})
+	   AND (O.OUTORD_DEL_YN='N')
+	   <if test="keywordInput != null and keywordInput != ''">
+		   	AND (
+	               O.OUTORD_TTL LIKE '%' || #{keywordInput} || '%' OR
+	               S.SETLE_AMT LIKE '%' || #{keywordInput} || '%'  OR
+	               S.SETLE_MN LIKE '%' || #{keywordInput} || '%' 
+	           )
+	    </if>
+    	<if test="dateInput1 != '' and dateInput2 != ''">
+            <![CDATA[
+            AND TO_DATE(S.SETLE_YMD, 'YYYY-MM-DD') >= TO_DATE(#{dateInput1})
+		    AND TO_DATE(S.SETLE_YMD, 'YYYY-MM-DD') <= TO_DATE(#{dateInput2})
+	 		]]>
+	 	</if>
+</select>	
+	
+
+<!-- 마이페이지 등록한 외주 목록 -->
+<select id="memOutsouList" parameterType="hashMap" resultType="outsouVO">
+	WITH T AS
+	  (
+	    SELECT ROW_NUMBER() OVER(ORDER BY OUTORD_NO DESC) RNUM 
+	        , OUTORD_NO, OUTORD_TTL, OUTORD_LCLSF
+            , get_common_code_name(OUTORD_LCLSF)OUTORD_LCLSF_NM  
+            , OUTORD_MLSFC
+            , get_common_code_name(OUTORD_MLSFC)OUTORD_MLSFC_NM  
+            , OUTORD_AMT, OUTORD_AMT_EXPLN
+            , OUTORD_EXPLN, OUTORD_PROVDPROCSS, OUTORD_REFNDREGLTN
+            , (SELECT F.FILE_PATH_NM
+	           FROM FILE_DT F
+	          WHERE F.FILE_GROUP_SN = OUTORD_MAIN_FILE
+	            AND ROWNUM = 1) AS OUTORD_MAIN_FILE
+            , OUTORD_DETAIL_FILE
+            , OUTORD_DMNDMATTER, OUTORD_WRTDE, OUTORD_UPDDE, OUTORD_DEL_YN, OUTORD_RDCNT
+            , MBR_ID
+	  FROM OUTSOU
+	  WHERE 1=1
+	    AND MBR_ID = #{mbrId}
+	    AND OUTORD_DEL_YN='N'
+	    <if test="keywordInput != null and keywordInput != ''">
+	    	AND (
+		        OUTORD_TTL LIKE '%' || #{keywordInput} || '%' OR
+		        OUTORD_AMT LIKE '%' || #{keywordInput} || '%'
+		    )
+	    </if>
+	    <if test="dateInput1 != '' and dateInput2 != ''">
+	    		<![CDATA[
+	            AND TRUNC(OUTORD_WRTDE) >= TO_DATE(#{dateInput1})
+	            AND TRUNC(OUTORD_WRTDE) <= TO_DATE(#{dateInput2})
+	            ]]>
+	     </if>
+	  )
+	SELECT * FROM T
+	WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 5 + 1 AND #{currentPage} * 5
+</select>
+
+<!-- 등록한 외주 전체 행의 수 -->
+<select id="getOutsouTotal" parameterType="map" resultType="int">
+	SELECT COUNT(*)
+	  FROM OUTSOU
+	 WHERE 1 = 1
+	   AND MBR_ID=#{mbrId}
+	   AND OUTORD_DEL_YN='N'
+    <if test="keywordInput != null and keywordInput != ''">
+    	AND (
+	        OUTORD_TTL LIKE '%' || #{keywordInput} || '%' OR
+	        OUTORD_AMT LIKE '%' || #{keywordInput} || '%'
+	    )
+    </if>
+    <if test="dateInput1 != '' and dateInput2 != ''">
+    		<![CDATA[
+            AND TRUNC(OUTORD_WRTDE) >= TO_DATE(#{dateInput1})
+	        AND TRUNC(OUTORD_WRTDE) <= TO_DATE(#{dateInput2})
+            ]]>
+     </if>
+</select>
+
+<!-- 최근 본 공고 조회 (PBANC_NO)로 조회 -->
+<select id="getPbancRecent" parameterType="list" resultMap="pbancMap">
+SELECT 
+    P.PBANC_NO
+   ,P.ENT_ID
+   ,P.PBANC_PIC_NM 
+   ,P.PBANC_PIC_TELNO 
+   ,P.PBANC_PIC_EML
+   ,get_common_code_name(P.PBANC_RPRSRGN) AS PBANC_RPRSRGN_NM
+   ,P.PBANC_TTL
+   ,P.PBANC_WORKSTLE_CD
+   ,get_common_code_name(P.PBANC_WORKSTLE_CD) AS PBANC_WRKSTLE_CD_NM
+   ,get_common_code_name(P.PBANC_APLCT_EDU_CD) AS PBANC_APLCT_EDU_CD_NM
+   ,get_common_code_name(P.PBANC_CAREER_CD) AS PBANC_CAREER_CD_NM
+   ,P.PBANC_CAREER_CD
+   ,P.PBANC_SALARY
+   ,P.PBANC_WORK_HR_CD
+   ,P.PBANC_WORK_DAY_CD
+   ,P.PBANC_RCPT_MTHD_CD
+   ,get_common_code_name(P.PBANC_RPRS_DTY) AS PBANC_RPRS_DTY_NM
+   ,P.PBANC_RCPT_PD
+   ,P.PBANC_BGNG_DT
+   ,P.PBANC_DDLN_DT 
+   ,P.PBANC_WRT_DT 
+   ,P.PBANC_MDFCN_DT
+   ,P.PBANC_DEL_DT
+   ,P.PBANC_SCRAP_CO 
+   ,P.PBANC_DEL_YN
+   ,P.PBANC_RDCNT
+   ,P.PBANC_STTUS
+   ,P.PBANC_INTRVW_TY_CD 
+   ,P.PBANC_CN
+   ,P.PBANC_GEN_CD
+   ,P.PBANC_APPOFE_FORM_CD
+   ,P.PBANC_IMG_FILE
+   ,P.PBANC_AGE_CD 
+   ,E.ENT_NM
+FROM PBANC P
+LEFT JOIN ENTER E ON E.ENT_ID = P.ENT_ID
+        WHERE
+       <if test="pbancNoList != null and pbancNoList.size() > 0">
+        P.PBANC_NO IN 
+        <foreach item="pbancNo" collection="pbancNoList" open="(" separator="," close=")">
+            #{pbancNo}
+        </foreach>
+	    </if>
+	    <if test="pbancNoList == null or pbancNoList.size() == 0">
+	        1 = 0
+	    </if>
+	    AND(P.PBANC_DEL_YN='1')
+</select>
+
+<!-- 내가 쓴 글 목록 -->
+<select id="boardVOList" parameterType="hashMap" resultType="BoardVO">
+	WITH REPLY_COUNT AS (
+	        SELECT PST_SN, COUNT(*) AS REPLY_CNT
+	        FROM "COMMENT"
+	        GROUP BY PST_SN
+	    ),
+	  T AS (SELECT ROW_NUMBER() OVER(ORDER BY B.PST_SN DESC) RNUM,
+	               B.PST_SN, B.SE_NO, B.MBR_ID, B.PST_TTL, B.PST_OTHBCSCOPE, 
+	               B.PST_CN, TO_CHAR(B.PST_WRT_DT, 'YYYY.MM.DD') AS PST_WRT_DT, 
+	               B.PST_MDFCN_DT, B.PST_DEL_YN, B.PST_INQ_CNT, B.PST_FILE, 
+	               B.ETYMANMTTR_SN, B.PST_GOOD, B.PST_BAD,
+	               COALESCE(RC.REPLY_CNT, 0) AS REPLY_CNT
+	        FROM BOARD B
+	        LEFT JOIN REPLY_COUNT RC ON B.PST_SN = RC.PST_SN
+	        WHERE 1 = 1
+	        AND (B.SE_NO = #{board})
+	        AND (B.MBR_ID=#{mbrId})
+	        AND (B.PST_DEL_YN='1')
+	        <if test="keywordInput != null and keywordInput != ''">
+		   		AND (
+		   		B.PST_TTL LIKE '%' || #{keywordInput} || '%'
+		   		)
+			</if>
+			<if test="dateInput1 != '' and dateInput2 != ''">
+		   		<![CDATA[
+		           AND TRUNC(B.PST_WRT_DT) >= TO_DATE(#{dateInput1})
+		           AND TRUNC(B.PST_WRT_DT) <= TO_DATE(#{dateInput2})
+		           ]]>
+		       </if>
+	  	)
+	    SELECT * FROM T
+	  	WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 7 + 1 AND #{currentPage} * 7
+</select>
+
+<!-- 내가 작성한 글 전체 행의 수 -->
+<select id="getTotal" parameterType="hashMap" resultType="int">
+	SELECT COUNT(*)
+    FROM BOARD
+    WHERE 1 = 1
+    AND (SE_NO = #{board})
+    AND (MBR_ID=#{mbrId})
+    AND (PST_DEL_YN='1')
+    <if test="keywordInput != null and keywordInput != ''">
+   		AND (
+   		PST_TTL LIKE '%' || #{keywordInput} || '%'
+   		)
+	</if>
+	<if test="dateInput1 != '' and dateInput2 != ''">
+   		<![CDATA[
+           AND TRUNC(PST_WRT_DT) >= TO_DATE(#{dateInput1})
+           AND TRUNC(PST_WRT_DT) <= TO_DATE(#{dateInput2})
+           ]]>
+       </if>
+</select>
+</mapper>

@@ -1,0 +1,15 @@
+package kr.or.ddit.service;
+
+import java.util.Map;
+
+import kr.or.ddit.vo.EnterVO;
+
+public interface NonService {
+	
+	
+	//기업 아이디 조회
+	EnterVO enterSearch(Map<String, Object> map);
+
+	void updateMem(Map<String, Object> map);
+	
+}

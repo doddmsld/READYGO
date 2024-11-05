@@ -1,0 +1,17 @@
+$(document).on("change", "#acbgSeCd",function(){
+		let val = $(this).val();
+		if($(this).val()==="ACSE001"){
+			$('#acbgRcognacbgCd').closest('div').hide();
+			$('#acbgGrdtnym').closest('div').hide();
+			$('#acdmcrGrdtnSeCd').closest('div').hide();
+		}
+		if($(this).val()==="ACSE002"){
+			$('#acbgRcognacbgCd').closest('div').show();
+			$('#acbgGrdtnym').closest('div').show();
+			$('#acdmcrGrdtnSeCd').closest('div').show();
+		}
+		if($(this).val()==="ACSE003"){
+			$('#acbgGrdtnym').closest('div').hide();
+			$('#acdmcrGrdtnSeCd').closest('div').hide();
+		}
+	})

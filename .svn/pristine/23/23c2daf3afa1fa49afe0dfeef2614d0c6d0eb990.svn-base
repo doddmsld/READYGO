@@ -1,0 +1,97 @@
+package kr.or.ddit.oustou.kakaoPayApi;
+
+import java.util.Map;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/outsou")
+public class KakaoPayController {
+
+//	@Autowired
+//	KakaoPayService kakaoPayService;
+	
+	private final KakaoPayService kakaoPayService;
+	
+	
+	@PostMapping("/pay/ready")
+	public @ResponseBody ReadyResponse payReady(@RequestBody Map<String, Object> data) {
+	    // 결제 준비 처리 로직
+		String title = (String) data.get("title");
+	    int price = Integer.parseInt(data.get("price").toString());
+	    String outordNo = (String) data.get("outordNo");
+	    String mbrId = (String) data.get("mbrId");  // partner_user_id로 사용
+	    String setleMn = (String) data.get("setleMn");
+
+	    log.info("상품 제목 :" + title);
+	    log.info("상품 가격 :" + price);
+	    log.info("외주 번호 :" + outordNo);
+	    log.info("회원 아이디 :" + mbrId);
+	    log.info("결제수단 :" + setleMn);
+
+	    // 결제 준비 로직 호출
+	    ReadyResponse readyResponse = kakaoPayService.payReady(title, price, mbrId, outordNo, setleMn);
+	    log.info("결제 준비 완료, 결제 고유번호(tid): " + readyResponse.getTid()); // 이 로그가 제대로 출력되는지 확인
+        
+	    
+//	   // 결제 정보를 세션에 저장
+	    String tid = readyResponse.getTid();
+	    SessionUtils.addAttribute("tid", tid);
+	    SessionUtils.addAttribute("price", price);
+	    SessionUtils.addAttribute("outordNo", outordNo);
+	    SessionUtils.addAttribute("partner_user_id", mbrId);
+	    SessionUtils.addAttribute("setleMn", setleMn);
+        
+	    // `tid` 값은 이미 서비스에서 처리되었음
+	    log.info("결제 준비 완료, 결제 고유번호(tid): " + readyResponse.getTid());
+
+
+        return readyResponse;
+    }
+
+	
+	
+    @GetMapping("/payok")
+    public String payCompleted(@RequestParam("pg_token") String pgToken) {
+        // 세션 또는 DB에서 저장된 tid 가져오기
+        String tid = (String) SessionUtils.getAttribute("tid"); // 세션이나 DB에 저장된 `tid`를 사용
+        String mbrId = (String) SessionUtils.getAttribute("partner_user_id"); // 저장된 사용자 정보
+        String outordNo = (String) SessionUtils.getAttribute("outordNo");
+        String setleMn = (String) SessionUtils.getAttribute("setleMn");
+        int price = (Integer) SessionUtils.getAttribute("price");
+
+        log.info("Received pg_token: " + pgToken);
+        log.info("Stored tid: " + tid);
+        
+        // 결제 승인 로직을 처리
+        if (tid == null || tid.isEmpty()) {
+            log.error("세션에서 tid를 찾을 수 없습니다.");
+            return "redirect:/error-page";  // 오류 처리 페이지로 이동
+        }
+
+        log.info("pg_token: " + pgToken);
+        log.info("tid: " + tid);
+
+        // 카카오 결제 승인 요청
+        AproveResponse aproveResponse = kakaoPayService.payApprove(tid, pgToken, mbrId, outordNo, setleMn, price);
+
+        // 결제 승인 완료 후 페이지로 리다이렉트
+        return "outsou/regist/pay/payok";  // 성공 페이지로 리다이렉트
+    }
+    
+    
+    
+    
+	
+}

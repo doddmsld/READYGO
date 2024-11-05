@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MemResumeMapper">
+	<select id="openResume" parameterType="String" resultType="resumeVO">
+		SELECT  RSM_NO, RSM_TTL, get_common_code_name(RSM_RLSSCOPE_CD) AS RSM_RLSSCOPE_CD_NM, get_common_code_name(RSM_CAREER_CD) AS RSM_CAREER_CD_NM, RSM_MEMO, 
+		        RSM_WRT_YMD, RSM_MDFCN_YMD, RSM_DEL_YN, RSM_FILE, MBR_NM, 
+		        MBR_ADDR, MBR_ADDR_DTL, MBR_ZIP, MBR_TELNO, MBR_BRDT, MBR_EML, 
+		        MBR_ID, get_common_code_name(RSM_CRDT_CD) AS RSM_CRDT_CD_NM, get_common_code_name(RSM_SAL_CD) AS RSM_SAL_CD_NM
+		  FROM  RESUME 
+		 WHERE  1 = 1
+		   AND  MBR_ID = #{mbrId}
+		   AND  RSM_DEL_YN IS NULL
+		   AND  RSM_RLSSCOPE_CD = 'RLSC02'
+	</select>
+	<select id="resumeList" parameterType="Map" resultType="resumeVO">
+		WITH T AS
+			(
+				SELECT  ROW_NUMBER() OVER(ORDER BY RSM_SN ASC) RNUM,
+						RSM_NO, RSM_TTL, get_common_code_name(RSM_RLSSCOPE_CD) AS RSM_RLSSCOPE_CD_NM, 
+					    get_common_code_name(RSM_CAREER_CD) AS RSM_CAREER_CD_NM, RSM_MEMO, 
+				        RSM_WRT_YMD, RSM_MDFCN_YMD, RSM_DEL_YN, RSM_FILE, MBR_NM, 
+				        MBR_ADDR, MBR_ADDR_DTL, MBR_ZIP, MBR_TELNO, MBR_BRDT, MBR_EML, 
+				        MBR_ID, get_common_code_name(RSM_CRDT_CD) AS RSM_CRDT_CD_NM, 
+				        get_common_code_name(RSM_SAL_CD) AS RSM_SAL_CD_NM,
+				        RSM_RLSSCOPE_CD, RSM_CAREER_CD, RSM_CRDT_CD, RSM_SAL_CD, RSM_SN
+				  FROM  RESUME 
+				 WHERE  1 = 1
+				   AND  MBR_ID = #{mbrId}
+				   AND  RSM_DEL_YN IS NULL
+			)
+			SELECT * FROM T
+			WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 3 + 1 AND #{currentPage} * 3
+	</select>
+	<select id="resumeListTotal" resultType="int" parameterType="String">
+		SELECT COUNT(*)
+		  FROM RESUME
+		 WHERE MBR_ID=#{mbrId}
+		   AND  RSM_DEL_YN IS NULL
+	</select>
+</mapper>

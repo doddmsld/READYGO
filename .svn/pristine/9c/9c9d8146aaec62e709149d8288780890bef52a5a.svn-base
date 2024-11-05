@@ -1,0 +1,415 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>  
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%> 
+<!-- 기업정보수정css -->   
+<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/enter/edit.css" />
+<!-- daum주소 api -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> 
+<!-- jquery -->
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script>
+
+$(function(){
+   /*우편번호,주소*/   
+   $("#btnPost").on("click",function(){
+      console.log("우편번호 검색!")
+      new daum.Postcode({
+         
+         // 다음 창에서 검색이 완료되어 클릭하면 콜백함수에 의해
+         // 결과 데이터(JSON string)가 data 객체로 들어온당
+         oncomplete:function(data){
+            //data{"zoncode":"12345", "address":"대전 중구", "buildingName":"123-123ㅁ"}
+            $("#entZip").val(data.zonecode);
+            $("#entAddr").val(data.address);
+            $("#entAddrDetail").val(data.buildingName);
+            // focus : 테두리와 커서 잡힘
+            $("#entAddrDetail").focus();
+         }
+      }).open();
+   });
+   
+// 수정 버튼 클릭
+    $("#edit").on("click", function() {
+        $("#spn1").css("display", "none");
+        $("#spn2").css("display", "flex");
+        $("#btnPost").css("display", "block");
+
+        $('.edit-control').removeAttr("readonly");
+
+        // 업종 필드 제어
+        $("#tpbizSeCd").css("display", "none");
+        $("#tpbizSeCd").attr("disabled", true);
+        $("#indutySelect").css("display", "block");
+
+        // 기업형태 필드 제어
+        $("#entStleCd").css("display", "none");
+        $("#entStleCd").attr("disabled", true);
+        $("#entStleCdSelect").css("display", "block");
+
+        // 기업 로고 수정 필드 보이기
+        $("#entLogo").css("display", "block");  // 파일 선택 필드 보이기
+        
+        // 기업사업자등록증 필드
+        $(".input-group").css("display", "block");  
+        $("#entBrFile").css("display", "none");  
+//         $("#entBrFileSelect").css("display", "block");
+
+       // 사원수 입력 필드에 숫자만 입력 가능하게 제어
+       $("#entEmpCnt").on("keyup", function(e) {
+           // 현재 입력된 값
+           let value = $(this).val();
+
+           // 숫자가 아닌 문자가 포함된 경우
+           if (/[^0-9]/.test(value)) {
+               // 알림 메시지
+               alert("숫자만 입력 가능합니다.");
+               // 숫자가 아닌 문자를 제거
+               $(this).val(value.replace(/[^0-9]/g, ''));
+           }
+       });
+       // 데이터 백업
+       entLogos = $("img[name='entLogos']").attr("src");
+       console.log(entLogos);
+       entNm = $("input[name='entNm']").val();
+       entId = $("input[name='entId']").val();
+       entPswd = $("input[name='entPswd']").val();
+       indutyVO = $("input[name='indutyVO']").val();
+       entFndnYmd = $("input[name='entFndnYmd']").val();
+       entEmpCnt = $("input[name='entEmpCnt']").val();
+       entStleCd = $("input[name='entStleCd']").val(); // 기존 기업형태 값 백업
+       entRprsntvNm = $("input[name='entRprsntvNm']").val();
+       entHmpgUrl = $("input[name='entHmpgUrl']").val();
+       entManagerTelno = $("input[name='entManagerTelno']").val();
+       entFxnum = $("input[name='entFxnum']").val();
+       entMail = $("input[name='entMail']").val();
+       entZip = $("input[name='entZip']").val();
+       entAddr = $("input[name='entAddr']").val();
+       entAddrDetail = $("input[name='entAddrDetail']").val();
+       entBrno = $("input[name='entBrno']").val();
+       entBrFile = $("input[name='entBrFile']").val();
+   });
+
+    // 취소 버튼 클릭
+    $("#cancel").on("click", function() {
+        $("#spn1").css("display", "flex");
+        $("#spn2").css("display", "none");
+        $("#btnPost").css("display", "none");
+        $("#tpbizSeCd").css("display","block");
+
+        $('.edit-control').attr("readonly", true);
+
+        // 업종 필드 제어
+        $("#indutyVO.tpbizSeCd").css("display", "block");
+        $("#indutySelect").css("display", "none");
+
+        // 기업형태 필드 제어
+        $("#entStleCd").css("display", "block");
+        $("#entStleCdSelect").css("display", "none");
+       
+        // 기업사업자등록증 필드 제어
+        $("#entBrFile").css("display", "block");
+        $("#entBrFileSelect").css("display", "none");
+        $(".input-group").css("display", "none");  
+
+        // 기업 로고 수정 필드 숨기기
+        $("#entLogo").css("display", "none");  // 파일 선택 필드 숨기기
+        
+       // 데이터 복구
+       $("img[name='entLogos']").attr("src",entLogos);
+       $("input[name='entNm']").val(entNm);
+       $("input[name='entId']").val(entId);
+       $("input[name='entPswd']").val(entPswd);
+       $("input[name='IndutyVO']").val(IndutyVO);
+       $("input[name='entFndnYmd']").val(entFndnYmd);
+       $("input[name='entEmpCnt']").val(entEmpCnt);
+       $("input[name='entStleCd']").val(entStleCd);  // 기업형태 복구
+       $("input[name='entRprsntvNm']").val(entRprsntvNm);
+       $("input[name='entHmpgUrl']").val(entHmpgUrl);
+       $("input[name='entManagerTelno']").val(entManagerTelno);
+       $("input[name='entFxnum']").val(entFxnum);
+       $("input[name='entMail']").val(entMail);
+       $("input[name='entZip']").val(entZip);
+       $("input[name='entAddr']").val(entAddr);
+       $("input[name='entAddrDetail']").val(entAddrDetail);
+       $("input[name='entBrno']").val(entBrno);
+       $("input[name='entBrFile']").val(entBrFile);
+
+   });
+   //미리보기 기능 (FileReader API)
+    $("#entLogo").on("change", function() {
+        var file = this.files[0];  // 선택된 파일
+        console.log(file);  // 콘솔에서 파일 확인
+
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                $("#entLogos").attr("src", e.target.result);  // 새로운 이미지 미리보기
+            };
+            reader.readAsDataURL(file);  // 파일을 읽어서 DataURL로 변환
+        }
+    });
+
+      
+      /*기업탈퇴*/ 
+      $("#btnDelete").on("click",function(){
+
+        $("#editForm").attr("action","/enter/edit");
+        
+        let data = "test01"
+        
+        $.ajax({
+           url:"/enter/deleteAjax",
+           contentType:"application/json;charset=utf-8",
+           data:data,
+           type:"post",
+           dataType:"json",
+           beforeSend:function(xhr){
+              xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+           },
+           success:function(result){
+              console.log("result : ", result);
+              $("#entId").val(result.entId);
+           }
+        });        
+        let result = confirm("정말로 기업 탈퇴를 하시겠습니까?");
+        
+        console.log("result : " + result);
+        
+        if(result>0){ //true
+           // 파라미터를 보내야하므로
+           $("#editForm").submit();
+           alert("기업 탈퇴를 성공하였습니다.")
+        } else{ //false
+           alert("기업 탈퇴를 실패하였습니다.")
+        }
+        location.reload();
+      })
+   })
+
+    // 전화번호 자동완성 함수
+	function oninputPhone(target) {
+	    target.value = target.value
+	        .replace(/[^0-9]/g, '')
+	        .replace(/(^02.{0}|^01.{1}|[0-9]{3,4})([0-9]{3,4})([0-9]{4})/g, "$1.$2.$3");
+}   
+   
+</script>
+
+<br>
+<div class="all">
+   <h2>기업정보 수정</h2>
+	<div class="container1">
+	   <br><br>
+	    <form name="editForm" id="editForm" action="/enter/editPost?${_csrf.parameterName}=${_csrf.token}" method="post" enctype="multipart/form-data">
+	        <div class="row">
+				<div class="col-left">
+					<!-- 
+					1. C:\sts-bundle\workspace\readyGo\src\main\webapp\resources\images\enter
+					2. C:\sts-bundle\workspace\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\readyGo\resources\images\enter
+					 -->
+					<img src="/resources/images/enter/${enterVO.entLogo}"
+						alt="${enterVO.entLogo}" id="entLogos" name="entLogos" /><br>
+					<!-- 수정 모드에서 보이는 파일 선택 -->
+					<input type="file" id="entLogo" name="entLogoFile" style="display: none;"
+						class="edit-control" />
+					<div id="entNameParent">
+						<p id="entName">
+							<strong>${enterVO.entNm}</strong>
+						</p>
+					</div>
+					<br>
+					<br>
+				</div>
+				<div class="flexInfo">
+					<div class="left">
+						<div class="col-right">
+							<h3>기본정보</h3>
+							<br>
+							<div class="form-group">
+								<label for="entNm">기업명</label> <input type="text" id="entNm"
+									name="entNm" class="edit-control" placeholder="기업명"
+									value="${enterVO.entNm}" readonly>
+							</div>
+			
+							<div class="form-group">
+								<label for="entId">아이디</label> <input type="text" id="entId"
+									name="entId" class="edit-control" value="${enterVO.entId}"
+									readonly placeholder="아이디">
+							</div>
+			
+							<div class="form-group">
+								<label for="entPswd">비밀번호</label> <input type="text" id="entPswd"
+									name="entPswd" class="edit-control" placeholder="비밀번호"
+									value="${enterVO.entPswd}" readonly>
+							</div>
+			
+							<div class="form-group">
+								<label for="IndutyVO">업종</label> <input type="text" id="tpbizSeCd"
+									name="indutyVO.tpbizSeCd" class="edit-control" placeholder="업종"
+									value="${enterVO.indutyVO.tpbizSeCd}" readonly>
+			
+								<!-- 수정 모드에서 보이는 업종 셀렉트 박스 -->
+								<select id="indutySelect" name="indutyVO.tpbizSeCd"
+									style="display: none;" class="edit-control">
+									<c:forEach var="induty" items="${indutyList}">
+										<option value="${induty.comCodeNm}"
+											<c:if test="${induty.comCodeNm eq enterVO.indutyVO.tpbizSeCd}">selected</c:if>
+										>${induty.comCodeNm}</option>
+									</c:forEach>
+								</select>
+							</div>
+			
+							<div class="form-group">
+								<label for="entFndnYmd">설립일</label> <input type="text"
+									id="entFndnYmd" name="entFndnYmd" class="edit-control"
+									placeholder="설립일" value="${enterVO.entFndnYmds}" readonly>
+							</div>
+			
+							<div class="form-group">
+								<label for="entEmpCnt">사원수</label> <input type="text"
+									id="entEmpCnt" name="entEmpCnt" class="edit-control"
+									placeholder="사원수" value="${enterVO.entEmpCnt}" readonly>
+							</div>
+			
+							<div class="form-group">
+								<label for="entStleCd">기업형태</label>
+								<!-- 기존 기업형태 텍스트 -->
+								<input type="text" id="entStleCd" name="entStleCd"
+									class="edit-control" placeholder="기업형태"
+									value="${enterVO.entStleCd}" readonly>
+			
+								<!-- 수정 모드에서 보이는 기업형태 셀렉트 박스 -->
+								<select id="entStleCdSelect" name="entStleCd"
+									style="display: none;" class="edit-control">
+									<c:forEach var="entStleCd" items="${entStleCdList}">
+										<option value="${entStleCd.comCode}"
+											<c:if test="${entStleCd.comCodeNm eq enterVO.entStleCd}">selected</c:if>
+										>${entStleCd.comCodeNm}</option>
+									</c:forEach>
+								</select>
+							</div>
+			
+							<div class="form-group">
+								<label for="entRprsntvNm">대표자명</label> <input type="text"
+									id="entRprsntvNm" name=entRprsntvNm class="edit-control"
+									placeholder="대표자명" value="${enterVO.entRprsntvNm}" readonly>
+							</div>
+			
+							<div class="form-group">
+								<label for="entHmpgUrl">홈페이지 URL</label> 
+								<input type="text"
+									id="entHmpgUrl" name="entHmpgUrl" class="edit-control"
+									placeholder="홈페이지 URL" value="${enterVO.entHmpgUrl}" readonly>
+							</div>
+						</div>
+						<br>
+						<br>
+						<div class="right">
+							<div class="form-group" style="margin-top: 60px;">
+								<label for="entManagerTelno">담당자 연락처</label> <input type="text"
+									class="edit-control" id="entManagerTelno" name="entManagerTelno"
+									placeholder="담당자 연락처" oninput="oninputPhone(this)"
+									value="${enterVO.entManagerTelno}" maxlength="14" readonly>
+							</div>
+			
+							<div class="form-group">
+								<label for="entFxnum">팩스번호</label> <input type="text" id="entFxnum"
+									name="entFxnum" class="edit-control" placeholder="팩스번호"
+									value="${enterVO.entFxnum}" readonly>
+							</div>
+			
+							<div class="form-group">
+								<label for="entMail">이메일</label> <input type="text" id="entMail"
+									name="entMail" class="edit-control" placeholder="이메일"
+									value="${enterVO.entMail}" readonly>
+							</div>
+			
+							<div class="form-group">
+								<label for="entZip">우편번호</label> <input type="text" id="entZip"
+									name="entZip" class="edit-control" value="${enterVO.entZip}"
+									readonly> <input type="button" class="btn btn-primary"
+									id="btnPost" placeholder="우편번호" value="우편번호 검색"
+									style="display: none;" />
+							</div>
+			
+							<div class="form-group">
+								<label for="entAddr">주소</label> <input type="text" id="entAddr"
+									name="entAddr" class="edit-control" placeholder="주소"
+									value="${enterVO.entAddr}" readonly>
+							</div>
+			
+							<div class="form-group">
+								<label for="entAddrDetail">상세주소</label> <input type="text"
+									id="entAddrDetail" name="entAddrDetail" placeholder="상세주소"
+									class="edit-control" value="${enterVO.entAddrDetail}" readonly>
+							</div>
+			
+							<br>
+							<br>
+							<div class="form-group" style="margin-top: 10px;">
+								<label for="entBrno">사업자 등록번호</label> <input type="text"
+									id="entBrno" name="entBrno" class="edit-control"
+									placeholder="사업자 등록번호" value="${enterVO.entBrno}" readonly>
+<%-- 							<fmt:formatNumber var="licsNo" value="${enterVO.entBrno}" pattern="###,##,#####"/> --%>
+<%-- 							<c:out value="${fn:replace(licsNo, ',', '-')}" /> --%>
+							</div>
+			
+							<div class="form-group">
+								<label for="entBrFile">사업자 등록증</label> 
+								<input type="text"
+									id="entBrFile" name="entBrFile" class="edit-control"
+									placeholder="사업자 등록증" value="${enterVO.entBrFile}" readonly>
+
+								
+								
+								<!-- 수정 모드에서 보이는 사업자등록증 파일박스 -->
+								<div class="input-group" style="display: none; margin-left: 58px;">
+									<div class="custom-file">
+										<input type="file" id="entBrFileSelect" name="entBrFile" 
+											class="edit-control" placeholder="사업자 등록증" value="${enterVO.entBrFile}"
+											 style="display: none;" required/> 
+										<label class="custom-file-label" for="entBrFile" 
+										style="width: 275px; height: 25px; border-radius: 5px; border: 1px solid #232323;">파일을 선택해주세요</label>
+										
+									</div>
+								</div>
+							</div> 
+						</div>
+					</div>
+				</div>
+				<!-- 폼 페이지에는 csrf써줘야함 -->
+			</div>
+			<!-- 일반 모드 시작 -->
+			<div class="groupButton">
+				<span id="spn1" class="button-group">
+					<p>
+						<div class="button1">
+							<input type="button" id="edit" value="수정" />
+						</div>
+						<div class="button1">
+							<input type="button" id="btnDelete" value="기업 탈퇴" />
+						</div>
+					</p>
+				</span>
+				<!-- 일반 모드 끝 -->
+			
+				<!-- 수정 모드 시작 -->
+				<span id="spn2" class="button-group" style="display: none;">
+					<p>
+						<div class="button1">
+							<input type="submit" id="save" value="저장" />
+						</div>
+						<div class="button1">
+							<input type="button" id="cancel" value="취소" />
+						</div>
+					</p>
+				</span>
+			</div>
+				        
+	        <sec:csrfInput />
+	    </form>
+	</div>
+</div>

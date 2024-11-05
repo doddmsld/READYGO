@@ -1,0 +1,143 @@
+<style>
+ @charset "UTF-8";
+
+*{
+	font-family: pretendard;
+}
+/*전체 높이 넓이*/
+.inquiryRow{
+	width: 1300px;
+	margin: 0px auto;
+	display: flex;
+	flex-direction: column;
+}
+/*상단 제목(FAQ)*/
+
+.registTitle{
+	margin-top: 50px;
+	width: 1300px;
+	height: 60px;
+}
+
+/* 전체 카운트 */
+#count {
+	margin-left: 40px;
+	font-size: 16px;
+	font-weight: 700;
+	color: #666;
+	width: 90px;
+}
+
+.table th {
+	padding: 15px;
+}
+th {
+	text-align: center;
+	font-size: 16px;
+	width: 150px;
+}
+td{
+	 text-align: center;
+}
+
+.table thead {
+	border-top: 2px solid #666363;
+	
+}
+.table th{
+	background-color: #f3f3f3;
+}
+.table td, .table th {
+	vertical-align: baseline;
+	
+}
+.table thead th {
+	vertical-align: bottom;
+	border-bottom: none;
+}
+
+.card-body.table-responsive.p-0 {
+	width: 1230px;
+}
+
+tbody {
+	text-align: center;
+	font-size: 14px;
+	color: #232323;
+}
+
+/*제목*/
+th.contTitle {
+	text-align: left;
+	margin: 30px;
+}
+
+
+
+td.contTitle {
+	text-align: left;
+	padding-left: 10px;
+	height:50px;
+	
+}
+
+/* 페이징 css 시작*/
+.page-link {
+    color: black; 
+    border-radius: 7px; 
+    margin:5px;
+}
+/* 버튼클릭했을 때! */
+.page-item.active .page-link {
+    z-index: 3;
+    font-weight : 700;
+    color: #24D59E;
+    background-color: rgba(44, 207, 195, 0.11); 
+    border-radius: 7px;
+}
+.write_date{
+	text-align: right;
+}
+
+.page-item.active .page-link {
+    border-color: #dee2e6;
+}
+a.page-link:hover {
+    color: #000000;
+    background-color: #dee2e6;
+}
+/* 페이징 css 끝*/
+
+
+
+
+/*버튼*/
+.button-container{
+	display: flex;
+    align-items: flex-end;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    margin-left: 1050px;
+}
+
+
+.boardRegist{
+	background: white;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+	width: 170px;
+	width : 100px;
+	height : 40px;
+	border-radius : 7px;
+    font-size : 16px;
+    font-weight : 400;
+    margin-left:30px;
+    transition: all 0.3s ease 0s;
+}
+
+.boardRegist:hover {
+background-color: #24D59E;
+color: white;
+}
+
+

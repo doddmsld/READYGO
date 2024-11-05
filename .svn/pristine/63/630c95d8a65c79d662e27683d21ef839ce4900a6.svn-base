@@ -1,0 +1,100 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="sec"	uri="http://www.springframework.org/security/tags"%>
+<!-- 외주 css 파일 -->
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/outsou/reviewmain.css" />
+
+<div style="width: 100%; border-top: 1PX solid #E0E0E0;">
+	<div class="reviewlayout">
+		<div class="rvttit">
+			<h2>리뷰 게시판</h2>
+		</div>
+		<!-- 리뷰 목록 시작 --> 
+		<div class="contentList">
+			<!-- main -->
+			<div class="main">
+				<div class="info">
+					<div>
+						<div>
+							<p>ㄴ****</p>
+						</div>
+						<div>
+							<p>title</p>
+						</div>
+					</div>
+					
+					<div class="summary">
+						<div class="thumbnail">
+							<img src=" " alt="" class="reeview_img" id="rvImg" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 리뷰 목록 끝 -->
+	</div>
+</div>
+
+<!-- 페이지네이션 -->
+<div class="card-body table-responsive p-0"
+	style="display: flex; justify-content: center;">
+	<table style="margin-bottom: 30px;">
+		<tr>
+			<td colspan="4" style="text-align: center;">
+				<div class="dataTables_paginate" id="example2_paginate"
+					style="display: flex; justify-content: center; margin-top: 20px;">
+					<ul class="pagination">
+
+						<!-- 맨 처음 페이지로 이동 버튼 -->
+						<c:if test="${articlePage.currentPage gt 1}">
+							<li class="paginate_button page-item first"><a
+								href="/outsou/injae?entId=${enterVO.entId}&currentPage=1"
+								aria-controls="example2" data-dt-idx="0" tabindex="0"
+								class="page-link">&lt;&lt;</a></li>
+						</c:if>
+
+						<!-- 이전 페이지 버튼 -->
+						<c:if test="${articlePage.startPage gt 1}">
+							<li class="paginate_button page-item previous"id="example2_previous">
+								<a href="/enter/injae?entId=${enterVO.entId}&currentPage=${(articlePage.startPage - 1) lt 1 ? 1 : (articlePage.startPage - 1)}"
+									aria-controls="example2" data-dt-idx="0" tabindex="0"
+									class="page-link">&lt;</a>
+							</li>
+						</c:if>
+
+						<!-- 페이지 번호 -->
+						<c:forEach var="pNo" begin="${articlePage.startPage}"
+							end="${articlePage.endPage}">
+							<li class="paginate_button page-item ${pNo == articlePage.currentPage ? 'active' : ''}">
+								<a href="/enter/injae?entId=${enterVO.entId}&currentPage=${pNo}"
+								aria-controls="example2" class="page-link">${pNo}</a>
+							</li>
+						</c:forEach>
+
+						<!-- 다음 페이지 버튼 -->
+						<c:if test="${articlePage.endPage lt articlePage.totalPages}">
+							<li class="paginate_button page-item next" id="example2_next">
+								<a href="/enter/injae?entId=${enterVO.entId}&currentPage=${articlePage.startPage+5}"
+									aria-controls="example2" data-dt-idx="7" tabindex="0"
+									class="page-link">&gt;</a>
+							</li>
+						</c:if>
+
+						<!-- 맨 마지막 페이지로 이동 버튼 -->
+						<c:if test="${articlePage.currentPage lt articlePage.totalPages}">
+							<li class="paginate_button page-item last">
+								<a 	href="/enter/injae?entId=${enterVO.entId}&currentPage=${articlePage.totalPages}"
+									aria-controls="example2" data-dt-idx="7" tabindex="0"
+									class="page-link">&gt;&gt;</a>
+							</li>
+						</c:if>
+
+					</ul>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.JobToolsMapper">
+
+<select id="getScore" parameterType="hashMap" resultType="languageVO">
+	SELECT * FROM (
+	    SELECT 
+	        NEW_TEPS, 
+	        TOEIC, 
+	        CASE 
+	            <!--  두 자리 또는 세 자리인 경우 --> 
+	            WHEN LENGTH(TOEFL) IN (2, 3) THEN TOEFL
+	            <!-- 두 자리 - 두 자리 또는 세 자리 - 세 자리 형식인 경우 (예: '92 - 93', '114 - 115')-->
+	            WHEN LENGTH(TOEFL) >= 7 AND TOEFL LIKE '%-%' THEN 
+	                CASE 
+	                    WHEN #{selectedOption} IN ('newTeps', 'toeic') THEN 
+	                        TRIM(SUBSTR(TOEFL, INSTR(TOEFL, '-') + 1)) <!--  하이픈 뒤의 숫자 --> 
+	                    WHEN #{selectedOption} = 'toefl' THEN 
+	                        TRIM(SUBSTR(TOEFL, 1, INSTR(TOEFL, '-') - 1)) <!-- 하이픈 앞의 숫자 --> 
+	                    ELSE NULL
+	                END
+	            ELSE NULL <!-- 기본적으로 NULL 반환 --> 
+	        END AS TOEFL,
+	        OPIC
+	    FROM LANGUAGE
+	    WHERE 
+	       (#{selectedOption} = 'newTeps' AND NEW_TEPS = TO_CHAR(#{score})) OR
+            (#{selectedOption} = 'toeic' AND TOEIC = TO_CHAR(#{score})) OR
+            (#{selectedOption} = 'toefl' AND 
+                (LENGTH(TOEFL) IN (2, 3) AND TOEFL = TO_CHAR(#{score})) OR
+                (LENGTH(TOEFL) >= 7 AND TOEFL LIKE '%-%' AND 
+                    TRIM(SUBSTR(TOEFL, 1, INSTR(TOEFL, '-') - 1)) = TO_CHAR(#{score})))
+	    ORDER BY NEW_TEPS DESC
+	) WHERE ROWNUM = 1
+</select>
+	
+</mapper>

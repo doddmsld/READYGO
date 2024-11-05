@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MemProposalMapper">
+
+<resultMap type="proposalVO" id="proposalMap">
+	<result property="propseNo" column="PROPSE_NO"/>
+	<result property="entId" column="ENT_ID"/>
+	<result property="mbrId" column="MBR_ID"/>
+	<result property="propsePbancTtl" column="PROPSE_PBANC_TTL"/>
+	<result property="propseTtl" column="PROPSE_TTL"/>
+	<result property="propseCn" column="PROPSE_CN"/>
+	<result property="propseDate" column="PROPSE_DATE"/>
+	<result property="propseFile" column="PROPSE_FILE"/>
+	<result property="propseSttus" column="PROPSE_STTUS"/>
+	<result property="entNm" column="ENT_NM"/>
+</resultMap>
+
+<!-- 받은 제안 조회 -->
+<select id="memProList" parameterType="hashMap" resultMap="proposalMap" >
+WITH T AS
+	  (
+	     SELECT ROW_NUMBER() OVER(ORDER BY PROPSE_NO DESC) RNUM
+             ,P.PROPSE_NO, P.ENT_ID, P.MBR_ID, P.PROPSE_TTL, P.PROPSE_CN
+             , P.PROPSE_DATE, P.PROPSE_FILE, P.PROPSE_STTUS, P.PROPSE_PBANC_TTL
+             , E.ENT_NM       
+	      FROM PROPOSAL P, ENTER E
+	     WHERE P.ENT_ID = E.ENT_ID
+           AND P.MBR_ID = #{mbrId}
+	  )
+	  SELECT * FROM T
+	 WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 7 + 1 AND #{currentPage} * 7
+</select>
+
+<!-- 받은 제안 전체 행의 수 -->
+<select id="getTotal" parameterType="String" resultType="int">
+	SELECT COUNT(*)
+	  FROM PROPOSAL
+	 WHERE MBR_ID=#{mbrId}
+</select>
+
+
+</mapper>

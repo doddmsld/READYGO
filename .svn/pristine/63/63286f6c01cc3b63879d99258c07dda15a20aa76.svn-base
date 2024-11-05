@@ -1,0 +1,17 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+@Data
+public class RsmAcademicVO {
+	private String acbgNo;
+	private String rsmNo;
+	private String acbgSeCd;
+	private String acbgRcognacbgCd;
+	private String acbgSchlNm;
+	private String acbgMjrNm;
+	private String acdmcrGrdtnSeCd;
+	private String acbgMtcltnym;
+	private String acbgGrdtnym;
+	private String acbgPntCd;
+}

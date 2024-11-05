@@ -1,0 +1,59 @@
+package kr.or.ddit.vo;
+
+import java.util.Date;
+import java.util.List;
+
+import lombok.Data;
+
+@Data
+public class PbancVO {
+	private String pbancSttus;
+	private String pbancNo;
+	private String entId;
+	private String pbancPicNm;
+	private String pbancPicTelno;
+	private String pbancPicEml;
+	private String pbancAplctEduCd;
+	private String pbancRprsrgn;
+	private String pbancTtl;
+	private String pbancWorkstleCd;
+	private int pbancApntcpd;
+	private String pbancSalary;
+	private String pbancWorkHrCd;
+	private String pbancWorkDayCd;
+	private String pbancRcptMthdCd;
+	private String pbancRprsDty;
+	private String pbancRcptPd;
+	private String pbancBgngDt;
+	private String pbancBgngDts;
+	private String pbancDdlnDt;
+	private String pbancDdlnDts;
+	private String pbancWrtDt;
+	private String pbancMdfcnDt;
+	private String pbancDelDt;
+	private int pbancScrapCo; //스크랩수
+	private String pbancDelYn;
+	private int pbancRdcnt;
+	private String pbancDlnDt; //마감일자 스트링타입
+	private int pbancBeforeWrt; //공고등록일로부터 현재까지 일자 등록
+	private String entStleNm; //기업 형태명
+	private String pbancAplctEdu; //졸업요건명
+	private String rcritCareerNm; //경력 여부명
+	private String pbancTpbizNm; //업종명
+	private String pbancWorkstleNm; //근무형태
+	private String entNm; //기업명	
+	private TbcRecruitmentVO tbcRecruitmentVO;//경력 코드
+	private TbcIndutyVO tbcIndutyVO;//공고업종
+	private EnterVO enterVO;
+	private CodeVO codeVO;
+	private String memNm;
+	private String memBrdt;
+	private int rnum;
+	private String pbancAplctEduCdNm; //학력코드명
+	private String pbancRprsrgnNm; //근무지역명
+	private String pbancCityNm; //근무도시명
+	private String pbancWorkstleCdNm; //근무형태명
+	private String pbancCareerCdNm; //모집경력명
+	private String pbancCareerCd; //모집경력코드
+	
+}

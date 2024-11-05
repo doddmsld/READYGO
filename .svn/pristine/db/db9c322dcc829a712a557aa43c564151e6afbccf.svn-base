@@ -1,0 +1,210 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="sec"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<!-- 외주 css 파일 -->
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/outsou/list.css" />
+
+<script type="text/javascript">
+
+$(function() {
+    // "적용하기" 버튼을 클릭했을 때 선택된 옵션들을 서버로 전송
+    $('#applyBtn').click(function() {
+        var selectedSrvcLevel = [];
+        var selectedTeamScale = [];
+        
+        // 체크된 기술수준 값 수집
+        $('input[name="srvcLevel"]:checked').each(function() {
+            selectedSrvcLevel.push($(this).val());
+        });
+
+        // 체크된 팀 규모 값 수집
+        $('input[name="teamScale"]:checked').each(function() {
+            selectedTeamScale.push($(this).val());
+        });
+
+        // 폼에 값 설정
+        $('#selectedSrvcLevel').val(selectedSrvcLevel.join(','));
+        $('#selectedTeamScale').val(selectedTeamScale.join(','));
+
+        // 폼 제출
+        $('#filterForm').submit();
+    });
+
+    // 정렬 버튼 클릭 시 정렬 기준을 서버로 전송
+    $('.trigger-btn').click(function() {
+        var orderType = $(this).text();  // 버튼 텍스트로 구분 (예: '인기순', '신규 등록순')
+        $('#orderType').val(orderType);
+        $('#filterForm').submit();
+    });
+});
+</script>
+<form id="filterForm" method="get" action="/outsou/list">
+    <input type="hidden" id="orderType" name="orderType" value="${param.orderType}" />
+    <input type="hidden" id="selectedSrvcLevel" name="selectedSrvcLevel" value="${param.selectedSrvcLevel}" />
+    <input type="hidden" id="selectedTeamScale" name="selectedTeamScale" value="${param.selectedTeamScale}" />
+</form>
+
+<div class="submainAll">
+	<div class="catnm">
+		<c:forEach var="getDetailVO" items="${articlePage.content}"
+			varStatus="stat">
+			<c:if test="${stat.index == 0}">
+				<p>${getDetailVO.outordMlsfcNm}</p>
+			</c:if>
+		</c:forEach>
+
+		<div class="ArryOP">
+			<!-- Trigger Button -->
+			<button class="trigger-btn" id="opbtn">
+				<span>옵션 별</span>
+				<svg width="10" height="10">
+                <path d="M0 0 L5 5 L10 0" stroke="black"
+						fill="transparent" />
+            </svg>
+			</button>
+
+			<!-- Dropdown Menu -->
+			<div id="downdrop" class="downdrop" style="display: none;">
+				<div class="checkbox-grid">
+					<div class="chText">
+						<p>기술수준</p>
+					</div>
+					<c:forEach var="Srle" items="${SrleList}">
+						<label><input type="checkbox" value="${Srle.comCodeNm}">&nbsp;${Srle.comCodeNm}</label>
+					</c:forEach>
+				</div>
+
+				<div class="hrline"></div>
+
+				<div class="checkbox-grid">
+					<div class="chText">
+						<p>팀규모</p>
+					</div>
+					<c:forEach var="Srte" items="${SrteList}">
+						<label><input type="checkbox" value="${Srte.comCodeNm}">&nbsp;${Srte.comCodeNm}</label>
+					</c:forEach>
+				</div>
+
+				<div class="hrline"></div>
+
+				<button class="apply-btn" id="applyBtn">적용하기</button>
+			</div>
+		</div>
+
+		<div class="ArryOP">
+			<!-- Sorting Buttons -->
+			<button class="trigger-btn">인기순</button>
+			<button class="trigger-btn">신규 등록순</button>
+		</div>
+	</div>
+</div>
+
+
+<div class="newtboxAll">
+	<div class="newtbox">
+		<!-- 게시글 목록 -->
+		<c:forEach var="getDetailVO" items="${articlePage.content}">
+			<div class="item_box">
+				<div class="plus"></div>
+				<a class="item_thum"
+					href="/outsou/detail?outordNo=${getDetailVO.outordNo}"> <img
+					src="${getDetailVO.outordMainFile}"
+					alt="${getDetailVO.outordMainFile}" class="product-image" id="pImg" />
+				</a> <a class="item_tit"
+					href="/outsou/detail?outordNo=${getDetailVO.outordNo}">
+					${getDetailVO.outordTtl} </a>
+				<div class="item_info_wrap clear">
+					<div class="item_info">
+						<hr class="outhr">
+						<p class="price">
+							<fmt:formatNumber pattern="#,###"
+								value="${getDetailVO.outordAmt}" />
+							원
+						</p>
+					</div>
+				</div>
+			</div>
+		</c:forEach>
+	</div>
+</div>
+
+<!-- 페이지 처리 -->
+
+<table class="table table-hover text-nowrap">
+	<t>
+	<tr>
+		<td colspan="4" style="text-align: center;">
+			<div class="dataTables_paginate" id="example2_paginate"
+				style="display: flex; justify-content: center; margin-top: 20px;">
+				<ul class="pagination">
+					<br>
+					<!-- 맨 처음 페이지로 이동 버튼 -->
+					<c:if test="${articlePage.currentPage gt 1}">
+						<li class="paginate_button page-item first"><a
+							href="/outsou/list?outordMlsfc=${param.outordMlsfc}&currentPage=1"
+							aria-controls="example2" data-dt-idx="0" tabindex="0"
+							class="page-link">&lt;&lt;</a></li>
+					</c:if>
+
+					<!-- 이전 페이지 버튼 -->
+					<c:if test="${articlePage.startPage gt 1}">
+						<li class="paginate_button page-item previous"
+							id="example2_previous"><a
+							href="/outsou/list?outordMlsfc=${param.outordMlsfc}&currentPage=${(articlePage.startPage - 1) lt 1 ? 1 : (articlePage.startPage - 1)}"
+							aria-controls="example2" data-dt-idx="0" tabindex="0"
+							class="page-link">&lt;</a></li>
+					</c:if>
+
+					<!-- 페이지 번호 -->
+					<c:forEach var="pNo" begin="${articlePage.startPage}"
+						end="${articlePage.endPage}">
+						<li
+							class="paginate_button page-item ${pNo == articlePage.currentPage ? 'active' : ''}">
+							<a
+							href="/outsou/list?outordMlsfc=${param.outordMlsfc}&currentPage=${pNo}"
+							aria-controls="example2" class="page-link">${pNo}</a>
+						</li>
+					</c:forEach>
+
+					<!-- 다음 페이지 버튼 -->
+					<c:if test="${articlePage.endPage lt articlePage.totalPages}">
+						<li class="paginate_button page-item next" id="example2_next">
+							<a
+							href="/outsou/list?outordMlsfc=${param.outordMlsfc}&currentPage=${articlePage.startPage+5}"
+							aria-controls="example2" data-dt-idx="7" tabindex="0"
+							class="page-link">&gt;</a>
+						</li>
+					</c:if>
+
+					<!-- 맨 마지막 페이지로 이동 버튼 -->
+					<c:if test="${articlePage.currentPage lt articlePage.totalPages}">
+						<li class="paginate_button page-item last"><a
+							href="/outsou/list?outordMlsfc=${param.outordMlsfc}&currentPage=${articlePage.totalPages}"
+							aria-controls="example2" data-dt-idx="7" tabindex="0"
+							class="page-link">&gt;&gt;</a></li>
+					</c:if>
+
+				</ul>
+			</div>
+		</td>
+	</tr>
+	</tfoot>
+</table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

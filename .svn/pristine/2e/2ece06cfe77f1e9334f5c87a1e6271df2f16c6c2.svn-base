@@ -1,0 +1,51 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.AdminVO;
+import kr.or.ddit.vo.CodeGrpVO;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.EnterVO;
+
+public interface AdminMapper {
+	public AdminVO selectOne(String adminVO);
+
+	//공통 코드관리 시작
+    public List<CodeVO> codeManage(String comCodeGrp);
+    
+	public List<CodeVO> codeAllSelect(Map<String, Object> map);
+
+
+	public int codeGrpAdd(CodeGrpVO codeGrpVO);
+
+	public int codeGrpDel(CodeGrpVO codeGrpVO);
+	
+    public int codeAdd(CodeVO code);
+    public int codeDel(String comCode);
+
+	public int getTotal(Map<String, Object> map);
+
+	public List<CodeVO> codeSelect(Map<String, Object> map);
+
+	public List<CodeVO> codeSelect(String comCodeGrp);
+
+	
+	//기업승인시작
+	public List<EnterVO> enterList();
+
+	public int entOk(String entId);
+
+	public int entNo(String entId);
+
+	public EnterVO enterDetail(String entId);
+
+	
+	//회원관리시작
+	public String memManage();
+
+	
+	//관리자 메인
+	public String main();
+
+}

@@ -1,0 +1,34 @@
+package kr.or.ddit.enter.entservice.impl;
+
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.Email;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.SimpleEmail;
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.enter.entservice.EmailService;
+@Service
+public class EmailServiceImpl implements EmailService {
+    private final String hostName = "smtp.gmail.com";
+    private final int smtpPort = 587;
+    private final String username = "seongbae123@gmail.com"; // 발신자 이메일
+    private final String password = "zvmf uzqu szwh ymzz"; // 구글 앱 비밀번호
+
+    public void sendEmail(String toEmail, String subject, String message) throws EmailException {
+        Email email = new SimpleEmail();
+        email.setHostName(hostName);
+        email.setSmtpPort(smtpPort);
+        email.setAuthenticator(new DefaultAuthenticator(username, password));
+        email.setStartTLSRequired(true);
+        email.setFrom(username); // 발신자 이메일
+
+        email.setSubject(subject); // 메일 제목
+//        email.setSubject("메일 제목"); // 메일 제목
+        email.setMsg(message); // 메일 내용
+//        email.setMsg("메일 내용"); // 메일 내용
+        email.addTo(toEmail); // 수신자 이메일
+//        email.addTo("lovely3529@naver.com"); // 수신자 이메일
+
+        email.send(); // 메일 전송
+    }
+}

@@ -1,0 +1,24 @@
+package kr.or.ddit.controller_DO;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import lombok.extern.slf4j.Slf4j;
+
+@RequestMapping("/adm")
+@Controller
+@Slf4j
+public class socketController {
+
+	@GetMapping("/socket")
+	public String socket() {
+        // 로그인한 사용자 ID 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String mbrId = authentication.getName();
+		return "adm/socket";
+	}
+	
+}

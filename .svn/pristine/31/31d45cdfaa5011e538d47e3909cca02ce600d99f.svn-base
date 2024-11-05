@@ -1,0 +1,196 @@
+package kr.or.ddit.oustou.controller;
+
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.or.ddit.mapper.UserMapper;
+import kr.or.ddit.oustou.service.OustouService;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.OustouVO;
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
+@Controller
+@RequestMapping("/oustou")
+public class OustouController {
+
+	@Inject
+	OustouService oustouService;
+	
+	@Autowired
+	UserMapper userMapper;
+
+
+	
+	/**
+	 * 외주 게시판 목록
+	 * 
+	 * 
+	 */
+	@GetMapping("/list")
+	public String list(Model model) {
+		//옵션값 가져오기 
+		List<CodeVO> codeList = this.codeList();
+//		List<OustouVO> oustouVO = this.oustouSrevice.list();
+//		
+		model.addAttribute("codeList",codeList);
+		
+		return "oustou/list";
+	}
+	
+	
+	private List<CodeVO> codeList() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	/**
+	 * 외주 게시판 기본 정보 등록
+	 */
+	@GetMapping("/regist1")
+	public String regit1(Model model) {
+		//기술수준
+		List<CodeVO> SRLEcodeVOList = userMapper.codeSelect("SRLE");
+		//팀규모
+		List<CodeVO> SRTEcodeVOList = userMapper.codeSelect("SRTE");
+		//개발언어 공통코드 
+		List<CodeVO> SRLAcodeVOList = userMapper.codeSelect("SRLA");
+		//데이터베이스 공통코드
+		List<CodeVO> SRDBcodeVOList = userMapper.codeSelect("SRDB");
+		//클라우드
+		List<CodeVO> SRCLcodeVOList = userMapper.codeSelect("SRCL");
+		//작업기간
+		List<CodeVO> SRJPcodeVOList = userMapper.codeSelect("SRJP");
+		//수정횟수
+		List<CodeVO> SRUMcodeVOList = userMapper.codeSelect("SRUM");
+		
+		
+		
+		//공통코드 
+		model.addAttribute("SRLEcodeVOList",SRLEcodeVOList);//기술수준
+		model.addAttribute("SRTEcodeVOList",SRTEcodeVOList);//팀규모
+		model.addAttribute("SRLAcodeVOList",SRLAcodeVOList);//개발언어
+		model.addAttribute("SRDBcodeVOList",SRDBcodeVOList);//데이터베이스
+		model.addAttribute("SRCLcodeVOList",SRCLcodeVOList);//클라우드
+		model.addAttribute("SRJPcodeVOList",SRJPcodeVOList);//작업기간
+		model.addAttribute("SRUMcodeVOList",SRUMcodeVOList);//수정횟수
+		
+		return "oustou/regist/regist1";
+	}
+	/**
+	 * 외주 게시판 가격 정보 등록
+	 */
+	@GetMapping("/regist2")
+	public String regit2() {
+		
+//		List<OustouVO> oustouVO = this.oustouSrevice.list();
+//		
+//		model.addAttribute("oustouVO",oustouVO);
+		
+		return "oustou/regist/regist2";
+	}
+	/**
+	 * 외주 게시판 서비스 설명
+	 */
+	@GetMapping("/regist3")
+	public String regit3() {
+		
+//		List<OustouVO> oustouVO = this.oustouSrevice.list();
+//		
+//		model.addAttribute("oustouVO",oustouVO);
+		
+		return "oustou/regist/regist3";
+	}
+	/**
+	 * 외주 게시판 이미지 
+	 */
+	@GetMapping("/regist4")
+	public String regit4() {
+		
+//		List<OustouVO> oustouVO = this.oustouSrevice.list();
+//		
+//		model.addAttribute("oustouVO",oustouVO);
+		
+		return "oustou/regist/regist4";
+	}
+	/**
+	 * 외주 게시판 요청사항
+	 */
+	@GetMapping("/regist5")
+	public String regit5() {
+		
+//		List<OustouVO> oustouVO = this.oustouSrevice.list();
+//		
+//		model.addAttribute("oustouVO",oustouVO);
+		
+		return "oustou/regist/regist5";
+	}
+	
+	
+	/**
+	 * 외주 게시판 등록실행 
+	 */
+	
+	
+	/**
+	 * 외주 게시판 수정 폼 
+	 */
+	
+	/**
+	 * 외주 게시판 수정 실행 
+	 */
+	
+	
+	/**
+	 * 외주 게시판 삭제 실행
+	 */
+	
+	
+	/**
+	 * 외주 게시판 상세
+	 * 요청 URI : /readyUP/oustou/detail
+	 * 요청파라미터 : {outordNo=1}
+	 * @return
+	 */
+	@GetMapping("/detail")
+	public String detail() {
+		//log.info("detail->outordNo : " + outorNo);
+		
+		
+		
+		
+		return "oustou/detail";
+		
+		
+	}
+	
+	/**
+	 * 외주 결제 상세 
+	 * 요청 URI : /readyUP/oustou/paydetail
+	 * 요청파라미터 : {outordNo=1}
+	 * @return
+	 */
+	@GetMapping("/paydetail")
+	public String paydetail() {
+		//log.info("detail->outordNo : " + outorNo);
+		
+		
+		
+		
+		return "oustou/paydetail";
+		
+		
+	}
+
+}

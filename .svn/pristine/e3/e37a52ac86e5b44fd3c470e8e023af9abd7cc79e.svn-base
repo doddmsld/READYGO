@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.VideoMapper">
+	
+	<insert id="videointrvwPost" parameterType="videoRoomVO">
+	<selectKey resultType="String" order="BEFORE" keyProperty="vcrNo">
+		SELECT LPAD(NVL(MAX(VCR_NO), '0') + 1, 4, '0') AS VCR_NO FROM VIDEO_ROOM
+	</selectKey>
+		INSERT INTO VIDEO_ROOM (VCR_NO, VCR_TITLE, VCR_ROOMURLID,VCR_MAXJOINCOUNT, VCR_PASSWD, VCR_STARTDATE
+                        , VCR_ENDDATE, VCR_DATE, PBANC_NO,VCR_ROOMID,VCR_STARTDATE_NO,VCR_ENDDATE_NO)
+		VALUES(#{vcrNo},#{vcrTitle},#{vcrRoomurlid},#{vcrMaxjoincount},#{vcrPasswd},#{vcrStartdate},#{vcrEnddate},#{vcrDate},#{pbancNo},#{vcrRoomid},#{vcrStartdateNo},#{vcrEnddateNo})
+	</insert>
+	
+	<delete id="deleteVideoRoom" parameterType="String">
+		DELETE FROM VIDEO_ROOM WHERE VCR_NO = #{vcrNo}
+	</delete>
+	
+	
+</mapper>

@@ -1,0 +1,11 @@
+package kr.or.ddit.service_DO;
+
+import java.util.List;
+
+import kr.or.ddit.vo.ChatMsgVO;
+
+public interface ChatService {
+
+	public void createChatRoom(String senderUser, String receiveUser);
+
+}

@@ -1,0 +1,320 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="/resources/ckeditor5/ckeditor.js"></script>
+<sec:authentication property="principal" var="prc"/>
+<!-- 비로그인 또는 로그인한 사용자가 'admin'이 아닐 때 접근 금지 메시지를 표시하거나 리디렉션 -->
+<sec:authorize access="!isAuthenticated() or principal.username != 'admin'">
+    <script>
+        alert("접근 권한이 없습니다.");
+        window.location.href = "http://localhost/"; // 접근 불가 시 다른 페이지로 리디렉션
+    </script>
+</sec:authorize>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: pretendard;
+    background-color: #fff;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    margin-left: 20%;
+}
+
+table {
+    width: 80%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: left;
+    padding-top: 20px;
+}
+
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin: 40px 0 30px;
+}
+
+input[type="text"] {
+    width: 200px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.search-button,
+.filter-button {
+    padding: 10px 20px;
+    border: 1px solid #FD5D6C;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: white;
+    color: #FD5D6C;
+    transition: background-color 0.3s, color 0.3s; 
+}
+
+.filter-button:hover {
+    background-color: #FD5D6C;
+    color: white;
+    border: 1px solid #FD5D6C; 
+}
+
+table thead {
+    border-bottom: 2px solid #000;
+}
+
+table thead th, table tbody td {
+    padding: 10px;
+    font-size: 14px;
+    border-bottom: 1px solid #ddd;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.pagination a {
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    color: black;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.pagination a.active {
+    background-color: #FD5D6C;
+    color: white;
+}
+
+.pagination a:hover:not(.active) {
+    background-color: #ddd;
+}
+
+.button-container {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.page-item.active .page-link {
+    color: #FD5D6C;
+    background-color: rgba(253, 93, 108, 0.11);
+    border-radius: 7px;
+    border-color: #FD5D6C;
+}
+
+</style>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<div class="container">
+	<header>
+		<h1>신고 커뮤니티 관리</h1>
+	</header>
+	<table>
+		<colgroup>
+		    <col style="width: 8%;">
+		    <col style="width: 8%;">
+		    <col style="width: 10%;">
+		    <col style="width: 10%;">
+		    <col style="width: 23%;">
+		    <col style="width: 13%;">
+		    <col style="width: 8%;">
+		    <col style="width: 10%;">
+		    <col style="width: 8%;">
+		</colgroup>
+		<thead>
+			<tr>
+				<th style="text-align: center;">분류</th>
+				<th style="text-align: center;">작성자</th>
+				<th style="text-align: center;">날짜</th>
+				<th style="text-align: center;">신고분류</th>
+				<th style="text-align: center;">신고내용</th>
+				<th style="text-align: center;">실렉트</th>
+				<th style="text-align: center;">제한</th>
+				<th style="text-align: center;">게시글</th>
+				<th style="text-align: center;">삭제</th>
+			</tr>
+		</thead>
+		<tbody>
+			<c:forEach var="declarationVO" items="${reportBoardVOList}">
+				<tr>
+					<input type="hidden" id="dclrNo" name="dclrNo"value="${declarationVO.dclrNo}" />
+					<td style="text-align: center;">${declarationVO.dclrField}</td>
+					<td style="text-align: center;">${declarationVO.mbrId}</td>
+					<td style="text-align: center;">${declarationVO.dclrDt}</td>
+					<td style="text-align: center;">${declarationVO.dclrTp}</td>
+					<td style="text-align: center;">${declarationVO.dclrCn}</td>
+					<td style="text-align: center;">
+						<select class="form-control category" name="comCode" id="comCode" required>
+						    <option value="" selected disabled hidden>제한 선택</option>
+						    <c:forEach var="codeVO" items="${codeVOList}">
+						        <option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+						    </c:forEach>
+						</select>
+					</td>
+					<td style="text-align: center;">
+						<button class="filter-button limit-btn">제한</button>
+					</td>
+			        <td style="text-align: center;">
+			            <a href="${declarationVO.dclrUrl}" class="filter-button" style="text-decoration: none;">게시글</a>
+			        </td>
+			        <td>
+			        	<button class="filter-button report-Del">삭제</button>
+			        </td>
+				</tr>
+			</c:forEach>
+		</tbody>
+	</table>
+</div>
+<div id="entDetailModal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">제출정보 조회</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p><strong>아이디:</strong> <span id="modal-entId"></span></p>
+        <p><strong>기업 이름:</strong> <span id="modal-entNm"></span></p>
+        <p><strong>대표자 이름:</strong> <span id="modal-entRprsntvNm"></span></p>
+        <p><strong>전화번호:</strong> <span id="modal-entTel"></span></p>
+        <p><strong>이메일:</strong> <span id="modal-entEmail"></span></p>
+        <p><strong>주소:</strong> <span id="modal-entAddr"></span></p>
+        <p><strong>우편번호:</strong> <span id="modal-entZip"></span></p>
+        <p><strong>사업자등록번호:</strong> <span id="modal-entBrNo"></span></p>
+        <p><strong>팩스 번호:</strong> <span id="modal-entFxnum"></span></p>
+        <p><strong>직원 수:</strong> <span id="modal-entEmpCnt"></span></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+	    $(document).on('click', '.limit-btn', function() {
+	        var selectedComCode = $(this).closest('tr').find('.category').val(); // 선택된 comCode 값 가져오기
+	        var mbrId = $(this).closest('tr').find('td:eq(1)').text(); // 두 번째 td (회원 ID) 가져오기
+	        var dclrNo = $(this).closest('tr').find('input[type="hidden"]').val(); // 해당 행의 dclrNo 값 가져오기
+
+	        if (selectedComCode) {
+	        	//신고기각일떄!
+	            if (selectedComCode === "WAMA04") {
+	                $.ajax({
+	                    url: '/adm/reportBoardDel',
+	                    type: 'POST',
+	                    data: {
+	                        dclrNo: dclrNo // 삭제할 dclrNo 값 전달
+	                    },
+	                    beforeSend: function(xhr) {
+	                        xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	                    },
+	                    success: function(response) {
+	                        if (response === "success") {
+	                            alert("삭제되었습니다.");
+	                            location.reload(); // 삭제 후 페이지 새로고침
+	                        } else {
+	                            alert("삭제 실패.");
+	                        }
+	                    },
+	                    error: function() {
+	                        alert("오류가 발생했습니다.");
+	                    }
+	                });
+	            } else {
+	                // 신고 기각아닐떄!
+	                $.ajax({
+	                    url: '/adm/boardReport',
+	                    type: 'POST',
+	                    data: {
+	                        comCode: selectedComCode,
+	                        mbrId: mbrId
+	                    },
+	                    beforeSend: function(xhr) {
+	                        xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	                    },
+	                    success: function(response) {
+	                        if (response === "success") {
+	                            alert("회원 제한이 적용되었습니다.");
+	                            // 첫 번째 AJAX 성공 후 자동으로 삭제 AJAX 요청을 실행
+	                            $.ajax({
+	                                url: '/adm/reportBoardDel',
+	                                type: 'POST',
+	                                data: {
+	                                    dclrNo: dclrNo // 삭제할 dclrNo 값 전달
+	                                },
+	                                beforeSend: function(xhr) {
+	                                    // CSRF 토큰 설정 (Spring Security 사용 시)
+	                                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	                                },
+	                                success: function(response) {
+	                                    if (response === "success") {
+	                                        alert("삭제되었습니다.");
+	                                        location.reload(); // 삭제 후 페이지 새로고침
+	                                    } else {
+	                                        alert("삭제 실패.");
+	                                    }
+	                                },
+	                                error: function() {
+	                                    alert("오류가 발생했습니다.");
+	                                }
+	                            });
+	                        } else {
+	                            alert("회원 제한 적용 실패.");
+	                        }
+	                    },
+	                    error: function() {
+	                        alert("오류가 발생했습니다.");
+	                    }
+	                });
+	            }
+	        } else {
+	            alert("카테고리를 선택하세요.");
+	        }
+	    });
+
+
+    // 삭제 버튼 클릭 이벤트
+    $(document).on('click', '.report-Del', function() {
+        var dclrNo = $(this).closest('tr').find('input[type="hidden"]').val(); 
+
+        $.ajax({
+            url: '/adm/reportBoardDel',
+            type: 'POST',
+            data: {
+                dclrNo: dclrNo
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(response) {
+                if (response === "success") {
+                    alert("삭제되었습니다.");
+                    location.reload(); // 성공 후 페이지 새로고침
+                } else {
+                    alert("삭제 실패.");
+                }
+            },
+            error: function() {
+                alert("오류가 발생했습니다.");
+            }
+        });
+    });
+});
+</script>
+

@@ -1,0 +1,170 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+.label{
+	font-weight : 200;
+}
+
+.edit-control {
+    font-size: 14px;
+    color: #232323;
+    padding: 5px;
+    border: 1px solid #666363;
+    border-radius: 5px;
+    box-sizing: border-box; /* padding과 border를 포함한 크기 계산 */
+}
+.edit-control2 {
+    font-size: 14px;
+    color: #232323;
+    padding: 5px;
+    border: 1px solid #666363;
+    border-radius: 5px;
+    box-sizing: border-box; /* padding과 border를 포함한 크기 계산 */
+}
+
+/* form-group의 CSS 수정 */
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px; /* 각 input 그룹 사이의 간격 */
+    margin-left : 30px;
+    
+}
+
+.form-group label {
+	font-size: 14px;
+    color: #232323;
+    margin-right: 40px;
+    width: 150px; /* label의 고정 너비 설정 */
+    text-align: left; /* label 텍스트를 오른쪽 정렬 */
+
+}
+
+.form-group input {
+    flex: 1; /* input이 남은 공간을 차지하게 설정 */
+    padding: 8px;
+    border: 1px solid #666363;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+#mbrId{
+	border : none;
+	background : none;
+}
+
+.col-left{
+	margin-left : -30px;
+	margin-right : 100px;
+	
+}
+
+#pImg{
+	width : 140px;
+	height : 140px;
+	border-radius : 999px;
+	cursor: pointer; /* 손 모양 커서 */
+}
+.h4{
+	font-size : 20px;
+	font-weight : 650;
+}
+.container{
+	padding-left : 100px;	
+}
+#h3{
+	margin-left:-40px;
+	font-weight : 700;
+	font-size : 30px;
+	color : #212529;
+}
+#mbrId{
+	margin-left:48px;
+	font-size : 20px;
+	font-weight : 600;
+}
+
+#edit{
+	width : 100px;
+	height : 40px;
+	background: #24D59E;
+	border : none;
+	color : white;
+	border-radius : 7px;
+    font-size : 16px;
+    font-weight : 400;
+	
+}
+#save{
+	width : 100px;
+	height : 40px;
+	background: #24D59E;
+	border : none;
+	color : white;
+	border-radius : 7px;
+    font-size : 16px;
+    font-weight : 400;
+}
+#cancel{
+	width : 100px;
+	height : 40px;
+	border : 1px solid #A7A7A7;
+	color : #666363;
+	background:white;
+	border-radius : 7px;	
+	font-size : 16px;
+	font-weight : 400;
+}
+#btnPost {
+	width : 100px;
+	height : 39px;
+	font-size : 14px;
+	background: #24D59E;
+	border : none;
+	color : white;
+    font-weight : 400;
+    margin-left : 10px;
+	
+	
+}
+
+#editBox{
+	display: flex;
+    align-items: flex-end;
+    margin-bottom: -100px;
+    margin-left: 100px;
+}
+
+input[readonly]{
+	background : none;
+/* 	padding: 8px; 편집 가능할 때와 동일한 패딩 적용 */
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #232323;
+}
+
+#btnDelete{
+	width : 100px;
+	height : 40px;
+	border : 1px solid #A7A7A7;
+	color : #666363;
+	background:white;
+	border-radius : 7px;
+    font-size : 16px;
+    font-weight : 400;
+}
+
+#editImg {
+	color : #232323;
+	font-size : 14px;
+	margin-left : 30px;
+	
+}
+#spn2{
+	margin-left: -64px;
+}
+#spn1{
+	 margin-bottom: -15px;
+}

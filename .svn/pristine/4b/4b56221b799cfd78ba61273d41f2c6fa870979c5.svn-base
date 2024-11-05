@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MemberMapper">
+
+	<!-- 회원(MemberVO) : 파일그룹(fileDetailVO) = 1 : N -->
+	<resultMap type="memberVO" id="memberMap">
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="mbrPswd" column="MBR_PSWD"/>
+		<result property="mbrNm" column="MBR_NM"/>
+		<result property="mbrBrdt" column="MBR_BRDT"/>
+		<result property="mbrSexdstnCd" column="MBR_SEXDSTN_CD"/>
+		<result property="mbrEml" column="MBR_EML"/>
+		<result property="mbrTelno" column="MBR_TELNO"/>
+		<result property="mbrZip" column="MBR_ZIP"/>
+		<result property="mbrAddr" column="MBR_ADDR"/>
+		<result property="mbrAddrDtl" column="MBR_ADDR_DTL"/>
+		<result property="mbrJoinYmd" column="MBR_JOIN_YMD"/>
+		<result property="mbrWhdwlYmd" column="MBR_WHDWL_YMD"/>
+		<result property="enabled" column="ENABLED"/>
+		<result property="mbrWarnCo" column="MBR_WARN_CO"/>
+		<result property="mbrAcnutno" column="MBR_ACNUTNO"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="userType" column="USER_TYPE"/>
+		<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+		<collection property="userAuthVOList" resultMap="userAuthMap"></collection>
+		<collection property="fileDetailVOList" resultMap="fileDetailMap"></collection>
+	</resultMap>
+	
+	<resultMap type="userAuthVO" id="userAuthMap">
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="auth" column="AUTH"/>
+	</resultMap>
+	
+	<resultMap type="fileDetailVO" id="fileDetailMap">
+		<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="orgnlFileNm" column="ORGNL_FILE_NM"/>
+		<result property="strgFileNm" column="STRG_FILE_NM"/>
+		<result property="filePathNm" column="FILE_PATH_NM"/>
+		<result property="fileSz" column="FILE_SZ"/>
+		<result property="fileExtnNm" column="FILE_EXTN_NM"/>
+		<result property="fileMime" column="FILE_MIME"/>
+		<result property="fileFancysize" column="FILE_FANCYSIZE"/>
+		<result property="fileStrgYmd" column="FILE_STRG_YMD"/>
+		<result property="fileDwnldCnt" column="FILE_DWNLD_CNT"/>
+	</resultMap>
+	
+	<select id="selectOne" parameterType="String" resultMap="memberMap">
+		SELECT A.MBR_ID, A.MBR_PSWD, A.MBR_NM, A.MBR_BRDT, 
+		       A.MBR_SEXDSTN_CD, A.MBR_EML, A.MBR_TELNO, A.MBR_ZIP, 
+		       A.MBR_ADDR, A.MBR_ADDR_DTL, A.MBR_JOIN_YMD, A.MBR_WHDWL_YMD, 
+		       A.ENABLED, A.MBR_WARN_CO, A.MBR_ACNUTNO, 
+		       A.ENT_ID, A.USER_TYPE,
+		       B.AUTH,
+               C.FILE_GROUP_SN,
+               C.FILE_SN, C.ORGNL_FILE_NM, C.STRG_FILE_NM, C.FILE_PATH_NM, 
+               C.FILE_SZ, C.FILE_EXTN_NM, C.FILE_MIME, C.FILE_FANCYSIZE, C.FILE_STRG_YMD, 
+               C.FILE_DWNLD_CNT
+		FROM MEMBER A LEFT OUTER JOIN AUTH_MEM B ON (A.MBR_ID = B.MBR_ID)
+			 LEFT OUTER JOIN FILE_DT C ON(A.FILE_GROUP_SN = C.FILE_GROUP_SN)
+		WHERE A.MBR_ID = #{username}
+	</select>
+<!-- 회원 상세 -->
+<select id="detail" parameterType="String" resultMap="memberMap">
+	SELECT M.MBR_ID, M.MBR_PSWD, M.MBR_NM, M.MBR_BRDT, M.MBR_SEXDSTN_CD, 
+	       M.MBR_EML, M.MBR_TELNO, M.MBR_ZIP, M.MBR_ADDR, M.MBR_ADDR_DTL, 
+	       M.MBR_JOIN_YMD, M.MBR_WHDWL_YMD, M.ENABLED, M.MBR_WARN_CO, 
+	       M.MBR_ACNUTNO, M.ENT_ID, M.USER_TYPE, M.FILE_GROUP_SN,
+	       F.FILE_SN, F.ORGNL_FILE_NM, F.STRG_FILE_NM, F.FILE_PATH_NM, 
+	       F.FILE_SZ, F.FILE_EXTN_NM, F.FILE_MIME, F.FILE_FANCYSIZE, F.FILE_STRG_YMD, 
+	       F.FILE_DWNLD_CNT
+	  FROM MEMBER M LEFT OUTER JOIN FILE_DT F ON(M.FILE_GROUP_SN = F.FILE_GROUP_SN)
+	WHERE 1 = 1
+	AND M.MBR_ID=#{mbrId}
+</select>
+
+<!-- 개인정보 수정 -->
+<update id="editPost" parameterType="memberVO">
+	UPDATE MEMBER
+	  SET MBR_NM=#{mbrNm}, MBR_BRDT=#{mbrBrdt}, MBR_TELNO=#{mbrTelno}, MBR_EML=#{mbrEml}
+	      , MBR_ZIP=#{mbrZip}, MBR_ADDR=#{mbrAddr}, MBR_ADDR_DTL=#{mbrAddrDtl}
+	      <if test="fileGroupSn!=null and fileGroupSn!=''">
+	      	, FILE_GROUP_SN=#{fileGroupSn}
+	      </if>
+	 WHERE MBR_ID=#{mbrId}
+</update>
+
+<!-- 회원 탈퇴 -->
+<update id="deletePost" parameterType="String">
+	UPDATE MEMBER
+	   SET MBR_WHDWL_YMD = SYSDATE,
+	   	   ENABLED ='0'
+	 WHERE MBR_ID=#{mbrId}
+</update>
+
+<!-- 회원 검색기록 -->
+<select id="searchHistory" parameterType="String" resultType="searchVO">
+		SELECT SEARCH_NO, SEARCH_NM, SEARCH_DATE
+		FROM SEARCH
+		WHERE MBR_ID = #{mbrId}
+		ORDER BY SEARCH_DATE
+</select>
+
+<!-- 회원 검색기록 저장-->
+<insert id="searchInsert" parameterType="hashMap">
+	INSERT INTO SEARCH (SEARCH_NO, MBR_ID, SEARCH_NM, SEARCH_DATE)
+	VALUES (
+    	(SELECT COALESCE(MAX(TO_NUMBER(SEARCH_NO)), 0) + 1 FROM SEARCH)
+    	, #{mbrId}, #{searchNm}, SYSDATE
+	)
+</insert>
+<!-- 회원 검색기록 선택 삭제 -->
+<delete id="searchDelete" parameterType="String">
+	DELETE FROM SEARCH
+	WHERE SEARCH_NO = #{searchNo}
+</delete>
+<!-- 회원 검색기록 전체 삭제-->
+<delete id="searchDeleteAll" parameterType="String">
+	DELETE FROM SEARCH
+	WHERE MBR_ID = #{mbrId}
+</delete>
+
+<!-- 프로필에서 이미지 수정 -> 멤버에 있는 파일 그룹번호 수정 -->
+<update id="editPrfImg" parameterType="memberVO">
+    UPDATE member
+    SET FILE_GROUP_SN = #{fileGroupSn}
+    WHERE MBR_ID = #{mbrId}
+</update>
+
+<!-- 회원 비밀번호 변경 -->
+<update id="updatePswd" parameterType="memberVO">
+	UPDATE MEMBER
+	  SET MBR_PSWD=#{mbrPswd}
+	WHERE MBR_ID=#{mbrId}
+</update>
+
+</mapper>

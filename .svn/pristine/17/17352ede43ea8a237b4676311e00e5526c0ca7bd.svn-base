@@ -1,0 +1,146 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<link rel="stylesheet" href="/resources/css/security/loginForm.css">
+
+<style type="text/css">
+.main .signFrom{
+	border : solid 1px gray;
+}
+.idForm{
+	justify-content: space-between;
+	align-items: flex-end;
+	max-width: 400px;
+	margin-left: 0px;
+}
+.id{
+	width: 260px;
+}
+.idForm .btn-sign{
+margin-bottom: 4px;
+}
+.card{
+	height: 1500px;
+}
+</style>
+<div class="main">
+	<div class="login-box">
+		<div class="card">
+			<div class="login-logo row">
+				<div>
+					<p>Welcome to ReadyGo<br />
+					<h2>회원가입</h2></p>
+				</div>
+				<div>
+					<p>계정이 있으신가요?<br />
+					<a id="signin" href="/security/login" style="font-size: 14px;">로그인</a></p>
+				</div>
+			</div>
+			<div class="card-body login-card-body">
+				<!-- 
+				[스프링 시큐리티 로그인 폼 규칙]
+				1. 아이디   : name속성값이 username
+				2. 비밀번호 : name속성값이 password
+				3. form태그의 action속성값이 /login, method속성값이 post
+				4. csrf 처리
+				5. submit 버튼
+				 -->
+				<form action="/login" method="post">
+					<div class="row idForm">
+						<div class="form-group mb-2 id">
+							<label for="mbrId">Enter you ID</label>
+							<input type="text" class="form-control" 
+								placeholder="아이디를 입력하세요" 
+								name="username" id="mbrId" />
+						</div>
+						<div class="form-group mb-1">
+							<button type="button" class="btn btn-block btn-sign">아이디 중복검사</button>
+						</div>
+					</div>
+					<div class="form-group mb-3">
+						<label for="username">Enter you Password</label>
+						<input type="mbrPwd" class="form-control" 
+							placeholder="비밀번호를 입력하세요." 
+							name="password" id="mbrPwd" />
+					</div>
+					<div class="row idForm">
+						<div class="form-group">
+							<label for="username">Enter you Name</label>
+							<input type="mbrName" class="form-control" 
+								placeholder="이름을 입력하세요" 
+								name="password" id="mbrName" />
+						</div>
+						<div class="form-group row">
+							<label for="reg1" id="reg1label">Enter you Birthday</label>
+							<input type="text" class="form-control" 
+								placeholder="0000000" 
+								name="password" id="reg1" />
+							<p>-</p>
+							<input type="password" class="form-control" 
+								placeholder="0" 
+								name="password" id="reg2" />
+						</div>
+					</div>
+					<div class="form-group mb-3">
+						<label for="username">Enter you Password</label>
+						<input type="password" class="form-control" 
+							placeholder="비밀번호" 
+							name="password" id="password" />
+					</div>
+					<div class="form-group mb-3">
+						<label for="username">Enter you Password</label>
+						<input type="password" class="form-control" 
+							placeholder="비밀번호" 
+							name="password" id="password" />
+					</div>
+					<div class="form-group mb-3">
+						<label for="username">Enter you Password</label>
+						<input type="password" class="form-control" 
+							placeholder="비밀번호" 
+							name="password" id="password" />
+					</div>
+					<div class="col-12">
+						<div class="icheck-primary">
+							<!-- 로그인 상태 유지 체크박스
+							체크 시 : PERSISTENT_LOGINS에 로그인 로그 정보가 insert
+							 -->
+						    <div class="userChkBox">
+							   <div class="chkbox">
+							   		<div id="rememberID">
+							      		<label class="container">아이디저장<input type="checkbox" type="checkbox" id=""name=""><span class="checkmark"></span></label>
+							   		</div>
+							   		<div id="autoLogin">
+							      		<label class="container">자동로그인<input type="checkbox" type="checkbox" id="remember-me"name="remember-me"><span class="checkmark"></span></label>
+							   		</div>
+							   		<div id="find">
+										<p>
+											<a id="signin" href="/security/memSignIn" style="font-size: 12px;">아이디찾기</a>
+											<a id="signin" href="/security/memSignIn" style="font-size: 12px;">비밀번호찾기</a>
+										</p>
+							   		</div>
+							   </div>
+							</div>
+						</div>
+						<div class="col-12">
+							<button type="submit" class="btn btn-block btn-sign">로그인</button>
+						</div>
+						<div class="row socialLogin">
+							<div>
+								<button type="button" class="btn btn-block soBtn"><img src="/resources/images/secucrity/google.jpg"></button>
+							</div>
+							<div>
+								<button type="button" class="btn btn-block soBtn"><img src="/resources/images/secucrity/naver.jpg"></button>
+							</div>
+							<div>
+								<button type="button" class="btn btn-block soBtn"><img src="/resources/images/secucrity/kakao.jpg"></button>
+							</div>
+						</div>
+					</div>
+					<!-- csrf : Cross Site(크로스 사이트) Request(요청) Forgery(위조) -->
+					<sec:csrfInput/>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>

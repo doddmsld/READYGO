@@ -1,0 +1,210 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인재 검색</title>
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/enter/injae.css" />
+</head>
+
+<body>
+
+<div class="box">
+    <div class="search">
+        <input type="text" id="keywordInput" placeholder="하나 이상의 자격조건 키워드를 포함">
+        <button type="button">검색</button>
+        
+        <!-- 체크박스가 포함된 드롭다운 -->
+        <div id="dropdown" class="dropdown">
+            <div class="checkbox-grid">
+            	<c:forEach var="skill" items="${skillList}">
+					<label><input type="checkbox" value="${skill.comCodeNm}">&nbsp;${skill.comCodeNm}</label>
+				</c:forEach>
+            </div>
+        </div>        
+    </div>
+
+    <div class="result">
+        <!-- 검색 결과 카드 -->
+        <div class="resultCard">
+            <div class="profile">
+                <img src="../resources/images/enter/서성배.jpg" alt="프로필 사진">
+                <div class="profile-info">
+                    <div class="name">서성배</div>
+                    <div class="details">20대 중반 · 경력 1년</div>
+                    <div class="details">대기업 - 대전 소재 4년제 대학(졸업)</div>
+                    <div class="skills">
+                        <span class="skill-badge">JAVA</span>
+                        <span class="skill-badge">Jenkins</span>
+                        <span class="skill-badge">Spring Boot</span>
+                        <span class="skill-badge">+5</span>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="profileGo">프로필로 가기</button>
+                <button class="scout-button">스카우트 제안하기</button>
+            </div>
+        </div>
+        <div class="resultCard">
+            <div class="profile">
+                <img src="../resources/images/enter/방민주.jpg" alt="프로필 사진">
+                <div class="profile-info">
+                    <div class="name">방민주</div>
+                    <div class="details">20대 중반 · 신입</div>
+                    <div class="details">대기업 - 서울 소재 4년제 대학(졸업)</div>
+                    <div class="skills">
+                        <span class="skill-badge">JAVA</span>
+                        <span class="skill-badge">MariaDB</span>
+                        <span class="skill-badge">Spring Boot</span>
+                        <span class="skill-badge">+3</span>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="profileGo">프로필로 가기</button>
+                <button class="scout-button">스카우트 제안하기</button>
+            </div>
+        </div>
+        
+        <div class="resultCard">
+            <div class="profile">
+                <img src="../resources/images/enter/방민주.jpg" alt="프로필 사진">
+                <div class="profile-info">
+                    <div class="name">방민주</div>
+                    <div class="details">20대 중반 · 신입</div>
+                    <div class="details">대기업 - 서울 소재 4년제 대학(졸업)</div>
+                    <div class="skills">
+                        <span class="skill-badge">JAVA</span>
+                        <span class="skill-badge">MariaDB</span>
+                        <span class="skill-badge">Spring Boot</span>
+                        <span class="skill-badge">+3</span>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="profileGo">프로필로 가기</button>
+                <button class="scout-button">스카우트 제안하기</button>
+            </div>
+        </div>
+
+        <div class="resultCard">
+            <div class="profile">
+                <img src="../resources/images/enter/강민구.jpg" alt="프로필 사진">
+                <div class="profile-info">
+                    <div class="name">강민구</div>
+                    <div class="details">20대 후반 · 경력 1년</div>
+                    <div class="details">대기업 - 대전 소재 4년제 대학(졸업)</div>
+                    <div class="skills">
+                        <span class="skill-badge">JAVA</span>
+                        <span class="skill-badge">PYTHON</span>
+                        <span class="skill-badge">Spring Boot</span>
+                        <span class="skill-badge">+2</span>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="profileGo">프로필로 가기</button>
+                <button class="scout-button">스카우트 제안하기</button>
+            </div>
+        </div>
+
+    </div>
+<br>
+    <!-- 페이지네이션 -->
+        <div class="pagination">
+            <button>&lt;&lt;</button>
+            <button>&lt;</button>
+            <button class="active">1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>4</button>
+            <button>5</button>
+            <button>&gt;</button>
+            <button>&gt;&gt;</button>
+        </div>
+</div>
+
+</body>
+<script>
+//검색창을 클릭하면 드롭다운이 나타나게 함
+document.getElementById('keywordInput').addEventListener('click', function() {
+    document.getElementById('dropdown').classList.toggle('show');
+});
+
+// 체크박스 클릭 시 검색란에 추가
+const checkboxes = document.querySelectorAll('#dropdown input[type="checkbox"]');
+checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', function() {
+        let keywordInput = document.getElementById('keywordInput');
+        let selectedKeywords = [];
+        checkboxes.forEach((box) => {
+            if (box.checked) {
+                selectedKeywords.push(box.value);
+            }
+        });
+        keywordInput.value = selectedKeywords.join(', ');
+    });
+});
+//검색란에 입력된 값이 변경될 때 체크박스를 업데이트
+document.getElementById('keywordInput').addEventListener('input', function() {
+    let keywordInput = document.getElementById('keywordInput').value.split(', ').filter(Boolean);
+    
+    checkboxes.forEach((checkbox) => {
+        let label = checkbox.closest('label'); // 체크박스의 라벨을 찾음
+        if (keywordInput.includes(checkbox.value)) {
+            checkbox.checked = true;
+            label.style.fontWeight = '700'; // 해당 키워드가 있으면 체크박스를 선택하고 글씨 굵게
+        } else {
+            checkbox.checked = false;
+            label.style.fontWeight = 'normal'; // 해당 키워드가 없으면 체크 해제하고 글씨 원래대로
+        }
+    });
+});
+
+// 체크박스 클릭 시 검색란에 추가 및 글씨체 굵게 변경
+checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', function() {
+        let keywordInput = document.getElementById('keywordInput');
+        let selectedKeywords = [];
+        checkboxes.forEach((box) => {
+            let label = box.closest('label'); // 체크박스의 라벨을 찾음
+            if (box.checked) {
+                selectedKeywords.push(box.value);
+                label.style.fontWeight = '700'; // 체크된 경우 글씨를 굵게
+            } else {
+                label.style.fontWeight = 'normal'; // 체크가 해제되면 다시 원래대로
+            }
+        });
+        keywordInput.value = selectedKeywords.join(', ');
+    });
+});
+// 검색 기능: 선택된 체크박스를 출력
+function search() {
+    const selectedKeywords = document.getElementById('keywordInput').value;
+    alert("선택된 키워드: " + selectedKeywords);
+}
+
+// 드롭다운 외부 클릭 시 드롭다운 숨기기
+window.onclick = function(event) {
+    if (!event.target.matches('#keywordInput') && !event.target.closest('.dropdown')) {
+        var dropdown = document.getElementById('dropdown');
+        if (dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+        }
+    }
+};
+
+// 검색 버튼 클릭 시 드롭다운 닫기
+document.querySelector('button[type="button"]').addEventListener('click', function() {
+    var dropdown = document.getElementById('dropdown');
+    if (dropdown.classList.contains('show')) {
+        dropdown.classList.remove('show');
+    }
+    search(); // 검색 함수 호출
+});
+</script>
+</html>

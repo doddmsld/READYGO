@@ -1,0 +1,9 @@
+package kr.or.ddit.security;
+
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.MemberVO;
+
+public interface UserService {
+	public int insertMember(MemberVO memVO);
+	public int insertEnter(EnterVO entVO);
+}

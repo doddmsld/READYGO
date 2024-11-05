@@ -1,0 +1,83 @@
+package kr.or.ddit.impl_DO;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+import org.springframework.stereotype.Service;
+import kr.or.ddit.mapper.AdminMapper;
+import kr.or.ddit.service_DO.AdminService;
+import kr.or.ddit.vo.CodeGrpVO;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.EnterVO;
+
+@Service
+public class AdminServiceImpl implements AdminService {
+
+    @Inject
+    AdminMapper adminMapper;
+    
+    @Override
+    public List<CodeVO> codeManage(String comCodeGrp) {
+        // 공통 코드 그룹에 따라 필터링하여 목록을 반환
+        return adminMapper.codeManage(comCodeGrp);
+    }
+
+	@Override
+	public int codeGrpAdd(CodeGrpVO codeGrpVO) {
+		return adminMapper.codeGrpAdd(codeGrpVO);
+	}
+
+	@Override
+	public int codeGrpDel(CodeGrpVO codeGrpVO) {
+		return adminMapper.codeGrpDel(codeGrpVO);
+	}
+
+	@Override
+	public int codeAdd(CodeVO codeVO) {
+		return adminMapper.codeAdd(codeVO);
+	}
+
+	@Override
+	public int codeDel(String comCode) {
+		return adminMapper.codeDel(comCode);
+	}
+
+	@Override
+	public int getTotal(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return adminMapper.getTotal(map);
+	}
+
+	//기업관리 시작
+	@Override
+	public List<EnterVO> enterList() {
+		return this.adminMapper.enterList();
+	}
+
+	@Override
+	public int entOk(String entId) {
+		return adminMapper.entOk(entId);
+	}
+
+	@Override
+	public int entNo(String entId) {
+		return adminMapper.entNo(entId);
+	}
+
+	@Override
+	public EnterVO entDetail(String entId) {
+		return adminMapper.enterDetail(entId);
+	}
+
+	@Override
+	public String memManage() {
+		return adminMapper.memManage();
+	}
+
+	@Override
+	public String main() {
+		return adminMapper.main();
+	}
+
+}

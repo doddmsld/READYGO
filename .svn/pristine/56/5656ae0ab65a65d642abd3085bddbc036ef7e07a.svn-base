@@ -1,0 +1,13 @@
+package kr.or.ddit.oustou.service;
+
+import java.util.List;
+
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.OustouVO;
+
+
+
+public interface OustouService {
+	
+	
+}

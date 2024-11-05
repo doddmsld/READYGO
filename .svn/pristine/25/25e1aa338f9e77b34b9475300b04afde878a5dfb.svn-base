@@ -1,0 +1,66 @@
+package kr.or.ddit.impl_DO;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.mapper.InquiryBoardMapper;
+import kr.or.ddit.service_DO.InquiryBoardService;
+import kr.or.ddit.vo.BoardVO;
+
+@Service
+public class InquiryBoardServiceImpl implements InquiryBoardService {
+
+	@Inject
+	InquiryBoardMapper inquiryBoardMapper;
+
+	@Override
+	public String regist() {
+		return this.inquiryBoardMapper.regist();
+	}
+
+	@Override
+	public int registPost(BoardVO boardVO) {
+		int result = 0;
+		
+		this.inquiryBoardMapper.registPost(boardVO);
+		
+		return result;
+	}
+
+	@Override
+	public BoardVO detail(String pstSn) {
+		return this.inquiryBoardMapper.detail(pstSn);
+	}
+
+	@Override
+	public String update(String pstSn) {
+		return this.inquiryBoardMapper.update(pstSn);
+	}
+
+	@Override
+	public BoardVO getPostDetails(String pstSn) {
+		return this.inquiryBoardMapper.getPostDetails(pstSn);
+	}
+
+	@Override
+	public int updatePost(BoardVO boardVO) {
+		return this.inquiryBoardMapper.updatePost(boardVO);
+	}
+
+	@Override
+	public List<BoardVO> list(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.inquiryBoardMapper.list(map);
+	}
+
+	@Override
+	public int getTotal() {
+		// TODO Auto-generated method stub
+		return this.inquiryBoardMapper.getTotal();
+	}
+
+}

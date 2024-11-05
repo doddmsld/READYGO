@@ -1,0 +1,608 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+h5 {
+	color: #232323;
+}
+h2{
+	color:#232323;
+	font-weight: 600;
+}
+#fmenu{
+	margin-bottom: 10px;
+}
+.fc .fc-button-primary {
+    background-color: gray;
+     opacity : 0.7;
+	border: 1px solid gray;
+}
+#maintop {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
+#mainright {
+	height: 500px;
+	display: flex;
+	flex-direction: column;
+}
+#mainleft{
+	height: 500px;
+}
+
+/*왼쪽 스타일*/
+.header-area.header-sticky {
+	min-height: 0px;
+}
+.fc-daygrid-day-number{
+	font-size:12px;
+}
+#calendar {
+	width: 680px;
+	height: auto;
+}
+.fc .fc-button-primary:not(:disabled).fc-button-active, .fc .fc-button-primary:not(:disabled):active {
+    background-color: #24D89E;
+    border-color: #24D89E;
+    color: white;
+}
+:root {
+	--fc-button-hover-border-color: #24D59E;
+	}
+.fc .fc-button-primary:disabled {
+    background-color: #24D59E;
+    border-color: #24D59E;
+    color: var(--fc-button-text-color);
+}
+.fc .fc-button-primary {
+    background-color: white;
+    opacity: 0.7;
+    border: none;
+    color: #232323;
+    border: 1px solid #c9c7c7;
+}
+.fc .fc-button-primary:hover {
+    background-color: #24D59E;
+    border-color: var(--fc-button-hover-border-color);
+    color: var(--fc-button-text-color);
+}
+#yrModal {
+	position: absolute;
+	width: 100%;
+    height: 110%;
+	background-color: rgba(41, 41, 41, 0.67);
+	display: none;
+	z-index: 1000;
+}
+
+#cont {
+	display : block;
+	margin: 50px auto;
+	width: 22%;
+	height: 56%;
+	background-color: white;
+	color: rgba(35, 35, 35, 1);
+	border-radius: 15px;
+}
+
+#cont h4{
+	float: left;
+    padding: 20px 40px;
+}
+
+#closeModal {
+	text-align: right;
+	margin-right: 50px;
+	margin-top: 30px;
+}
+
+.close {
+	display:inline-block;
+	*display:inline;
+	color: rgba(35, 35, 35, 1);
+	background: white;
+	border-radius: 3px;
+	width: 0px;
+	height : 10px;
+	margin-top: 18px;
+	}
+.close:after {
+	display: inline-block;
+	content: "\00d7";
+	font-size:20pt;
+}
+
+
+#ModalContent {
+	display: block;
+ 	text-align: justify;
+	padding-left: 35px;
+    line-height: 40px;
+    height: 83%;
+}
+
+.flexDiv{
+	display :flex;
+	height: 100px;
+}
+
+#add {
+	border: 1px solid #24D59E;
+	border-radius: 5px;
+	height: 43px;
+    width: 100px;
+	background: white;
+	color: #24D59E;
+	transition: all 0.3s ease 0s;
+}
+
+#add:hover {
+	background: #24D59E;
+	color: white;
+}
+
+#Caltitle{
+	margin-right: 103px;
+    margin-top: -5px;
+}
+#schTitle{
+	margin-right: 406px;
+    margin-top: -5px;
+    height: 35px;
+    width: 250px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    color: #757575;
+}
+.blockDiv{
+	width : 175px;
+	display :block;
+}
+#start{
+ 	margin-right: 50px;
+}
+#allDay{
+	border: 1px solid #ddd;
+	margin : 20px 0;
+}
+#schStart,#schEnd{
+	width: 250px;
+	height: 35px;
+	border: 1px solid #ddd;
+    border-radius: 5px;
+    color: #757575;
+    padding: 13px;
+}
+#back, #font{
+	margin-right: -25px;
+}
+#schBColor{
+	margin-right: 38px;
+}
+#schFColor{
+
+}
+.colorCss{
+	width : 50px;
+	height : 50px;
+	-webkit-appearance : none;
+	-moz-appearance : none;
+	appearance : none;
+	background-color : transparent;
+	border : none;
+}
+
+.colorCss::-webkit-color-swatch{
+	border-radius : 30px;
+	border : none;
+}
+
+label {
+	display: inline-block;
+	width: 80px;
+	height: 30px;
+}
+
+.fc-h-event {
+	border: none;
+}
+
+/*오른쪽 스타일*/
+#fast {
+	width: 600px;
+	height: 100px;
+/* 	border: 1px solid #B6B6B6; */
+	border-radius: 10px;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+	border-left: 2px solid white;
+	border-right: 2px solid white;
+	border-top: 2px solid #24D59E;
+	border-bottom: 2px solid white;
+}
+
+#pbanc, #prf, #proposal, #applicant {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.fmtitle {
+	font-size: 14px;
+	color: #232323;
+	font-weight: 500;
+}
+
+.v-line {
+	border-left: 1px solid #B6B6B6;
+	height: 70px;
+}
+
+#pbancmenu {
+	width: 600px;
+	height: 130px;
+}
+
+#pbanctitle {
+	display: flex;
+	justify-content: space-between;
+	align-items: stretch;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+#pbancex {
+	width: 600px;
+	height: 200px;
+	border-radius: 20px;
+}
+
+#pbanclist {
+	margin: 20px auto;
+	width: 600px;
+	height: 185px;
+	border-top: 2px solid #D9D9D9;
+	border-bottom: 2px solid #D9D9D9;
+	overflow-y: auto;
+}
+
+/* 인재 추천*/
+#mainbtm {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.prfmenu {
+	flex: 0 0 auto;
+	width: 180px;
+	height: 120px;
+	border: 1px solid #E5F8ED;
+	padding: 10px;
+	border-radius: 10px;
+	background-color: #E5F8ED;
+	cursor: pointer;
+/* 	transition: background-color 0.3s ease; */
+	margin-right: 25px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.circle {
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.info {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	margin: 1px;
+}
+
+.p-line {
+	border-left: 1px solid #dddddd;
+	height: 150px;
+	margin-left: 30px;
+}
+
+#newbie, #personal {
+	display: flex;
+	width: 600px;
+	justify-content: space-between;
+}
+.injae{
+	width:110px;
+	text-align: left;
+	font-size: 14px;
+	margin-bottom: -5px;
+	margin-left: 10px;
+}
+.skill{
+	text-align:left;
+	font-size: 12px;
+	color: #a7a7a7;
+	margin-left: 10px;
+}
+a {
+    color: #232323;
+}
+a:hover{
+	color: #24D59E;
+}
+.num{
+	font-size: 30px;
+}
+#pblist{
+	padding:7px;
+	display: flex;
+	align-items: center;
+    justify-content: space-evenly;
+    border-bottom: 1px solid #D9D9D9;
+}
+.pbl{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.pblso1{
+	display: flex;
+	flex-direction: column;
+	width:200px;
+}
+.pblso2{
+	display: flex;
+	flex-direction: column;
+	width:100px;
+}
+.pblso{
+	display: flex;
+	flex-direction: column;
+}
+.fbig{
+	font-size: 16px;
+	color: #666363;
+}
+.fbigtt{
+	font-size: 16px;
+	color: #666363;
+}
+.fbigtt:hover{
+	color: #24D59E;
+}
+.fmid{
+	font-size: 12px;
+	color: #666363;
+}
+.fsmall{
+	font-size: 10px;
+	color: #666363;
+}
+.fc-popover-body {
+	overflow-y: auto;
+	height: 300px;
+}
+
+
+/* -------------빠른 메뉴 css 시작 (민주)------------ */
+#fastmenu {
+	width: 600px;
+	height: 110px;
+	margin-top: 25px;
+	margin-bottom: 15px;
+}
+
+#fastmenubtn {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	
+}
+
+#pr, #pb, #ap, #pro, .readyGo, #tal, #auth,#readyGo,
+#addPost, #applicants, #proposals, #talent, #authorization,
+#ready2, #add2, #ap2, #pro2, #tal2, #auth2{
+	width: 120px;
+	height: 60px;
+	border: none;
+	background:rgba(0,0,0,0);
+}
+#fast-btn {
+	width: 40px;
+	height: 40px;
+	border: none;
+	background: #FFFFFF;
+}
+.fast-img{
+	width: 30px;
+	height: 30px; 
+}
+.addImg{
+	width: 40px;
+	height: 45px;
+}
+.appImg, .readyGoImg, .proImg{
+	width: 45px;
+	height: 45px;
+}
+.div-flex{
+	display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.p-title{
+	font-size: 12px;
+	margin-top: -10px;
+}
+.fast-title{
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+}
+
+/*빠른메뉴 모달창*/
+.modal {/* 모달창 스타일 */
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  border: 1px solid #888;
+  width: 500px;
+  height: 450px;
+  border-radius: 8px;
+}
+
+.close {
+  color: white;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: -5px;
+  margin-right: 10px;
+}
+
+.close:hover, .close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.modal-fast{
+	display: flex;
+	justify-content: space-between;
+	background: linear-gradient(to right, #2CCFC3, #24D59E);
+	height: 70px;
+	border-top-left-radius: 8px; 
+	border-top-right-radius: 8px;
+	padding: 30px;
+	padding-bottom: 50px;
+}
+.fast-list{
+	width: 400px;
+	font-size: 24px;
+	font-weight: 700;
+	color: white;
+	padding-left: 155px;
+}
+.save-fast-menu{
+	width: 440px;
+	height: 40px;
+	border: 1px solid #24D59E;
+	background:rgba(0,0,0,0);
+	color: #24D59E;
+	border-radius: 7px;
+	font-size: 16px;
+	font-weight: 400;
+	z-index: 999;
+}
+.save-fast-menu:hover {
+	background: #24D59E;
+	border: none;
+	color: white;
+}
+#fastMenuOptions{
+	display: flex;
+	flex-direction:column;
+	align-items: center; 
+	padding-bottom: 25px;
+	padding-top: 10px;
+}
+.modal-btn{
+	margin: 30px;
+	margin-top: -5px;
+}
+.div-flex2{
+	display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+.up-fast-menu, .down-fast-menu{
+	display: flex;
+	margin-top: 20px;
+}
+.down-fast-menu{
+	margin-top: 35px;
+}
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    position: relative;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    outline: none !important;
+    border: 1px solid #eeeeee;
+    border-radius: 2px;
+    background: #fbfbfb;
+}
+
+input[type="checkbox"]::before {
+    content: "\2713";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    overflow: hidden;
+    transform: scale(0) translate(-50%, -50%);
+    line-height: 1;
+}
+
+input[type="checkbox"]:hover {
+    border-color: rgba(170, 170, 170, 0.5);
+}
+
+input[type="checkbox"]:checked {
+    background-color: #24D59E;
+    border-color: rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+input[type="checkbox"]:checked::before {
+    border-radius: 2px;
+    transform: scale(1) translate(-50%, -50%)
+}
+.fast-menu-content{
+	font-size: 14px;
+	text-align: center;
+	margin-top: 5px;
+}
+/* -------------빠른 메뉴 css 시작 (끝)------------ */
+
+
+/*스크롤*/
+#pbanclist::-webkit-scrollbar { /* 전체 스크롤바 스타일 */
+    width: 8px; /* 스크롤바의 너비 설정 */
+}
+#pbanclist::-webkit-scrollbar-track { /* 스크롤바의 배경 스타일 */
+    background: #f1f1f1; /* 스크롤 트랙 색상 */
+    border-radius: 2px; /* 트랙의 모서리 둥글게 설정 */
+}
+#pbanclist::-webkit-scrollbar-thumb { /* 스크롤바의 막대 스타일 */
+    background: #c1c1c1; 
+    border-radius: 2px; 
+}
+#pbanclist::-webkit-scrollbar-thumb:hover { /* 스크롤바의 막대에 마우스를 올렸을 때의 스타일 */
+    background:#c1c1c1;
+}
+
+.add_list{
+	font-size: 12px;
+	cursor: pointer;
+}
+
+
+

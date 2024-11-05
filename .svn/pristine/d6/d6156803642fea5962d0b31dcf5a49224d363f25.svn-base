@@ -1,0 +1,238 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+.announcement-container {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 60px;
+}
+h2 {
+    text-align: left;
+/*     margin-top:50px; */
+	color: #232323;
+}
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+thead th {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 2px solid #ddd;
+    font-weight: 500;
+    font-size: 20px;
+    color: #232323;
+}
+.ptag{
+	text-align: left;
+    font-weight: 500;
+    font-size: 20px;
+    color: #232323;
+    margin-left: 5px;
+}
+tbody td {
+    padding: 9px 6px;
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+}
+.title{
+	color: #232323;
+	font-weight: 400;
+}
+.title:hover{
+	color: #24D59E;
+}
+.industry {
+    font-size: 14px;
+    color: #636e72; /* 분류 텍스트 색상 */
+    margin-top: 5px;
+}
+.dt{
+	font-size: 14px;
+    color: #636e72; /* 분류 텍스트 색상 */
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.pagination button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pagination button:hover {
+    background-color: #ddd;
+}
+.details-button {
+   width : 100px;
+   height : 30px;
+   border : 1px solid #A7A7A7;
+   color : #666363;
+   background:white;
+   border-radius : 7px;   
+   font-size : 16px;
+   font-weight : 400;
+   margin-top: 10px;
+}
+.details-button:hover {
+    background-color: #ECECEC;
+}
+
+.filter-dropdown select {
+    height: 40px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 16px;
+}
+.filter-dropdown button {
+    height: 30px;
+    padding: 5px 10px;
+    background-color: #00b894;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.filter-dropdown button:hover {
+    background-color: #008c9e;
+}
+.date-info {
+    color: #636e72;
+    font-size: 12px;
+}
+.pagination button.active {
+    background-color: #24D59E;;
+    color: white;
+}
+.insert-button{
+   width : 100px;
+   height : 40px;
+   background: white;
+   border : 1px solid #24D59E; 
+   color : #24D59E;
+   border-radius : 7px;
+/*    margin-top: 30px; */
+   font-size : 16px;
+   font-weight : 400;
+   margin-right: 28px;
+}
+.insert-button:hover{
+   background: #24D59E;
+   border : none;
+   color : white;
+}	
+.btnclass{
+	display: flex;
+	justify-content: flex-end;
+	margin: 0px !important;
+}	
+select{
+	border-radius: 5px;
+/* 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); */
+	font-size: 14px;
+}
+
+.detail{
+	display: flex;
+	justify-content:flex-end; 
+}
+.detail-cell {
+    text-align: center; 
+}
+thead, tfoot {
+    border-top: 2px solid #232323;
+}
+
+tfoot td {
+    text-align: center;
+    padding: 10px; /* 하단의 셀 패딩 추가 */
+}
+/* 페이징 css 시작*/
+.page-link {
+	color: black;
+	border-radius: 7px;
+	margin: 5px;
+}
+/* 버튼클릭했을 때! */
+.page-item.active .page-link {
+	z-index: 3;
+	font-weight: 700;
+	color: #24D59E;
+	background-color: rgba(44, 207, 195, 0.11);
+	border-radius: 7px;
+}
+
+.write_date {
+	text-align: right;
+}
+
+.page-item.active .page-link {
+	border-color: #dee2e6;
+}
+
+a.page-link:hover {
+	color: #000000;
+	background-color: #dee2e6;
+}
+/* 페이징 css 끝*/
+.pageTable{
+	border-bottom: 1px solid white !important;
+	padding: 0px !important;
+}
+.search{
+	display: flex;
+	justify-content: flex-end;
+	
+}
+.search input[type="text"], .search input[type="date"]{
+	width: 250px;
+	padding: 13px;
+	padding-left: 20px;
+	font-size: 16px;
+	border: 1px solid #232323;
+	border-radius: 5px;
+	height: 40px;
+	border: 1px solid #ddd;
+	margin-right: 5px;
+	color: #757575;
+}
+#dateInput{
+	width: 170px;
+}
+.search button {
+	text-align : center;
+	background-color: white;
+	border: 1px solid #24D59E; /*민트*/
+	color: #24D59E;
+	border-radius: 5px;
+	cursor: pointer;
+	height: 40px;
+	width: 70px;
+	margin-left: 5px;
+}
+
+.search button:hover {
+	background-color: #24D59E;
+	color: white;
+}
+.search-box{
+	margin-top : 15px;
+	display: flex;
+	justify-content: space-between;
+	
+}
+.gubun-select{
+	border-radius: 5px;
+	font-size: 14px;
+	height: 40px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 16px;
+    margin-right: 5px;
+}

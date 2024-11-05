@@ -1,0 +1,6 @@
+package kr.or.ddit.oustou.service;
+
+public interface OutsouReviewService {
+
+	
+}

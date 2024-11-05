@@ -1,0 +1,59 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+<
+style
+>
+ @charset "UTF-8";
+
+* {
+    font-family: pretendard;
+}
+
+.payokPage{
+	border-top: 1px solid #e0e0e0;
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+	margin: 0px auto;
+	width: 100%; 
+	height : auto;
+	margin-top:20px;
+}
+.okimg{
+
+	margin: 0px auto;;
+}
+.oktext{
+	text-align: center;
+}
+.text{
+	margin: 30px;
+}
+
+/*버튼*/
+#editBox{
+	display: flex;
+    align-items: flex-end;
+    margin: 60px auto;
+}
+
+.okbtn{
+	margin: 0px 50px;
+	width : 150px;
+	height : 60px;
+	border: 1px solid #24D59E;
+	color: #24D59E;
+	background:white;
+	border-radius : 7px;	
+	font-size : 16px;
+	font-weight : 400;
+	transition: all 0.3s ease 0s;
+}
+.okbtn:hover {
+	background-color: #24D59E;
+color: white;
+}

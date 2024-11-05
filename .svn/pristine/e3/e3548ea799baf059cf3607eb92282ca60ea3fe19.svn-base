@@ -1,0 +1,19 @@
+package kr.or.ddit.impl_DO;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.mapper.ChatMapper;
+import kr.or.ddit.service_DO.ChatService;
+import kr.or.ddit.vo.ChatMsgVO;
+
+@Service
+public class ChatServiceImpl implements ChatService {
+
+	@Inject
+	ChatMapper chatMapper;
+	
+}

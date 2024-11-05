@@ -1,0 +1,103 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<script type="text/javascript" src="/resources/ckeditor5/ckeditor.js"></script>
+<script type="text/javascript">
+// e : onchange 이벤트
+function handleImg(e){
+    let files = e.target.files; // 선택한 파일들
+    let fileArr = Array.prototype.slice.call(files);
+    let accumStr = "";
+    fileArr.forEach(function(f){
+        if(!f.type.match("image.*")){ // MIME타입
+            alert("이미지 확장자만 가능합니다.");
+            return; // 함수 종료
+        }
+        let reader = new FileReader();
+        reader.onload = function(e){
+            accumStr += "<img src='"+e.target.result+"' style='width:20%;border:1px solid #D7DCE1;' />";
+            $("#pImg").html(accumStr);
+        }
+        reader.readAsDataURL(f);
+    });
+}
+$(function(){
+    $("#uploadFile").on("change",handleImg);
+    
+    $(".ck-blurred").keydown(function(){
+        $("#perDet").val(window.editor.getData());
+    });
+    
+    $(".ck-blurred").focusout(function(){
+        $("#perDet").val(window.editor.getData());
+    });
+    
+    $("#custNum").on("change",function(){
+        let custNum = $(this).val();
+        let data = { "custNum":custNum };
+        console.log("custNum : ", custNum);
+        console.log("data : ", data);
+        /* $.ajax({
+            url:"/perSer/custCarList",
+            contentType:"application/json;charset=utf-8",
+            data:JSON.stringify(data),
+            type:"post",
+            dataType:"json",
+            beforeSend:function(xhr){
+                xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+            },
+            success:function(result){
+                console.log("result : ", result);
+                let str = "";
+                $("#carNum").html("<option value='' selected disabled>선택해주세요</option>");
+                $.each(result.carVOList,function(idx,carVO){
+                    str += "<option value='"+carVO.carNum+"'>"+carVO.carNum+"</option>";
+                });
+                $("#carNum").append(str);
+            }
+        }); */
+    });
+});
+</script>
+<style>
+.content-wrapper {
+    background-color: white;
+    font-family: pretendard;
+}
+</style>
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2" style="margin-left: 150px;">
+            <div class="col-sm-6">
+                <h1>자유 게시판<br></h1>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="invoice col-md-8 offset-md-2">
+	<div class="row">
+		<form class="col-12" action="simple-results.html" style="margin: 10px;">
+			<div style="border-color: black;">대충 여기다 글 옮기게하고 코딩시작해보자</div>
+			<div style="border-color: black;">조회수 : n!</div>
+			<div>
+				<a href="#" class="link-black text-sm"><i
+					class="fas fa-link mr-1"></i>(자게에선 안씀)첨부한 파일 이름</a>
+			</div>
+		</form>
+	</div>
+</div>
+<div class="col-md-8 offset-md-2">
+	<div class="form-group">
+	    <div id="perDetTemp"></div>
+	</div>
+</div>
+
+
+<script type="text/javascript">
+// CKEditor5 적용 및 데이터 넣기
+ClassicEditor.create(document.querySelector('#perDetTemp'), { 
+    ckfinder: { uploadUrl: '/image/upload?${_csrf.parameterName}=${_csrf.token}'},
+    placeholder: '댓글을 입력해주세요.'
+})
+.then(editor => { window.editor = editor; })
+.catch(err => { console.error(err.stack); });
+
+</script>

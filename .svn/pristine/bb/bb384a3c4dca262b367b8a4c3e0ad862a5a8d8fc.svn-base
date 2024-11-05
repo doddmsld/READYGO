@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.PbancMapper">
+
+	<select id="list" parameterType="hashMap" resultType="pbancVO">
+		WITH T AS
+		(
+		SELECT ROW_NUMBER() OVER(ORDER BY PBANC_NO DESC) RNUM
+		, PBANC_NO,
+		ENT_ID, PBANC_PIC_NM, PBANC_PIC_TELNO, PBANC_PIC_MBTLNUM
+		,
+		PBANC_PIC_EML, PBANC_APLCT_EDU_CD, PBANC_RPRSRGN, PBANC_TTL
+		,
+		PBANC_WORKSTLE_CD, PBANC_APNTCPD, PBANC_SALARY, PBANC_WORK_HR_CD
+		,
+		PBANC_WORK_DAY_CD, PBANC_RCPT_MTHD_CD, PBANC_APPOFE_FORM,
+		PBANC_RPRS_DTY
+		, PBANC_RCPT_PD, PBANC_BGNG_DT, PBANC_DDLN_DT,
+		PBANC_TMPLT,
+		PBANC_WRT_DT
+		, PBANC_MDFCN_DT, PBANC_DEL_DT,
+		PBANC_SCRAP_CO, PBANC_DEL_YN,
+		PBANC_RDCNT
+		, PBANC_STTUS
+		FROM PBANC
+		)
+		SELECT * FROM T
+		WHERE T.RNUM BETWEEN (#{currentPage} * 10) - (10 - 1)
+		AND (#{currentPage} *
+		10)
+	</select>
+
+	<!-- 전체 행의 수 -->
+	<select id="getTotal" resultType="int">
+		SELECT COUNT(*)
+		FROM PBANC
+	</select>
+
+	<!-- 기업 현재채용중인 공고 -->
+	<select id="getPbancList" parameterType="String"
+		resultType="pbancVO">
+		SELECT PBANC_TTL, PBANC_BGNG_DT, PBANC_DDLN_DT
+		FROM PBANC
+		WHERE ENT_ID =
+		#{entId}
+       <![CDATA[
+       AND ROWNUM < 5
+       AND PBANC_DDLN_DT > SYSDATE - 1
+       ]]>
+		ORDER BY PBANC_WRT_DT DESC
+	</select>
+
+	<select id="regionList" resultType="codeVO">
+		SELECT COM_CODE, COM_CODE_NM
+		FROM CODE
+		WHERE COM_CODE_GRP = 'WRGN'
+		AND COM_CODE LIKE 'WRGN__'
+		ORDER BY TO_NUMBER(SUBSTR(COM_CODE, 5, 2))
+	</select>
+</mapper>

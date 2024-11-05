@@ -1,0 +1,99 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+<
+style
+>
+ @charset "UTF-8";
+
+* {
+    font-family: pretendard;
+}
+
+/*전체적인 위치*/
+.reviewlayout {
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 1300px;
+}
+
+.rvttit h2 {
+  text-align: left;
+  margin-bottom: 30px;
+}
+/*리뷰 전체 목록*/
+.contentList {
+  display: flex;
+  flex-direction: column;
+  margin-top: 50px;
+}
+
+/*리부 1개 만*/
+.main {
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 20px;
+   width: 1300px;
+   margin-top: 15px;
+}
+
+/*아이디, 제목*/
+.info {
+   display: flex;
+  align-items: center; /* 요소들을 수직 가운데 정렬 */
+}
+
+.cont {
+  flex: 1; /* 남은 공간을 차지하게 설정 */
+  text-align: left; /* 텍스트를 왼쪽 정렬 */
+  margin-left: 120px;
+}
+
+.thumbnail {
+  width: 120px;
+  height: 90px;
+  flex-shrink: 0; /* 이미지 크기를 고정 */
+  margin-left: 20px; /* cont와 thumbnail 사이에 간격 추가 */
+  border: 1px solid #e0e0e0;
+  margin-right: 120px;
+}
+
+
+.coti:hover{
+	color: #24D59E;
+	text-decoration : underline;
+	
+}
+
+
+
+#editBox{
+	display: flex;
+    align-items: flex-end;
+    margin-bottom: 60px;
+    margin-left: 1100px;
+    margin-top: 20px;
+}
+
+
+
+#savebtn{
+	background: white;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+	width: 170px;
+	width : 100px;
+	height : 40px;
+	border-radius : 7px;
+    font-size : 16px;
+    font-weight : 400;
+    margin-left:30px;
+    transition: all 0.3s ease 0s;
+}
+#savebtn:hover {
+background-color: #24D59E;
+color: white;
+}

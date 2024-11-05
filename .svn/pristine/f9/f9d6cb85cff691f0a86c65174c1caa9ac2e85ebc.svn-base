@@ -1,0 +1,6 @@
+package kr.or.ddit.mapper;
+
+public interface NoticeMapper {
+
+	public String list();
+}

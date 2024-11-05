@@ -1,0 +1,405 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/enter/pbancInsert.css" />
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript"
+	src="//dapi.kakao.com/v2/maps/sdk.js?appkey=eaad16168d2cb5b733bf76e1a41ced77"></script>
+<script type="text/javascript" src="/resources/ckeditor5/ckeditor.js"></script>
+<script type="text/javascript"
+	src="/resources/ckeditor5/sample/css/sample.css"></script>
+</head>
+
+<body>
+	<sec:authentication property="principal" var="prc" />
+	<c:if test="${prc ne 'anonymousUser'}">
+		<input type="hidden" id="hasRoleEnter" value="${prc.authorities}" />
+	</c:if>
+	<c:if test="${prc  ne 'anonymousUser'}">
+		<c:if test="${prc.authorities eq '[ROLE_ENTER]'}">
+			<h2>공고 등록</h2>
+			<div class="background">
+				<!-- 담 당자 정보 -->
+				<section class="section">
+					<h4>기업 정보</h4>
+					<h5>먼저 기업 정보가 맞는지 확인해주세요</h5>
+						<div class="flexPbanc">
+							<div>
+								<div class="form-group">
+									<label for="name"><b>*</b> 대표자 성함</label> 
+									<input type="text"
+										id="name" name="name" value="${enterVO.entRprsntvNm}">
+								</div>
+								<div class="form-group">
+									<label for="industry"><b>*</b> 업종</label> 
+									<input type="text" id="industry" name="industry" value="${enterVO.tpbizSeCd}"/>
+								</div>								
+								<div class="form-group" style="margin-top: 30px;">
+									<label for="location"><b>*</b> 대표 근무지역</label> 
+									<input type="text" id="location1" name="location1" value="(${enterVO.entZip})"> 
+									<input type="text" id="location2" name="location2" value="${enterVO.entAddr}, ${enterVO.entAddrDetail}">
+								</div>
+								<div id="staticMap" class="map"
+									style="width: 800px; height: 200px;"></div>
+							</div>	
+							<div style="margin-left: -380px;">
+								<div class="form-group multi-input">
+									<label for="phone"><b>*</b> 팩스번호</label> 
+									<input type="tel" id="phone1" name="phone1" value="${enterVO.entFxnum}">
+								</div>
+								<div class="form-group">
+									<label for="email"><b>*</b> 이메일 주소</label> 
+									<input type="email" id="email" name="email" value="${enterVO.entMail}">
+								</div>
+							</div>	
+						</div>	
+							<div class="sec1-btn">
+								<a href="/enter/edit?entId=${prc.username}">
+							    	<button type="button" class="modalOk" id="up-btn">수정</button>
+							    </a>
+							    <button type="button" class="modalGo">확인</button>
+							</div>						
+							<p class="sec1-p">기업 정보 수정 필요 시 '수정', 기업 정보가 모두 일치 시 '확인' 버튼을 클릭해주세요.</p>
+				</section>
+				
+				<form name="pbancInsert" id="pbancInsert" method="post" action="/enter/pbancInsertPost?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">				
+				<!-- 모집 정보 -->
+				<section class="section" hidden="hidden">
+					<input type="hidden" id="entId"name="entId" value="${enterVO.entId}" />
+					<h4>모집 분야</h4>
+					<h5>어떤일을 담당할 직원을 찾으시나요?</h5>
+					<div class="flexPbanc">
+						<div>
+							<div class="form-group">
+								<label for="jobType"><b>*</b> 모집분야명</label> 
+								<input type="text" id="jobType" name="rcritNm" placeholder="예: 앱개발자" required>
+								<input type="number" id="applicants" name="rcritCnt" min="0"placeholder="0" required> 
+								<label for="applicants">명 모집</label>
+							</div>
+							<div class="form-group radio-group">
+								<label for="pbancCareerCd"><b>*</b> 경력여부</label>
+								<div>
+								<select class="input-detail" name="pbancCareerCd">
+									<c:forEach var="pbancVO" items="${getRecruitmentCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="rcritJbttlCd"><b>*</b> 직급/직책</label> 
+								<select class="input-detail" name="rcritJbttlCd">
+									<c:forEach var="pbancVO" items="${getRcritJbttlCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>	
+							</div>							
+						</div>
+						<div>
+							<div class="form-group">
+								<label for="rcritDept" class="noneStar">근무부서</label> 
+								<input type="text" id="work" name="rcritDept" placeholder="예: 개발팀">
+							</div>
+							<div class="form-group">
+								<label for="rcritTask" class="noneStar">담당업무</label> 
+								<input type="text" id="task" name="rcritTask" placeholder="예: 앱 개발 및 유지보수">
+							</div>
+						</div>
+					</div>
+					<h6>
+						<b class="bb">추가</b>를 클릭하면 필수/우대 조건을 추가할 수 있습니다.
+					</h6>
+					<div class="flexPbanc">
+						<div>
+							<div class="form-group" id="ll">
+								<label for="pvLtCn"><b>*</b> 필수 조건</label> 
+								<input type="text" id="required" name="pvLtCn" placeholder="예: 해당 직무 근무 경험" required>
+								<button type="button" class="add-btn">추가</button>
+							</div>
+						</div>
+						<div>
+							<div class="form-group" id="rr">
+								<label for="pvLtCn" class="noneStar">우대 조건</label> 
+								<input type="text" id="prefer" name="pvLtCn" placeholder="예: 정보처리기사 자격증 ">
+								<button type="button" class="add-btn">추가</button>
+							</div>
+						</div>
+					</div>	
+				</section>
+
+				<!-- 자격/조건 정보 -->
+				<section class="section" hidden="hidden">
+					<h4>자격/조건</h4>
+					<h5>어떤일을 담당할 직원을 찾으시나요?</h5>
+					<div class="flexPbanc">
+						<div>
+							<div class="form-group">
+								<label for="pbancAplctEduCd"><b>*</b> 지원자 학력</label> 
+								<select id="education" name="pbancAplctEduCd">
+									<c:forEach var="pbancVO" items="${getPbancEduCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>									
+							</div>
+							<div class="form-group">
+								<label for="pbancSalary"><b>*</b> 연봉/급여</label> 
+								<select id="salary-type">
+									<option value="연봉">연봉</option>
+									<option value="월급">월급</option>
+								</select> 
+								<select class="input-detail" id="salary-money" name="pbancSalary">
+									<c:forEach var="pbancVO" items="${getPbancSalaryCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>									
+								<input type="text" id="additional-salary"
+									name="additional-salary" placeholder="기타 급여사항">
+							</div>
+							<p class="sal-standard">
+								최저시급 9,860원, 주 40시간 기준 최저연봉 2,060,740원 <a class="sal-line">최저임금제도
+									안내</a><br> 최저임금을 준수하지 않는 경우, 공고 강제 마감 및 행정처분을 받을 수 있습니다.
+							</p>
+						</div>
+						<!-- 최저임금제도 안내 모달 -->
+						<div id="salaryModal" class="modal">
+						  <div class="modal-content">
+						    <div class="flexPbancc">
+						      <h2 id="salModal">최저임금제도 안내</h2>
+						      <span class="close">&times;</span>
+						    </div>
+						    <div class="image-container">
+						      <img src="../resources/images/enter/최저임금제도.jpg" alt="최저임금제도 이미지" style="width:100%">
+						    </div>
+						    
+						    <p class="salModalCn">
+						      <strong id="cnTitle">최저임금제도 목적</strong> 
+						      <button id="accordion-btn" class="accordion">보기</button>
+						    </p>
+						    <!-- 아코디언 내용 -->
+						    <br>
+						    <div id="accordion-content" class="accordion-content">
+						      <p>최저임금제도는 근로자에 대하여 임금의 최저수준을 보장하여 근로자의 생활안정과 노동력의 질적 향상을 꾀함으로써 국민경제의 건전한 발전에 이바지하게 함을 목적으로 함.(최저임금법 제1조)</p>
+						      <p>최저임금제도의 실시로 최저임금액 미만의 임금을 받고 있는 근로자의 임금이 최저임금액 이상 수준으로 인상되면서 다음과 같은 효과를 가져옴.</p>
+						      <ul>
+						        <li>1. 저임금 해소로 임금격차가 완화되고 소득분배 개선에 기여</li>
+						        <li>2. 근로자에게 일정한 수준 이상의 생계를 보장해 줌으로써 근로자의 생활을 안정시키고 근로자의 사기를 올려주어 노동생산성이 향상</li>
+						        <li>3. 저임금을 바탕으로 한 경쟁방식을 지양하고 적정한 임금을 지급토록 하여 공정한 경쟁을 촉진하고 경영합리화를 기함.</li>
+						      </ul>
+						    </div>
+							<div class="modalBtn">
+							    <button type="button" class="modalOk">확인</button>
+							    	<a href="https://www.minimumwage.go.kr/minWage/policy/decisionMain.do" target="_blank">
+							    <button type="button" class="modalGo">최저임금위원회</button>
+							    </a>
+							</div>
+						  </div>
+						</div>
+						
+						<div style="margin-left: 80px;">
+							<div class="form-group">
+								<label for="pbancGenCd">지원자 성별</label> 
+								<select class="input-detail" id="gender" name="pbancGenCd">
+									<c:forEach var="pbancVO" items="${getPbancGenCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>								
+							</div>
+							<div class="form-group">
+								<label for="pbancAgeCd">지원자 연령</label> 
+								<select class="input-detail" id="age" name="pbancAgeCd">
+									<c:forEach var="pbancVO" items="${getPbancAgeCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>									
+							</div>
+						</div>
+					</div>	
+					<div class="flexPbanc">
+						<div>
+							<div class="form-group">
+								<label for="pbancWorkstleCd"><b>*</b> 근무형태</label>
+								<div class="checkbox-group">
+									<select class="input-detail" id="workstle" name="pbancWorkstleCd">
+										<c:forEach var="pbancVO" items="${getPbancWorkstleCD}" varStatus="status">
+											<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+										</c:forEach>
+									</select>										
+								</div>
+							</div>
+						</div>
+						<div  style="margin-left: 355px;">
+							<div class="form-group">
+								<label for="pbancWorkDayCd">근무요일</label>
+								<select class="input-detail" id="workday" name="pbancWorkDayCd">
+									<c:forEach var="pbancVO" items="${getPbancWorkDayCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>								
+							</div>
+							<div class="form-group">
+								<label for="pbancWorkHrCd">근무시간</label> 
+								<select class="input-detail" id="worktime" name="pbancWorkHrCd">
+									<c:forEach var="pbancVO" items="${getPbancWorkHrCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>									
+							</div>
+						</div>
+					</div>
+				</section>
+
+				<!-- 채용절차 -->
+				<section class="section" hidden="hidden">
+					<h4>채용 절차</h4>
+					<h5>채용 절차는 어떻게 되나요?</h5>
+					<div class="flexPbancc">
+						<div>
+							<div class="form-group">
+								<label for="pbancRprsDty"><b>*</b> 공고 대표 직무</label> 
+								<select class="input-detail" id="pbancRprsDty" name="pbancRprsDty">
+									<c:forEach var="pbancVO" items="${getPbancRprsDtyCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>	
+							</div>
+							<div class="form-group">
+								<label for="pbancRcptMthdCd"><b>*</b> 지원 접수 방법</label> 
+								<select class="input-detail" id="pbancRcptMthdCd" name="pbancRcptMthdCd">
+									<c:forEach var="pbancVO" items="${getPbancRcptMthdCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>	
+							</div>
+							<div class="form-group">
+								<label for="pbancAppofeFormCd"><b>*</b> 지원서 양식</label> 
+								<select class="input-detail" id="application-form" name="pbancAppofeFormCd">
+									<c:forEach var="pbancVO" items="${getPbancAppofeFormCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>									
+							</div>
+						</div>
+						<div>
+							<div class="form-group">
+								<label for="period"><b>*</b> 지원 접수 기간</label> 
+								<input type="hidden" id="start-date" name="pbancBgngDt" required>
+								<input type="date" id="start-date" name="pbancBgngDts" required>
+								&nbsp; ~ &nbsp; 
+								<input type="hidden" id="end-date" name="pbancDdlnDt" required>
+								<input type="date" id="end-date" name="pbancDdlnDts" required>
+							</div>
+							<div class="form-group">
+								<label for="procssCd"><b>*</b> 전형절차</label>
+								<div class="step-group">
+								<select class="input-detail" id="proc" name="procssCd">
+									<c:forEach var="pbancVO" items="${getProcssCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>									
+								</div>
+							</div>
+						</div>
+					</div>	
+				</section>
+
+				<!-- 공고 내용 -->
+				<section class="section" hidden="hidden">
+					<h4>공고 내용</h4>
+					<h5>공고 내용을 입력해주세요</h5>
+					<div class="form-group">
+						<label for="pbancTtl"><b>*</b> 공고 제목</label> 
+						<input type="text"
+							id="title" name="pbancTtl" placeholder="제목을 입력하세요" required>
+					</div>
+					<div class="form-group">
+						<label for="pbancCn" class="con-pbanc-title"><b>*</b> 공고 내용</label>
+						<textarea class="txtara" name="pbancCn"></textarea>
+					</div>
+					<div class="form-group" id="filegroup">
+						<label for="entPbancFile" class="con-pbanc-title"><b>*</b> 공고 파일</label>
+<!-- 						<input type="file" id="pbancFile" name="entPbancFile"/> -->
+					</div>
+						<div class="flexPbanccc">
+							<img class="fileImg" src="../resources/icon/warning.png" alt="exclamation"/>
+							<p id="pFile">공고 상단에 보일 이미지 파일을 등록해주세요.</p>
+						</div>
+				</section>
+				<!-- 버튼 섹션 -->
+				<section class="button-section" hidden="hidden">
+					<div class="btn-last1">
+						<button type="button" class="btn save-btn">임시 저장</button>
+					</div>
+					<div class="btn-last2">
+						<button type="button" class="btn cancel-btn">취소</button>
+						<button type="submit" class="btn submit-btn">공고 등록</button>
+					</div>
+				</section>
+				<sec:csrfInput />
+				</form>
+			</div>
+		</c:if>
+	</c:if>
+</body>
+<script>
+/*최저임금제도 모달창*/
+$(document).ready(function() {
+  // 모달 열기
+  $('.sal-line').click(function() {
+    $('#salaryModal').css('display', 'block');
+    $('body').css('overflow', 'hidden'); // 배경 스크롤 비활성화
+  });
+
+  // 모달 닫기
+  $('.close').click(function() {
+    $('#salaryModal').css('display', 'none');
+    $('body').css('overflow', 'auto'); // 배경 스크롤 다시 활성화
+  });
+
+  // 아코디언 버튼 클릭 이벤트
+  $('#accordion-btn').click(function() {
+    $('#accordion-content').slideToggle();
+    $(this).text($(this).text() === '보기' ? '접기' : '보기');
+  });
+  
+  // 확인 버튼 클릭 시 모달 닫기
+  $('.modalOk').click(function() {
+    $('#salaryModal').css('display', 'none');
+    $('body').css('overflow', 'auto'); // 배경 스크롤 다시 활성화
+});
+  
+  // 확인 버튼 클릭 시 히든 제거
+  $('.modalGo').click(function() {
+    // 히든 섹션 보이도록 설정
+    $('section[hidden="hidden"]').attr("hidden", false);
+});
+});
+
+$(function(){
+// 이미지 지도에 표시할 마커입니다
+var marker = {
+    position: new kakao.maps.LatLng(33.450701, 126.570667), 
+    text: '텍스트를 표시할 수 있어요!' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
+};
+
+var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
+    staticMapOption = { 
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 이미지 지도의 중심좌표
+        level: 3, // 이미지 지도의 확대 레벨
+        marker: marker // 이미지 지도에 표시할 마커
+    };
+
+// 이미지 지도를 생성합니다
+var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+});
+</script>
+</html>

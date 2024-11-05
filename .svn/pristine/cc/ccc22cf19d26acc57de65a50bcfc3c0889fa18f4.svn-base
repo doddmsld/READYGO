@@ -1,0 +1,57 @@
+package kr.or.ddit.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import kr.or.ddit.service.CommonListService;
+import kr.or.ddit.util.ArticlePage;
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.PbancVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Controller
+@Slf4j
+@RequestMapping("/common/jobTools")
+public class JobToolsController {
+	
+	@GetMapping(value="/spellingCheck")
+	public String spellingCheck() {
+		
+		return "common/jobTools/spellingCheck";
+	}
+	
+	@GetMapping(value="/salaryCal")
+	public String salaryCal() {
+		
+		return "common/jobTools/salaryCal";
+	}
+	
+	@GetMapping(value="/netPayCal")
+	public String netPayCal() {
+		
+		return "common/jobTools/netPayCal";
+	}
+	
+	@GetMapping(value="/creditTrans")
+	public String creditTrans() {
+		
+		return "common/jobTools/creditTrans";
+	}
+	
+	@GetMapping(value="/languageTrans")
+	public String languageTrans() {
+		
+		return "common/jobTools/languageTrans";
+	}
+
+
+}

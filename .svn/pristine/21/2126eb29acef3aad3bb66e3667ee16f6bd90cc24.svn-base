@@ -1,0 +1,244 @@
+@charset "UTF-8";
+
+* {
+    font-family: pretendard;
+}
+/*커서 깜빡임 없애기*/
+body{
+	caret-color : transparent; 
+}     
+.container-fluid{
+	height: 1250px;
+}
+/*헤더 이미지*/
+.headerImg{
+	height: 280px;
+	width: 1687px;
+	margin-left:200px;
+	opacity: 0.5;
+}
+/*헤더 이미지 위에 기업 로고 사진*/
+.title{
+	margin-left: 510px; 
+	position:absolute; 
+	top:0px; 
+	left:0px; 
+	z-index:1;
+	margin-top: 70px;
+	display: flex;
+}
+/*헤더 이미지 위에 기업 로고 이미지*/
+.img {
+    border-radius: 10px;
+    height: 142px;
+    width: 142px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+/*헤더 이미지 위에 기업명*/
+h3{
+	margin-left: 20px;
+	margin-top: 40px;
+}
+/*헤더 이미지 위에 기업업종*/
+#titleTpbizSeCd{
+	margin-left: 20px;
+}
+
+/*기업 홈페이지 버튼*/
+.titleHpBtn{
+	margin-left: 270px;
+	margin-top : 45px;
+	height: 50px;
+	width: 120px;
+	border: 1px solid #A7A7A7;
+	background: white;
+	border-radius: 5px;
+	color: #232323;
+	text-align: center;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.titleHpBtn:hover{
+	background: #ECECEC;
+}
+#titleGroup1{
+	width: 500px;
+}
+
+/* 버튼 스타일 */
+.btn {
+    border: 1px solid #24D59E;
+    border-radius: 5px;
+    height: 40px;
+    width: 120px;
+    background: white;
+    color: #24D59E;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.btn:hover {
+    background: #24D59E;
+    color: white;
+}   
+/* 기업명 */
+.comName {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* 버튼 정렬 */
+#btndiv {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+}
+
+/* 프로필 정보 박스 */
+#div1 {
+    width: 1400px;
+    margin-top: 50px;
+    margin-left: 500px;
+}
+/* 정보 제목 */
+h4{
+	margin-bottom: 15px;
+}
+/* 정보 카드 스타일 */
+#div1-2{
+	display: flex;
+    flex: 0 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid rgba(217, 217, 217, 1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 1018px;
+    line-height: 2.0rem;
+}
+#div1-2-2{
+	margin-left: 185px;
+}
+/*테이블 사이 간격*/
+th{
+	width: 100px;
+	color:#232323;
+	font-weight: 550;
+}
+.font{
+	color:#232323;
+	font-weight: 550;	
+}
+p{
+	margin: 0px;
+}
+/* 프로필 박스 텍스트 */
+.profilebox, .profilebox1 {
+    text-align: center;
+    color: #5F6368;
+    font-size: 16px;
+}
+
+/* 매출액 및 입사자 수 차트 영역 */
+#div2 {
+    width: 1200px;
+    margin: 0 auto;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 500px;
+}
+#div2-2{
+	margin-right: 55px;	
+}
+#div2-2, #div2-3 {
+    width: 480px;
+    background-color: #ffffff;
+    padding: 20px;
+    border: 1px solid rgba(217, 217, 217, 1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 320px;
+}
+
+/*차트 플렉스*/
+.chartFlex{
+	display: flex;
+}
+/* 차트 버튼 */
+.chartbtn {
+    border: 1px solid #24D59E;
+    border-radius: 5px;
+    height: 34px;
+    background: white;
+    color: #24D59E;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+.chartbtn:hover {
+    background: #24D59E;
+    color: white;
+}
+
+/* 버튼 정렬 */
+#btnParent {
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* 채용 공고 섹션 */
+#div3 {
+    width: 1200px;
+    margin: 0 auto;
+}
+
+#div4-1 {
+    display: flex;
+}
+
+/* 공고 제목 및 링크 */
+#atag {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 30px;
+}
+#atag1 {
+	margin-top: 5px;
+	margin-left: 30px;
+    color: #232323;
+}
+
+#atag1:hover {
+    color: #24D59E;
+    text-decoration: underline;
+}
+
+/* 공고 카드 */
+.entPbanc {
+    flex: 0 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid rgba(217, 217, 217, 1);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    height: 150px;
+    width: 240px;
+    margin: 7.4px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.entPbanc:hover {
+    transform: translateY(-5px);
+    background-color: #f0f8f7;
+}
+#pbanc{
+	font-size: 19px;
+}
+#onePbanc{
+	margin-bottom: 20px;
+	font-size: 14px;
+}
+.onePbanc1{
+	font-size: 12px;
+}

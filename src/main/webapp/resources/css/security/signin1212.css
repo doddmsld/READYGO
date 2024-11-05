@@ -1,0 +1,272 @@
+
+
+
+
+
+.login_input_wrap .tab_member_type li .btn_tab.active {
+    font-weight: 700;
+    color: #373f73;
+}
+.login_input_wrap .tab_member_type li .btn_tab {
+    position: relative;
+    color: #8491a7;
+    font-size: 24px;
+    line-height: 34px;
+    width: 100%;
+}
+button {
+    overflow: visible;
+    background-color: transparent;
+}
+button, label {
+    cursor: pointer;
+}
+img, fieldset, button, input {
+    border: 0 none;
+}
+button, label {
+    cursor: pointer;
+}
+button {
+    appearance: auto;
+    font-style: ;
+    font-variant-ligatures: ;
+    font-variant-caps: ;
+    font-variant-numeric: ;
+    font-variant-east-asian: ;
+    font-variant-alternates: ;
+    font-variant-position: ;
+    font-weight: ;
+    font-stretch: ;
+    font-size: ;
+    font-family: ;
+    font-optical-sizing: ;
+    font-size-adjust: ;
+    font-kerning: ;
+    font-feature-settings: ;
+    font-variation-settings: ;
+    text-rendering: auto;
+    color: buttontext;
+    letter-spacing: normal;
+    word-spacing: normal;
+    line-height: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: center;
+    align-items: flex-start;
+    cursor: default;
+    box-sizing: border-box;
+    background-color: buttonface;
+    margin: 0em;
+    padding-block: 1px;
+    padding-inline: 6px;
+    border-width: 2px;
+    border-style: outset;
+    border-color: buttonborder;
+    border-image: initial;
+}
+.login_input_wrap .tab_member_type li:first-child {
+}
+.login_input_wrap .tab_member_type li {
+    flex: 1 1 50%;
+    text-align: center;
+}
+.login_input_wrap .tab_member_type {
+    width: 100%;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+ol, ul, li {
+    list-style-type: none;
+}
+ul {
+    display: block;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+    unicode-bidi: isolate;
+}
+.join_page_wrap .join_content .join_box {
+    float: right;
+    margin-top: 150px;
+    padding-right: 104px;
+    width: 320px;
+}
+.login_input_wrap, .pop_login_layer {
+    --common_a_hover_color: #3769ed;
+}
+.join_page_wrap .join_content {
+    float: left;
+    width: 50%;
+}
+.join_page_wrap {
+    overflow: hidden;
+}
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video, b, strong, input, textarea, button, select {
+    margin: 0;
+    padding: 0;
+    font-family: "Pretendard", "Malgun Gothic", dotum, gulim, sans-serif;
+    font-size: 100%;
+}
+div {
+    display: block;
+    unicode-bidi: isolate;
+}
+body, input, button, textarea, select, table {
+    line-height: 1.0;
+}
+:root {
+    --black: #000;
+    --white: #fff;
+    --blue10: #f5f8ff;
+    --blue20: #f0f4ff;
+    --blue30: #e5ecff;
+    --blue40: #ccdaff;
+    --blue50: #a3bcff;
+    --blue60: #7a9fff;
+    --blue70: #5785ff;
+    --blue80: #4075ff;
+    --blue90: #2d67ff;
+    --blue100: #003fe5;
+    --blue110: #0031b2;
+    --blue120: #002585;
+    --gray10: #f8fafc;
+    --gray20: #f4f6fa;
+    --gray30: #eaedf4;
+    --gray40: #d7dce5;
+    --gray50: #b4c0d3;
+    --gray60: #96a0b5;
+    --gray70: #8491a7;
+    --gray80: #67738e;
+    --gray90: #5c667b;
+    --gray100: #475067;
+    --gray110: #373f57;
+    --gray120: #292e41;
+    --gray130: #151822;
+    --green10: #f3fffd;
+    --green20: #ebfffc;
+    --green30: #defaf6;
+    --green40: #aff4e5;
+    --green50: #7beed8;
+    --green60: #4fe5c7;
+    --green70: #00deb3;
+    --green80: #00d3ab;
+    --green90: #11be9a;
+    --green100: #17a187;
+    --green110: #2a7c6d;
+    --green120: #286258;
+    --coral10: #fffafa;
+    --coral20: #fff5f7;
+    --coral30: #fce6e6;
+    --coral40: #fec5c5;
+    --coral50: #fea4a3;
+    --coral60: #ff837e;
+    --coral70: #ff7a72;
+    --coral80: #ff6d6a;
+    --coral90: #ff5656;
+    --coral100: #eb413f;
+    --coral110: #d63131;
+    --coral120: #b81d1d;
+    --orange10: #fffbf5;
+    --orange20: #fff7eb;
+    --orange30: #ffebcc;
+    --orange40: #ffd699;
+    --orange50: #ffc46b;
+    --orange60: #ffb84d;
+    --orange70: #ffa929;
+    --orange80: #ff9a03;
+    --orange90: #f09000;
+    --orange100: #e08700;
+    --orange110: #b86e00;
+    --orange120: #804d00;
+    --yellow10: #fffbeb;
+    --yellow20: #fff7d6;
+    --yellow30: #fff2b8;
+    --yellow40: #ffe885;
+    --yellow50: #ffe15f;
+    --yellow60: #ffdb3d;
+    --yellow70: #ffd41a;
+    --yellow80: #facb00;
+    --yellow90: #ebbf00;
+    --yellow100: #dbb200;
+    --yellow110: #ad8d00;
+    --yellow120: #755f00;
+    --forestGreen10: #f0fff6;
+    --forestGreen20: #e0ffed;
+    --forestGreen30: #c7ffdd;
+    --forestGreen40: #8affb9;
+    --forestGreen50: #57ff9a;
+    --forestGreen60: #00ff66;
+    --forestGreen70: #00e55c;
+    --forestGreen80: #00cc52;
+    --forestGreen90: #00be4c;
+    --forestGreen100: #00a843;
+    --forestGreen110: #008535;
+    --forestGreen120: #006629;
+    --skyBlue10: #f5fdff;
+    --skyBlue20: #ebfaff;
+    --skyBlue30: #dbf7ff;
+    --skyBlue40: #bdf0ff;
+    --skyBlue50: #99e8ff;
+    --skyBlue60: #70dfff;
+    --skyBlue70: #57d9ff;
+    --skyBlue80: #02c6ff;
+    --skyBlue90: #00b6eb;
+    --skyBlue100: #00a2d1;
+    --skyBlue110: #008ab2;
+    --skyBlue120: #006380;
+    --violet10: #fcfaff;
+    --violet20: #f8f5ff;
+    --violet30: #efe5ff;
+    --violet40: #deccff;
+    --violet50: #cbadff;
+    --violet60: #b185ff;
+    --violet70: #9d66ff;
+    --violet80: #8d4dff;
+    --violet90: #7224ff;
+    --violet100: #5a00fa;
+    --violet110: #4600c2;
+    --violet120: #2e0080;
+    --subwayLine101: #0052a4;
+    --subwayLine102: #34a344;
+    --subwayLine103: #ec611b;
+    --subwayLine104: #2995d6;
+    --subwayLine105: #7c38d6;
+    --subwayLine106: #ab4518;
+    --subwayLine107: #5e661f;
+    --subwayLine108: #df1c62;
+    --subwayLine109: #ca9a35;
+    --subwayLine201: #dd9520;
+    --subwayLine1101: #9c1b2c;
+    --subwayLine901: #2c96df;
+    --subwayLine301: #6490c7;
+    --subwayLine302: #ed8b00;
+    --subwayLine1801: #395697;
+    --subwayLine1601: #7eb543;
+    --subwayLine1701: #8b651b;
+    --subwayLine1501: #bcb202;
+    --subwayLine203: #216ceb;
+    --subwayLine202: #fe9132;
+    --subwayLine1201: #159768;
+    --subwayLine1301: #61aa5e;
+    --subwayLine1001: #66af90;
+    --subwayLine303: #feb700;
+    --subwayLine401: #ec5430;
+    --subwayLine402: #34a344;
+    --subwayLine403: #b68748;
+    --subwayLine404: #3a66a9;
+    --subwayLine405: #74428f;
+    --subwayLine406: #5d95c8;
+    --subwayLine501: #ec5430;
+    --subwayLine502: #34a344;
+    --subwayLine503: #feb700;
+    --subwayLine601: #34a344;
+    --subwayLine801: #34a344;
+}

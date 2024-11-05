@@ -1,0 +1,38 @@
+package kr.or.ddit.controller_DO;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.service_DO.FAQService;
+import kr.or.ddit.vo.BoardVO;
+import lombok.extern.slf4j.Slf4j;
+
+
+@RequestMapping("/common/faqBoard")
+@Controller
+@Slf4j
+public class ComFAQController {
+
+	@Inject
+	FAQService faqService;
+	
+	@GetMapping("/faqList")
+	public String list(Model model) {
+		List<BoardVO> boardVOList = this.faqService.admList();
+		int total = this.faqService.getTotal();
+		
+	    // model을 통해 데이터를 JSP로 전달
+	    model.addAttribute("boardVOList", boardVOList);
+	    model.addAttribute("total", total);
+	    log.info("boardVOList"+boardVOList);
+	    log.info("boardVOList",boardVOList);
+	    
+		return "common/faqBoard/faqList";
+	}
+}

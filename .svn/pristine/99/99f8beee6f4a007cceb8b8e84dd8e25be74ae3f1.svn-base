@@ -1,0 +1,68 @@
+package kr.or.ddit.controller;
+
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import kr.or.ddit.service.MemProfileService;
+import kr.or.ddit.vo.PrfAcbgVO;
+import kr.or.ddit.vo.PrfActVO;
+import kr.or.ddit.vo.PrfBusinessVO;
+import kr.or.ddit.vo.PrfCareerVO;
+import kr.or.ddit.vo.PrfCrtfctVO;
+import kr.or.ddit.vo.PrfVO;
+import kr.or.ddit.vo.PrfWnpzVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Controller
+@RequestMapping("/member")
+public class MemProfileController {
+
+    @Autowired
+    private MemProfileService memProfileService;
+
+    @GetMapping("/profile")
+    public String profile(@RequestParam("mbrId") String mbrId, Model model) {
+    	
+        // 프로필 조회
+        PrfVO prfVO = this.memProfileService.profile(mbrId);
+        log.info("profile -> prfVO : " , prfVO);
+        
+        // 경력 리스트 조회
+        List<PrfCareerVO> prfCareerVOList = memProfileService.careerList(mbrId);
+        
+        // 학력 조회
+        List<PrfAcbgVO> prfAcbgVOList = memProfileService.acbgList(mbrId);
+        
+        // 자격증 조회
+        List<PrfCrtfctVO> prfCrtfctVOList = memProfileService.crtfctList(mbrId);
+        
+        // 수상 조회
+        List<PrfWnpzVO> prfWnpzVOList = memProfileService.WnpzList(mbrId);
+        
+        // 활동 조회
+        List<PrfActVO> prfActVOList = memProfileService.ActList(mbrId);
+        
+        // 업종 조회
+        List<PrfBusinessVO> prfBusinessVOList = memProfileService.BusinessList(mbrId);
+        
+        model.addAttribute("prfVO", prfVO);
+        model.addAttribute("prfCareerVOList", prfCareerVOList);
+        model.addAttribute("prfAcbgVOList", prfAcbgVOList);
+        model.addAttribute("prfCrtfctVOList", prfCrtfctVOList);
+        model.addAttribute("prfWnpzVOList", prfWnpzVOList);
+        model.addAttribute("prfActVOList", prfActVOList);
+        model.addAttribute("prfBusinessVOList", prfBusinessVOList);
+        
+        
+        return "member/profile";  // profile.jsp 페이지로 이동
+    }
+    
+    
+    
+    
+}

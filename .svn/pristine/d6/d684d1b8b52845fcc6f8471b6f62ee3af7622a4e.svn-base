@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.AdminMapper">
+	<resultMap type="adminVO" id="adminMap">
+		<result property="admId" column="ADM_ID"/>
+		<result property="admPswd" column="ADM_PSWD"/>
+		<result property="enabled" column="ENABLED"/>
+		<result property="userType" column="USER_TYPE"/>
+		<collection property="UserAuthVOList" resultMap="adminAuthMap"></collection>
+	</resultMap>
+	<resultMap type="userAuthVO" id="adminAuthMap">
+		<result property="admId" column="ADM_ID"/>
+		<result property="auth" column="AUTH"/>
+	</resultMap>
+	<select id="selectOne" parameterType="String" resultMap="adminMap">
+		SELECT A.ADM_ID, A.ADM_PSWD, 
+		       A.ENABLED, A.USER_TYPE,
+		       B.AUTH
+		FROM ADMIN A, AUTH_ADMIN B
+		WHERE A.ADM_ID = B.ADM_ID
+		  AND A.ADM_ID = #{username}
+	</select>
+	
+	
+	<!-- 아래부터는 동오가쓰는중 -->
+
+	<!-- 메인페이지 -->
+	<select id="mainInquiryTotal" resultType="int">
+		WITH TOTAL_BOARD AS (
+		    SELECT COUNT(PST_SN) AS TOTAL_COUNT
+		    FROM BOARD
+		    WHERE SE_NO = '4' AND MBR_ID != 'admin'
+		),
+		TOTAL_REPLY AS (
+		    SELECT COUNT(DISTINCT A.PST_SN) AS REPLY_COUNT
+		    FROM "COMMENT" A, BOARD B
+		    WHERE B.SE_NO = '4' AND A.PST_SN = B.PST_SN
+		)
+		SELECT (TOTAL_BOARD.TOTAL_COUNT - TOTAL_REPLY.REPLY_COUNT) AS RESULT_COUNT
+		FROM TOTAL_BOARD, TOTAL_REPLY
+	</select>
+	<select id="mainEntSignTotal" resultType="int">
+        SELECT COUNT(*)
+        FROM ENTER
+        WHERE ENABLED = 0
+	</select>
+	<select id="mainReportMemTotal" resultType="int">
+        SELECT COUNT(DISTINCT MBR_ID) AS REPORT_MEM_CNT
+        FROM DECLARATION
+	</select>
+	<select id="mainReportBoardTotal" resultType="int">
+        SELECT COUNT(*)
+        FROM DECLARATION
+	</select>
+
+
+	<select id="mainReportList" resultType="declarationVO">
+	   SELECT DCLR_NO, DCLR_CN, DCLR_URL, TO_CHAR(DCLR_DT, 'YYYY.MM.DD') AS DCLR_DT, DCLR_PRCS_STTUS, PST_SN, DCLR_TP, MBR_ID, DCLR_FIELD
+	   FROM DECLARATION
+	</select>
+	<select id="mainNoticeList" resultType="boardVO">
+		SELECT ROW_NUMBER() OVER(ORDER BY PST_SN DESC) RNUM,
+			   PST_SN, PST_BAD, TO_CHAR(PST_WRT_DT, 'YYYY.MM.DD') AS PST_WRT_DT, FILE_GROUP_SN, PST_DEL_YN, 
+			   PST_OTHBCSCOPE, PST_FILE, PST_TTL, SE_NO, PST_INQ_CNT, 
+			   PST_GOOD, ETYMANMTTR_SN, PST_MDFCN_DT, MBR_ID, PST_CN
+		FROM BOARD
+		WHERE SE_NO = '1' AND PST_DEL_YN='1'
+		ORDER BY RNUM
+	</select>
+	<select id="mainInquiryList" resultType="boardVO">
+		SELECT PST_SN, PST_BAD, TO_CHAR(PST_WRT_DT, 'YYYY.MM.DD') AS PST_WRT_DT, FILE_GROUP_SN, PST_DEL_YN, 
+			   PST_OTHBCSCOPE, PST_FILE, PST_TTL, SE_NO, PST_INQ_CNT, 
+			   PST_GOOD, ETYMANMTTR_SN, PST_MDFCN_DT, MBR_ID, PST_CN
+		FROM BOARD
+		WHERE SE_NO = '4' AND PST_DEL_YN = '1' AND PST_OTHBCSCOPE = '비공개'
+	</select>
+	<select id="mainEntList" resultType="enterVO">
+		SELECT ENT_ID, ENT_FNDN_YMD, ENT_BRNO, ENT_EMP_CNT, ENT_ADDR_DETAIL,
+		       ENT_RPRSNTV_NM, TPBIZ_SE_CD, USER_TYPE, ENT_BR_FILE, ENT_PSWD, 
+		       ENT_NM, 
+		       CASE
+		           WHEN LENGTH(ENT_MANAGER_TELNO) = 10 THEN
+		               SUBSTR(ENT_MANAGER_TELNO, 1, 3) || ' - ' || SUBSTR(ENT_MANAGER_TELNO, 4, 3) || ' - ' || SUBSTR(ENT_MANAGER_TELNO, 7)
+		           WHEN LENGTH(ENT_MANAGER_TELNO) = 11 THEN
+		               SUBSTR(ENT_MANAGER_TELNO, 1, 3) || ' - ' || SUBSTR(ENT_MANAGER_TELNO, 4, 4) || ' - ' || SUBSTR(ENT_MANAGER_TELNO, 8)
+		           ELSE
+		               ENT_MANAGER_TELNO
+		       END AS ENT_MANAGER_TELNO,
+		       ENT_HMPG_URL, ENT_ZIP, ENT_FXNUM, 
+		       ENT_ADDR, ENT_STLE_CD, ENT_LOGO, ENT_RPRSRGN, ENABLED, ENT_MAIL
+		FROM ENTER
+		WHERE ENABLED = 0
+	</select>
+
+	<!-- 코드관리시작 -->
+	<!-- 코드관리시작 -->
+	<select id="codeAllSelect" resultType="codeGrpVO" parameterType="String">
+	    SELECT ROW_NUMBER() OVER(ORDER BY COM_CODE_GRP) RNUM,
+	    		COM_CODE_GRP, COM_CODE_GRP_NM, CODE_GRP_DESC, USE_YN
+	    FROM CODE_GRP
+	    WHERE USE_YN=1
+	    ORDER BY COM_CODE_GRP_NM
+	</select>
+
+	<select id="getTotal" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM CODE A
+	    JOIN CODE_GRP B ON A.COM_CODE_GRP = B.COM_CODE_GRP
+	    WHERE B.USE_YN = 1
+	    <if test="comCodeGrp != ''">
+	        AND A.COM_CODE_GRP = #{comCodeGrp}
+	    </if>
+	    <if test="searchKeyword != ''">
+	        AND (A.COM_CODE LIKE #{searchKeyword} OR A.COM_CODE_NM LIKE #{searchKeyword})
+	    </if>
+	</select>
+	
+	<select id="codeSelect" parameterType="map" resultType="codeVO">
+	    WITH T AS (
+	        SELECT ROW_NUMBER() OVER (ORDER BY A.COM_CODE) AS RNUM,
+	               A.COM_CODE, A.COM_CODE_GRP, A.COM_CODE_NM, 
+	               A.COM_CODE_DESC, A.USE_YN, A.UPPER_COM_CODE, 
+	               A.UPPER_COM_CODE_GRP
+	        FROM CODE A
+	        JOIN CODE_GRP B ON A.COM_CODE_GRP = B.COM_CODE_GRP
+	        WHERE A.USE_YN = 1 AND B.USE_YN =1
+	        <if test="comCodeGrp != ''">
+	            AND A.COM_CODE_GRP = #{comCodeGrp}
+	        </if>
+	        <if test="searchKeyword != ''">
+	            AND (A.COM_CODE LIKE #{searchKeyword} OR A.COM_CODE_NM LIKE #{searchKeyword})
+	        </if>
+	    )
+	    SELECT * FROM T
+	    WHERE T.RNUM BETWEEN (CAST(#{currentPage} AS INT) - 1) * 10 + 1 AND CAST(#{currentPage} AS INT) * 10
+	</select>
+
+	<insert id="codeGrpAdd" parameterType="codeGrpVO">
+		INSERT INTO CODE_GRP(COM_CODE_GRP, COM_CODE_GRP_NM, CODE_GRP_DESC, USE_YN)
+		VALUES (#{comCodeGrp}, #{comCodeGrpNm}, #{codeGrpDesc}, 1)
+	</insert>
+
+	<update id="codeGrpDel" parameterType="String">
+	UPDATE CODE_GRP 
+	SET USE_YN=0
+	WHERE COM_CODE_GRP=#{comCodeGrp}
+	</update>
+	
+	<insert id="codeAdd" parameterType="codeVO">
+	INSERT INTO CODE(COM_CODE, COM_CODE_GRP, COM_CODE_NM, COM_CODE_DESC, USE_YN, UPPER_COM_CODE, UPPER_COM_CODE_GRP)
+	VALUES (#{comCode}, #{comCodeGrp}, #{comCodeNm}, #{comCodeDesc}, 1, #{upperComCode}, #{upperComCodeGrp})
+	</insert>
+
+	<update id="codeCodeCh" parameterType="map">
+        UPDATE CODE
+        SET COM_CODE_NM = #{comCodeNm, jdbcType=VARCHAR}, COM_CODE_DESC =#{comCodeDesc, jdbcType=VARCHAR}
+        WHERE COM_CODE = #{comCode}
+	</update>
+
+	<update id="codeDel" parameterType="String">
+	UPDATE CODE
+	SET USE_YN=0
+	WHERE COM_CODE =#{comCode}
+	</update>
+	
+	<!--기업관리시작 -->
+	<!--기업관리시작 -->
+	<select id="enterList" parameterType="String" resultType="enterVO">
+        SELECT *
+        FROM ENTER
+        WHERE ENABLED = '0'
+	</select>
+	
+	<select id="getEntBrFile" parameterType="String" resultType="fileDetailVO">
+	    SELECT FILE_GROUP_SN, FILE_SN, ORGNL_FILE_NM, STRG_FILE_NM, FILE_PATH_NM, 
+	           FILE_SZ, FILE_EXTN_NM, FILE_MIME, FILE_FANCYSIZE, 
+	           FILE_STRG_YMD, FILE_DWNLD_CNT
+	    FROM FILE_DT
+	    WHERE FILE_GROUP_SN = (
+	        SELECT ENT_BR_FILE
+	        FROM ENTER
+	        WHERE ENT_ID = #{entId}
+		    )
+	</select>
+	<!-- 기업승인 -->
+	<update id="entOk" parameterType="String">
+	    UPDATE ENTER
+	    SET ENABLED = '1'
+	    WHERE ENT_ID = #{entId}
+	</update>
+
+		
+	<delete id="entNo" parameterType="String">
+	    DELETE FROM ENTER
+	    WHERE ENT_ID = #{entId}
+	</delete>
+	
+	<select id="enterDetail" parameterType="String" resultType="enterVO"> 
+	    SELECT *
+	    FROM ENTER
+	    WHERE ENABLED = '0' AND ENT_ID = #{entId}
+	</select>
+	<select id="enterAllDetail" parameterType="String" resultType="enterVO"> 
+	    SELECT *
+	    FROM ENTER
+	    WHERE ENT_ID = #{entId}
+	</select>
+	<select id="memAllDetail" parameterType="String" resultType="memberVO"> 
+	    SELECT MBR_ID, ENT_ID, MBR_ADDR, FILE_GROUP_SN, ENABLED, 
+	    	   MBR_NM, MBR_SEXDSTN_CD, MBR_JOIN_YMD, MBR_ACNUTNO, MBR_WARN_CO, 
+	    	   CASE
+		           WHEN LENGTH(MBR_TELNO) = 10 THEN
+		               SUBSTR(MBR_TELNO, 1, 3) || ' - ' || SUBSTR(MBR_TELNO, 4, 3) || ' - ' || SUBSTR(MBR_TELNO, 7)
+		           WHEN LENGTH(MBR_TELNO) = 11 THEN
+		               SUBSTR(MBR_TELNO, 1, 3) || ' - ' || SUBSTR(MBR_TELNO, 4, 4) || ' - ' || SUBSTR(MBR_TELNO, 8)
+		           ELSE
+		               MBR_TELNO
+		       END AS MBR_TELNO,
+	    	   MBR_EML, MBR_BRDT, MBR_ADDR_DTL, MBR_ZIP, TO_CHAR(mbr_join_ymd, 'YYYY-MM-DD') AS mbrJoinYmd, MBR_PSWD, USER_TYPE
+	    FROM MEMBER
+	    WHERE MBR_ID = #{mbrId}
+	</select>
+	
+	<!-- 신고커뮤니티관리시작 -->
+	<!-- 신고커뮤니티관리시작 -->
+	<select id="reportBoardList" parameterType="String" resultType="declarationVO">
+		   SELECT DCLR_NO, DCLR_CN, DCLR_URL, TO_CHAR(DCLR_DT, 'YYYY.MM.DD') AS DCLR_DT, DCLR_PRCS_STTUS, PST_SN, DCLR_TP, MBR_ID, DCLR_FIELD
+		   FROM DECLARATION
+	</select>
+		
+		
+	<update id="boardReport" parameterType="map">
+	    UPDATE MEMBER
+	    <choose>
+	        <when test="comCode == 'WAMA01'">
+	            SET MBR_WARN_CO = MBR_WARN_CO + 1
+	        </when>
+	        <when test="comCode == 'WAMA02'">
+	            SET MBR_WARN_CO = 5, LIMIT_PERIOD = TO_CHAR(SYSDATE + 7 ,'YYYY-MM-DD')
+	        </when>
+	        <when test="comCode == 'WAMA03'">
+	            SET ENABLED = 1
+	        </when>
+	    </choose>
+	    WHERE MBR_ID = #{mbrId}
+	</update>
+
+		
+	<delete id="reportBoardDel" parameterType="String">
+		DELETE FROM DECLARATION
+		WHERE DCLR_NO = #{dclrNo}
+	</delete>
+	
+	<!-- 회원관리 -->
+	<!-- 회원관리 -->
+	<resultMap type="memberVO" id="memberMap">
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="mbrPswd" column="MBR_PSWD"/>
+		<result property="mbrNm" column="MBR_NM"/>
+		<result property="mbrBrdt" column="MBR_BRDT"/>
+		<result property="mbrSexdstnCd" column="MBR_SEXDSTN_CD"/>
+		<result property="mbrEml" column="MBR_EML"/>
+		<result property="mbrTelno" column="MBR_TELNO"/>
+		<result property="mbrZip" column="MBR_ZIP"/>
+		<result property="mbrAddr" column="MBR_ADDR"/>
+		<result property="mbrAddrDtl" column="MBR_ADDR_DTL"/>
+		<result property="mbrJoinYmd" column="MBR_JOIN_YMD"/>
+		<result property="mbrWhdwlYmd" column="MBR_WHDWL_YMD"/>
+		<result property="enabled" column="ENABLED"/>
+		<result property="mbrWarnCo" column="MBR_WARN_CO"/>
+		<result property="mbrAcnutno" column="MBR_ACNUTNO"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="userType" column="USER_TYPE"/>
+		<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+	</resultMap>
+	<!-- 회원 리스트 -->
+	<select id="memList" parameterType="map" resultMap="memberMap">
+	    SELECT MBR_ID, MBR_PSWD, MBR_NM, MBR_BRDT, MBR_SEXDSTN_CD, 
+	           MBR_EML, MBR_TELNO, MBR_ZIP, MBR_ADDR, MBR_ADDR_DTL, 
+	           MBR_JOIN_YMD, MBR_WHDWL_YMD, ENABLED, MBR_WARN_CO, 
+	           MBR_ACNUTNO, ENT_ID, USER_TYPE, FILE_GROUP_SN
+	    FROM (
+	        SELECT MBR_ID, MBR_PSWD, MBR_NM, MBR_BRDT, MBR_SEXDSTN_CD, 
+	               MBR_EML, MBR_TELNO, MBR_ZIP, MBR_ADDR, MBR_ADDR_DTL, 
+	               MBR_JOIN_YMD, MBR_WHDWL_YMD, ENABLED, MBR_WARN_CO, 
+	               MBR_ACNUTNO, ENT_ID, USER_TYPE, FILE_GROUP_SN,
+	               ROW_NUMBER() OVER (ORDER BY MBR_WHDWL_YMD) AS RNUM
+	        FROM MEMBER
+	        <if test="searchKeyword != null and searchKeyword != ''">
+	            WHERE (MBR_ID LIKE #{searchKeyword} OR MBR_NM LIKE #{searchKeyword})
+	        </if>
+	    ) WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+	<!-- 회원 토탈 -->
+	<select id="memTotal" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM MEMBER
+        <if test="searchKeyword != null and searchKeyword != ''">
+            WHERE (MBR_ID LIKE #{searchKeyword} OR MBR_NM LIKE #{searchKeyword})
+        </if>
+	</select>
+	<!-- 기업 리스트 -->
+	<select id="entList" parameterType="map" resultType="enterVO">
+	    SELECT ENT_ID, ENT_LOGO, ENT_ADDR, ENT_FNDN_YMD, ENT_BRNO, 
+	           ENT_FXNUM, ENT_RPRSNTV_NM, ENT_PSWD, ENT_STLE_CD, ENT_MAIL, 
+	           ENT_HMPG_URL, ENT_NM, ENT_EMP_CNT, ENT_BR_FILE, ENT_ZIP, 
+	           ENT_RPRSRGN, USER_TYPE, ENT_ADDR_DETAIL, ENABLED, ENT_MANAGER_TELNO, TPBIZ_SE_CD
+	    FROM (
+	        SELECT ENT_ID, ENT_LOGO, ENT_ADDR, ENT_FNDN_YMD, ENT_BRNO, 
+	               ENT_FXNUM, ENT_RPRSNTV_NM, ENT_PSWD, ENT_STLE_CD, ENT_MAIL, 
+	               ENT_HMPG_URL, ENT_NM, ENT_EMP_CNT, ENT_BR_FILE, ENT_ZIP, 
+	               ENT_RPRSRGN, USER_TYPE, ENT_ADDR_DETAIL, ENABLED, ENT_MANAGER_TELNO, TPBIZ_SE_CD,
+	               ROW_NUMBER() OVER (ORDER BY ENT_ID) AS RNUM
+	        FROM ENTER
+	        <if test="searchKeyword != null and searchKeyword != ''">
+	            WHERE (ENT_ID LIKE #{searchKeyword} OR ENT_NM LIKE #{searchKeyword})
+	        </if>
+	    ) WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+
+	<select id="entTotal" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+		FROM ENTER
+        <if test="searchKeyword != null and searchKeyword != ''">
+            WHERE (ENT_ID LIKE #{searchKeyword} OR ENT_NM LIKE #{searchKeyword})
+        </if>
+	</select>
+	
+	<!-- 신고회원 리스트 -->
+	<resultMap id="reportMap" type="declarationVO">
+		<result property="dclrTp" column="DCLR_TP"/>
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="dclrField" column="DCLR_FIELD"/>
+		<result property="dclrNo" column="DCLR_NO"/>
+		<result property="dclrCn" column="DCLR_CN"/>
+		<result property="dclrUrl" column="DCLR_URL"/>
+		<result property="dclrDt" column="DCLR_DT"/>
+		<result property="dclrPrcsSttus" column="DCLR_PRCS_STTUS"/>
+		<result property="pstSn" column="PST_SN"/>
+		
+		<result property="mbrNm" column="MBR_NM"/>
+		<result property="mbrEml" column="MBR_EML"/>
+		<result property="enabled" column="ENABLED"/>
+	</resultMap>
+<select id="reportList" parameterType="map" resultMap="reportMap">
+	SELECT * 
+	FROM (
+	    SELECT 
+	        A.MBR_ID, A.ENT_ID, A.FILE_GROUP_SN, A.MBR_JOIN_YMD, A.MBR_ADDR, A.MBR_PSWD, 
+	        A.MBR_TELNO, A.MBR_WARN_CO, A.MBR_WHDWL_YMD, A.MBR_ZIP, A.MBR_EML, A.MBR_SEXDSTN_CD, 
+	        A.MBR_NM, A.MBR_BRDT, A.USER_TYPE, A.ENABLED, A.MBR_ADDR_DTL, A.MBR_ACNUTNO,
+	        B.DCLR_NO, B.DCLR_CN, B.DCLR_PRCS_STTUS, B.DCLR_URL, B.DCLR_FIELD, B.DCLR_TP, B.DCLR_DT, B.PST_SN,
+	        ROW_NUMBER() OVER (ORDER BY B.DCLR_DT DESC) AS RNUM
+	    FROM MEMBER A
+	    INNER JOIN DECLARATION B ON A.MBR_ID = B.MBR_ID
+	    <if test="searchKeyword != null and searchKeyword != ''">
+	     WHERE A.MBR_ID LIKE #{searchKeyword} OR B.DCLR_CN LIKE #{searchKeyword}
+	    </if>
+	) subquery
+	WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+</select>
+
+
+
+	<select id="reportTotal" parameterType="map" resultType="int">
+	    SELECT count(*)
+        FROM DECLARATION
+        <if test="searchKeyword != null and searchKeyword != ''">
+            WHERE (MBR_ID LIKE #{searchKeyword} OR  DCLR_CN LIKE #{searchKeyword})
+        </if>
+	</select>
+	
+	<update id="reportLimit" parameterType="map">
+	    UPDATE MEMBER
+	    <choose>
+	        <when test="comCode.equals('WAMA01')">
+	            SET MBR_WARN_CO = MBR_WARN_CO + 1
+	        </when>
+	        <when test="comCode.equals('WAMA02')">
+	            SET MBR_WARN_CO = 5, LIMIT_PERIOD = TO_CHAR(SYSDATE + 7 ,'YYYY-MM-DD')
+	        </when>
+	        <when test="comCode.equals('WAMA03')">
+	            SET ENABLED = 0
+	        </when>
+	    </choose>
+	    WHERE MBR_ID = #{mbrId}
+	</update>
+	
+<!-- 	게시판제한자 경고메시지 -->
+	<select id="warningMsg" parameterType="String" resultType="memberVO">
+		SELECT TO_CHAR(LIMIT_PERIOD, 'YY-MM-DD')
+		FROM MEMBER
+		WHERE MBR_ID = #{mbrId}
+	</select>
+	
+	
+</mapper>

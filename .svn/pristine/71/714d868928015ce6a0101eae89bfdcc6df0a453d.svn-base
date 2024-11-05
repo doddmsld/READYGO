@@ -1,0 +1,149 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<style>
+.content-wrapper {
+    background-color: white;
+    font-family: pretendard;
+}
+
+.page-link {
+    color: black; 
+    border-radius: 7px; 
+    margin: 5px;
+}
+
+/* 버튼 클릭했을 때! */
+.page-item.active .page-link {
+    z-index: 3;
+    color: #24D59E;
+    background-color: rgba(44, 207, 195, 0.11); 
+    border-radius: 7px;
+}
+
+.write_date {
+    text-align: center;
+}
+
+.btn-default {
+    background-color: #24D59E;
+    border-color: none;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.btn-default:hover {
+    background-color: white;
+    color: #24D59E;
+    border-color: #24D59E;
+}
+.ListTitle{
+	color:black;
+}
+.ListTitle:hover{
+    color: #24D59E;
+}
+/* 상태 셀 스타일 수정 */
+.status {
+    border-radius: 999px; 
+    text-align: center;
+    width: 90px;
+    height: 30px;
+    display: flex; /* Flexbox를 사용하여 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    margin: auto; /* 셀 중앙 정렬 */
+}
+
+.status a {
+    font-size: 12px;
+    color: inherit; /* 부모의 색상 상속 */
+    text-decoration: none; /* 링크의 기본 밑줄 제거 */
+}
+</style>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2" style="margin-left: 150px;">
+            <div class="col-sm-6">
+                <h1>문의 게시판<br></h1>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 게시글목록 -->
+<div class="card-body table-responsive p-0" style="display: flex; justify-content: center;">
+    <table class="table table-hover text-nowrap col-10">
+        <thead>
+            <tr>
+                <th class="write_date col-1">상태</th>
+                <th class="write_date col-5">제목</th>
+                <th class="write_date col-1">공개설정</th>
+                <th class="write_date col-1">작성자</th>
+                <th class="write_date col-1">작성일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 답변대기 -->
+        	<c:forEach var="boardVO" items="${articlePage.content}" varStatus="stat">
+            <tr>
+                <td>답변대기</td>
+                <td class="col-5"><a class="ListTitle" href="/board/inquiryBoard/inquiryDetail?seNo=4&pstSn=${boardVO.pstSn}">${boardVO.pstTtl}</a></td>
+                <td class="write_date">${boardVO.pstOthbcscope}</td>
+                <td class="write_date">${boardVO.mbrId}</td>
+                <td class="write_date">${boardVO.pstWrtDt}</td>
+            </tr>
+            </c:forEach>
+        </tbody>
+		<tfoot>
+			<tr>
+				<td colspan="4" style="text-align: center;">
+					<!-- EL태그 정리 
+						== : eq(equal)
+						!= : ne(not equal)
+						<  : lt(less than)
+						>  : gt(greater than)
+						<= : le(less equal)
+						>= : ge(greater equal)
+					 -->
+					<p>${articlePage.startPage}to${articlePage.endPage}</p> <!-- startPage가 5보다 클 때에만 [이전] 활성화 -->
+					<div class="dataTables_paginate" id="example2_paginate" style="display: flex; justify-content: center;">
+    					<ul class="pagination" style="display: flex;">
+					<c:if test="${articlePage.startPage gt 5}">
+       <li class="paginate_button page-item previous disabled" id="example2_previous"><a href="/board/inquiryBoard/inquiryList?currentPage=${articlePage.startPage-5}" data-dt-idx="0" tabindex="0" class="page-link">&lt;</a></li>
+
+					</c:if> <c:forEach var="pNo" begin="${articlePage.startPage}"
+						end="${articlePage.endPage}">
+        <li class="paginate_button page-item"><a href="/board/inquiryBoard/inquiryList?currentPage=${pNo}" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">${pNo}</a></li>
+					</c:forEach> <!-- endPage < totalPages일때만 [다음]활성 --> <c:if
+						test="${articlePage.endPage lt articlePage.totalPages}">
+        <li class="paginate_button page-item next" id="example2_next"><a href="/board/inquiryBoard/inquiryList?currentPage=${articlePage.startPage+5}" aria-controls="example2" data-dt-idx="7" tabindex="0" class="page-link">&gt;</a></li>
+					</c:if>
+						</ul>
+					</div>
+				</td>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+<!--  active -->
+<%-- 						<a href="/board/inquiryBoard/inquiryList?currentPage=${articlePage.startPage-5}">[이전]</a> --%>
+<%-- 						<a href="/board/inquiryBoard/inquiryList?currentPage=${pNo}">[${pNo}]</a> --%>
+<%-- 						<a href="/board/inquiryBoard/inquiryList?currentPage=${articlePage.startPage+5}">[다음]</a> --%>
+
+
+<!-- <div class="dataTables_paginate" id="example2_paginate" style="display: flex; justify-content: center;"> -->
+<!--     <ul class="pagination" style="display: flex;"> -->
+<!--         <li></li> -->
+<!--         <li class="paginate_button page-item previous disabled" id="example2_previous"><a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">&lt;&lt;</a></li> -->
+<%--         <li class="paginate_button page-item previous disabled" id="example2_previous"><a href="/board/inquiryBoard/inquiryList?currentPage=${articlePage.startPage-5}" data-dt-idx="0" tabindex="0" class="page-link">&lt;</a></li> --%>
+<%--         <li class="paginate_button page-item active"><a href="/board/inquiryBoard/inquiryList?currentPage=${pNo}" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">1</a></li> --%>
+<%--         <li class="paginate_button page-item next" id="example2_next"><a href="/board/inquiryBoard/inquiryList?currentPage=${articlePage.startPage+5}" aria-controls="example2" data-dt-idx="7" tabindex="0" class="page-link">&gt;</a></li> --%>
+<!--         <li class="paginate_button page-item next" id="example2_next"><a href="#" aria-controls="example2" data-dt-idx="7" tabindex="0" class="page-link">&gt;&gt;</a></li> -->
+<!--         <li></li> -->
+<!--     </ul> -->
+<!-- 	<button type="button" class="btn btn-default btn-list" onclick="location.href='/board/inquiryBoard/inquiryRegist'">문의글 작성</button> -->
+<!-- </div> -->
+

@@ -1,0 +1,15 @@
+package kr.or.ddit.vo;
+
+import java.sql.Date;
+
+import lombok.Data;
+
+//프로필_자격증
+@Data
+public class PrfCrtfctVO {
+	private String crtfctNo;
+	private String mbrId;
+	private String crtfctNm;
+	private String crtfctPblcnoffic;
+	private Date crtfctAcqsDate;
+}

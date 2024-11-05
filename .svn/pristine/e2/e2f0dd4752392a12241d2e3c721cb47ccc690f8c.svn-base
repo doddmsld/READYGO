@@ -1,0 +1,236 @@
+package kr.or.ddit.oustou.controller;
+
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.oustou.service.OutsouService;
+import kr.or.ddit.mapper.OutsouMapper;
+import kr.or.ddit.mapper.UserMapper;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.OutsouVO;
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
+@Controller
+@RequestMapping("/outsou")
+public class OutsouController {
+
+	@Inject
+	OutsouService outsouService;
+	
+	//공통코드를 가져오기 위함 
+	@Autowired
+	UserMapper userMapper;
+	@Autowired
+	OutsouMapper outsouMapper;
+ 
+	
+	/**
+	 * 외주 게시판 목록
+	 * 
+	 * 
+	 */
+	@GetMapping("/list")
+	public String list(Model model) {		
+		return "outsou/list";
+	}
+	
+	/**
+	 * 1차 카테고리에 따른 2차 카테고리 선택
+	 * 요청URI : /outsou/category2
+	 * 요청파라미터 : JSON {comCode:OUML}
+	 * 요청방식 : POST
+	 *
+	 * @ResponseBody : 반환 데이터를 JSON 형식으로 변환하는 애너테이션
+	 */
+	@ResponseBody
+	@PostMapping("/category2")
+	public List<CodeVO> category2(@RequestBody Map<String, String> data, Model model) {
+	    String comCode = data.get("comCode");  // 1차 카테고리에서 선택한 comCode 값
+	    log.info("category2 -> comCode : " + comCode);
+	    //2차 카테고리 카테고리 
+	  	List<CodeVO> OUMLcodeVOList = this.outsouMapper.cacodeSelect(comCode);
+	    log.info("category2 -> OUMLcodeVOList : " + OUMLcodeVOList);
+	    
+	    model.addAttribute("OUMLcodeVOList",OUMLcodeVOList);//자기소개서 카테고리
+	    
+	    return OUMLcodeVOList;  // JSON 형식으로 2차 카테고리 데이터를 클라이언트에 반환
+	}
+	
+
+	/** 외주 게시판 기본 정보 등록폼
+	 * 요청URI: /outsou/regist
+	 * 요청파라미터 : 
+	 * 요청방식 :get
+	 */
+	@GetMapping("/regist")
+	public String regit1(Model model) {
+		//1차카테고리
+		List<CodeVO> OUCLcodeVOList = this.userMapper.codeSelect("OULC");
+		//직업분야
+		List<CodeVO> SRFLcodeVOList = this.userMapper.codeSelect("RCCA");
+		//기업 종류
+		List<CodeVO> SRKNcodeVOList = this.userMapper.codeSelect("SRKN");
+		//지원 종류
+		List<CodeVO> SRARcodeVOList = this.userMapper.codeSelect("SRAR");
+		//기술수준
+		List<CodeVO> SRLEcodeVOList = this.userMapper.codeSelect("SRLE");
+		//팀규모
+		List<CodeVO> SRTEcodeVOList = this.userMapper.codeSelect("SRTE");
+		//개발언어 공통코드 
+		List<CodeVO> SRLAcodeVOList = this.userMapper.codeSelect("SRLA");
+		//데이터베이스 공통코드
+		List<CodeVO> SRDBcodeVOList = this.userMapper.codeSelect("SRDB");
+		//클라우드
+		List<CodeVO> SRCLcodeVOList = this.userMapper.codeSelect("SRCL");
+		//작업기간
+		List<CodeVO> SRJPcodeVOList = this.userMapper.codeSelect("SRJP");
+		//수정횟수
+		List<CodeVO> SRUMcodeVOList = this.userMapper.codeSelect("SRUM");
+		
+		//공통코드 
+		model.addAttribute("OUCLcodeVOList",OUCLcodeVOList);//it카테고리
+		model.addAttribute("SRFLcodeVOList",SRFLcodeVOList);//직업분야
+		model.addAttribute("SRKNcodeVOList",SRKNcodeVOList);//기업종류
+		model.addAttribute("SRARcodeVOList",SRARcodeVOList);//지원종류
+		model.addAttribute("SRLEcodeVOList",SRLEcodeVOList);//기술수준
+		model.addAttribute("SRTEcodeVOList",SRTEcodeVOList);//팀규모
+		model.addAttribute("SRLAcodeVOList",SRLAcodeVOList);//개발언어
+		model.addAttribute("SRDBcodeVOList",SRDBcodeVOList);//데이터베이스
+		model.addAttribute("SRCLcodeVOList",SRCLcodeVOList);//클라우드
+		model.addAttribute("SRJPcodeVOList",SRJPcodeVOList);//작업기간
+		model.addAttribute("SRUMcodeVOList",SRUMcodeVOList);//수정횟수
+		
+		return "outsou/regist/regist";
+	}
+	
+	
+	/**외주 게시판 등록실행 
+	요청URI :/outsou/registPostAjax
+	요청 파라미터 : 
+	요청방식 : post
+	*/
+	@ResponseBody
+	@PostMapping("/registPostAjax")
+	public String registPostAjax( OutsouVO outsouVO) {
+		/*
+		 [1.IT프로그래밍]->OUTSOU, OS_DEVAL, OS_KEYWOED
+		 OutsouVO(outordNo=null, outordLclsf=OULC01, outordMlsfc=OULC01-002, outordTtl=1, ..., 
+		 	osDevalVO=OsDevalVO(srvcNo=null, outordNo=null, srvcLevelCd=SRLE01, srvcTeamscaleCd=SRTE01, srvcLangCd=SRLA16, srvcDatabaseCd=SRDB16, srvcCludCd=SRCL14, srvcEtc=b, ..), 
+		 	osClVO=OsClVO(srvcNo=null, ..), 
+		 	osKeywordVO=OsKeywordVO(kwrdNo=null, outordNo=null, kwrdNm=a))
+		 
+		 
+		 [2.자기소개서]->OUTSOU, OS_CL 이 두 개의 테이블에 insert
+		 OutsouVO(outordNo=null, outordLclsf=OULC02, outordMlsfc=OULC02-001, outordTtl=1, ...,
+		  	osDevalVO=OsDevalVO(srvcNo=null, outordNo=null, srvcLevelCd=null, srvcTeamscaleCd=null, srvcLangCd=null, srvcDatabaseCd=null, srvcCludCd=null, srvcEtc=, srvcJobpd=null, srvcUpdtnmtm=null, srvcFileprovdyn=null, srvcSklladit=null), 
+		  	osClVO=OsClVO(srvcNo=null, outordNo=null, srvcFld=SRFL02, srvcKnd=SRKN03, srvcArctype=SRAR02), 
+		  	osKeywordVO=OsKeywordVO(kwrdNo=null, outordNo=null, kwrdNm=))
+		 */
+		log.info("registPostAjax -> outsouVO : " + outsouVO);
+		
+		log.info("OsDevalVO: " + outsouVO.getOsDevalVO());
+		log.info("OsKeywordVO: " + outsouVO.getOsKeywordVO());
+		log.info("OsClVO: " + outsouVO.getOsClVO());
+		
+		int result = this.outsouService.registPostAjax(outsouVO);
+		log.info("registPostAjax -> result : " + result);
+		
+		log.info("outsouVO.getOutordNo() -> " +outsouVO.getOutordNo() );
+		
+		return outsouVO.getOutordNo();
+	}
+	
+	
+	
+	/**
+	 * 외주 게시판 상세
+	 * 요청 URI : /outsou/detail
+	 * 요청파라미터 : {outordNo=1}
+	 * @return
+	 */
+	@GetMapping("/detail")
+	public String detail(@RequestParam("outordNo") String outordNo, Model model) {
+		
+		log.info("detail->outordNo : " + outordNo);
+		 
+		 //외주 상세 (외주, 서비스타입, 키워드)
+		 OutsouVO outsouVO = this.outsouService.detail(outordNo);
+		 /*
+		 1 :
+		 OutsouVO(outordNo=5, outordLclsf=IT·프로그래밍, outordMlsfc=홈페이지 신규 제작, outordTtl=테스트
+		 , outordExpln=<p>겁나게 잘해져</p>, outordAmt=550000, outordAmtExpln=홈페이지를개발하는데 최적화되ㅇ있습니다.
+		 , outordMainFile=null, outordDetailFile=null, outordDmndmatter=<ol><li>연락먼저</li><li>1. 연라먼저</li><li>2.시넝</li><li>3. 도메인준비</li></ol>, outordProvdprocss=<p>겁나게 잘해져</p>, outordRefndregltn=<p>겁나게 잘해져</p>
+		 , outordWrtde=Wed Sep 25 20:46:06 KST 2024, outordUpdde=null, outordDelde=null, outordRdcnt=0, mbrId=yyy123
+		 		1 : 
+		 		, osDevalVO=OsDevalVO(srvcNo=5, outordNo=5, srvcLevelCd=초급:소스분석 / 수정, srvcTeamscaleCd=1인, srvcLangCd=ActionScript
+		 		, srvcDatabaseCd=CouchDB, srvcCludCd=Amazon Athena, srvcEtc=null, srvcJobpd=2일, srvcUpdtnmtm=1회, srvcFileprovdyn=1, srvcSklladit=2), 
+		 		
+		 		1 : 
+		 		osClVO=OsClVO(srvcNo=5, outordNo=5, srvcFld=null, srvcKnd=null, srvcArctype=null)
+		 		
+		 		, osKeywordVO=null, mainFile=null, detailFile=null
+		 		
+		 		N
+		 		, fileDetailVOList=[
+		 		FileDetailVO(fileGroupSn=null, gubun=MAIN, fileSn=0, orgnlFileNm=null, strgFileNm=null, filePathNm=/upload/outsou/mainFile/2024/09/25/da95d79e-09a4-4b21-8098-264c36b59c5d_이미지 등록.png, fileSz=0, fileExtnNm=null, fileMime=null, fileFancysize=null, fileStrgYmd=null, fileDwnldCnt=0), FileDetailVO(fileGroupSn=null, gubun=DETAIL, fileSn=0, orgnlFileNm=null, strgFileNm=null, filePathNm=/upload/outsou/detailFile/2024/09/25/24f913b1-a57e-482e-89e0-3f8a7ace9324_404.jpg, fileSz=0, fileExtnNm=null, fileMime=null, fileFancysize=null, fileStrgYmd=null, fileDwnldCnt=0), FileDetailVO(fileGroupSn=null, gubun=DETAIL, fileSn=0, orgnlFileNm=null, strgFileNm=null, filePathNm=/upload/outsou/detailFile/2024/09/25/657dae26-e9c4-443a-a89d-f4632fde1627_500.jpg, fileSz=0, fileExtnNm=null, fileMime=null, fileFancysize=null, fileStrgYmd=null, fileDwnldCnt=0), FileDetailVO(fileGroupSn=null, gubun=DETAIL, fileSn=0, orgnlFileNm=null, strgFileNm=null, filePathNm=/upload/outsou/detailFile/2024/09/25/f95035ca-3e9d-40f3-bbca-e85aa9c9c6eb_ReadyUp-로고.png, fileSz=0, fileExtnNm=null, fileMime=null, fileFancysize=null, fileStrgYmd=null, fileDwnldCnt=0), FileDetailVO(fileGroupSn=null, gubun=DETAIL, fileSn=0, orgnlFileNm=null, strgFileNm=null, filePathNm=/upload/outsou/detailFile/2024/09/25/30cf28a1-f1e5-4a04-a1b4-8e289901fd71_scj.jpg, fileSz=0, fileExtnNm=null, fileMime=null, fileFancysize=null, fileStrgYmd=null, fileDwnldCnt=0), FileDetailVO(fileGroupSn=null, gubun=DETAIL, fileSn=0, orgnlFileNm=null, strgFileNm=null, filePathNm=/upload/outsou/detailFile/2024/09/25/83fd8508-5ca1-41c8-9f59-4dc68dae2bb3_sjh.jpg, fileSz=0, fileExtnNm=null, fileMime=null, fileFancysize=null, fileStrgYmd=null, fileDwnldCnt=0), FileDetailVO(fileGroupSn=null, gubun=DETAIL, fileSn=0, orgnlFileNm=null, strgFileNm=null, filePathNm=/upload/outsou/detailFile/2024/09/25/e1f99653-0268-42ea-9fe5-7c1d98f34764_외주 상세페이지 이미지.jpg, fileSz=0, fileExtnNm=null, fileMime=null, fileFancysize=null, fileStrgYmd=null, fileDwnldCnt=0)], fileGroupNo=null)
+		  */
+		 log.info("detail->outsouVO : " + outsouVO);
+		 
+		 model.addAttribute("outsouVO",outsouVO);
+		
+		return "outsou/detail";
+		
+		
+	}
+	
+	/**
+	 * 외주 결제 상세 
+	 * 요청 URI : /readyUP/outsou/paydetail
+	 * 요청파라미터 : {outordNo=1}
+	 * @return
+	 */
+	@GetMapping("/paydetail")
+	public String paydetail(@RequestParam("outordNo") String outordNo, Model model) {
+			log.info("paydetail->outordNo : " + outordNo);
+		 
+		 //외주 상세 (외주, 서비스타입, 키워드) 저장 내용 가져옴 
+		 OutsouVO outsouVO = this.outsouService.detail(outordNo);
+		 log.info("paydetail->outsouVO : " + outsouVO);
+		 
+		 model.addAttribute("outsouVO",outsouVO);
+		
+		
+		return "outsou/regist/paydetail";
+		
+	}
+	
+	/** 외주 삭제 
+	* 요청URI : /outsou/deletePost
+	* 요청파라미터 : {outordNo=}	
+	* 요청방식 : post
+	*/
+	@PostMapping("/deletePost")
+	public String deletePost(@RequestParam("outordNo") String outordNo) {
+		//날짜를 업데이트 시켜서 날짜가 있는 건 보이지 않도록 처리해야함
+		int result = this.outsouService.deletePost(outordNo);
+		log.info("deletePost->outordNo : " + outordNo);
+		
+		return "outsou/list";
+	}
+
+}

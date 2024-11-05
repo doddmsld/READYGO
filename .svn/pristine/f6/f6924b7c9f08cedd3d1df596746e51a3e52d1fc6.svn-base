@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.PbancMapper">
+	<sql id="where">
+		<if test="selCity != null and selCity.size() > 0">
+<!--                 <if test="'WRGN18-001' in selCity"> -->
+                    <!-- selCity에 전국(WRGN18-001)이 포함되어 있을 때 전체 값을 출력 -->
+                    <!-- 아무 조건도 추가하지 않음 -->
+<!--                 </if> -->
+                <if test="'WRGN18-001' not in selCity">
+                    AND ( 
+                    <foreach collection="selCity" item="city" separator=" OR ">
+                        PBANC_RPRSRGN = #{city}
+                    </foreach>
+                    ) 
+                </if> 
+            </if>
+
+            <if test="selJob != null and selJob.size() > 0">
+                AND (
+	                <foreach collection="selJob" item="job" separator=" OR ">
+	                    PBANC_RPRS_DTY = #{job}
+	                </foreach>
+                )
+            </if>
+
+            <if test="keyword != null and keyword != ''">
+    			AND (PBANC_TTL LIKE '%' || #{keyword} || '%')
+			</if>
+<!--         </where> -->
+        <if test="order!=null and order!=''">
+            <choose>
+                <when test="order=='pbancNo'">
+                    ORDER BY PBANC_NO
+                </when>
+                <when test="order=='pbancScrapCo'">
+                    ORDER BY PBANC_SCRAP_CO
+                </when>
+                <when test="order=='pbancDlnDt'">
+                    ORDER BY PBANC_DDLN_DT
+                </when>
+            </choose>
+        </if>
+	</sql>
+
+	<resultMap type="PbancVO" id="pbancMap">
+		<result property="pbancSttus" column="PBANC_STTUS"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="pbancPicNm" column="PBANC_PIC_NM"/>
+		<result property="pbancPicTelno" column="PBANC_PIC_TELNO"/>
+		<result property="pbancPicMbtlnum" column="PBANC_PIC_MBTLNUM"/>
+		<result property="pbancPicEml" column="PBANC_PIC_EML"/>
+		<result property="pbancAplctEduCd" column="PBANC_APLCT_EDU_CD"/>
+		<result property="pbancRprsrgn" column="PBANC_RPRSRGN"/>
+		<result property="pbancTtl" column="PBANC_TTL"/>
+		<result property="pbancWorkstleCd" column="PBANC_WORKSTLE_CD"/>
+		<result property="pbancApntcpd" column="PBANC_APNTCPD"/>
+		<result property="pbancSalary" column="PBANC_SALARY"/>
+		<result property="pbancWorkHrCd" column="PBANC_WORK_HR_CD"/>
+		<result property="pbancWorkDayCd" column="PBANC_WORK_DAY_CD"/>
+		<result property="pbancRcptMthdCd" column="PBANC_RCPT_MTHD_CD"/>
+		<result property="pbancAppofeForm" column="PBANC_APPOFE_FORM"/>
+		<result property="pbancRprsDty" column="PBANC_RPRS_DTY"/>
+		<result property="pbancRcptPd" column="PBANC_RCPT_PD"/>
+		<result property="pbancBgngDt" column="PBANC_BGNG_DT"/>
+		<result property="pbancBgngDts" column="PBANC_BGNG_DTS"/>
+		<result property="pbancDdlnDt" column="PBANC_DDLN_DT"/>
+		<result property="pbancDdlnDts" column="PBANC_DDLN_DTS"/>
+		<result property="pbancDlnDt" column="PBANC_DLN_DT"/>
+		<result property="pbancTmplt" column="PBANC_TMPLT"/>
+		<result property="pbancWrtDt" column="PBANC_WRT_DT"/>
+		<result property="pbancMdfcnDt" column="PBANC_MDFCN_DT"/>
+		<result property="pbancDelDt" column="PBANC_DEL_DT"/>
+		<result property="pbancScrapCo" column="PBANC_SCRAP_CO"/>
+		<result property="pbancDelYn" column="PBANC_DEL_YN"/>
+		<result property="pbancRdcnt" column="PBANC_RDCNT"/>
+		<result property="pbancBeforeWrt" column="PBANC_BEFORE_WRT"/>
+		<result property="pbancWorkstleNm" column="PBANC_WORKSTLE_NM"/>
+		<result property="rcritCareerNm" column="RCRIT_CAREER_NM"/>
+		<result property="pbancRprsrgnNm" column="PBANC_RPRSRGN_NM"/>
+      
+      <association property="enterVO" resultMap="enterMap"/>
+      <association property="codeVO" resultMap="codeMap"/>
+      <association property="tbcRecruitmentVO" resultMap="tbcRecruitmentMap"/>
+      <association property="tbcIndutyVO" resultMap="tbcIndutyMap"/>
+   </resultMap>
+   
+   <resultMap type="tbcIndutyVO" id="tbcIndutyMap">
+      <result property="tpbizCd" column="TPBIZ_CD"/>
+      <result property="pbancNo" column="PBANC_NO"/>
+   </resultMap>
+   
+   <resultMap type="tbcRecruitmentVO" id="tbcRecruitmentMap">
+      <result property="rcritNo" column="RCRIT_NO"/>
+      <result property="pbancNo" column="PBANC_NO"/>
+      <result property="rcritNm" column="RCRIT_NM"/>
+      <result property="rcritCareerCd" column="RCRIT_CAREER_CD"/>
+      <result property="rcritTask" column="RCRIT_TASK"/>
+      <result property="rcritDept" column="RCRIT_DEPT"/>
+      <result property="rcritJbttlCd" column="RCRIT_JBTTL_CD"/>
+   </resultMap>
+   
+   <resultMap type="enterVO" id="enterMap">
+      <result property="userType" column="USER_TYPE"/>
+      <result property="entMail" column="ENT_MAIL"/>
+      <result property="entId" column="ENT_ID"/>
+      <result property="entPswd" column="ENT_PSWD"/>
+      <result property="entNm" column="ENT_NM"/>
+      <result property="entManagerTelno" column="ENT_MANAGER_TELNO"/>
+      <result property="entFxnum" column="ENT_FXNUM"/>
+      <result property="entAddr" column="ENT_ADDR"/>
+      <result property="entAddrDetail" column="ENT_ADDR_DETAIL"/>
+      <result property="entZip" column="ENT_ZIP"/>
+      <result property="entLogo" column="ENT_LOGO"/>
+      <result property="entRprsntvNm" column="ENT_RPRSNTV_NM"/>
+      <result property="entIntrcnsntnc" column="ENT_INTRCNSNTNC"/>
+      <result property="entStleCd" column="ENT_STLE_CD"/>
+      <result property="entEmpCnt" column="ENT_EMP_CNT"/>
+      <result property="entFndnYmd" column="ENT_FNDN_YMD"/>
+      <result property="entHmpgUrl" column="ENT_HMPG_URL"/>
+      <result property="entBrno" column="ENT_BRNO"/>
+      <result property="entBrFile" column="ENT_BR_FILE"/>
+      <result property="enabled" column="ENABLED"/>
+   </resultMap>
+   
+   <resultMap type="codeVO" id="codeMap">
+   <result property="comCode" column="COM_CODE"/>
+   <result property="comCodeGrp" column="COM_CODE_GRP"/>
+   <result property="comCodeNm" column="COM_CODE_NM"/>
+   <result property="comCodeDesc" column="COM_CODE_DESC"/>
+   <result property="useYn" column="USE_YN"/>
+   <result property="upperComCode" column="UPPER_COM_CODE"/>
+   <result property="upperComCodeGrp" column="UPPER_COM_CODE_GRP"/>
+   </resultMap>
+
+	<select id="list" parameterType="hashMap" resultType="pbancVO">
+    WITH T AS
+    (
+        SELECT ROW_NUMBER() OVER(ORDER BY PBANC_NO) RNUM
+        , PBANC_NO, ENT_ID, PBANC_RPRSRGN, PBANC_DDLN_DT
+        , get_common_code_name(PBANC_APLCT_EDU_CD) PBANC_APLCT_EDU_CD_NM
+        , get_common_code_name(SUBSTR(PBANC_RPRSRGN, 1, 6)) PBANC_RPRSRGN_NM
+        , get_common_code_name(PBANC_RPRSRGN) PBANC_CITY_NM, PBANC_TTL
+        , get_common_code_name(PBANC_WORKSTLE_CD) PBANC_WORKSTLE_CD_NM
+        , PBANC_RPRS_DTY, PBANC_SCRAP_CO
+        , get_common_code_name(PBANC_CAREER_CD) PBANC_CAREER_CD_NM
+        FROM PBANC
+<!--         <where> 
+		WHERE TRUE(1 = 1) AND TRUE => TRUE
+		WHERE TRUE(1 = 1) AND FALSE => FALSE
+-->
+		WHERE 1 = 1
+        <include refid="where"></include>   
+    )
+    SELECT * FROM T
+    WHERE T.RNUM BETWEEN (#{currentPage} * 10) - (10 - 1) AND (#{currentPage} * 10)
+</select>
+
+	<!-- 전체 행의 수(조건이 있을 때 조건도 포함시킨 후 전체 행을 구해야 함)-->
+	<select id="getTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM PBANC
+		WHERE 1 = 1
+        <include refid="where"></include>   
+	</select>
+
+   <!-- 기업 현재채용중인 공고 -->
+   <select id="getPbancList" parameterType="String" resultMap="pbancMap">
+      SELECT 
+         CASE 
+      <![CDATA[
+            WHEN LENGTH(PBANC_TTL) > 10 THEN SUBSTR(PBANC_TTL, 1, 10) || '...'
+            ELSE PBANC_TTL
+         END AS PBANC_TTL,
+			TO_CHAR(A.PBANC_BGNG_DT, 'YYYY.MM.DD') AS PBANC_BGNG_DTS, 
+    		TO_CHAR(A.PBANC_DDLN_DT, 'YYYY.MM.DD') AS PBANC_DDLN_DTS,
+          (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = A.PBANC_WORKSTLE_CD)AS PBANC_WORKSTLE_NM,
+         (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = D.RCRIT_CAREER_CD)AS RCRIT_CAREER_NM,
+         (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE=A.PBANC_RPRSRGN)AS PBANC_RPRSRGN_NM
+      FROM PBANC A,ENTER B,TBC_RECRUITMENT D
+      WHERE A.ENT_ID = #{entId}
+      AND A.PBANC_NO = D.PBANC_NO
+      AND A.ENT_ID = B.ENT_ID
+      AND ROWNUM < 5
+      AND PBANC_DDLN_DT > SYSDATE - 1
+      ]]>
+      ORDER BY PBANC_WRT_DT DESC
+   </select>
+
+
+	<select id="regionList" resultType="codeVO">
+		SELECT COM_CODE, COM_CODE_NM
+		FROM CODE
+		WHERE COM_CODE_GRP = 'WRGN'
+		AND COM_CODE LIKE 'WRGN__'
+		ORDER BY TO_NUMBER(SUBSTR(COM_CODE, 5, 2))
+	</select>
+	
+	<select id="cityList" parameterType="String" resultType="codeVO">
+	    SELECT A.COM_CODE, A.COM_CODE_NM, B.COM_CODE_NM AS UPPER_COM_CODE_NM
+	    FROM CODE A
+	    LEFT JOIN CODE B ON A.UPPER_COM_CODE_GRP = B.COM_CODE
+	    WHERE A.UPPER_COM_CODE_GRP = #{comCode}
+	    ORDER BY TO_NUMBER(SUBSTR(A.COM_CODE, 8, 3))
+	</select>
+	
+	<select id="jobList" resultType="codeVO">
+		SELECT COM_CODE, COM_CODE_NM
+		FROM CODE
+		WHERE COM_CODE_GRP = 'INSE'
+		AND COM_CODE LIKE 'INSE__'
+		ORDER BY TO_NUMBER(SUBSTR(COM_CODE, 5, 2))
+	</select>
+</mapper>

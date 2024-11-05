@@ -1,0 +1,138 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript">
+
+//1차 카테고리 선택에 따라 2차 카테고리 옵션을 설정하는 함수
+function updateCategory2() {
+    let category1 = $("#category1").val();
+    let category2 = $("#category2");
+
+    // 2차 카테고리 초기화
+    category2.empty();
+
+    // 카테고리별 2차 카테고리 옵션 설정
+    let options = [];
+
+    if (category1 === "01") {
+        options = [
+        	{ value: "", text: "선택해주세요" },
+            { value: "01-1", text: "홈페이지 신규 제작" },
+            { value: "01-2", text: "쇼핑몰 신규제작" },
+            { value: "01-3", text: "랜딩페이지" },
+            { value: "01-3", text: "크롤링·스크래핑" },
+            { value: "01-3", text: "서버·클라우드" },
+            { value: "01-3", text: "수익·자동화" },
+            { value: "01-3", text: "데이터 구매·구축" },
+            { value: "01-3", text: "데이터 라벨링" },
+            { value: "01-3", text: "데이터 베이스" },
+            { value: "01-3", text: "AI·GPT서비스 개발" },
+            { value: "01-3", text: "AI·GPT챗봇" },
+            { value: "01-3", text: "프롬로트 엔지니어링" },
+            { value: "01-3", text: "UI·UX기획" },
+            { value: "01-3", text: "프론트엔트" },
+            { value: "01-3", text: "백엔드" },
+            { value: "01-3", text: "풀스텍" }
+        ];
+    } else if (category1 === "02") {
+        options = [
+        	{ value: "", text: "선택해주세요" },
+            { value: "02-1", text: "국내 자기소개서" },
+            { value: "02-2", text: "해외 자기소개서" },
+            { value: "02-3", text: "대학 입시" }
+        ];
+    }
+
+    // 2차 카테고리에 새로운 옵션 추가
+    $.each(options, function(index, option) {
+        category2.append($("<option>").val(option.value).text(option.text));
+    });
+}
+
+// 1차 카테고리의 onchange 이벤트 핸들러 설정
+$("#category1").on("change", updateCategory2);
+
+
+// 서비스 타입 카테고리 초기화
+category2.empty();
+
+
+</script>
+
+
+<!-- 작은 타일즈 -->
+<div class="form-container">
+	<div class="form-section">
+	    <h4>기본 정보</h4>
+	</div>
+	<div class="form-section">
+	    <h4>가격 설정</h4>
+	</div>
+	<div class="form-section">
+	    <h4>서비스 설명</h4>
+	</div>
+	<div class="form-section">
+	    <h4>이미지</h4>
+	</div>
+	<div class="form-section">
+	    <h4>요청사항</h4>
+	</div>
+</div>
+        
+        <form action="">
+	        <div class="GigFormInput">
+				<label>제목</label>
+				<input type="text" placeholder="서비스를 잘 드러낼 수 있는 제목을 입력해주세요" maxlength="30" />
+					
+			</div>
+
+			<div class="form-group">
+				<label>카테고리</label>
+				<div class="form-sub-group">
+					<div>
+						<label>1차 카테고리</label> 
+						<select id="category1"	onchange="updateCategory2()">
+							<option value="" selected disabled>선택해주세요</option>
+							<option value="01">IT·프로그래밍</option>
+							<option value="02">취업·입시</option>
+						</select>
+					</div>
+					<div>
+						<label>2차 카테고리</label>
+						<select id="category2">
+							<!-- 2차 카테고리 옵션이 JavaScript로 동적으로 채워질 예정 -->
+						</select>
+					</div>
+				</div>
+			</div>
+
+	<div class="form-group">
+            <label>서비스 타입</label>
+            <div class="form-sub-group">
+                <div>
+                    <label>직업 분야</label>
+                    <select id="category3">
+                        <option value="01">IT·프로그래밍</option>
+                        <option value="02">취업·입시</option>
+                    </select>
+                </div>
+                <div>
+                    <label>기업 종류</label>
+                    <select id="category4">
+                        <option value="01">IT·프로그래밍</option>
+                        <option value="02">취업·입시</option>
+                    </select>
+                </div>
+                <div>
+                    <label>지원 전형</label>
+                    <select id="category5">
+                        <option value="01">IT·프로그래밍</option>
+                        <option value="02">취업·입시</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        </form>
+    </div>

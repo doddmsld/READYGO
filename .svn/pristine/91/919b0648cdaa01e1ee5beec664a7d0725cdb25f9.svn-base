@@ -1,0 +1,28 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.CodeVO;
+
+public interface MemAplctMapper {
+	
+	// 입사 목록 조회
+	public List<ApplicantVO> aplctList(Map<String, Object> map);
+
+	// 전체 입사 행 수
+	public int getTotal(String mbrId);
+	
+	// 입사 지원 취소 사유 항목
+	public List<CodeVO> cancelList();
+
+	// 특정 공고 입사 지원 취소 사유 update
+	public int aplctDelete(Map<String, Object> map);
+	
+	// 입사 관리 목록 조회
+	public List<ApplicantVO> aplctManage(Map<String, Object>map);
+	
+	// 받은 제안 목록 조회
+	public List<ApplicantVO> comscoutList (String mbrId);
+}

@@ -1,0 +1,6 @@
+package kr.or.ddit.service_DO;
+
+public interface FAQService {
+
+	public String list();
+}

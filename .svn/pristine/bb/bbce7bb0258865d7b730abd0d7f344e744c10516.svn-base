@@ -1,0 +1,240 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+<
+style
+>
+ @charset "UTF-8";
+
+* {
+    font-family: pretendard;
+}
+
+/*전체적인 위치*/
+.layout {
+	display: flex;
+	justify-content: space-between;
+	width: 1100px;
+	margin: 0 auto;
+}
+
+/*결제 내용 전체*/
+.main {
+	margin: 20px;
+}
+
+/*주문 내역*/ 
+.info {
+	display: flex;
+	flex-direction: column; /* 세로 방향 설정 */
+	justify-content: center; /* 가로 가운데 정렬 */
+	border: 1px solid #e0e0e0;
+	border-radius: 8%;
+/* 	margin-bottom: 30px; */
+	padding: 20px;
+}
+
+.title1{
+	font-weight: bold;
+	margin: 10px;
+}
+.tableAll{
+	
+}
+
+.summary {
+	display: flex;
+	align-items: flex-start;
+	margin-bottom: 20px;
+}
+
+.thumbnail img {
+	width: 80px;
+	height: 60px;
+	border-radius: 10px;
+}
+
+.description {
+	margin-left: 10px;
+}
+
+.seller {
+	display: flex;
+	align-items: center;
+}
+
+.seller img {
+	width: 20px;
+	height: 20px;
+	border-radius: 50%;
+	margin-right: 10px;
+}
+
+.name {
+	font-size: 14px;
+	color: #888;
+}
+
+.table {
+	width: 100%;
+s	margin-top: 20px;
+}
+
+.table th, .table td {
+/* 	text-align: right; */
+/* 	border-bottom: 1px solid #e0e0e0; */
+/* 	font-size: 14px; */
+}
+
+.table th {
+	text-align: left;
+}
+
+.center {
+	text-align: center;
+}
+
+.right {
+	text-align: right;
+}
+
+.payment {
+	border: 1px solid #e0e0e0;
+	margin-top: 30px;
+}
+
+.methods {
+	display: flex;
+	justify-content: space-between;
+	gap: 10px;
+	flex-wrap: wrap;
+}
+
+.methods .btn {
+	flex: 1;
+	padding: 10px;
+	border: 1px solid #e0e0e0;
+	background-color: white;
+	border-radius: 5px;
+	font-size: 14px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.methods .btn.active {
+	border: 2px solid #24d59e;
+}
+
+.methods .btn:hover {
+	background-color: #f9f9f9;
+}
+
+.checkbox-wrapper {
+	margin-top: 30px;
+}
+
+.checkbox {
+	display: flex;
+	align-items: center;
+}
+
+.checkbox label {
+	cursor: pointer;
+}
+
+.body {
+	margin-right: 10px;
+}
+
+.label {
+	font-size: 14px;
+}
+/*세금 계산 서 박스 */
+.billAll {
+	border: 1px solid #e0e0e0;
+	margin-top: 20px;
+}
+
+.descriptions {
+	list-style-type: none;
+	padding: 0;
+	font-size: 12px;
+	color: #666;
+}
+
+.descriptions li {
+	margin-bottom: 10px;
+}
+
+.summary-main {
+	flex: 1;
+	background-color: white;
+	border: 1px solid #e0e0e0;
+	border-radius: 10px;
+	padding: 20px;
+	text-align: right;
+}
+
+.price-wrapper {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
+.label {
+	font-size: 14px;
+	color: #666;
+}
+
+.price {
+	font-weight: bold;
+	font-size: 16px;
+}
+
+.total-wrapper {
+	font-weight: bold;
+	font-size: 18px;
+}
+
+.vat {
+	font-size: 14px;
+	color: #888;
+}
+
+.divider {
+	height: 1px;
+	background-color: #e0e0e0;
+	margin: 20px 0;
+}
+
+.agreement-wrapper {
+	margin-top: 20px;
+}
+
+.agreement-text {
+	font-size: 12px;
+	color: #666;
+}
+
+.btn-block {
+	width: 100%;
+	padding: 12px;
+	background-color: #24d59e;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	font-size: 16px;
+}
+
+.btn-block:hover {
+	background-color: #1cae85;
+}
+
+.pay-text {
+	font-weight: bold;
+	font-size: 16px;
+}

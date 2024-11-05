@@ -1,0 +1,14 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+@Data
+public class RsmCertificateVO {
+	private String crtfctNo;
+	private String rsmNo;
+	private String crtfctNm;
+	private String crtfctPblcnoffic;
+	private String crtfctAcqsSe;
+	private String crtfctAcqsYm;
+	private int crtfctScr;
+}

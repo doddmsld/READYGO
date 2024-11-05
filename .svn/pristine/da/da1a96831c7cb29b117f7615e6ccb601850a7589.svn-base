@@ -1,0 +1,28 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+@Data
+public class VideoRoomVO {
+	private String vcrNo;
+	private String vcrTitle;
+	private String vcrRoomurlid;
+	private String vcrCalltype;
+	private String vcrLivemode;
+	private int vcrMaxjoincount;
+	private int vcrLivemaxjoincount;
+	private String vcrPasswd;
+	private String vcrStartdate;
+	private String vcrEnddate;
+	private String vcrLayouttype;
+	private String vcrSfuincludeall;
+	private String vcrDate;
+	private String vcrYn;
+	private String pbancNo;
+	private String vcrRoomid;
+	
+	private String entId;
+	private int rnum;
+	private String status;//완료,진행중
+	
+}

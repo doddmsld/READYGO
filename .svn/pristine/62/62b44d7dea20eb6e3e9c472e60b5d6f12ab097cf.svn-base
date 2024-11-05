@@ -1,0 +1,13 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+@Data
+public class RsmClVO {
+	private String clNo;
+	private String rsmNo;
+	private String clTtl;
+	private String clCn;
+	private String clWritngYmd;
+	private int clSn;
+}

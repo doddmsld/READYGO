@@ -1,0 +1,14 @@
+package kr.or.ddit.vo;
+
+import java.util.Date;
+
+import lombok.Data;
+
+@Data
+public class OsClVO {
+	private String srvcNo;
+	private String outordNo;
+	private String srvcFld;
+	private String srvcKnd;
+	private String srvcArctype;
+}

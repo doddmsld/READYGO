@@ -1,0 +1,408 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+.announcement-container {
+    width: 80%;
+    margin: 0 auto;
+    margin-top: 60px;
+}
+h2 {
+    text-align: left;
+    margin-top:50px;
+	color: #232323;
+}
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+thead th {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 2px solid #ddd;
+    font-weight: 500;
+    font-size: 20px;
+    color: #232323;
+}
+#dateInput{
+	width: 170px;
+}
+.ptag{
+	text-align: left;
+    font-weight: 500;
+    font-size: 20px;
+    color: #232323;
+    margin-left: 5px;
+}
+tbody td {
+    padding: 20px 9px;
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+}
+.title{
+	color: #232323;
+	font-weight: 400;
+}
+.title:hover{
+	color: #24D59E;
+}
+.industry {
+    font-size: 14px;
+    color: #636e72; /* 분류 텍스트 색상 */
+    margin-top: 5px;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.pagination button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pagination button:hover {
+    background-color: #ddd;
+}
+.details-button{
+   width : 100px;
+   height : 30px;
+   border : 1px solid #A7A7A7;
+   color : #666363;
+   background:white;
+   border-radius : 7px;   
+   font-size : 16px;
+   font-weight : 400;
+   margin-top: 10px;
+}
+.details-button:hover {
+    background-color: #ECECEC;
+}
+
+.filter-dropdown select {
+    height: 40px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 16px;
+}
+.filter-dropdown button {
+    height: 30px;
+    padding: 5px 10px;
+    background-color: #00b894;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.filter-dropdown button:hover {
+    background-color: #008c9e;
+}
+.date-info {
+    color: #636e72;
+    font-size: 12px;
+}
+.pagination button.active {
+    background-color: #24D59E;;
+    color: white;
+}
+.submit-button{
+   width : 100px;
+   height : 40px;
+   background: white;
+   border : 1px solid #24D59E; 
+   color : #24D59E;
+   border-radius : 7px;
+   font-size : 16px;
+   font-weight : 400;
+}
+.submit-button:hover{
+   background: #24D59E;
+   border : none;
+   color : white;
+}	
+.btnclass{
+	display: flex;
+	justify-content: space-between;
+	margin: 0px !important;
+	margin-top: 30px !important;
+}	
+select{
+	border-radius: 5px;
+/* 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05); */
+	font-size: 14px;
+}
+
+.detail{
+	display: flex;
+	justify-content:flex-end; 
+}
+thead, tfoot {
+    border-top: 2px solid #232323;
+}
+
+tfoot td {
+    text-align: center;
+    padding: 10px; /* 하단의 셀 패딩 추가 */
+}
+/* 페이징 css 시작*/
+.page-link {
+	color: black;
+	border-radius: 7px;
+	margin: 5px;
+}
+/* 버튼클릭했을 때! */
+.page-item.active .page-link {
+	z-index: 3;
+	font-weight: 700;
+	color: #24D59E;
+	background-color: rgba(44, 207, 195, 0.11);
+	border-radius: 7px;
+}
+
+.write_date {
+	text-align: right;
+}
+
+.page-item.active .page-link {
+	border-color: #dee2e6;
+}
+
+a.page-link:hover {
+	color: #000000;
+	background-color: #dee2e6;
+}
+/* 페이징 css 끝*/
+.pageTable{
+	border-bottom: 1px solid white !important;
+	padding: 0px !important;
+}
+.search{
+	display: flex;
+	justify-content: flex-end;
+}
+.search input[type="text"], .search input[type="date"]{
+	width: 20%;
+	padding: 13px;
+	font-size: 16px;
+	border: 1px solid #232323;
+	border-radius: 5px;
+	height: 40px;
+	border: 1px solid #ddd;
+	color: #757575;
+}
+.search input[type="text"]{
+	margin-right: 5px;
+}
+.search button {
+	text-align : center;
+	background-color: white;
+	border: 1px solid #24D59E; /*민트*/
+	color: #1e1e1e;
+	border-radius: 5px;
+	cursor: pointer;
+	height: 40px;
+	width: 70px;
+	margin-left: 5px;
+}
+
+.search button:hover {
+	background-color: #24D59E;
+	color: white;
+}
+.search-box{
+	margin-top : 15px;
+	display: flex;
+	justify-content: space-between;
+	
+}
+.gubun-select{
+	border-radius: 5px;
+	font-size: 14px;
+	height: 40px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 16px;
+    margin-right: 5px;
+}
+.sel-cls{
+	display: flex;
+}
+.th-center{
+	text-align: center;
+}
+
+.cal-btn{
+   width : 120px;
+   height : 40px;
+	background: white;
+	color: #232323;
+	border: 1px solid #B5B5B5;
+   border-radius : 7px;
+   font-size : 16px;
+   font-weight : 400;
+   justify-content: center;
+}
+
+.cal-btn:hover{
+	background: #ECECEC;
+	border: 1px solid #B5B5B5;
+}	
+#keywordInput{
+	text-align: center;
+	width: 125px;
+}
+.gubun-select-date{
+	border-radius: 5px;
+	font-size: 14px;
+	height: 40px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 16px;
+    margin-right: 5px;
+}
+.aplctIN{
+	display: flex; 
+	align-items: center; 
+	justify-content: center;
+}
+.aplctImg img{
+	border-radius: 50%;
+	width: 35px;
+	height: 35px;
+	margin-left: -10px;
+	margin-right: 5px;
+}
+
+.aplctTp{
+	text-align: center;
+	font-size: 12px;
+}
+.aplct-sel{
+	margin-right: 5px;
+}
+
+
+
+/* 모달 배경 */
+.modal {
+	display: none; /* 기본적으로 숨김 */
+	position: fixed;
+	
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;		
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4); /* 배경 투명도 */
+}
+
+/* 모달 콘텐츠 */
+.modal-content {
+	background-color: #fefefe;
+	margin: 5% auto; /* 상단에서 약간의 간격을 주고 중앙 정렬 */
+	padding: 35px;
+	border: 1px solid #888;
+	width: 40%; /* 모달 창의 너비를 줄입니다 (기본값은 80%) */
+	max-height: 80%; /* 모달 창의 최대 높이 설정 */
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0
+		rgba(0, 0, 0, 0.19); /* 그림자 효과 */
+}
+
+/* 닫기 버튼 스타일 */
+.close {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.close:hover, .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.close:hover, .close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+/* 폼 내 각 요소 간의 간격을 늘려줍니다 */
+.modal-content form div {
+	margin-bottom: 15px; /* 각 입력 필드 간 간격 */
+}
+
+/* 입력 필드의 높이를 늘립니다 */
+#title, #content, #jobPost {
+	width: 100%;
+	padding: 10px;
+	font-size: 16px;
+	box-sizing: border-box; /* padding과 border를 포함한 크기 조정 */
+}
+
+#content {
+	height: 150px; /* 텍스트 에어리어 높이 증가 */
+	resize: vertical; /* 세로 크기 조절 가능 */
+}
+
+#file {
+	display: block;
+	margin-top: 10px;
+}
+
+/* 버튼 스타일 조정 */
+.cancel-btn1,.cancel-btn2, #scoutForm button[type="submit"] {
+	padding: 10px 0;
+	font-size: 16px;
+	cursor: pointer;
+	width: 200px;
+	height: 50px;
+	border-radius: 7px;
+}
+
+/* 모달 내 버튼 컨테이너 정렬 */
+#scoutForm div:last-child {
+	display: flex;
+	justify-content: space-between; /* 버튼을 양쪽에 배치 */
+}
+
+.scout-title {
+	font-size: 23px;
+}
+
+.cancel-btn1,.cancel-btn2 {
+	background: white;
+	color: #232323;
+	border: 1px solid #B5B5B5;
+}
+
+.cancel-btn1:hover,.cancel-btn2:hover {
+	background: #ECECEC;
+	border: 1px solid #B5B5B5;
+}
+
+#submit-btn {
+	background: white;
+	border: 1px solid #24D59E;
+	color: #24D59E;
+	border-radius: 7px;
+}
+
+#submit-btn:hover {
+	background: #24D59E;
+	border: none;
+	color: white;
+}
+
+#title, #jobPost, #content {
+	border: 1px solid #B5B5B5;
+	border-radius: 7px;
+}
+
+h2 {
+	color: #232323;
+}

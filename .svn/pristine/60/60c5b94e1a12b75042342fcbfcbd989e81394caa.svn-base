@@ -1,0 +1,875 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="sec"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/member/aplctList.css" />
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/security/loginForm.css" />
+<script
+	src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="/resources/js/sweetalert2.js"></script>
+<script type="text/javascript">
+	function execDaumPostcode() {
+		new daum.Postcode(
+				{
+					oncomplete : function(data) {
+						var fullAddr = data.address;
+						var extraAddr = '';
+
+						if (data.addressType === 'R') {
+							if (data.bname !== '') {
+								extraAddr += data.bname;
+							}
+							if (data.buildingName !== '') {
+								extraAddr += (extraAddr !== '' ? ', '
+										+ data.buildingName : data.buildingName);
+							}
+							fullAddr += (extraAddr !== '' ? ' (' + extraAddr
+									+ ')' : '');
+						}
+
+						$('#mbrZip').val(data.zonecode);
+						$('#mbrAddr').val(fullAddr);
+						$('#mbrAddrDtl').focus();
+					}
+				}).open();
+	}
+	function handleImg(e) {
+		let files = e.target.files; // 선택한 파일들
+		let fileArr = Array.prototype.slice.call(files);
+		let accumStr = "";
+		fileArr.forEach(function(f) {
+			if (!f.type.match("image.*")) {
+				alert("이미지 확장자만 가능합니다");
+				return; // 함수 자체가 종료됨
+			}
+			let reader = new FileReader();
+			reader.onload = function(e) {// "+e.target+result+" - 이미지를 다 읽었으면 결과를 가져와라 -> 그것을 누적
+				accumStr += "<img src='"+e.target.result+"'/>"; // 누적 String
+				$(".pImg").html(accumStr);
+			}
+			reader.readAsDataURL(f);
+
+		});
+	}
+	$(function() {
+		
+		$("#mbrAddr").on("click", function() {
+			execDaumPostcode();
+		})
+
+		$(".pImg").on("click", function(e) {
+			$("#rsmFile").click();
+			console.log("hihi");
+		})
+		$("#rsmFile").on("change", function(e) {
+			let file = e.target.files[0];
+			if (!file) {
+				return;
+			}
+
+			if (!file.type.match("image.*")) {
+				alert("이미지 파일만 업로드 가능합니다.");
+				return;
+			}
+
+			let reader = new FileReader();
+			reader.onload = function(e) {
+				$(".pImg").attr("src", e.target.result);
+			}
+			reader.readAsDataURL(file);
+		});
+		
+		let skillListRaw = "${codeGrpVOMap.get('SK')}";
+	    let skillList = [];
+	    
+	    function parseJavaObject(str) {
+	        // CodeVO 객체 파싱
+	        let codeVORegex = /CodeVO\(([^)]+)\)/g;
+	        let codeVOMatches = str.match(codeVORegex);
+	        
+	        if (codeVOMatches) {
+	            skillList = codeVOMatches.map(match => {
+	                let props = match.slice(7, -1).split(', ');
+	                let obj = {};
+	                props.forEach(prop => {
+	                    let [key, value] = prop.split('=');
+	                    obj[key] = value;
+	                });
+	                return {
+	                    codeNm: obj.comCodeNm,
+	                    codeNo: obj.comCode
+	                };
+	            });
+	        }
+	    }
+	    try {
+	        parseJavaObject(skillListRaw);
+	    } catch (e) {
+	        console.error("Error parsing skill data:", e);
+	    }
+		console.log(skillList);
+		
+		$("#skillSearch").on("keyup", function() {
+	        let searchStr = $("#skillSearch").val().toLowerCase();
+	        console.log(searchStr);
+	        if(searchStr===""){
+	        	$(".search-results").html("");
+	        }
+        	$(".search-results").html("");
+	        let filteredSkills = skillList.filter(skill => 
+	            skill.codeNm.toLowerCase().includes(searchStr)
+	        );
+
+	        updateSearchResults(filteredSkills, searchStr);
+	    });
+
+	    function updateSearchResults(skills, searchStr) {
+	        let searchResults = $(".search-results");
+	        searchResults.empty();
+	        let skillItem = "";
+	        skills.forEach(skill => {
+	            let highlightedName = highlightMatch(skill.codeNm, searchStr);
+	            skillItem += '<a href="#" class="list-group-item"><div class="search-title"><strong class="search-nm">';
+	            skillItem += highlightedName;
+	            skillItem += '</strong></div><div class="search-val" hidden>';
+	            skillItem += skill.codeNo;
+	            skillItem += '</div></a>';
+
+// 	            skillItem.click(function(e) {
+// 	                e.preventDefault();
+// 	                addSelectedSkill(skill);
+// 	            });
+				
+	        });
+            searchResults.html(skillItem);
+	    }
+	    
+	    function highlightMatch(text, searchStr) {
+	        if (!searchStr) return text;
+	        const regex = new RegExp(`(${searchStr})`, 'gi');
+	        return text.replace(regex, '$1');
+	    }
+	    
+	    function addSelectedSkill(skill) {
+	        let selectedSkills = $("#selectedSkills"); // 선택된 스킬을 표시할 컨테이너
+	        if (selectedSkills.find(`[data-code-no="${skill.codeNo}"]`).length === 0) {
+	            let skillTag = `
+	                <span class="selected-skill" data-code-no="${skill.codeNo}">
+	                    ${skill.codeNm}
+	                    <button type="button" class="close ml-2">&times;</button>
+	                </span>
+	            `;
+
+	            skillTag.find('.close').click(function() {
+	                skillTag.remove();
+	            });
+
+	            selectedSkills.append(skillTag);
+	        }
+	        $("#skillSearch").val('');
+	        $(".sidebar-search-results").empty();
+	    }
+	})
+</script>
+
+<div id="registMain">
+	<div class="registForm-sub" id="basInfo">
+		
+	</div>
+	<div class="registForm-bottom" id="basInfo">
+		
+	</div>
+	<!-- 	기본정보 입력창 -->
+	<!-- 	기본정보 입력창 -->
+	<div class="registForm" id="basInfo">
+		<div>
+			<p id="h3">
+				기본정보 <span class="reqHint">필수*</span>
+			</p>
+
+		</div>
+		<br />
+		<div class="conBox">
+			<hr />
+			<div class="inputForm">
+				<div class="row idForm">
+					<div class="form-group width-l">
+						<label for="mbrNm" id="reg1label">이름*</label> <input type="text"
+							class="form-control" placeholder="이름을 입력하세요" name="mbrNm"
+							id="mbrNm" value="${memVO.mbrNm }" required />
+					</div>
+					<div class="form-group width-s">
+						<label for="mbrSexdstnCd" id="reg1label">성별*</label> <select
+							class="form-control" name="mbrSexdstnCd" id="mbrSexdstnCd">
+							<option value="" disabled selected>성별선택*</option>
+							<c:forEach var="codeVO"
+								items="${codeGrpVOMap.get('GEND').codeVOList }" varStatus="stus">
+								<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="form-group width-s">
+						<label for="mbrBrdt" id="reg1label">생년월일*</label> <input
+							type="text" class="form-control" placeholder="ex)19990518"
+							name="mbrEml" id="mbrEml" required />
+					</div>
+				</div>
+				<div class="row imgForm">
+					<!-- 					이력서 이미지 -->
+					<input type="file" class="form-control" name="rsmFile" id="rsmFile"
+						hidden="hidden" />
+					<div class="form-group">
+						<div class="imgCover" id="ivImg">
+							<img src="/resources/images/rsmImg.png" id="pImg" class="pImg"
+								style="cursor: pointer;">
+						</div>
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-l">
+						<label for="mbrEml" id="reg1label">이메일*</label> <input type="text"
+							class="form-control" placeholder="이메일을 입력해주세요." name="mbrEml"
+							id="mbrEml" required />
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-l">
+						<label for="mbrPhone" id="reg1label">휴대폰번호*</label> <input
+							type="text" class="form-control" placeholder="-를 제외한 번호만 입력해주세요."
+							name="mbrPhone" id="mbrPhone" required />
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-l">
+						<label for="mbrTelno" id="reg1label">전화번호</label> <input
+							type="text" class="form-control" placeholder="-를 제외한 번호만 입력해주세요."
+							name="mbrTelno" id="mbrTelno" />
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-l">
+						<label for="mbrAddr" id="reg1label">주소*</label> <input type="text"
+							class="form-control" placeholder="주소를 입력해주세요." name="mbrAddr"
+							id="mbrAddr" readonly="readonly" required />
+					</div>
+					<div class="form-group width-l">
+						<label for="mbrAddrDtl" id="reg1label">상세주소*</label> <input
+							type="text" class="form-control" placeholder="상세주소를 입력해주세요."
+							name="mbrAddrDtl" id="mbrAddrDtl" required />
+					</div>
+				</div>
+			</div>
+			<div class="row idForm btnForm">
+				<button class="resetBtn">취소</button>
+				<button class="submitBtn">저장</button>
+			</div>
+		</div>
+	</div>
+	<!-- 	이력서 불러오기 버튼 -->
+	<img src="/resources/images/rsmCopyBtn.png" id="CopyBtn"
+		class="CopyBtn"
+		style="cursor: pointer; width: 1030px; margin: 10px 0px 30px 0px;">
+	<!-- 	학력 입력 창 -->
+	<div class="registForm" id="basInfo">
+		<p id="h3">
+			학력 <span class="reqHint">필수*</span>
+		</p>
+		<img src="/resources/images/addBtn.png" class="addBtn"
+			style="width: 58px;"> <br />
+		<div class="conBox">
+			<hr />
+			<div class="inputForm">
+				<div class="row idForm">
+					<div class="form-group width-l">
+						<label for="acbgSeCd" id="reg1label">학력 구분*</label> <select
+							class="form-control" name="acbgSeCd" id="acbgSeCd">
+							<option value="" disabled selected>학력 구분 선택*</option>
+							<c:forEach var="codeVO"
+								items="${codeGrpVOMap.get('ACSE').codeVOList }" varStatus="stus">
+								<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="form-group width-s">
+						<label for="acbgRcognacbgCd" id="reg1label">인정학력*</label> <select
+							class="form-control" name="acbgRcognacbgCd" id="acbgRcognacbgCd">
+							<option value="" disabled selected>인정학력선택*</option>
+							<c:forEach var="codeVO"
+								items="${codeGrpVOMap.get('ACRC').codeVOList}" varStatus="stus">
+								<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="form-group width-l">
+						<label for="acbgSchlNm" id="reg1label">학교명*</label> <input
+							type="text" class="form-control" placeholder="학교명*"
+							name="acbgSchlNm" id="acbgSchlNm" required />
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-l">
+						<label for="acbgMjrNm" id="reg1label">전공*</label> <input
+							type="text" class="form-control" placeholder="전공*"
+							name="acbgMjrNm" id="acbgMjrNm" required />
+					</div>
+					<div class="form-group width-s">
+						<label for="acdmcrGrdtnSeCd" id="reg1label">졸업여부*</label> <select
+							class="form-control" name="acdmcrGrdtnSeCd" id="acdmcrGrdtnSeCd">
+							<option value="" disabled selected>졸업여부선택*</option>
+							<c:forEach var="codeVO"
+								items="${codeGrpVOMap.get('ACGD').codeVOList}" varStatus="stus">
+								<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="form-group width-s">
+						<label for="acbgMtcltnym" id="reg1label">입학년월</label> <input
+							type="date" class="form-control" placeholder="입학년월"
+							name="acbgMtcltnym" id="acbgMtcltnym" />
+					</div>
+					<div class="form-group width-s">
+						<label for="acbgGrdtnym" id="reg1label">졸업년월</label> <input
+							type="date" class="form-control" placeholder="입학년월"
+							name="acbgGrdtnym" id="acbgGrdtnym" />
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="row idForm sub">
+						<div class="form-group width-s">
+							<label for="acbgGrdtnym" id="reg1label">학점</label> <input
+								type="text" class="form-control" placeholder="학점"
+								name="acbgGrdtnym" id="acbgGrdtnym" />
+						</div>
+						<div class="form-group width-s">
+							<label for="acdmcrGrdtnSeCd" id="reg1label">기준학점</label> <select
+								class="form-control" name="acdmcrGrdtnSeCd" id="acdmcrGrdtnSeCd">
+								<option value="" disabled selected>기준학점선택*</option>
+								<c:forEach var="codeVO"
+									items="${codeGrpVOMap.get('AGPN').codeVOList}" varStatus="stus">
+									<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row idForm btnForm">
+				<button class="resetBtn">취소</button>
+				<button class="submitBtn">저장</button>
+			</div>
+		</div>
+	</div>
+	<!-- 	경력 입력 창 -->
+	<div class="registForm" id="basInfo">
+		<p id="h3">경력</p>
+		<img src="/resources/images/addBtn.png" class="addBtn"
+			style="width: 58px;"> <br />
+		<div class="conBox">
+			<hr />
+			<div class="inputForm">
+				<div class="row idForm">
+					<div class="form-group width-l">
+						<label for="careerEntNm" id="reg1label">회사명*</label> <input
+							type="text" class="form-control" placeholder="회사명을 입력해주세요."
+							name="careerEntNm" id="careerEntNm" required />
+					</div>
+					<div class="form-group width-s">
+						<label for="careerJncmpYmd" id="reg1label">입사년월*</label> <input
+							type="date" class="form-control" name="careerJncmpYmd"
+							id="careerJncmpYmd" required />
+					</div>
+					<div class="form-group width-s">
+						<label for="careerRetireYmd" id="reg1label">퇴사년월*</label> <input
+							type="date" class="form-control" name="careerRetireYmd"
+							id="careerRetireYmd" required />
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-l">
+						<label for="careerdtyCd" id="reg1label">직무*</label> <select
+							class="form-control" name="careerdtyCd" id="careerdtyCd"
+							required="required">
+							<option value="" disabled selected>직무선택*</option>
+							<c:forEach var="codeVO"
+								items="${codeGrpVOMap.get('CRDT').codeVOList}" varStatus="stus">
+								<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="form-group width-l">
+						<label for="careerDept" id="reg1label">근무부서</label> <input
+							type="text" class="form-control" placeholder="근무부서를 입력하세요."
+							name="careerDept" id="careerDept" />
+					</div>
+					<div class="form-group width-l">
+						<label for="careerjbgdCd" id="reg1label">직급/직책</label> <select
+							class="form-control" name="careerjbgdCd" id="careerjbgdCd">
+							<option value="" disabled selected>직급/직책선택*</option>
+							<c:forEach var="codeVO"
+								items="${codeGrpVOMap.get('CRBG').codeVOList}" varStatus="stus">
+								<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-xl">
+						<label for="careerTask" id="reg1label">담당업무</label>
+						<textarea class="form-control"
+							placeholder="
+	담당업무를 입력해주세요.
+
+		- 진행한 업무를 다 적기 보다는 경력사항 별로 주요한 내용만 엄선해서 작성하는 것이 중요합니다!
+		- 담당한 업무 내용을 요약해서 작성해보세요!
+		- 경력별 프로젝트 내용을 적을 경우, 역할/팀구성/기여도/성과를 기죽으로 요약해서 작성해보세요!"
+							name="careerTask" id="careerTask" style="height: 300px;" required></textarea>
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-s">
+						<label for="careerAnslry" id="reg1label">연봉</label> <input
+							type="text" class="form-control" placeholder="연봉을 입력하세요."
+							name="careerAnslry" id="careerAnslry" />
+					</div>
+					<p
+						style="font-size: 19px; font-weight: bold; padding: 39px 23px 0px 2px;">만원</p>
+					<div class="form-group width-s">
+						<label for="careerWorkRgnCd" id="reg1label">근무지역</label> <select
+							class="form-control" name="careerWorkRgnCd" id="careerWorkRgnCd">
+							<option value="" disabled selected>근무지역선택*</option>
+							<c:forEach var="codeVO"
+								items="${codeGrpVOMap.get('WRGN').codeVOList}" varStatus="stus">
+								<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+							</c:forEach>
+						</select>
+					</div>
+				</div>
+				<div class="row idForm btnForm">
+					<button class="resetBtn">취소</button>
+					<button class="submitBtn">저장</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 	스킬 입력 창 -->
+	<div class="registForm" id="basInfo">
+		<p id="h3">스킬</p>
+		<img src="/resources/images/addBtn.png" class="addBtn"
+			style="width: 58px;"> <br />
+		<div class="conBox">
+			<hr />
+			<div class="inputForm">
+				<div class="row idForm">
+					<div class="form-group width-xl">
+						<label for="skillSearch" id="reg1label">스킬 검색</label> <input
+							type="text" class="form-control"
+							placeholder="툴/직무역량/소프트스킬을 입력해주세요." name="skillSearch" id="skillSearch" value=""
+							 />
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-xl search-results" style="height:100xp; overflow: scroll;">
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-xl ">
+						<label for="" id="reg1label">스킬</label>
+						<div class="form-control selectedSkills"id="skill" style="height: 250px;"></div>
+					</div>
+				</div>
+				<div class="row idForm btnForm">
+					<button class="resetBtn">취소</button>
+					<button class="submitBtn">저장</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 	경험/활동/교육 입력 창 -->
+	<div class="registForm" id="basInfo">
+		<p id="h3">경험/활동/교육</p>
+		<img src="/resources/images/addBtn.png" class="addBtn"
+			style="width: 58px;"> <br />
+		<div class="conBox">
+			<hr />
+			<div class="inputForm">
+				<div class="row idForm">
+					<div class="form-group width-l">
+						<label for="actSeCd" id="reg1label">활동구분*</label> <select
+							class="form-control" name="actSeCd" id="actSeCd">
+							<option value="" disabled selected>활동구분선택*</option>
+							<c:forEach var="codeVO"
+								items="${codeGrpVOMap.get('ACTS').codeVOList}" varStatus="stus">
+								<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="form-group width-l">
+						<label for="actEngn" id="reg1label">기관/장소명*</label> 
+						<input type="text" class="form-control" placeholder="기관/장소명을 입력해주세요." name="actEngn"
+							id="actEngn" required />
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-l">
+						<label for="actNm" id="reg1label">활동명*</label> 
+						<input type="text" class="form-control" placeholder="활동명을 입력해주세요." name="actNm"
+							id="actNm" required />
+					</div>
+					<div class="form-group width-s">
+						<label for="actBeginYmd" id="reg1label">시작년월*</label> 
+						<input type="date" class="form-control" placeholder="기관/장소명을 입력해주세요." name="actBeginYmd"
+							id="actBeginYmd" required />
+					</div>
+					<div class="form-group width-s">
+						<label for="actEndYmd" id="reg1label">종료년월*</label> 
+						<input type="date" class="form-control" placeholder="기관/장소명을 입력해주세요." name="actEndYmd"
+							id="actEndYmd" required />
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-xl">
+						<label for="actCn" id="reg1label">담당업무</label>
+						<textarea class="form-control"
+							placeholder="
+	경험/활동 상세내용 입력"
+							name="actCn" id="actCn" style="height: 300px;" required></textarea>
+					</div>
+				</div>
+				<div class="row idForm btnForm">
+					<button class="resetBtn">취소</button>
+					<button class="submitBtn">저장</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 	자격/어학/수상 입력 창 -->
+	<div class="registForm" id="basInfo">
+		<p id="h3">자격/어학/수상</p>
+		<img src="/resources/images/addBtn.png" class="addBtn"
+			style="width: 58px;"> <br />
+		<div class="conBox">
+			<hr />
+			<div class="inputForm">
+				<div class="row idForm">
+					<div class="form-group width-l">
+						<label for="actSeCd" id="reg1label">자격증·면허증*</label> <select
+							class="form-control" name="actSeCd" id="actSeCd">
+							<option value="" disabled selected>활동구분선택*</option>
+							<c:forEach var="codeVO"
+								items="${codeGrpVOMap.get('CLW').codeVOList}" varStatus="stus">
+								<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="form-group width-l">
+						<label for="crtfctNm" id="reg1label">자격증명*</label> <input type="text"
+							class="form-control" placeholder="자격증명을 입력해주세요." name="crtfctNm"
+							id="crtfctNm" required />
+					</div>
+					<div class="form-group width-l">
+						<label for="crtfctPblcnoffic" id="reg1label">발행처/기관</label> <input type="text"
+							class="form-control" placeholder="발행처/기관을 입력해주세요." name="crtfctPblcnoffic"
+							id="crtfctPblcnoffic" required />
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-s">
+						<label for="crtfctAcqsSe" id="reg1label">합격구분*</label> <select
+							class="form-control" name="crtfctAcqsSe" id="crtfctAcqsSe">
+							<option value="" disabled selected>합격구분선택*</option>
+							<c:forEach var="codeVO"
+								items="${codeGrpVOMap.get('ACQS').codeVOList}" varStatus="stus">
+								<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+							</c:forEach>
+						</select>
+					</div>
+					<div class="form-group width-s">
+						<label for="crtfctAcqsYm" id="reg1label">합격년월</label> <input type="date"
+							class="form-control" name="crtfctAcqsYm"
+							id="crtfctAcqsYm" />
+					</div>
+				</div>
+				<div class="row idForm btnForm">
+					<button class="resetBtn">취소</button>
+					<button class="submitBtn">저장</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 	포트폴리오 및 기타문서 입력 창 -->
+	<div class="registForm" id="basInfo">
+		<p id="h3">포트폴리오 및 기타문서</p>
+		<img src="/resources/images/addBtn.png" class="addBtn"
+			style="width: 58px;"> <br />
+		<div class="conBox">
+			<hr />
+			<div class="inputForm">
+				<div>
+					<p style="padding-top: 10px; font-size: 16px;">
+						포트폴리오 및 기타문서 <span style="font-size: 14px">내 포트폴리오 및 추가로
+							제출할 문서를 첨부해보세요.</span>
+					</p>
+				</div>
+				<div class="row idForm">
+					<div>
+						<img src="/resources/images/potadd.png" id="CopyBtn"
+							class="CopyBtn"
+							style="cursor: pointer; width: 920px; padding: 10px 0px 0px 0px;">
+					</div>
+				</div>
+				<div class="row idForm btnForm">
+					<button class="resetBtn">취소</button>
+					<button class="submitBtn">저장</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 	자기소개서 입력 창 -->
+	<div class="registForm" id="basInfo">
+		<p id="h3">자기소개서</p>
+		<img src="/resources/images/addBtn.png" class="addBtn"
+			style="width: 58px;"> <br />
+		<div class="conBox">
+			<hr />
+			<div class="inputForm">
+				<div class="row idForm">
+					<div class="form-group width-xl" style="margin-right: 10px;">
+						<label for="clTtl" id="reg1label">제목*</label> <input type="text"
+							class="form-control" placeholder="특별한 제목으로 자신을 어필해보세요." name="clTtl"
+							id="clTtl" required />
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-xl">
+						<label for="clCn" id="reg1label">내용*</label>
+						<textarea class="form-control"
+							placeholder="
+	자신을 소개해 주세요."
+							name="clCn" id="clCn" style="height: 300px;" required></textarea>
+					</div>
+				</div>
+				<div class="row idForm btnForm">
+					<button class="resetBtn">취소</button>
+					<button class="submitBtn">저장</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 	자기소개서 입력 창 -->
+	<div class="registForm" id="basInfo">
+		<p id="h3">자기소개서</p>
+		<img src="/resources/images/addBtn.png" class="addBtn"
+			style="width: 58px;"> <br />
+		<div class="conBox">
+			<hr />
+			<div class="inputForm">
+				<div class="row idForm">
+					<div class="form-group width-xl" style="margin-right: 10px;">
+						<label for="mbrBrdt" id="reg1label">이름*</label> <input type="text"
+							class="form-control" placeholder="ex)19990518" name="mbrBrdt"
+							id="mbrBrdt" required />
+					</div>
+					<div class="form-group width-l">
+						<label for="mbrBrdt" id="reg1label">이름*</label> <input type="text"
+							class="form-control" placeholder="ex)19990518" name="mbrBrdt"
+							id="mbrBrdt" required />
+					</div>
+				</div>
+				<div class="row idForm">
+					<div class="form-group width-xl">
+						<label for="mbrBrdt" id="reg1label">생년월일</label>
+						<textarea class="form-control"
+							placeholder="
+	담당업무를 입력해주세요.
+
+		- 진행한 업무를 다 적기 보다는 경력사항 별로 주요한 내용만 엄선해서 작성하는 것이 중요합니다!
+		- 담당한 업무 내용을 요약해서 작성해보세요!
+		- 경력별 프로젝트 내용을 적을 경우, 역할/팀구성/기여도/성과를 기죽으로 요약해서 작성해보세요!"
+							name="mbrBrdt" id="mbrBrdt" style="height: 300px;" required></textarea>
+					</div>
+				</div>
+				<div class="row idForm btnForm">
+					<button class="resetBtn">취소</button>
+					<button class="submitBtn">저장</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style>
+::placeholder {
+	color: #b4b4b4;
+	font-weight: 300;
+}
+
+#registMain {
+	padding: 30px 198px 30px 400px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    max-width: 100%;
+    min-width: 100%;
+}
+
+.registForm {
+	max-width: 1030px;
+    min-width: 1030px;
+    height: auto;
+}
+.registForm-sub {
+    width: 370px;
+    height: 600px;
+    position: fixed;
+    left: 1468px;
+    top: 135px;
+    background-color: beige;
+}
+.registForm-bottom {
+	width: 100%;
+    height: 60px;
+    position: fixed;
+    left: 0px;
+    bottom: 0px;
+    background-color: beige;
+}
+
+#h3 {
+	font-size: 22px;
+	padding: 0px 0px 0px 40px;
+	position: absolute;
+}
+
+.registForm-sub .reqHint, .registForm .reqHint {
+	color: red;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.registForm hr {
+	background-color: #24D59E;
+	max-width: 1030px;
+	min-width: 1030px;
+	border: 0;
+	height: 3px;
+	position: relative;
+	right: 57px;
+	margin: 18px 0px 7px 0px;
+}
+
+.registForm .conBox {
+	border: solid 1px #efefef;
+	box-shadow: 0px 12px 10px -3px rgba(0, 0, 0, .05), 11px 9px 10px -1px
+		rgba(0, 0, 0, .05);
+	border-top: none;
+	border-radius: 0px 0px 12px 12px;
+	height: auto;
+	max-width: 1030px;
+	min-width: 1030px;
+	width: 100%;
+	padding: 0px 42px 100px 55px;
+	margin-bottom: 30px;
+}
+
+.form-control {
+	border-color: #24D59E;
+	height: calc(2rem + 14px);
+}
+
+label {
+	position: relative;
+	top: 20px;
+	left: 13px;
+	background-color: white;
+	padding: 0px 6px 0px 6px;
+	font-size: 14px;
+}
+
+.form-group {
+	margin-bottom: auto;
+}
+
+.sub {
+	margin-left: 0px;
+	width: 308.5px;
+}
+
+.imgForm {
+	margin-top: -129px;
+	position: relative;
+	right: -827px;
+	top: 85px;
+}
+
+.imgCover {
+	border: none;
+	height: 130px;
+	width: 100px;
+	border-radius: 8px;
+}
+
+#selIvImg {
+	height: 130px;
+	width: 100px;
+	border: none;
+	background-color: transparent;
+}
+
+#pImg {
+	height: 130px;
+	width: 100px;
+	border-radius: 8px;
+	border: solid 1px #24D59E;
+	object-fit: cover;
+}
+
+.btnForm {
+	float: right;
+	margin: 30px 0px 0px 0px;
+}
+
+.width-l {
+	width: 300px;
+	margin-right: 10px;
+}
+
+.width-s {
+	width: 145px;
+	margin-right: 10px;
+}
+
+.width-xl {
+	width: 920px;
+}
+
+.addBtn {
+	cursor: pointer;
+	float: right;
+}
+
+.inputForm .row {
+	margin-right: 0px;
+	margin-left: 0px;
+}
+
+.resetBtn, .submitBtn {
+	margin-right: 10px;
+}
+.search-results{
+	overflow: auto; /* 또는 scroll */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;
+    height:auto;
+    max-height: 250px;
+    border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+.search-results::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+}
+</style>

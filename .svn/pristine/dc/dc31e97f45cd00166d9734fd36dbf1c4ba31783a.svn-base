@@ -1,0 +1,111 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+
+<style>
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+    box-sizing: border-box;
+}
+
+.product-detail {
+    display: flex;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+}
+.dettit{
+	width: 100%;
+}
+
+.left-section {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #EDF5F3;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    background-color: #EDF5F3;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+}
+
+.tab-button.active {
+    background-color: #24D59E;
+    color: #fff;
+    border-bottom: 2px solid #24D59E;
+}
+
+.tab-content {
+    margin-top: 20px;
+}
+
+.right-section {
+    flex: 1;
+    border: 1px solid #EDF5F3;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #F8F8F8;
+}
+
+.service-info h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+}
+
+.price {
+    font-size: 20px;
+    color: #24D59E;
+    margin: 10px 0;
+}
+
+.service-details {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.service-details li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.purchase-button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: #24D59E;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.purchase-button:hover {
+    background-color: #1C946E;
+}
+

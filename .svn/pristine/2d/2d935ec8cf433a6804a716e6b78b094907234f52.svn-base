@@ -1,0 +1,232 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+
+<style>
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+
+/*저장 버튼 */
+#save{
+	width : 100px;
+	height : 40px;
+	background: #24D59E;
+	border : none;
+	color : white;
+	border-radius : 7px;
+	margin-left: 680px;
+    margin-top: 60px;
+    font-size : 16px;
+    font-weight : 400;
+	
+}
+/*기본 정보*/
+.GigFormInput{
+	display: flex;
+	flex-direction: column; 
+}
+/*제목*/
+.form-group {
+	display: flex;
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px;
+	width: 55%;
+}
+
+.label1{
+	margin: 10px 80px 10px 10px; 
+	display:inline-block;
+	text-align:left;
+}
+.title_1{
+	border: 1px solid #ffffff;
+	width: 75%;
+}
+
+
+/*카테고리 구분*/
+.form-group1{
+	display: flex;
+	flex-direction: row; 
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px;	
+	width: 55%;
+}
+.label2{
+	margin: 10px; 
+	display:inline-block;
+	text-align:left;
+	width: 80px;
+}
+.form-sub-group{
+	display : flex;
+	flex-direction: column;
+	width: 100%;
+}
+.category{
+	border: 1px solid #ffffff;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 5px;	
+	background-color: #fafafc;
+}
+.category{
+	border: 1px solid #fafafc;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 5px;	
+/* 	background-color: #fafafc; */
+}
+.label2_1{
+	margin: 10px; 
+	display:inline-block;
+	text-align:left;
+	width: 140px;
+}
+
+.title_2{
+	border: 1px solid #fafafc;
+	font-size: 16px;
+	width: 70%;
+	background-color: #fafafc;
+}
+
+.form-group2{
+	display: flex;
+	flex-direction: row; 
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px;	
+	width: 55%;
+}
+.form-group3{
+	display: flex;
+	flex-direction: row; 
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px;	
+	width: 55%;
+}
+/*가격 정보 */
+.GigFormInput2{
+	display: flex;
+	flex-direction: column; 
+}
+.form-group2_1{
+	display: flex;
+	flex-direction: row; 
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px;	
+	width: 55%;
+}
+.form-sub-group2_1{
+	display : flex;
+	flex-direction: column;
+	width: 100%;
+}
+.category2_1{
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 5px;	
+}
+.category2_2{
+	display :flex;
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 5px;	
+}
+.category2_2 p{
+	text-align: right;
+	margin-top: 10px;
+}
+.label2_2{
+	margin: 10px; 
+	display:inline-block;
+	text-align:left;
+	width: 150px;
+}
+.title_3{
+	border: 1px solid #fafafc;
+	font-size: 16px;
+	background-color: #fafafc;
+	margin-left: 140px;
+}
+/*이미지 */
+.form-group4{
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #ffffff;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px;	
+	width: 80%;
+}
+.label2{
+	margin: 10px; 
+	display:inline-block;
+	text-align:left;
+	width: 130px;
+}
+.category4{
+	display:flex;
+	flex-direction:column;
+/* 	align-content:center; */
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 5px;	
+	width: 251px;
+	height: 186px;
+}
+#mainImagePreview{
+	width: 88px; 
+	height: 64px; 
+	cursor: pointer;
+	align-content: center;
+	
+}
+.imgupload{
+	margin: 0px auto;
+	margin-top: 20px;
+}
+.upload{
+	width: 120px;
+	text-align: center;
+	align-content: center;
+	margin: 0px auto;
+}
+.real-upload{
+	display: none;
+}
+/*요청 사항 css*/
+.form-group_5{
+	display: flex;
+	flex-direction: row; 
+	border: 1px solid #ffffff;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px;	
+	width: 55%;
+}
+.label_5{
+	width: 120px;
+	border: 1px solid #ffffff;
+	height: 50px;
+}
+#pstCnTemp{
+	height: 200px;
+}
+

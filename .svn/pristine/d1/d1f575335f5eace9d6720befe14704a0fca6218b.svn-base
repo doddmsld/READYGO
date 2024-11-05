@@ -1,0 +1,366 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+
+<style>
+/*외주 메인 전체*/
+.submainAll{
+	margin-top: 100px;
+    align-items: center;
+    justify-content: center;
+    display: flex;  /* display: flex 추가 */
+   	width: 1100px;
+}    
+
+.catnm{
+	margin: 10px auto;
+	width: 1100px;
+}
+
+.catnm p{
+	font-size: 36px;
+	margin:30px;
+	margin-top: 50px;
+	font: bold;
+}
+
+
+ /*게시글 항목 NEW / BEST  */ 
+.oust{
+	margin-top:10px;
+	padding :5px;
+	font-size: 20px;
+	font: bold;
+}
+ /*외주 추천 각 각 카테고리  */ 
+ .oucg{
+ 	 border: 1px solid #ffffff;
+     margin: 0 10px; /* 카테고리 항목 사이 간격 조절 */
+    width: 180px;
+    height: 50px;
+    text-align: center;
+    display: flex;    /* 내부 요소들의 정렬을 위한 flex 추가 */
+    justify-content: center; /* 가로로 가운데 정렬 */
+    align-items: center;    /* 세로로 가운데 정렬  */
+    border-radius: 0.5em;
+    background-color: #ffffff;
+}    
+
+ /* 게시글 목록 묶음  */ 
+ .newtboxAll {
+	display: flex;
+	margin: 10px auto;
+	width: 1100px;
+	flex-direction: column;
+	align-items: flex-start;  
+	justify-content: center; /* 가로로 가운데 정렬 */
+	
+}
+
+ .newtbox {
+	display: flex;
+	flex-wrap : wrap;
+	width:1100px;
+	margin:10px;
+}
+
+.bestboxAll {
+	display: flex;
+	margin: 0 auto;
+	width: 1100px;
+	flex-direction: column;
+	align-items: flex-start;  
+	justify-content: center; /* 가로로 가운데 정렬 */
+}
+ .bestbox {
+	display: flex;
+	justify-content: center; /* 가로로 가운데 정렬 */
+	width: 1100px;
+	margin:10px;
+}
+
+
+ /* 각 게시글   */ 
+.item_box { 
+    width: 180px; 
+    border: 1px solid #ffffff;
+ 
+    margin : 20px; 
+    text-align: center; 
+} 
+
+ /* 각 게시글 이미지  */ 
+.item_thum img { 
+    width: 200px; 
+    height: 160px ;
+    border-radius: 8%;
+    
+} 
+
+ /* 각 게시글 제목  */ 
+.item_tit { 
+     display: block; 
+     margin-top: 12px; 
+     color: #000; 
+     font-size: 15px;
+     text-align:left;
+} 
+ /* 각 게시글 가격  */ 
+.price{
+	margin-top : 0px;
+	font-size: 15px;
+    text-align:left;
+}
+ /* 각 게시글 제목,가격 사이 선  */ 
+.outhr{
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, .1);
+	
+}
+ /* 리뷰 전체  */ 
+.review{
+	display: flex;
+	margin: 0 auto;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;    /* 세로로 가운데 정렬  */
+	width: 1100px;
+}
+
+<style> 
+/* 페이징 css 시작*/
+.dynamic-filter-link{
+	color: black; 
+    border-radius: 7px; 
+    margin:5px;
+     margin: 5px;
+}
+
+.page-link {
+    color: black; 
+    border-radius: 7px; 
+    margin:5px;
+     margin: 5px;
+}
+/* 버튼클릭했을 때! */
+.page-item.active .page-link {
+    z-index: 3;
+    font-weight : 700;
+    color: #24D59E;
+    background-color: rgba(44, 207, 195, 0.11); 
+    border-radius: 7px;
+    margin: 5px;
+}
+.write_date{
+	text-align: right;
+}
+
+
+.page-item.active .page-link {
+    border-color: #dee2e6;
+}
+a.page-link:hover {
+    color: #000000;
+    background-color: #dee2e6;
+}
+/* 페이징 css 끝*/
+
+.custom-button {
+	float: right;
+	padding: 5px 15px;
+	border: 1.5px solid #24D59E;
+	background-color: white;
+	color: #24D59E;
+	border-radius: 5px;
+	text-decoration: none;
+	font-weight: 500;
+	transition: background-color 0.3s;
+}
+
+.custom-button:hover {
+	background-color: rgba(44, 207, 195, 0.20);
+	color: #24D59E;
+}
+
+#category {
+	width: 100%;
+	height: 230px;
+	border: 1px solid #D6D6D6;
+}
+
+#categoryTap {
+	display: flex;
+	align-items: center;
+}
+
+#region, #job, #keyword {
+	width: 100%;
+	height: 50px;
+	border: 1px solid #D6D6D6;
+	background: #FFFFFF;
+}
+
+#selectReg {
+	overflow-y: auto;
+	height: 150px;
+	margin: 15px 15px 15px 15px;
+}
+
+#selectCity {
+	overflow-y: auto;
+	height: 150px;
+	margin: 15px 0px 15px 0px;
+}
+
+.regText {
+	margin: 20px 5px 20px 5px;
+	display: inline-block; /* 블록 형식으로 처리 */
+	width: 130px; /* 원하는 고정 너비 설정 */
+	text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.cityText {
+	margin: 20px 10px 20px 10px;
+	display: inline-block; /* 블록 형식으로 처리 */
+	width: 130px; /* 원하는 고정 너비 설정 */
+	text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+#regSearch {
+	display: flex;
+	width: 100%;
+}
+
+#jobDiv {
+	overflow-y: auto;
+	height: 130px;
+	margin: 15px 0px 15px 0px;
+}
+
+.jobText {
+	margin: 20px 10px 20px 10px;
+	display: inline-block; /* 블록 형식으로 처리 */
+	width: 170px; /* 원하는 고정 너비 설정 */
+	text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.row {
+	margin: 0px 10% 0px 10%;
+}
+
+#selCategory {
+	float: right;
+	margin-top: 20px;
+}
+
+#selCheck {
+	background-color: #EBEBEB;
+	border-radius: 10px;
+	height: 60px;
+	padding: 20px 20px 0px 20px;
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+#sendBtn {
+	background-color: #24D59E;
+	padding: 15px 20px 15px 20px;
+	border: 1px solid #EBEBEB;
+	border-radius: 10px;
+	color: white;
+	left: 88%;
+	top: 2%;
+}
+
+
+
+/* 옵션별 체크박스 */
+.ArryOP {
+    position: relative;
+    display: inline-block;
+}
+
+.downdrop {
+	display: none;
+    position: absolute;
+    background-color: #fff;
+    min-width: 250px;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    border-radius: 8px;
+    z-index: 1;
+    border: 1px solid #ddd;
+    width: 340px;
+}
+
+.checkbox-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.hrline {
+    border-top: 1px solid #ddd;
+    margin: 10px 0;
+}
+
+.chText {
+    grid-column: 1 / span 2;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+.chText  p{
+	font-size: 0.875rem;
+	margin: 5px;
+}
+
+label {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+label input {
+    margin-right: 8px;
+    width: 15px;
+    height: 15px;
+
+}
+
+.apply-btn {
+    display: block;
+    padding: 8px 16px;
+    background-color: #00d8a1;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 210px;
+}
+
+.apply-btn:hover {
+    background-color: #00c490;
+}
+
+.downdrop.show {
+    display: block;
+}
+
+
+/*정렬 버튼*/
+.trigger-btn {
+    padding: 10px 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    cursor: pointer;
+    align-items: center;
+    margin: 5px;
+    width: 150px;
+}
+
+</style>
+
+

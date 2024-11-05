@@ -1,0 +1,71 @@
+package kr.or.ddit.impl_DO;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.mapper.NoticeMapper;
+import kr.or.ddit.service_DO.NoticeService;
+import kr.or.ddit.vo.BoardVO;
+
+@Service
+public class NoticeServiceImpl implements NoticeService {
+
+	@Inject
+	NoticeMapper noticeMapper;
+	
+	@Override
+	public String admRegist() {
+		return this.noticeMapper.admRegist();
+	}
+
+	@Override
+	public int admRegistPost(BoardVO boardVO) {
+		int result=0;
+		return this.noticeMapper.admRegistPost(boardVO);
+	}
+	
+	@Override
+	public List<BoardVO> admList(Map<String, Object> map) {
+		return this.noticeMapper.admList(map);
+	}
+
+	@Override
+	public int getTotal() {
+		return this.noticeMapper.getTotal();
+	}
+	
+	@Override
+	public BoardVO admDetail(String pstSn) {
+		return this.noticeMapper.admDetail(pstSn);
+	}
+
+	@Override
+	public void InqCnt(String pstSn) {
+		this.noticeMapper.InqCnt(pstSn);
+	}
+
+	@Override
+	public String update(String pstSn) {
+		return this.noticeMapper.update(pstSn);
+	}
+
+	@Override
+	public int deletePost(String pstSn) {
+		return this.noticeMapper.deletePost(pstSn);
+	}
+
+	@Override
+	public BoardVO getPostDetails(String pstSn) {
+		return this.noticeMapper.getPostDetails(pstSn);
+	}
+
+	@Override
+	public int updatePost(BoardVO boardVO) {
+		return this.noticeMapper.updatePost(boardVO);
+	}
+
+}

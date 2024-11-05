@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.OutsouPayMapper">
+
+
+
+	<!-- 결제완료시 사용정보 저장  -->
+	<insert id="insertOsAplyVO" parameterType="osAplyVO">
+		INSERT INTO OS_APLY(OUTORD_NO, MBR_ID, OS_APLY_YMD, OUTORD_STLM_AMT)
+		VALUES(#{outordNo}, #{mbrId}, #{osAplyYmd}, #{outordStlmAmt})
+	
+	</insert>
+
+	<!-- 결제 완료시 정보 저장 -->
+	<insert id="insertSettlement" parameterType="settlementVO">
+		INSERT INTO SETTLEMENT(STLM_NO, OUTORD_NO, MBR_ID, SETLE_MN, SETLE_YMD, SETLE_STTUS, SETLE_AMT)
+		VALUES(#{stlmNo}, #{outordNo}, #{mbrId}, #{setleMn}, #{setleYmd}, #{setleSttus}, #{setleAmt})
+	</insert>
+
+
+	<!-- 해당 주문 날짜 갯수두학 -->
+	<select id="getOrderCountForToday" resultType="int">
+		SELECT
+		COUNT(SETLE_YMD)
+		FROM SETTLEMENT
+		WHERE SETLE_YMD = SYSDATE
+	</select>
+	
+</mapper>

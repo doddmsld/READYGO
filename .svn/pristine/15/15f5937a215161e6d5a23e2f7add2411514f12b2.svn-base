@@ -1,0 +1,352 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+<
+style
+>
+ @charset "UTF-8";
+
+* {
+	font-family: pretendard;
+	box-sizing: border-box;
+}
+
+/*상세 페이지 전체 */
+.detail {
+	display: flex;
+	flex-direction: column; /* 세로 방향 설정 */
+	width: 1100px;
+	justify-content: center; /* 가로 가운데 정렬 */
+	align-items: center; /* 세로 가운데 정렬 */
+	margin: 0 auto;
+	padding: 20px;
+}
+
+/*상품 경로? */
+.dettit {
+	width: 100%;
+	text-align: left;
+}
+/*상품 상세 내용 및 가격 내용  */
+.detcontent {
+	display: flex;
+	align-items: flex-start; /* 상단에 맞추어 정렬 */
+}
+
+/*상품 상세 내용*/
+.left-section {
+	flex: 3;
+	display: flex;
+	flex-direction: column;
+	padding: 20px;
+	width: 800px;
+}
+
+/*상품 이미지 */
+.mainimg {
+	display: flex;
+	justify-content: center; /* 버튼이 중앙에 위치하도록 설정 */
+	align-items: center;
+}
+
+.product-image {
+/* 	width: 80%; */
+	border-radius: 8px;
+	margin-bottom: 20px;
+}
+/*상품 설명 내용 */
+.tabs {
+	display: flex;
+	margin-bottom: 20px;
+	border-bottom: 2px solid #EDF5F3;
+}
+
+/*상품에 대한 내용 */
+.tab-button {
+	flex: 1;
+	padding: 10px;
+	border: none;
+	background-color: #EDF5F3;
+	cursor: pointer;
+	font-size: 16px;
+	text-align: center;
+}
+
+.tab-button.active {
+	background-color: #24D59E;
+	color: #fff;
+	border-bottom: 2px solid #24D59E;
+}
+
+.tab-button.prcont {
+	background-color: #ffffff;
+	color: #24D59E;
+	border-bottom: 2px solid #ffffff;
+}
+
+.tab-content {
+	margin-top: 20px;
+}
+
+.pImg {
+	width: 800px;
+}
+
+.tab-content2 {
+	margin-top: 40px;
+}
+/*a메인 가격 정보 */
+.price_content {
+	display: none;
+	margin-top: 30px;
+}
+
+.main_price {
+	display: flex;
+	flex-direction: column;
+	border: 1px solid #e0e0e0;
+	padding: 20px;
+	border-radius: 5px;
+	margin-top: 30px;
+}
+
+.sedetail {
+	border: 1px solid #FAFAFC;
+	padding: 20px;
+	border-radius: 8px;
+	margin-top: 10px;
+	background-color: #FAFAFC;
+}
+
+/*가격 정보 */
+.right-section {
+	margin: 20px;
+	flex: 1;
+	border: 1px solid #EDF5F3;
+	padding: 20px;
+	border-radius: 8px;
+	background-color: #ffffff;
+	width: 400px;
+}
+
+.service-info hr {
+	color: #24D59E;
+}
+
+.service-info h3 {
+	margin-bottom: 10px;
+	font-size: 18px;
+	color: #333;
+}
+
+.price {
+	display: flex;
+	font-size: 20px;
+	color: #24D59E;
+	margin: 10px 0;
+	font-size: 20px;
+}
+
+.service-details {
+	list-style: none;
+	padding: 0;
+	margin: 10px 0;
+}
+
+.service-details li {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 5px;
+	font-size: 14px;
+}
+
+.purchase-button {
+	width: 100%;
+	padding: 10px;
+	border: none;
+	background-color: #24D59E;
+	color: white;
+	cursor: pointer;
+	border-radius: 5px;
+	margin-top: 20px;
+	font-size: 16px;
+	transition: background-color 0.3s;
+}
+
+.purchase-button:hover {
+	background-color: #1C946E;
+}
+
+.product-image {
+	max-width: 100%;
+	height: auto;
+}
+
+/*내용이 담긴 div*/
+.text-wrapper {
+	margin: 10px;
+	/* 요소의 내용이 영역을 벗어날 경우 그 부분은 숨겨지게 처리 */
+	overflow: hidden;
+	/* 요소의 표시 방법을 -webkit-box로 표시 */
+	display: -webkit-box;
+	/* webkit-box로 표시된 자식 요소들의 배치 방법 결정 (여기서는 수직) */
+	-webkit-box-orient: vertical;
+	/* 요소 내 텍스트를 지정한 라인수까지만 표시 */
+	-webkit-line-clamp: 15;
+}
+.img-wrapper {
+	margin: 10px;
+	/* 요소의 내용이 영역을 벗어날 경우 그 부분은 숨겨지게 처리 */
+	overflow: hidden;
+	/* 요소의 표시 방법을 -webkit-box로 표시 */
+	display: -webkit-box;
+	/* webkit-box로 표시된 자식 요소들의 배치 방법 결정 (여기서는 수직) */
+	-webkit-box-orient: vertical;
+	/* 요소 내 텍스트를 지정한 라인수까지만 표시 */
+	-webkit-line-clamp: 1;
+}
+
+/*더보기 접기 버튼 */
+.morbtn {
+	display: flex;
+	justify-content: center; /* 버튼이 중앙에 위치하도록 설정 */
+	align-items: center;
+}
+
+.morebtn {
+	/* 글씨 크기,색상 지정 */
+	font-size: 16px;
+	color: #24D59E;
+	/* 마우스 포인트가 올라갔을 때 커서 모양을 포인터로 변경 */
+	cursor: pointer;
+	background-color: white;
+	border: 1px solid #24D59E;
+	border-radius: 5px;
+	width: 840px;
+	height: 40px;
+}
+
+.lessbtn {
+	/* 글씨 크기,색상 지정 */
+	font-size: 16px;
+	color: #24D59E;
+	/* 마우스 포인트가 올라갔을 때 커서 모양을 포인터로 변경 */
+	cursor: pointer;
+	/* 줄이기 버튼 (처음에는 안보이게) */
+	display: none;
+	cursor: pointer;
+	background-color: white;
+	border: 1px solid #24D59E;
+	border-radius: 5px;
+	width: 830px;
+	height: 40px;
+}
+
+.sacont {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.cont-text {
+	font-size: 20px;
+	font: bold;
+}
+
+.more-content {
+	/* 임의의 넓이 설정 (200px이 넘어갈 경우 텍스트 줄바꿈) */
+	width: 200px;
+}
+
+.text {
+	padding: 10px;
+}
+
+.collapsible {
+	cursor: pointer;
+	padding: 10px;
+	text-align: left;
+	outline: none;
+	font-size: 20px;
+}
+
+.collapsible-content {
+	display: none;
+	padding: 10px;
+	border: 1px solid #ffffff;
+	background-color: #FAFAFC;
+	margin-top: 5px;
+}
+
+.collapsible-content p {
+	color: #676767;
+	margin-left: 5px;
+}
+
+.arrow {
+	float: right;
+}
+
+.osdevalcode {
+	margin: 30px;
+	background-color: #e0e0e0;
+	padding: 3px;
+	border-radius: 10px;
+	width: 150px;
+	text-align: center;
+	margin-bottom: 20PX;
+}
+
+#outordAmtExpln {
+	white-space: pre-wrap;
+}
+
+.
+.text-container {
+	margin-top: 5px;
+}
+/*수정 삭제 버튼 */
+#editBox {
+	display: flex;
+	justify-content :center;
+	align-items: flex-end;
+	margin-top: 30px;
+	
+}
+
+.cancel {
+	width: 120px;
+	height: 40px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	border-radius: 7px;
+	font-size: 16px;
+	font-weight: 400;
+	transition: all 0.3s ease 0s;
+}
+
+.cancel:hover {
+	background: #ECECEC;
+	border: 1px solid #B5B5B5;
+}
+
+#savebtn {
+	background: white;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+	width: 120px;
+	height: 40px;
+	border-radius: 7px;
+	font-size: 16px;
+	font-weight: 400;
+	margin-left: 25px;
+	transition: all 0.3s ease 0s;
+}
+
+#savebtn:hover {
+	background-color: #24D59E;
+	color: white;
+}

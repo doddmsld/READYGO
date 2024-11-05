@@ -1,0 +1,244 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>기업 프로필</title>
+<!-- 기업프로필css -->
+<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/enter/profile.css" />
+<!-- chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- 구글 아이콘 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<style>
+.material-symbols-outlined {
+	font-size: 48px;
+	color: #5F6368;
+  	font-variation-settings:
+  	'FILL' 0,
+  	'wght' 300,
+  	'GRAD' 0,
+ 	'opsz' 48
+}
+</style>
+<body>
+	<div id="nav">
+		<img alt="" src="../resources/images/sjh.jpg" class="img">
+	</div>
+	<div id="comName">
+		<h3>
+			<strong>${enterVO.entNm}</strong>
+		</h3>
+	</div>
+
+	<div id="div1">
+		<div id="div1-1">
+			<span class="material-symbols-outlined">update</span>
+			<p class="profilebox"><strong>설립일</strong></p>
+			<p class="profilebox1">${enterVO.entFndnYmd}</p>
+		</div>
+		<div id="div1-2">
+			<span class="material-symbols-outlined">source_environment</span>
+			<p class="profilebox"><strong>기업형태</strong></p>
+			<p class="profilebox1">${enterVO.entStleCd}</p>
+		</div>
+		<div id="div1-3">
+			<span class="material-symbols-outlined">diversity_3</span>
+			<p class="profilebox"><strong>사원수</strong></p>
+			<p class="profilebox1">${enterVO.entEmpCnt}</p>
+		</div>
+	</div>
+
+	<div id="div2">
+		<div id="div2-1">
+		<label>업종</label>
+		<p>${enterVO.indutyVOList[0].tpbizSeCd}</p>
+		<label>홈페이지</label>
+		<p>${enterVO.entHmpgUrl}</p>
+		<label>주소</label>
+		<p>${enterVO.entAddr}</p>
+		</div>
+		<div id="div2-2">
+		<label>대표자명</label>
+		<p>${enterVO.entRprsntvNm}</p>		
+		<label>팩스번호</label>
+		<p>${enterVO.entFxnum}</p>		
+		</div>
+	</div>
+	
+	<div id="div3">
+		<div id="div3-1">
+			<p><strong>매출액</strong></p>
+			<div style="width:100%; margin-top: 55px;">
+			  <canvas id="canvas"></canvas>
+			</div>			
+		</div>
+		<div id="div3-2">
+			<p><strong>연도별 입사자수</strong></p>
+			<div id="btnParent">
+		    <button class="chartbtn" onclick="fChgType()">타입 변경</button>
+			</div>
+		    <!-- 차트 크기는 부모 크기를 조절하면 거기에 맞게 자동으로 맹글어짐-->
+		    <div style="width:auto;height:auto;border:2px solid none; background: white; border-radius: 9px;">
+		        <!-- 차트 그릴 위치 지정 canvas webGL(그래픽엔진) 사용 -->
+		        <canvas id="myChart"></canvas>
+		    </div>		
+		</div>
+		
+	</div>
+	<c:choose>
+	    <c:when test="${not empty PbancVOList}">
+	        <div id="div4">
+	            <div id="atag">
+	                <p><strong>현재 채용 중인 공고</strong></p>&nbsp;&nbsp;&nbsp;&nbsp;
+	                <a id="atag1" href="">공고 더보기 ▶</a>
+	            </div>
+	            <div id="div4-1">
+	                <c:forEach var="pbanc" items="${PbancVOList}">
+	                    <div class="entPbanc">
+	                        <p><strong>${pbanc.pbancTtl}</strong></p>
+							<p>시작일 : <fmt:formatDate value="${pbanc.pbancBgngDt}" pattern="yyyy-MM-dd"/></p>
+							<p>마감일 : <fmt:formatDate value="${pbanc.pbancDdlnDt}" pattern="yyyy-MM-dd"/></p>
+	                    </div>
+	                </c:forEach>
+	            </div>
+	        </div>
+	    </c:when>
+	    <c:otherwise>
+	        <div id="div4">
+	            <p><strong>현재 채용 중인 공고가 없습니다.</strong></p>
+	        </div>
+	    </c:otherwise>
+	</c:choose>
+
+
+
+</body>
+<script>
+	/*chart.js 연도별 입사자수 시작*/
+	// 버튼 눌렀을 때 실행
+	function fChg() {
+	    //값 재 할당!
+	    mChart.data.datasets[0].data = fRanArrData();
+	    mChart.data.datasets[1].data = fRanArrData();
+	    //chart.js에서 가장 중요한 메소드, 다시 그려랑(re rendering)
+	    mChart.update();
+	}
+	
+	let isToggle = false;
+	function fChgType() {
+	    // 오직 bar와 line만 믹스 가능(생각해 보면 그냥 이해됨)
+	    if (isToggle) {
+	        mChart.data.datasets[0].type = "bar";
+	        mChart.data.datasets[1].type = "line";
+	    } else {
+	        mChart.data.datasets[0].type = "line";
+	        mChart.data.datasets[1].type = "bar";
+	    }
+	    mChart.update();
+	    isToggle = !isToggle;
+	}
+	
+	
+	const ctx = document.querySelector('#myChart');
+	
+	const mChart = new Chart(ctx, {
+	    type: 'bar',  // bar, line, pie, doughnut, radar 등등...
+	    data: {
+	        labels: ['2023.8', '2023.9', '2023.10', '2023.11', '2023.12', '2024.1', '2024.2', '2024.3', '2024.4', '2024.5', '2024.6', '2024.7', '2024.8'],
+	        datasets: [
+	            {
+	                label: '전체인원',
+	                data: [100, 120, 110, 100, 110, 115, 120, 100, 110, 115, 120, 115, 120],
+	                borderWidth: 1,
+	            },
+	            {
+	                label: '입사자',
+	                data: [10, 19, 13, 15, 12, 13, 9, 10, 19, 13, 15, 12, 13],
+	                borderWidth: 1,
+	            },
+	            {
+	                label: '퇴사자',
+	                data: [1, 2, 3, 4, 4, 5, 1, 1, 1, 3, 1, 2, 5],
+	                borderWidth: 1
+	            }
+	        ]
+	    },
+	    options: {
+	        scales: {
+	            y: {
+	                beginAtZero: true
+	            }
+	        }
+	    }
+	});
+	// mChart에 담긴 값 확인, 누느로 꼬옥 화긴하장!
+	console.log("labels:", mChart.data.labels);
+	console.log("labels:", mChart.data.datasets[0]);
+	console.log("labels:", mChart.data.datasets[1].label);
+	console.log("labels:", mChart.data.datasets[1].data);
+	/*chart.js 연도별 입사자수 끝*/
+	
+	/*chart.js 매출액 시작*/
+	new Chart(document.getElementById("canvas"), {
+	    type: 'line',
+	    data: {
+	        labels: ['2019', '2020', '2021', '2022', '2023'],
+	        datasets: [{
+	            label: '매출액',
+	            data: [
+	                100,
+	                300,
+	                500,
+	                700,
+	                750
+	            ],
+	            borderColor: "rgba(255, 201, 14, 1)",
+	            backgroundColor: "rgba(255, 201, 14, 0.5)",
+	            fill: true,
+	            lineTension: 0
+	        }]
+	    },
+	    options: {
+	        responsive: true,
+	        title: {
+	            display: true,
+	            text: '라인 차트 테스트'
+	        },
+	        tooltips: {
+	            mode: 'index',
+	            intersect: false,
+	        },
+	        hover: {
+	            mode: 'nearest',
+	            intersect: true
+	        },
+	        scales: {
+	            xAxes: [{
+	                display: true,
+	                scaleLabel: {
+	                    display: true,
+	                    labelString: 'x축'
+	                }
+	            }],
+	            yAxes: [{
+	                display: true,
+	                ticks: {
+	                    suggestedMin: 0,
+	                },
+	                scaleLabel: {
+	                    display: true,
+	                    labelString: 'y축'
+	                }
+	            }]
+	        }
+	    }
+	});
+
+	/*chart.js 매출액 끝*/
+</script>
+</html>

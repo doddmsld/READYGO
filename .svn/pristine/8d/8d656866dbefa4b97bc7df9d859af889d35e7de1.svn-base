@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 
+	[마이바티스] 스프링에서 "_"를 사용한 컬럼명을 사용 시(BOOK 테이블의 BOOK_ID)
+	카멜케이스로 읽어줌(bookId)
+	ex) 테이블 컬러명이 member_id인 경우 jsp화면단에서 이 값을 사용 시 memberId로 사용
+	-->
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	<!-- 자주 사용하는 타입의 별칭을 세팅 -->
+	<typeAliases>
+		<!-- 회원 -->
+		<typeAlias type="kr.or.ddit.vo.MemberVO" alias="memberVO" />		
+		<typeAlias type="kr.or.ddit.vo.UserVO" alias="userVO" />		
+		<typeAlias type="kr.or.ddit.vo.UserAuthVO" alias="userAuthVO" />		
+		<typeAlias type="kr.or.ddit.vo.PrfCareerVO" alias="prfCareerVO" /> <!-- 프로필 경력 -->
+		<typeAlias type="kr.or.ddit.vo.PrfCrtfctVO" alias="prfCrtfctVO" /> <!-- 프로필 자격증 -->
+		<typeAlias type="kr.or.ddit.vo.PrfAcbgVO" alias="prfAcbgVO" /> <!-- 프로필 학력 -->
+		<typeAlias type="kr.or.ddit.vo.PrfWnpzVO" alias="prfWnpzVO" /> <!-- 프로필 수상 -->
+		<typeAlias type="kr.or.ddit.vo.PrfActVO" alias="prfActVO" /> <!-- 프로필 활동 -->
+		<typeAlias type="kr.or.ddit.vo.PrfVO" alias="prfVO" /> <!-- 프로필 -->
+		<typeAlias type="kr.or.ddit.vo.PrfBusinessVO" alias="prfBusinessVO" /> <!-- 프로필 업종-->
+		<typeAlias type="kr.or.ddit.vo.ApplicantVO" alias="applicantVO" /> <!-- 지원자 -->	
+	    <typeAlias type="kr.or.ddit.vo.ProposalVO" alias="proposalVO" /> <!-- 제안 -->   
+		
+		<!-- 기업 -->
+		<typeAlias type="kr.or.ddit.vo.EnterVO" alias="enterVO" />	 <!-- 기업 -->	
+		<typeAlias type="kr.or.ddit.vo.IndutyVO" alias="indutyVO" /> <!-- 업종 -->	
+		<typeAlias type="kr.or.ddit.vo.EventVO" alias="eventVO" />	 <!-- 캘린더 이벤트 -->
+		<typeAlias type="kr.or.ddit.vo.EnterRevenueVO" alias="enterRevenueVO" /> <!-- 매출액 -->	
+		<typeAlias type="kr.or.ddit.vo.EnterEmpYcntVO" alias="enterEmpYcntVO" /> <!-- 매출액 -->	
+		<typeAlias type="kr.or.ddit.vo.TbcRecruitmentVO" alias="tbcRecruitmentVO" /> <!-- 모집분야 -->	
+		<typeAlias type="kr.or.ddit.vo.TbcIndutyVO" alias="tbcIndutyVO" /> <!-- 공고 업종 -->	
+		
+		<!-- 외주 -->
+		<typeAlias type="kr.or.ddit.vo.OustouVO" alias="oustouVO" /> <!-- 외주 기본테이블  -->	
+		
+		<!-- 관리자 -->
+		<typeAlias type="kr.or.ddit.vo.AdminVO" alias="adminVO" />		
+		
+		<!-- 공통 -->
+		<typeAlias type="kr.or.ddit.vo.FileDetailVO" alias="fileDetailVO" />
+		<typeAlias type="kr.or.ddit.vo.PbancVO" alias="pbancVO" />
+		<typeAlias type="kr.or.ddit.vo.CodeVO" alias="codeVO" />
+		<typeAlias type="kr.or.ddit.vo.NotificationVO" alias="notificationVO" /> <!-- 알람 -->
+		
+		<!-- 게시판 -->
+		<typeAlias type="kr.or.ddit.vo.BoardVO" alias="boardVO" />		
+		<typeAlias type="kr.or.ddit.vo.BoardTypeVO" alias="boardTypeVO" />
+		<typeAlias type="kr.or.ddit.vo.CommentVO" alias="commentVO" />
+		
+		
+	</typeAliases>
+</configuration>
+
+
+
+
+
+
+
+

@@ -1,0 +1,19 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+@Data
+public class OsDevalVO {
+	private String srvcNo;
+	private String outordNo;
+	private String srvcLevelCd;
+	private String srvcTeamscaleCd;
+	private String srvcLangCd;
+	private String srvcDatabaseCd;
+	private String srvcCludCd;
+	private String srvcEtc;
+	private String srvcJobpd;
+	private String srvcUpdtnmtm;
+	private String srvcFileprovdyn;
+	private String srvcSklladit;
+}

@@ -1,0 +1,164 @@
+package kr.or.ddit.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.ddit.mapper.FileDetailMapper;
+import kr.or.ddit.mapper.MemAplctMapper;
+import kr.or.ddit.security.CustomUser;
+import kr.or.ddit.service.MemAplctService;
+import kr.or.ddit.util.UploadController;
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PbancVO;
+import kr.or.ddit.vo.ScrapVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class MemAplctServiceImpl implements MemAplctService {
+
+    @Inject
+    MemAplctMapper memAplctMapper;
+    
+    @Inject
+	FileDetailMapper fileDetailMapper;
+	
+	@Inject
+	UploadController uploadController;
+	
+   // DI, IoC
+   // c:\\upload
+   @Inject
+   String uploadPath;
+
+    // 입사 지원 목록
+	@Override
+	public List<ApplicantVO> aplctList(Map<String, Object> map) {
+		return this.memAplctMapper.aplctList(map);
+	}
+
+	// 전체 입사 행 수 
+	@Override
+	public int getTotal(Map<String, Object> map) {
+		return this.memAplctMapper.getTotal(map);
+	}
+
+	// 입사 지원 취소 사유 항목
+	@Override
+	public List<CodeVO> cancelList() {
+		return this.memAplctMapper.cancelList();
+	}
+	
+	// 특정 공고 입사 지원 취소 사유 update
+	@Override
+	@Transactional
+	public int aplctDelete(Map<String, Object> map) {
+		return this.memAplctMapper.aplctDelete(map);
+	}
+	
+    // 입사 지원 관리 목록
+	@Override
+	public List<ApplicantVO> aplctManage(Map<String, Object> map) {
+		return this.memAplctMapper.aplctManage(map);
+	}
+	
+	// 입사 지원 중복 체크
+	@Override
+	public ApplicantVO aplctChk(Map<String, Object> map) {
+		return this.memAplctMapper.aplctChk(map);
+	}
+	
+	// 입사 지원 관리 전체 행의 수
+	@Override
+	public int getManTotal(Map<String, Object> map) {
+		return this.memAplctMapper.getManTotal(map);
+	}
+
+	// 상태 미평가 행의 수
+	@Override
+	public int getNotTotal(String mbrId) {
+		return this.memAplctMapper.getNotTotal(mbrId);
+	}
+	
+	// 상태 서류합격 행의 수
+	@Override
+	public int getDocTotal(String mbrId) {
+		return this.memAplctMapper.getDocTotal(mbrId);
+	}
+
+	// 상태 최종합격 행의 수
+	@Override
+	public int getFinTotal(String mbrId) {
+		return this.memAplctMapper.getFinTotal(mbrId);
+	}
+	
+	// 상태 불합격 행의 수
+	@Override
+	public int getBadTotal(String mbrId) {
+		return this.memAplctMapper.getBadTotal(mbrId);
+	}
+	
+
+	// 내가 스크랩한 공고 조회
+	@Override
+	public List<PbancVO> scrapList(Map<String, Object> map) {
+		return this.memAplctMapper.scrapList(map);
+	}
+
+	// 스크랩한 전체 행의 수
+	@Override
+	public int getScrapTotal(Map<String, Object> map) {
+		return this.memAplctMapper.getScrapTotal(map);
+	}
+	// 공고 스크랩 추가
+	@Override
+	public int addScrap(ScrapVO scrapVO) {
+		return this.memAplctMapper.addScrap(scrapVO);
+	}
+	// 스크랩한 공고 삭제
+	@Override
+	public int delScrap(Map<String, Object> map) {
+		return this.memAplctMapper.delScrap(map);
+	}
+
+	// 공고 스크랩 여부 확인
+	@Override
+	public int scrapYN(Map<String, Object> map) {
+		return this.memAplctMapper.scrapYN(map);
+	}
+
+	// 입사 지원
+	@Override
+	public int aplctAdd(ApplicantVO applicantVO) {
+		int result = 0;
+		
+		MultipartFile[] multipartFiles = applicantVO.getUploadFile();
+
+      // 파일이 없으면 fileGroupSn을 설정하지 않음 (자동으로 null 처리됨)
+       if (multipartFiles != null && multipartFiles.length > 0 && !multipartFiles[0].isEmpty()) {
+           String fileGroupSn = this.uploadController.multiImageUpload(multipartFiles, "/applicant");
+           log.info("editPost->fileGroupSn : " + fileGroupSn);
+           
+           // 파일 그룹 번호 설정
+           applicantVO.setFileGroupSn(fileGroupSn);
+       }
+
+	    // 데이터 등록
+	    result += this.memAplctMapper.aplctAdd(applicantVO);
+	    
+	    // 항상 int 값 반환
+	    return result;
+	}
+
+	
+}

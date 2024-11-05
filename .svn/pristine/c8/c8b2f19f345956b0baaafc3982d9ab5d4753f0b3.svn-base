@@ -1,0 +1,27 @@
+package kr.or.ddit.controller_DO;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@RequestMapping("/board/freeBoard")
+@Controller
+public class FreeBoardController {
+
+	@GetMapping("/freeList")
+	public String list() {
+		return "board/freeBoard/freeList";
+	}	
+
+	@GetMapping("/freeRegist")
+	public String regist() {
+		
+		return "board/freeBoard/freeRegist";
+	}
+	
+	@GetMapping("/freeDetail")
+	public String detail() {
+		
+		return "board/freeBoard/freeDetail";
+	}
+}

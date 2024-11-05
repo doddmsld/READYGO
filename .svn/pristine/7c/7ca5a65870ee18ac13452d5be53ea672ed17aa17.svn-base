@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MemProfileMapper">
+
+	
+<!-- PRF : PRF_CAREER = 1 : N -->
+<resultMap type="prfVO" id="prfMap">
+    <result property="mbrId" column="MBR_ID"/>
+    <result property="mbrNm" column="MBR_NM"/>
+    <result property="careerNm" column="CAREER_NM"/> <!-- 단일 경력명 매핑 -->
+    <result property="proflContent" column="PROFL_CONTENT"/>
+    <result property="mbrEml" column="MBR_EML"/>
+    <result property="prtfolioAddr" column="PRTFOLIO_ADDR"/>	
+    <result property="prfRlsscopeCd" column="PRF_RLSSCOPE_CD"/>
+    <collection property="prfCareerVOList" resultMap="prfCareerMap"></collection>
+</resultMap>
+
+<resultMap type="prfCareerVO" id="prfCareerMap">
+	<result property="careerNo" column="CAREER_NO"/>
+	<result property="mbrId" column="MBR_ID"/>
+	<result property="careerNm" column="CAREER_NM"/>
+	<result property="careerEnt" column="CAREER_ENT"/>
+	<result property="careerBegYm" column="CAREER_BEG_YM"/>
+	<result property="careerEndYm" column="CAREER_END_YM"/>
+</resultMap>
+
+<!-- PRF_ACBG : CODE = 1 : N -->
+<resultMap type="prfAcbgVO" id="prfAcbgMap">
+	<result property="mbrId" column="MBR_ID"/>
+	<result property="prseSeCd" column="PRSE_SE_CD"/>
+	<result property="acbgSchlNm" column="ACBG_SCHL_NM"/>
+	<result property="acbgMjrNm" column="ACBG_MJR_NM"/>
+	<result property="acbgMtcltnym" column="ACBG_MTCLTNYM"/>
+	<result property="acbgGrdtnym" column="ACBG_GRDTNYM"/>
+	<result property="acbgNo" column="ACBG_NO"/>
+	<result property="acspSeCd" column="ACSP_SE_CD"/>
+	<result property="acdeSeCd" column="ACDE_SE_CD"/>
+	<result property="prseSeNm" column="PRSE_SE_NM"/>
+    <result property="acdeSeNm" column="ACDE_SE_NM"/>
+    <result property="acspSeNm" column="ACSP_SE_CM"/>
+</resultMap>
+
+
+<!-- 프로필 -->
+<select id="profile" parameterType="String" resultMap="prfMap">
+    SELECT P.MBR_ID, P.MBR_NM, MIN(C.CAREER_NM) AS CAREER_NM, P.PROFL_CONTENT,P.PRF_RLSSCOPE_CD, P.MBR_EML
+      FROM PRF P
+      JOIN PRF_CAREER C ON P.MBR_ID = C.MBR_ID
+     WHERE P.MBR_ID = #{mbrId}
+     GROUP BY P.MBR_ID, P.MBR_NM, P.PROFL_CONTENT,P.PRF_RLSSCOPE_CD, P.MBR_EML
+</select>
+
+<!-- 프로필 수정 -->
+<update id="prfUpdateAjax" parameterType="map">
+	UPDATE PRF
+	   SET PROFL_CONTENT= #{proflContent}
+	 WHERE MBR_ID = #{mbrId}
+</update>
+
+<!-- 스카우트 버튼 수정 -->
+<update id="prfUpdateScout" parameterType="map">
+	UPDATE PRF
+   SET PRF_RLSSCOPE_CD=#{prfRlsscopeCd}
+ WHERE MBR_ID=#{mbrId}
+</update>
+
+<!-- 경력 조회 -->
+<select id="careerList" parameterType="String" resultType="prfCareerVO">
+	SELECT CAREER_NO, MBR_ID, CAREER_NM, CAREER_ENT, CAREER_BEG_YM, CAREER_END_YM
+	  FROM PRF_CAREER
+	 WHERE MBR_ID =#{mbrId}
+	   ORDER BY 
+       TO_NUMBER(CAREER_END_YM) DESC,
+       TO_NUMBER(CAREER_BEG_YM) DESC
+</select>
+
+<!-- 경력 추가 -->
+<insert id="careerAddAjax" parameterType="PrfCareerVO">
+    <selectKey resultType="String" order="BEFORE" keyProperty="careerNo">
+        SELECT 'CAR' || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(CAREER_NO, 4))), 0) + 1, 4, '0')
+        FROM PRF_CAREER
+    </selectKey>
+    INSERT INTO PRF_CAREER (CAREER_NO, MBR_ID, CAREER_NM, CAREER_ENT, CAREER_BEG_YM, CAREER_END_YM)
+    VALUES (#{careerNo}, #{mbrId}, #{careerNm}, #{careerEnt}
+    , REPLACE(#{careerBegYm},'.','')
+    , REPLACE(#{careerEndYm},'.',''))
+</insert>
+
+<!-- 경력 수정 -->
+<update id="careerUpdateAjax" parameterType="map">
+	UPDATE PRF_CAREER
+	   SET CAREER_NM=#{careerNm}, CAREER_ENT=#{careerEnt}
+	   , CAREER_BEG_YM=REPLACE(#{careerBegYm},'.','')
+	   , CAREER_END_YM=REPLACE(#{careerEndYm},'.','')
+	 WHERE MBR_ID = #{mbrId}
+	   AND CAREER_NO=#{careerNo}
+</update>
+
+<!-- 경력 삭제 -->
+<delete id="careerDelAjax" parameterType="map">
+	DELETE 
+	  FROM PRF_CAREER
+	 WHERE CAREER_NO = #{careerNo}
+	   AND MBR_ID=#{mbrId}
+</delete>
+
+
+
+
+
+<!-- 학력 조회 -->
+<select id="acbgList" parameterType="String" resultMap="prfAcbgMap">
+    SELECT P.MBR_ID, P.ACBG_NO, P.PRSE_SE_CD, C1.COM_CODE_NM AS PRSE_SE_NM, 
+           P.ACBG_SCHL_NM, P.ACBG_MJR_NM, P.ACBG_MTCLTNYM, P.ACBG_GRDTNYM, 
+           P.ACSP_SE_CD, P.ACDE_SE_CD, C2.COM_CODE_NM AS ACDE_SE_NM,
+           C3.COM_CODE_NM AS ACSP_SE_CM
+      FROM PRF_ACBG P
+      LEFT JOIN CODE C1 ON P.PRSE_SE_CD = C1.COM_CODE
+      LEFT JOIN CODE C2 ON P.ACDE_SE_CD = C2.COM_CODE
+      LEFT JOIN CODE C3 ON P.ACSP_SE_CD = C3.COM_CODE
+     WHERE P.MBR_ID = #{mbrId}
+      ORDER BY 
+     CASE 
+         WHEN P.PRSE_SE_CD = 'PRSE01' THEN 1
+         ELSE 2 
+     END
+</select>
+
+<!-- 학력 추가 -->
+<insert id="acbgAddAjax" parameterType="prfAcbgVO">
+    <selectKey resultType="String" order="BEFORE" keyProperty="acbgNo">
+        SELECT 'AC' || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(ACBG_NO, 3))), 0) + 1, 4, '0')
+        FROM PRF_ACBG
+    </selectKey>
+INSERT INTO PRF_ACBG (MBR_ID, ACBG_NO, PRSE_SE_CD, ACBG_SCHL_NM
+	<if test="acbgMjrNm!=null and acbgMjrNm!=''">
+	, ACBG_MJR_NM
+	</if>
+	, ACBG_MTCLTNYM, ACBG_GRDTNYM
+	<if test="acspSeCd!=null and acspSeCd!=''">
+	, ACSP_SE_CD
+	</if>
+	<if test="acdeSeCd!=null and acdeSeCd!=''">
+	, ACDE_SE_CD
+	</if>
+	)
+  VALUES (#{mbrId}, #{acbgNo},#{prseSeCd},#{acbgSchlNm}
+  	  <if test="acbgMjrNm!=null and acbgMjrNm!=''">
+	  ,#{acbgMjrNm}
+	  </if>
+	  ,REPLACE(#{acbgMtcltnym},'.',''),REPLACE(#{acbgGrdtnym},'.','')
+	  <if test="acspSeCd!=null and acspSeCd!=''">
+	  ,#{acspSeCd}
+	  </if>
+	  <if test="acdeSeCd!=null and acdeSeCd!=''">
+	  ,#{acdeSeCd}
+	  </if>
+	  )
+</insert>
+
+<!-- 학력 수정
+PrfAcbgVO(mbrId=test1, acbgNo=AC0001, prseSeCd=PRSE01, acbgSchlNm=서울대학교2
+  	, acbgMjrNm=컴퓨터공학2, acbgMtcltnym=2021.03, acbgGrdtnym=2025.08, acspSeCd=null
+  	, acdeSeCd=ACDE02, prseSeNm=null, acdeSeNm=null, acspSeNm=null, codeVOList=null)
+ -->
+<update id="acbgUpdateAjax" parameterType="prfAcbgVO">
+	UPDATE PRF_ACBG
+	   SET PRSE_SE_CD = #{prseSeCd}, 
+	       ACBG_SCHL_NM = #{acbgSchlNm}, 
+	       ACBG_MTCLTNYM = REPLACE(#{acbgMtcltnym},'.',''), 
+	       ACBG_GRDTNYM = REPLACE(#{acbgGrdtnym},'.','')
+	   <if test="acbgMjrNm != null and acbgMjrNm != ''">
+	       , ACBG_MJR_NM = #{acbgMjrNm}
+	   </if>
+	   <if test="acspSeCd != null and acspSeCd != ''">
+	       , ACSP_SE_CD = #{acspSeCd}
+	   </if>
+	   <if test="acdeSeCd != null and acdeSeCd != ''">
+	       , ACDE_SE_CD = #{acdeSeCd}
+	   </if>
+	   
+	WHERE MBR_ID = #{mbrId}
+	  AND ACBG_NO = #{acbgNo}
+</update>
+
+
+<!-- 학력 삭제 -->
+<delete id="acbgDelAjax" parameterType="map">
+	DELETE 
+	  FROM PRF_ACBG
+	 WHERE ACBG_NO = #{acbgNo}
+	   AND MBR_ID=#{mbrId}
+</delete>
+
+<!-- 프로필 학력(PRSE) 항목 리스트 -->
+<select id="prseList" resultType="codeVO">
+	SELECT COM_CODE, COM_CODE_GRP, COM_CODE_NM, COM_CODE_DESC, USE_YN
+          ,UPPER_COM_CODE, UPPER_COM_CODE_GRP
+	  FROM CODE
+	 WHERE COM_CODE_GRP='PRSE'
+</select>
+
+<!-- 학위(ACDE) 항목 리스트 -->
+<select id="acdeList" resultType="codeVO">
+	SELECT COM_CODE, COM_CODE_GRP, COM_CODE_NM, COM_CODE_DESC, USE_YN
+          ,UPPER_COM_CODE, UPPER_COM_CODE_GRP
+	  FROM CODE
+	 WHERE COM_CODE_GRP='ACDE'
+</select>
+
+<!-- 전공계열 (ACSP) 항목 리스트 -->
+<select id="acspList" resultType="codeVO">
+	SELECT COM_CODE, COM_CODE_GRP, COM_CODE_NM, COM_CODE_DESC, USE_YN
+          ,UPPER_COM_CODE, UPPER_COM_CODE_GRP
+	  FROM CODE
+	 WHERE COM_CODE_GRP='ACSP'
+</select>
+
+
+
+<!-- 자격증 조회 -->
+<select id="crtfctList" parameterType="String" resultType="prfCrtfctVO">
+	SELECT CRTFCT_NO, MBR_ID, CRTFCT_NM, CRTFCT_PBLCNOFFIC, CRTFCT_ACQS_DATE
+	  FROM PRF_CRTFCT
+	 WHERE MBR_ID = #{mbrId}
+  ORDER BY TO_NUMBER(CRTFCT_ACQS_DATE) DESC
+</select>
+
+<!-- 자격증 추가 -->
+<insert id="crtfctAddAjax" parameterType="prfCrtfctVO">
+    <selectKey resultType="String" order="BEFORE" keyProperty="crtfctNo">
+        SELECT 'CRT' || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(CRTFCT_NO, 4))), 0) + 1, 4, '0')
+        FROM PRF_CRTFCT
+    </selectKey>
+INSERT INTO PRF_CRTFCT (CRTFCT_NO, MBR_ID, CRTFCT_NM, CRTFCT_PBLCNOFFIC, CRTFCT_ACQS_DATE)
+  VALUES (#{crtfctNo},#{mbrId},#{crtfctNm},#{crtfctPblcnoffic}
+  ,REPLACE(#{crtfctAcqsDate},'.',''))
+</insert>
+
+<!-- 자격증 수정 -->
+<update id="crtfctUpdateAjax" parameterType="prfCrtfctVO">
+	UPDATE PRF_CRTFCT
+	   SET CRTFCT_NM=#{crtfctNm}, CRTFCT_PBLCNOFFIC=#{crtfctPblcnoffic}
+	   , CRTFCT_ACQS_DATE=REPLACE(#{crtfctAcqsDate},'.','')
+	 WHERE MBR_ID = #{mbrId}
+	   AND CRTFCT_NO=#{crtfctNo}
+</update>
+<!-- 자격증 삭제 -->
+<delete id="crtfctDelAjax" parameterType="map">
+	DELETE 
+	  FROM PRF_CRTFCT
+	 WHERE CRTFCT_NO = #{crtfctNo}
+	   AND MBR_ID=#{mbrId}
+</delete>
+
+
+
+<!-- 수상 조회 -->
+<select id="WnpzList" parameterType="String" resultType="prfWnpzVO">
+	SELECT WNPZ_NO, MBR_ID, WNPZ_CNTST_NM, WNPZ_AUSPCENGN, WNPZ_PSSRP_YM
+	  FROM PRF_WNPZ
+	 WHERE MBR_ID = #{mbrId}
+  ORDER BY TO_NUMBER(WNPZ_PSSRP_YM) DESC
+  		
+</select>
+
+<!-- 수상 추가 -->
+<insert id="WnpzAddAjax" parameterType="prfWnpzVO">
+    <selectKey resultType="String" order="BEFORE" keyProperty="wnpzNo">
+       SELECT 'WN' || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(WNPZ_NO, 3))), 0) + 1, 4, '0')
+		 FROM PRF_WNPZ
+    </selectKey>
+		INSERT INTO PRF_WNPZ (WNPZ_NO, MBR_ID, WNPZ_CNTST_NM, WNPZ_AUSPCENGN, WNPZ_PSSRP_YM)
+		  VALUES (#{wnpzNo},#{mbrId},#{wnpzCntstNm},#{wnpzAuspcengn}
+		  ,REPLACE(#{wnpzPssrpYm},'.',''))
+</insert>
+
+<!-- 수상 수정 -->
+<update id="wnpzUpdateAjax" parameterType="prfWnpzVO">
+	UPDATE PRF_WNPZ
+	   SET WNPZ_CNTST_NM=#{wnpzCntstNm}, WNPZ_AUSPCENGN=#{wnpzAuspcengn}
+	   , WNPZ_PSSRP_YM=REPLACE(#{wnpzPssrpYm},'.','')
+	 WHERE MBR_ID = #{mbrId}
+	   AND WNPZ_NO=#{wnpzNo}
+</update>
+
+<!-- 수상 삭제 -->
+<delete id="WnpzDelAjax" parameterType="map">
+	DELETE 
+	  FROM PRF_WNPZ
+	 WHERE WNPZ_NO = #{wnpzNo}
+	   AND MBR_ID=#{mbrId}
+</delete>
+
+
+<!-- 활동 조회 -->
+<select id="ActList" parameterType="String" resultType="prfActVO">
+	SELECT ACT_NO, MBR_ID, ACT_NM, ACT_AUSPCENGN, ACT_BEGIN_YM, ACT_END_YM, ACT_NC
+	  FROM PRF_ACT
+	 WHERE MBR_ID = #{mbrId}
+  ORDER BY TO_NUMBER(ACT_BEGIN_YM) DESC,	
+           TO_NUMBER(ACT_END_YM) DESC 
+</select>
+
+<!-- 활동 추가 -->
+<insert id="actAddAjax" parameterType="prfActVO">
+    <selectKey resultType="String" order="BEFORE" keyProperty="actNo">
+       SELECT 'ACT' || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(ACT_NO, 4))), 0) + 1, 4, '0')
+		 FROM PRF_ACT
+    </selectKey>
+		INSERT INTO PRF_ACT (ACT_NO, MBR_ID, ACT_NM, ACT_AUSPCENGN, ACT_BEGIN_YM, ACT_END_YM, ACT_NC)
+		  VALUES (#{actNo},#{mbrId},#{actNm},#{actAuspcengn}
+		  ,REPLACE(#{actBeginYm},'.','')
+		  ,REPLACE(#{actEndYm},'.',''),#{actNc})
+</insert>
+
+<!-- 활동 수정 -->
+<update id="actUpdateAjax" parameterType="prfActVO">
+	UPDATE PRF_ACT
+	   SET ACT_NM=#{actNm}, ACT_AUSPCENGN=#{actAuspcengn}
+	   , ACT_BEGIN_YM=REPLACE(#{actBeginYm},'.',''), ACT_END_YM=REPLACE(#{actEndYm},'.',''), ACT_NC=#{actNc}
+	 WHERE MBR_ID = #{mbrId}
+	   AND ACT_NO=#{actNo}
+</update>
+<!-- 활동 삭제 -->
+<delete id="actDelAjax" parameterType="map">
+	DELETE 
+	  FROM PRF_ACT
+	 WHERE ACT_NO = #{actNo}
+	   AND MBR_ID=#{mbrId}
+</delete>
+
+
+<!-- 업종 조회 -->
+<select id="BusinessList" parameterType="String" resultType="prfBusinessVO">
+	SELECT TPBIZ_SE_CD, MBR_ID, TPBIZ_NM
+	  FROM PRF_BUSINESS
+	 WHERE MBR_ID = #{mbrId}
+</select>
+
+<!-- 업종 추가
+
+{tpbizSeCd=INSE11,mbrId=test1,tpbizNm=}
+ -->
+<insert id="BusinessAdd" parameterType="prfBusinessVO">
+   INSERT INTO PRF_BUSINESS(TPBIZ_SE_CD, MBR_ID, TPBIZ_NM)
+  	VALUES (#{tpbizSeCd}, #{mbrId}, (SELECT COM_CODE_NM FROM CODE WHERE COM_CODE = #{tpbizSeCd}))
+</insert>
+
+<!-- 업종 삭제 -->
+<delete id="BusinessDelAjax" parameterType="prfBusinessVO">
+	DELETE 
+	  FROM PRF_BUSINESS
+	 WHERE MBR_ID=#{mbrId}
+</delete>
+
+<!-- 스킬 조회 -->
+<select id="skillList" parameterType="String" resultType="prfSkillVO">
+	SELECT get_common_code_name(SK_CD) SK_NM , MBR_ID, SK_CD
+	  FROM PRF_SKILL
+	 WHERE MBR_ID=#{mbrId}
+</select>
+
+<!-- 스킬 추가 -->
+<insert id="skillAdd" parameterType="prfSkillVO">
+	INSERT INTO PRF_SKILL (SK_CD, MBR_ID)
+	  VALUES (#{skCd}, #{mbrId})
+</insert>
+
+<!-- 스킬 삭제 -->
+<delete id="skillDel" parameterType="prfSkillVO">
+	DELETE 
+	  FROM PRF_SKILL
+	 WHERE MBR_ID=#{mbrId}
+</delete>
+
+</mapper>

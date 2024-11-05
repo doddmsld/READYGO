@@ -1,0 +1,81 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+@Data
+public class PbancVO {
+	private String pbancSttus;//
+	private String pbancNo;
+	private String pbancPicNm;
+	private String pbancPicTelno;
+	private String pbancPicEml;
+	private String pbancAplctEduCd;
+	private String pbancRprsrgn;
+	private String pbancTtl;
+	private int pbancApntcpd;
+	private String pbancSalary;
+	private String pbancWorkHrCd;
+	private String pbancWorkDayCd;
+	private String pbancRcptMthdCd;
+	private String pbancRprsDty;
+	private String pbancRcptPd;
+	private String pbancBgngDt;
+	private String pbancBgngDts;
+	private String pbancDdlnDt;
+	private String pbancDdlnDts;
+	private String pbancWrtDt;
+	private String pbancMdfcnDt;
+	private String pbancDelDt;
+	private int pbancScrapCo; // 스크랩수
+	private String pbancDelYn;
+	private int pbancRdcnt;
+	private String pbancDlnDt; // 마감일자 스트링타입
+	private int pbancBeforeWrt; // 공고등록일로부터 현재까지 일자 등록
+	private String pbancAplctEdu; // 졸업요건명
+	private String rcritCareerNm; // 경력 여부명
+	private String pbancTpbizNm; // 업종명
+	private String pbancWorkstleNm; // 근무형태
+	private TbcRecruitmentVO tbcRecruitmentVO; // 경력 코드
+	private TbcIndutyVO tbcIndutyVO; // 공고업종
+	private CodeVO codeVO;
+	private String memNm;
+	private String memId;
+	private String memBrdt;
+	private int rnum;
+	private String pbancAplctEduCdNm; // 학력코드명
+	private String pbancRprsrgnNm; // 근무지역명
+	private String pbancCityNm; // 근무도시명
+	private String pbancWorkstleCdNm; // 근무형태명
+	private String pbancWorkstleCd; // 근무형태명
+	private String pbancCareerCdNm; // 모집경력명
+	private String pbancCareerCd; // 모집경력코드
+	private String pbancGenCd; // 성별
+	private String pbancAppofeFormCd; // 지원서양식
+	private String pbancImgFile; // 이미지파일
+	private String pbancCn; // 공고내용
+	private String pbancAgeCd; // 연령
+
+	private EnterVO enterVO;
+	private String entId; // 기업아이디
+	private String entNm; // 기업명
+	private String entStleNm; // 기업 형태명
+	private String tpbizSeCd; // 업종
+	private String entEmpCnt; // 사원수
+	private String entStleCd; // 기업형태
+	private String entFndnYmd; // 설립일
+	private String entLogo; // 기업로고
+	private String entHmpgUrl; // 기업홈페이지URL
+	private String entRprsntvNm; // 대표자이름
+	private String entFxnum; // 팩스번호
+
+	private String favorCn; // 혜택
+	private String procssCd;
+	private String pvRtCd;
+	private String rcritNm;
+	private String rcritCnt;
+	private String rcritJbttlCd;
+	private String rcritTask;
+	private String rcritDept;
+	private String powkCd;
+
+}

@@ -1,0 +1,124 @@
+@charset "UTF-8";
+
+* {
+    font-family: pretendard;
+}
+   
+.search-input {
+    position: relative; /* 부모 요소에 relative 포지션 설정 */
+}
+
+.SearchContent {
+    position: absolute; /* ul에 absolute 포지션 설정 */
+    top: 100%; /* input 아래에 위치하도록 설정 */
+    left: 0; /* input과 정렬되도록 설정 */
+    z-index: 1000; /* 다른 요소들 위에 표시 */
+    background-color: white; /* 배경색 추가 */ 
+    width: 100%; /* input과 동일한 너비 */
+    margin-top: -0.1px; /* 입력창과 ul 사이의 간격 조정 */
+    border-radius: 15px 15px 15px 15px; /* 아래 모서리 둥글게 설정 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.SearchContent li {
+   	padding: 15px 0px 10px 15px; /* 여백 추가 */
+    cursor: pointer; /* 마우스 커서 변경 */
+    font-size: 14px; /* 글씨 크기 조정 */
+    text-decoration: none; /* 기본 밑줄 제거 */
+}
+.SearchContent li:hover {
+    background-color: #ECECEC; /* 마우스 오버 시 배경색 변경 */
+    text-decoration: underline;
+}
+
+.SearchHistory {
+	padding-top : 5px;
+    position: absolute; /* ul에 absolute 포지션 설정 */
+    top: 100%; /* input 아래에 위치하도록 설정 */
+    left: 0; /* input과 정렬되도록 설정 */
+    z-index: 1000; /* 다른 요소들 위에 표시 */
+    background-color: white; /* 배경색 추가 */ 
+    width: 100%; /* input과 동일한 너비 */
+    margin-top: -0.1px; /* 입력창과 ul 사이의 간격 조정 */
+    border-radius: 15px 15px 15px 15px; /* 아래 모서리 둥글게 설정 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.SearchHistory li, p b{
+   	padding: 10px; /* 여백 추가 */
+    cursor: pointer; /* 마우스 커서 변경 */
+    font-size: 14px; /* 글씨 크기 조정 */
+    text-decoration: none; /* 기본 밑줄 제거 */
+}
+.SearchHistory li:hover {
+    background-color: #ECECEC; /* 마우스 오버 시 배경색 변경 */
+    text-decoration: underline;
+}
+
+.close-div {
+	float: right;
+	margin : 2px 8px 8px 8px;
+	border: none; /* 테두리 제거 */
+    font-size: 14px; /* 글자 크기 설정 */
+    color: #666363; /* 글자 색상 설정 */
+    background: none; /* 배경 제거 */
+    cursor: pointer; /* 포인터 커서 */
+}
+.close-all {
+	float: right;
+	margin : 2px 8px 2px 2px;
+	border: none; /* 테두리 제거 */
+    font-size: 14px; /* 글자 크기 설정 */
+    color: #666363; /* 글자 색상 설정 */
+    background: none; /* 배경 제거 */
+    cursor: pointer; /* 포인터 커서 */
+}
+.customIcon{
+	display: flex;
+  color: #24D59E;
+  width: 30px;
+  height: 30px;
+  font-size: 16px;
+  background-color: #ECECEC;
+   border-radius: 99px;
+   justify-content: center; /* 가로 방향 중앙 정렬 */
+    align-items: center;
+}
+
+.SearchHistory td {
+	padding : 8px;
+	font-size: 14px;
+}
+.SearchHistory td.icon {
+    width: 50px; /* 아이콘 칼럼 너비 */
+}
+
+.SearchHistory td.date {
+	text-align: right;
+    width: 80px; /* 날짜 칼럼 너비 */
+    color : #A7A7A7;
+    font-size: 12px;
+}
+
+.SearchHistory td.delete {
+	text-align: right;
+	padding : 0 10px 0 0;
+    width: 40px; /* 동작 칼럼 너비 */
+}
+/* 삭제버튼 (X) */
+.btn-close {
+	border: none; /* 테두리 제거 */
+    font-size: 14px; /* 글자 크기 설정 */
+    color: #666363; /* 글자 색상 설정 */
+    cursor: pointer; /* 포인터 커서 */
+    background: none; /* 배경 제거 */
+    font-size: 10px;
+}
+
+.SearchHistory td.record {
+    width: calc(100% - 300px); /* 나머지 너비를 차지하도록 설정 (아이콘, 날짜, 동작 칼럼 너비 합계) */
+}
+.SearchHistory hr {
+	height : 0.5px;
+	margin: 5px 0;
+	color : #A7A7A7;
+
+	}

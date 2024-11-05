@@ -1,0 +1,75 @@
+package kr.or.ddit.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import kr.or.ddit.mapper.AdminMapper;
+import kr.or.ddit.mapper.EnterMapper;
+import kr.or.ddit.mapper.MemberMapper;
+import kr.or.ddit.mapper.UserMapper;
+import kr.or.ddit.vo.AdminVO;
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.UserVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class CustomUserDetailsService implements UserDetailsService {
+	//DI(의존성 주입)
+	@Autowired
+	UserMapper userMapper;
+	@Autowired
+	MemberMapper memMapper;
+	@Autowired
+	EnterMapper enterMapper;
+	@Autowired
+	AdminMapper adminMapper;
+	
+	//요청파라미터 : <input type="text" name="username"...
+	@Override
+	public UserDetails loadUserByUsername(String username) 
+			throws UsernameNotFoundException {
+		//파라미터 준비(public MemVO memLogin(MemVO memVO))
+		UserVO userVO = new UserVO();
+		//WHERE  A.USER_ID = 샵{userId}
+		userVO.setUserId(username);
+		//<resultMap type="memVO" id="memMap">
+		userVO = userMapper.userLogin(username);
+		log.info("username.getUserType ==> "+userVO.getUserType());
+		if(userVO.getUserType().equals("1")) {
+			MemberVO memVO = new MemberVO();
+			memVO.setMbrId(username);
+			memVO = memMapper.selectOne(username);
+			log.info("memMapperr을 실행해야하는데 왜 못하는거야 씨발!");
+			log.warn("memMapperr에 의해 쿼리를 실행할 것임 : " + memVO.getEntId());
+			return memVO==null?null:new CustomUser(memVO);
+		}
+		else if(userVO.getUserType().equals("2")) {
+			EnterVO memVO = new EnterVO();
+			memVO.setEntId(username);
+			memVO = enterMapper.selectOne(username);
+			log.warn("enterMapper에 의해 쿼리를 실행할 것임 : " + memVO.getEntId());
+			return memVO==null?null:new CustomUser(memVO);
+		}
+		else if(userVO.getUserType().equals("3")) {
+			AdminVO memVO = new AdminVO();
+			memVO.setAdmId(username);
+			memVO = adminMapper.selectOne(username);
+			log.warn("adminMapper에 의해 쿼리를 실행할 것임 : " + memVO.getAdmId());
+			return memVO==null?null:new CustomUser(memVO);
+		}
+		return null;
+		
+		//3항 연산자. memVO가 null이면 null을 리턴하고, null이 아니면 USER를 리턴
+		
+	}
+	
+}
+
+
+
+
+
+

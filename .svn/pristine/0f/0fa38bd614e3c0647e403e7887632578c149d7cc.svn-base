@@ -1,0 +1,127 @@
+package kr.or.ddit.api;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class socket extends TextWebSocketHandler {
+	private static final Logger logger = LoggerFactory.getLogger(WebSocketHandler.class);
+	//소켓에 연결한 클라이언트 목록(로그인한 인원)
+	private List<WebSocketSession> sessions = new ArrayList<WebSocketSession>();
+	
+	//특정 사용자를 찾기 위한 map
+	//특정 사용자의 id 값으로 메시지를 보내기 위해 사용된다
+	private final Map<String, WebSocketSession> userSessionsMap = new ConcurrentHashMap<>();
+	
+	//소켓연결
+	@Override
+	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+	    String username = (String) session.getAttributes().get("username");
+	    if (username != null) {
+	        userSessionsMap.put(username, session);  // 세션을 맵에 저장
+	        logger.info("WebSocket 연결 성공: 사용자 {}, 세션 {}", username, session.getId());
+	    } else {
+	        logger.warn("WebSocket 연결 중 사용자 정보 없음, 세션: {}", session.getId());
+	    }
+	    logger.info("현재 WebSocket 세션 목록: " + userSessionsMap.keySet());  // 세션 목록 출력
+	    logger.info("현재 WebSocket 세션 목록: " + userSessionsMap);  // 세션 목록 출력
+	    
+	}
+
+
+   public Map<String, WebSocketSession> getUserSessionsMap() {
+        return userSessionsMap;
+    }
+   @Override
+   protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+       String msg = message.getPayload();  // 클라이언트로부터 받은 메시지
+
+       if (msg != null && !msg.isEmpty()) {
+           String[] strs = msg.split(",");
+           if (strs != null && strs.length == 5) {
+
+               String cmd = strs[0];  // 댓글, 스크랩 등의 기능 구분
+               String replyWriter = strs[1];  // 댓글 작성자
+               String boardWriter = strs[2];  // 글 작성자
+               String bno = strs[3];  // 게시글 번호
+               String title = strs[4];  // 게시글 제목
+
+               // 작성자에 해당하는 WebSocket 세션이 있는지 확인
+               WebSocketSession boardWriterSession = userSessionsMap.get(boardWriter);
+               if (boardWriterSession != null && boardWriterSession.isOpen()) {
+                   logger.info("댓글 알림 전송 준비 완료: " + boardWriter);
+                   boardWriterSession.sendMessage(new TextMessage(replyWriter + "님이 댓글을 달았습니다!"));
+               } else {
+                   logger.warn("WebSocket 세션을 찾을 수 없음, 사용자: " + boardWriter);
+               }
+           }
+       }
+   }
+
+
+	
+	
+	//현재 유저
+	private String currentUserName(WebSocketSession session) {
+	    // 세션에서 사용자 이름을 가져오는 로직
+	    Map<String, Object> httpSession = session.getAttributes();
+	    String username = (String) httpSession.get("username");  // "username"이라는 속성으로 사용자 정보 저장
+	    if (username == null) {
+	        username = session.getId();  // username이 없을 경우 세션 ID 사용
+	    }
+	    return username;
+	}
+	// 소켓 연결 해제
+	@Override
+	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+	    String username = (String) session.getAttributes().get("username");
+	    if (username != null) {
+	        userSessionsMap.remove(username);
+	        logger.info("WebSocket 연결 해제: 사용자 {}, 세션 {}", username, session.getId());
+	        logger.info("현재 등록된 세션 목록: " + userSessionsMap.keySet());  // 세션 해제 후 상태 출력
+	    }
+	}
+
+
+
+//성배가 건들던 핸들러텍스트메세지
+	//메시지를 받은 후 소켓에 전달
+	//특정 대상에게 메시지를 전송하려면 대상의 id값을 메시지를 보낼때 같이 보낸 뒤
+	//id를 이용하여 map에서 세션을 찾아 메시지를 전송하면 된다
+//	@Override
+//	protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+//		//받은 메시지를 String 값으로 받는다
+//		logger.info("ssesion"+currentUserName(session));
+//		String msg = message.getPayload();
+//		logger.info("msg="+msg);
+//		
+//		//메시지를 ','로 나눠준다
+//		String[] msgs = msg.split(",");
+//		
+//		//메시지 전송대상이 all 이면 연결된 모든 소켓에 전송
+//		if(msgs[1].equals("all")) {
+//			for(int i=0; i<sessions.size(); i++) {
+//				TextMessage tmsg = new TextMessage(msgs[0]);
+//				sessions.get(i).sendMessage(tmsg);
+//			}
+//		//메시지 전송대상이 me 이면 나에게만 전송
+//		}else if(msgs[1].equals("me")) {
+//			//메시지를 받을 세션의 id값으로 map에서 세션값을 찾아 메시지를 전송한다
+//			Map<String, Object> sessionGet = session.getAttributes();
+//			String sessionId = (String) sessionGet.get("id");
+//			TextMessage tmsg = new TextMessage(msgs[0]);
+//			userSessionsMap.get(sessionId).sendMessage(tmsg);
+//		}
+//	}
+}

@@ -1,0 +1,723 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="/resources/ckeditor5/ckeditor.js"></script>
+<link rel="stylesheet" href="../../resources/assets/css/templatemo-cyborg-gaming.css">
+<!-- Spring Security 인증 정보를 가져오기 -->
+<sec:authentication property="principal" var="prc"/>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script><!-- 웹소켓 -->
+<script type="text/javascript">
+var socket = null;
+
+// WebSocket 연결 함수
+function connectWs() {
+    console.log("WebSocket 연결 시작");
+    var ws = new SockJS("/alarm");
+    ws.onopen = function() {
+        console.log('WebSocket 연결 성공');
+    };
+    ws.onmessage = function(event) {
+        console.log("서버로부터 메시지 받음: " + event.data);
+    };
+    ws.onclose = function() {
+        console.log('WebSocket 연결 종료');
+    };
+    socket = ws;
+
+    ws.onmessage = function(event) {
+        console.log("서버로부터 메시지 받음: " + event.data);
+        let $socketAlert = $('#socketAlert');
+        $socketAlert.html(event.data);
+        
+        // 알림 표시
+        $socketAlert.removeClass('hidden').addClass('visible');
+        
+        // 5초 후 알림 숨기기
+        setTimeout(function(){
+            $socketAlert.removeClass('visible').addClass('hidden');
+        }, 5000);
+    };
+
+    ws.onclose = function() {
+        console.log('WebSocket 연결 종료');
+    };
+}
+
+$(document).ready(function(){
+    var username = "${prc.username}";
+    console.log("현재 사용자: " + username);
+
+        connectWs();
+
+        $('#submitComment').on("click", function(event) {
+            event.preventDefault(); // 기본 폼 제출 막기
+
+            var isAnonymous = '${prc eq "anonymousUser"}';
+            if (isAnonymous === 'true') {
+                alert("로그인 후 댓글을 등록할 수 있습니다.");
+                return;
+            }
+
+            const commentContent = $('#commentContent').val();  // 댓글 내용
+            const pstSn = $('#pstSn').val();  // 게시글 번호
+
+            if (commentContent === "") {
+                alert("댓글을 입력하세요.");
+                return;
+            }
+
+            // Ajax로 댓글 등록 요청
+            $.ajax({
+                url: '/common/freeBoard/registReplyPost',
+                type: 'POST',
+                data: {
+                    commentContent: commentContent,
+                    pstSn: pstSn
+                },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+                },
+                success: function(response) {
+                    // 댓글 등록 후 WebSocket으로 메시지 전송
+                    if (socket && username !== "anonymousUser") {
+                        const websocketMessage = `댓글 등록: ${commentContent}`;
+                        socket.send(websocketMessage);
+                        console.log("WebSocket 메시지 전송: " + websocketMessage);
+                    }
+                    location.reload(); // 댓글 목록 갱신
+                },
+                error: function(xhr, status, error) {
+                    alert('댓글 등록 실패: ' + error);
+                }
+            });
+        });
+
+});
+</script>
+
+
+<script type="text/javascript">
+ClassicEditor.create(document.querySelector('#pstCnTemp'))
+.then(editor => {
+    editor.enableReadOnlyMode('#pstCnTemp');
+    window.editor = editor;
+    
+    // 폼 제출 전 CKEditor의 내용을 textarea에 동기화
+    document.querySelector('#registForm').addEventListener('submit', function(event) {
+        document.querySelector('#pstCn').value = editor.getData();
+    });
+})
+.catch(error => {
+    console.error(error);
+});
+</script>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: pretendard;
+    background-color: #fff;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: bold;
+    text-align: left;
+    padding-top: 20px;
+    color: black;
+}
+
+.Content {
+    border: 1px solid black;
+    width: 100%;
+    height: 560px;
+    border-radius: 20px;
+    margin-top: 30px;
+}
+
+.cn-detail {
+    margin-left: 20px;
+}
+
+.btn {
+	background: white;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+	width: 170px;
+	transition: all 0.3s ease 0s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+	padding: 8px 15px;
+    border-radius: 5px;
+}
+
+.btn:hover {
+	background-color: #24D59E;
+	color: white;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.button-group-right {
+    display: flex;
+    gap: 10px;
+}
+
+.comment-section {
+    margin-top: 30px;
+}
+
+.comment-input {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.comment-input textarea {
+    width: 90%;
+    height: 50px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    resize: none;
+}
+
+.comment-input button {
+    width: 100px;
+    height: 50px;
+    margin-left: 10px;
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+
+.comment-list {
+    border-top: 1px solid #ccc;
+    margin-top: 20px;
+}
+
+.comment-list .comment-item {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    position: relative;
+}
+
+.comment-list .comment-item p {
+    margin: 0;
+}
+
+.btn-replyDel {
+    position: absolute;
+    right: 0;
+    top: 10px;
+    background-color: #24D59E;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s;
+    width: 80px;
+    height: 30px;
+}
+
+.comment-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-comment-form {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.btn-report-comment,
+.btn-save-edit,
+.btn-cancel-edit,
+.btn-edit-comment,
+.btn-delete-comment {
+    padding: 5px 10px;
+    font-size: 14px;
+    height: 30px;
+    width: 70px;
+    background: white;
+	color: #232323;
+	border: 1px solid #B5B5B5;
+	transition: all 0.3s ease 0s;
+}
+
+.btn-report-comment:hover,
+.btn-save-edit:hover,
+.btn-cancel-edit:hover,
+.btn-edit-comment:hover,
+.btn-delete-comment:hover{
+	background: #ECECEC;
+	color: #232323;
+	border: 1px solid #B5B5B5;
+}
+
+.btn-Report {
+	background: white;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+	width: 170px;
+	transition: all 0.3s ease 0s;
+    float: right;
+    margin-right: 10px;
+}
+
+.btn-Report:hover {
+	background-color: #24D59E;
+	color: white;
+}
+
+.inp_tarea {
+    overflow-y: auto;
+    margin-top: 20px;
+    padding: 10px 12px;
+    width: 422px;
+    height: 95px;
+    border: 1px solid #dbdbdb;
+    box-sizing: border-box;
+    color: #444;
+    font-size: 14px;
+    line-height: 18px;
+    resize: none;
+}
+
+.repotModal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1050;
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    width: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+.scroll-content {
+    overflow-y: scroll; 
+    max-height: 430px; 
+    -ms-overflow-style: auto; /* IE 10+ */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #24D59E #f0f0f0; /* Firefox: track color and thumb color */
+}
+
+.scroll-content::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+.scroll-content::-webkit-scrollbar-thumb {
+    background-color: #24D59E; /* Scrollbar thumb color */
+    border-radius: 10px; /* Optional: round the corners of the scrollbar thumb */
+}
+
+.scroll-content::-webkit-scrollbar-track {
+    background: #f0f0f0; /* Scrollbar track color (the area behind the thumb) */
+}
+</style>
+
+<div class="container">
+	<header>
+		<h1>자유 게시판</h1>
+		<div id="socketAlert">chk</div>
+	</header>
+	<div class="title-group">
+		<div class="content-group">
+			<form name="deletePost" id="deletePost"
+				action="/common/freeBoard/deletePost" method="post">
+				<div class="Content">
+					<div class="cn-detail">
+						<br>
+						<div class="title-group">
+							<p style="font-weight: bold; display: inline-block;">
+								[${boardVO.pstOthbcscope}]&nbsp;${boardVO.pstTtl}</p>
+							<c:if test="${prc ne 'anonymousUser'}">
+							<button type="button" class="btn btn-Report">신고</button>
+							</c:if>
+						</div>
+						<p>${boardVO.mbrId}(${boardVO.pstMdfcnDt})<br>조회수:${boardVO.pstInqCnt}
+						</p>
+						<div class="scrollable-table">
+						<div class="scroll-content">
+						<p>${boardVO.pstCn}</p>
+						</div>
+						</div>
+					</div>
+				</div>
+				<c:forEach var="file" items="${fileDetails}">
+				    <div>
+				        <a href="${file.filePathNm}" download="${file.orgnlFileNm}">
+				            <i class="fas fa-link mr-1">${file.orgnlFileNm} (${file.fileFancysize})</i>
+				        </a>
+				    </div>
+				</c:forEach>
+				<!-- 버튼 배치 -->
+				<div class="button-container">
+					<button type="button" class="btn btn-List"
+						onclick="location.href='/common/freeBoard/freeList'">게시글
+						목록</button>
+					<div class="button-group-right">
+						<!-- 로그인하지 않은 경우 버튼 숨기기 -->
+						<c:if test="${prc eq 'anonymousUser'}">
+							<!-- 아무것도 표시하지 않음 -->
+						</c:if>
+						<!-- 로그인한 사용자인 경우 -->
+						<c:if test="${prc ne 'anonymousUser'}">
+							<!-- 로그인한 사용자와 게시글 작성자가 같을 때만 수정/삭제 버튼을 표시 -->
+							<c:if test="${prc.username == boardVO.mbrId}">
+								<button type="button" class="btn btn-Edit"
+									onclick="location.href='/common/freeBoard/freeUpdate?seNo=${boardVO.seNo}&pstSn=${boardVO.pstSn}'">수정</button>
+								<button type="submit" class="btn btn-Del">삭제</button>
+							</c:if>
+						</c:if>
+						<input type="hidden" id="pstSn" name="pstSn"
+							value="${boardVO.pstSn}" />
+					</div>
+				</div>
+				<sec:csrfInput />
+			</form>
+		</div>
+	</div>
+	<!-- 댓글 입력창 및 목록 섹션 -->
+	<div class="comment-section">
+		<!-- 댓글 입력창 -->
+		<form name="replyRegistPost" id="replyRegistPost"
+			action="/common/freeBoard/registReplyPost" method="post">
+			<div class="comment-input">
+				<input type="text" id="commentContent" name="commentContent" class="form-control ck-blurred" placeholder="댓글을 입력하세요" rows="5">
+				<button type="submit" id="submitComment" class="btn btn-Regist">등록</button>
+			</div>
+			<sec:csrfInput />
+			<input type="hidden" id="pstSn" name="pstSn" value="${boardVO.pstSn}" />
+		</form>
+
+		<!-- 댓글 목록 -->
+		<div id="commentsList">
+			<c:if test="${empty commentsList}">
+				<p>댓글이 없습니다.</p>
+			</c:if>
+			<c:forEach var="comment" items="${commentsList}">
+				<div class="comment-item" data-cmnt-no="${comment.cmntNo}">
+					<p>
+						<strong>${comment.mbrId}</strong>(${comment.cmntRegDt})
+					</p>
+					<div class="button-group-right">
+						<p class="comment-content">${comment.cmntCn}</p>
+						<!-- 로그인하지 않은 경우 버튼 숨기기 -->
+						<c:if test="${prc eq 'anonymousUser'}">
+							<!-- 아무것도 표시하지 않음 -->
+						</c:if>
+						<!-- 로그인한 사용자인 경우 -->
+						<c:if test="${prc ne 'anonymousUser'}">
+							<!-- 로그인한 사용자와 댓글 작성자가 같을 때만 수정/삭제 버튼을 표시 -->
+							<c:if test="${prc.username == comment.mbrId}">
+								<div class="comment-buttons">
+									<button type="button" class="btn btn-edit-comment"
+										data-id="${comment.cmntNo}">수정</button>
+									<button type="button" class="btn btn-delete-comment"
+										data-id="${comment.cmntNo}">삭제</button>
+								</div>
+							</c:if>
+							<c:if test="${prc.username != comment.mbrId}">
+								<div class="comment-buttons">
+									<button type="button" class="btn btn-report-comment"
+										data-id="${comment.cmntNo}">신고</button>
+								</div>
+							</c:if>
+						</c:if>
+					</div>
+
+
+					<!-- 댓글 수정 폼-->
+					<div class="edit-comment-form" style="display: none;">
+						<input type="text" class="edit-comment-text"
+							value="${comment.cmntCn}">
+						<button type="button" class="btn btn-save-edit">저장</button>
+						<button type="button" class="btn btn-cancel-edit">취소</button>
+					</div>
+				</div>
+			</c:forEach>
+		</div>
+	</div>
+	<!--게시글 신고 -->
+	<div id="repotModal" class="modal fade" tabindex="-1" role="dialog">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" style="color:black">게시글 신고</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">&times;</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <c:forEach var="codeVO" items="${codeVOList}">
+	                    <p><input type="radio" name="radio" style="margin-left: 1px;">
+	                    <label for="select" class="dclrTp" >&nbsp;${codeVO.comCodeNm}</label></p>
+	                </c:forEach>
+	                <textarea name="report_contents" id="dclrCn" class="inp_tarea dclrCn" title="신고내용 입력" placeholder="내용을 입력해주세요" rows="5" cols="54"></textarea>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary dclr-btn" data-dismiss="modal">접수</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+	<!--댓글 신고 -->
+	<div id="replyReportModal" class="modal fade" tabindex="-1" role="dialog">
+	    <div class="modal-dialog" role="document">
+	        <div class="modal-content">
+	            <div class="modal-header">
+	                <h5 class="modal-title" style="color:black">댓글 신고</h5>
+	                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+	                    <span aria-hidden="true">&times;</span>
+	                </button>
+	            </div>
+	            <div class="modal-body">
+	                <c:forEach var="codeVO" items="${codeVOList}">
+	                    <p><input type="radio" name="radio" style="margin-left: 1px;">
+	                    <label for="select" class="dclrTp2" >&nbsp;${codeVO.comCodeNm}</label></p>
+	                </c:forEach>
+	                <textarea name="report_contents" id="dclrCn2" class="inp_tarea dclrCn" title="신고내용 입력" placeholder="내용을 입력해주세요" rows="5" cols="54"></textarea>
+	            </div>
+	            <div class="modal-footer">
+	                <button type="button" class="btn btn-secondary dclr-reply-btn" data-dismiss="modal">접수</button>
+	            </div>
+	        </div>
+	    </div>
+	</div>
+</div>
+<script type="text/javascript">
+function handleImg(e){
+	// 	e.target : <input type="file" class="custom-file-input" id="uploadFile" ... /> 
+	let files = e.target.files; // 선택한 파일들
+	// 파일들을 잘라서 배열로 만든다
+	// fileArr = [토낑.gif,굿.gif,라쿤.gif]
+	let fileArr = Array.prototype.slice.call(files);
+	// f : 토낑.gif 객체
+	let accumStr = ""; 
+	fileArr.forEach(function(f){
+		// 이미지가 아니면
+		if(!f.type.match("image.*")){
+			alert("이미지 확장자만 가능합니다");
+			return; // 함수 자체가 종료됨
+		}
+		// 이미지가 맞다면 => 파일을 읽어주는 객체 생성
+		let reader = new FileReader();
+		// 파일을 읽자
+		// e : reader가 이미지 객체를 읽는 이벤트
+		reader.onload = function(e){// "+e.target+result+" - 이미지를 다 읽었으면 결과를 가져와라 -> 그것을 누적
+			accumStr += "<img src='"+e.target.result+"'/>";  // 누적 String
+			$("#pImg").html(accumStr);
+		}
+		reader.readAsDataURL(f);
+		
+	});
+	// 요소.append : 누적, 요소.html : 새로고침, 요소.innerHTML : J/S에서 새로고침
+}
+$(document).ready(function(){
+    $(document).on("click", '.btn-Report', function() {
+   	 $('#repotModal').modal('show');
+   });
+    $(document).on("click", '.dclr-btn', function() {
+        const dclrTp = $('input[type="radio"]:checked').next('.dclrTp').text(); 
+        const dclrCn = $('#dclrCn').val(); 
+        const pstSn = $('#pstSn').val(); 
+        const mbrId = '${boardVO.mbrId}'; 
+        //관리자 url로 변환시키자
+   	    const currentUrl = window.location.href;  
+   	    const urlParams = new URLSearchParams(window.location.search);
+   	    
+   	    // 관리자용 URL을 생성
+   	    const dclrUrl = 'http://localhost/adm/freeBoard/admFreeDetail?seNo=3&pstSn=' + pstSn;
+        if (!dclrTp || !dclrCn) {
+            alert("신고 유형과 내용을 입력하세요.");
+            return;
+        }
+
+        $.ajax({
+            url: '/common/freeBoard/boardReport',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                dclrTp: dclrTp,
+                dclrCn: dclrCn,
+                dclrUrl: dclrUrl,
+                pstSn: pstSn, 
+                mbrId: mbrId
+            }),
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(response) {
+                if (response === "success") {
+                    alert("신고가 접수되었습니다.");
+                    $('#repotModal').modal('hide'); 
+                } else {
+                    alert("신고 접수 실패.");
+                }
+            },
+            error: function(xhr, status, error) {
+                alert("신고 접수 중 오류 발생: " + error);
+            }
+        });
+    });
+
+   $(document).on("click", '.btn-report-comment', function() {
+       const commentItem = $(this).closest('.comment-item');  
+       const mbrId = commentItem.find('strong').text().trim(); 
+       console.log("mbrId: " + mbrId);
+       $('#mbrId').val(mbrId);  
+       $('#replyReportModal').modal('show');
+	   	//댓글신고접수
+	   	$(document).on("click", '.dclr-reply-btn', function() {
+	   	    const dclrTp = $('input[type="radio"]:checked').next('.dclrTp2').text();
+	   	    const dclrCn = $('#dclrCn2').val();  
+	   	    const pstSn = $('#pstSn').val();  
+	   	    // 기존 URL을 변환하는 로직
+	   	    const currentUrl = window.location.href;  
+	   	    const urlParams = new URLSearchParams(window.location.search);
+	   	    const dclrUrl = 'http://localhost/adm/freeBoard/admFreeDetail?seNo=3&pstSn=' + pstSn;
+
+	           console.log("pstSn: ", pstSn);
+	           console.log("mbrId: ", mbrId);
+	   	    if (!dclrTp || !dclrCn) {
+	   	        alert("신고 유형과 내용을 입력하세요.");
+	   	        return;
+	   	    }
+	   	
+	   	    $.ajax({
+	   	        url: '/common/freeBoard/replyReport',
+	   	        type: 'POST',
+	   	        contentType: 'application/json',
+	   	        data: JSON.stringify({
+	   	            dclrTp: dclrTp,
+	   	            dclrCn: dclrCn,
+	   	            dclrUrl: dclrUrl,
+	   	            pstSn: pstSn,
+	   	            mbrId: mbrId
+	   	        }),
+	   	        beforeSend: function(xhr) {
+	   	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	   	        },
+	   	        success: function(response) {
+	   	            if (response === "success") {
+	   	                alert("신고가 접수되었습니다.");
+	   	                $('#replyReportModal').modal('hide'); // 모달 창 닫기
+	   	            } else {
+	   	                alert("신고 접수 실패.");
+	   	            }
+	   	        },
+	   	        error: function(xhr, status, error) {
+	   	            alert("신고 접수 중 오류 발생: " + error);
+	   	        }
+	   	    });
+	   	});
+   });
+	// 댓글 수정 버튼 클릭 시
+    $(document).on("click", '.btn-edit-comment', function() {
+        const commentItem = $(this).closest('.comment-item');
+        commentItem.find('.comment-content').hide(); // 댓글 내용 숨기기
+        commentItem.find('.edit-comment-form').show(); // 수정 폼 표시하기
+    });
+
+    // 댓글 수정 저장 버튼 클릭 시
+    $(document).on("click", '.btn-save-edit', function() {
+        const commentItem = $(this).closest('.comment-item');
+        const cmntNo = commentItem.data('cmnt-no');
+        const pstSn = $('#pstSn').val();
+        const cmntCn = commentItem.find('.edit-comment-text').val();
+
+        $.ajax({
+            url: '/common/freeBoard/updateComment',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                cmntNo: cmntNo,
+                pstSn: pstSn,
+                cmntCn: cmntCn
+            }),
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(response) {
+                if (response === "success") {
+                    commentItem.find('.comment-content').text(cmntCn).show(); 
+                    commentItem.find('.edit-comment-form').hide();
+                } else {
+                    alert('댓글 수정 실패');
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('댓글 수정 실패: ' + error);
+            }
+        });
+    });
+
+    // 댓글 수정 취소 버튼 클릭 시
+    $(document).on("click", '.btn-cancel-edit', function() {
+        const commentItem = $(this).closest('.comment-item');
+        commentItem.find('.comment-content').show(); // 댓글 내용 표시
+        commentItem.find('.edit-comment-form').hide(); // 수정 폼 숨기기
+    });
+
+    // 댓글 삭제 버튼 클릭 시
+    $(document).on("click", '.btn-delete-comment', function() {
+        if (confirm('댓글을 삭제하시겠습니까?')) {
+            const cmntNo = $(this).data('id');
+            const pstSn = $('#pstSn').val();
+            
+            $.ajax({
+                url: '/common/freeBoard/deleteComment',
+                type: 'POST',
+                data: {
+                    cmntNo: cmntNo,
+                    pstSn: pstSn
+                },
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+                },
+                success: function(response) {
+                    if (response === "success") {
+                        location.reload(); // 댓글 삭제 후 목록 갱신.. 리로드로할게...
+                    } else {
+                        alert('댓글 삭제 실패');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    alert('댓글 삭제 실패: ' + error);
+                }
+            });
+        }
+    });
+});
+
+ClassicEditor.create(document.querySelector('#pstCnTemp'))
+    .then(editor => {
+        editor.enableReadOnlyMode('#pstCnTemp');
+        window.editor = editor;
+        
+        // 폼 제출 전 CKEditor의 내용을 textarea에 동기화
+        document.querySelector('#registForm').addEventListener('submit', function(event) {
+            document.querySelector('#pstCn').value = editor.getData();
+        });
+    })
+    .catch(error => {
+        console.error(error);
+    });
+</script>
+

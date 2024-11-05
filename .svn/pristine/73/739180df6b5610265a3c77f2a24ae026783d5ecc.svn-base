@@ -1,0 +1,15 @@
+package kr.or.ddit.oustouservice.impl;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.oustou.service.OustouService;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class OustouServiceImpl implements OustouService {
+	
+	/**
+	 */
+
+}

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.NotificationMapper">
+	<resultMap type="notificationVO" id="notificaitonMap">
+		<result property="ntcnNo" column="NTCN_NO"/>
+		<result property="commonId" column="COMMON_ID"/>
+		<result property="ntcnCn" column="NTCN_CN"/>
+		<result property="ntcnUrl" column="NTCN_URL"/>
+		<result property="ntcnIdntyYn" column="NTCN_IDNTY_YN"/>
+		<result property="ntcnYmd" column="NTCN_YMD"/>
+		<result property="ntcnTrgettblNm" column="NTCN_TRGETTBL_NM"/>
+		<result property="ntcnTrgettblPk" column="NTCN_TRGETTBL_PK"/>
+		<result property="ntcnTrgettblAsstnfrmlasprgrp" column="NTCN_TRGETTBL_ASSTNFRMLASPRGRP"/>
+		<result property="ntcnRsvtYmday" column="NTCN_RSVT_YMDAY"/>
+		<result property="ntcnDelYn" column="NTCN_DEL_YN"/>
+	</resultMap>
+	
+	<insert id="sendAlram" parameterType="notificationVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="ntcnNo">
+	        SELECT LPAD(NVL(MAX(NTCN_NO), '0') + 1, 4, '0') AS NTCN_NO
+	        FROM NOTIFICATION
+		</selectKey>
+		INSERT INTO NOTIFICATION(NTCN_NO, COMMON_ID, NTCN_CN, NTCN_URL,NTCN_YMD)
+		VALUES (#{ntcnNo},#{commonId},#{ntcnCn},#{ntcnUrl},SYSDATE)
+	</insert>
+	
+	<select id="alramList" parameterType="String" resultType="notificationVO">
+		SELECT NTCN_NO, COMMON_ID, SUBSTR(NTCN_CN,0,27)||'...' AS NTCN_CN, NTCN_URL, NTCN_IDNTY_YN, NTCN_YMD, 
+			   NTCN_TRGETTBL_NM, NTCN_TRGETTBL_PK, NTCN_TRGETTBL_ASSTNFRMLASPRGRP, 
+			   NTCN_RSVT_YMDAY,NTCN_DEL_YN
+		FROM NOTIFICATION
+		WHERE COMMON_ID = #{commonId} AND NTCN_IDNTY_YN=1
+		ORDER BY NTCN_YMD DESC
+	</select>
+	<!-- 위에 누르거나 X버튼눌렀을떄 -->
+	<update id="alramDel" parameterType="String">
+	    UPDATE NOTIFICATION
+	    SET NTCN_IDNTY_YN = 0
+	    WHERE NTCN_NO = #{ntcnNo}
+	</update>
+	<!-- 위에 링크눌렀을때 -->
+	<update id="alramLinkClick" parameterType="String">
+	    UPDATE NOTIFICATION
+	    SET NTCN_IDNTY_YN = 0, NTCN_DEL_YN=0
+	    WHERE NTCN_NO = #{ntcnNo}
+	</update>
+	
+	<update id="alramAllDel" parameterType="String">
+		UPDATE NOTIFICATION
+		SET NTCN_IDNTY_YN = 0
+		WHERE COMMON_ID = #{comonId}
+	</update>
+	
+	<select id="alramTotal" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM NOTIFICATION
+	    WHERE COMMON_ID=#{commonId}
+	</select>
+	
+	<select id="getAlramCnt" parameterType="String" resultType="int">
+	    SELECT COUNT(*)
+	    FROM NOTIFICATION
+	    WHERE COMMON_ID=#{userId}
+	      AND NTCN_IDNTY_YN = '1'
+	</select>
+	
+	
+	<select id="memAlramList" parameterType="map" resultType="notificationVO">
+	    SELECT * 
+	    FROM (
+	        SELECT ROW_NUMBER() OVER(ORDER BY NTCN_YMD DESC) AS RNUM,
+	               NTCN_NO, NTCN_URL, NTCN_CN, COMMON_ID, 
+	               NTCN_TRGETTBL_ASSTNFRMLASPRGRP, NTCN_RSVT_YMDAY, 
+	               NTCN_TRGETTBL_PK, NTCN_YMD, 
+	               NTCN_IDNTY_YN, NTCN_TRGETTBL_NM,NTCN_DEL_YN
+	        FROM NOTIFICATION
+	        WHERE COMMON_ID = #{commonId} 
+	    ) T
+	    WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 7 + 1 AND #{currentPage} * 7
+	</select>
+
+	<delete id="selectAlramAllDel" parameterType="list">
+	    DELETE FROM NOTIFICATION
+	    WHERE NTCN_NO IN
+	    <foreach item="ntcnNo" collection="list" open="(" separator="," close=")">
+	        #{ntcnNo}
+	    </foreach>
+	</delete>
+
+	<delete id="alramRealAllDel" parameterType="String">
+		DELETE FROM NOTIFICATION
+		WHERE COMMON_ID= #{commonId}
+	</delete>
+
+
+</mapper>

@@ -1,0 +1,333 @@
+package kr.or.ddit.oustou.service.impl;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.ddit.mapper.OutsouMapper;
+import kr.or.ddit.mapper.UserMapper;
+import kr.or.ddit.oustou.controller.OutsouController;
+import kr.or.ddit.oustou.service.OutsouService;
+import kr.or.ddit.util.UploadController;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.FileDetailVO;
+import kr.or.ddit.vo.OsClVO;
+import kr.or.ddit.vo.OsDevalVO;
+import kr.or.ddit.vo.OsKeywordVO;
+import kr.or.ddit.vo.OsdeCludVO;
+import kr.or.ddit.vo.OsdeDatabaseVO;
+import kr.or.ddit.vo.OsdeLangVO;
+import kr.or.ddit.vo.OutsouVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class OutsouServiceImpl implements OutsouService {
+	
+	@Inject
+	OutsouMapper oustouMapper;
+	
+	//서비스 게시판 번호를 가져오기 위함
+	@Autowired
+	OutsouController outsouController; 
+	
+	//파일 처리를 위한 
+	@Autowired
+	UploadController uploadController;
+	
+	//<!--  외주 등록  -->
+	@Transactional
+	@Override
+	public int  registPostAjax(OutsouVO outsouVO) {
+		//이미지 저장 
+		//0. 메인 이미지 처리 
+		MultipartFile[] multipartFiles = outsouVO.getMainFile();
+		log.info("multipartFiles == > " + multipartFiles);
+		//1. 상세이미지 처리
+		MultipartFile[] multipartFiles2 = outsouVO.getDetailFile();
+		log.info("multipartFiles2 == > " + multipartFiles2);
+		
+		// 메인 이미지
+		if (multipartFiles == null || multipartFiles.length == 0 || multipartFiles[0].isEmpty()) {
+		    log.info("새로운 파일이 업로드되지 않았습니다. 세팅 안해");
+		    outsouVO.setOutordMainFile("2"); // fileGroupNo의 값을 세팅
+		} else {
+		    // 새로운 파일 업로드 처리
+		    String fileGroupSn = this.uploadController.multiImageUpload(multipartFiles, "/outsou/mainFile");
+		    log.info("mainFile->fileGroupSn : " + fileGroupSn);
+		    outsouVO.setOutordMainFile(fileGroupSn); // fileGroupNo의 값을 세팅
+		}
+
+		// 상세 이미지
+		if (multipartFiles2 == null || multipartFiles2.length == 0 || multipartFiles2[0].isEmpty()) { 
+		    log.info("새로운 파일이 업로드되지 않았습니다. 세팅 안해");
+		    outsouVO.setOutordDetailFile("1");
+		} else {
+		    // 새로운 파일 업로드 처리
+		    String fileGroupSn = this.uploadController.multiImageUpload(multipartFiles2, "/outsou/detailFile");
+		    log.info("outsou->fileGroupSn : " + fileGroupSn);
+		    outsouVO.setOutordDetailFile(fileGroupSn);
+		}
+		//정보 저장 
+		/*
+		 [1.IT프로그래밍]->OUTSOU, OS_DEVAL, OS_KEYWOED
+		 OutsouVO(outordNo=null, outordLclsf=OULC01, outordMlsfc=OULC01-002, outordTtl=1, ..., 
+		 	osDevalVO=OsDevalVO(srvcNo=null, outordNo=null, srvcLevelCd=SRLE01, srvcTeamscaleCd=SRTE01, srvcLangCd=SRLA16, srvcDatabaseCd=SRDB16, srvcCludCd=SRCL14, srvcEtc=b, ..), 
+		 	osClVO=OsClVO(srvcNo=null, ..), 
+		 	osKeywordVO=OsKeywordVO(kwrdNo=null, outordNo=null, kwrdNm=a))
+		 */
+		/*
+		 [2.자기소개서]->OUTSOU, OS_CL 이 두 개의 테이블에 insert
+		 OutsouVO(outordNo=null, outordLclsf=OULC02, outordMlsfc=OULC02-001, outordTtl=1, ...,
+		  	osDevalVO=OsDevalVO(srvcNo=null, outordNo=null, srvcLevelCd=null, srvcTeamscaleCd=null, srvcLangCd=null, srvcDatabaseCd=null, srvcCludCd=null, srvcEtc=, srvcJobpd=null, srvcUpdtnmtm=null, srvcFileprovdyn=null, srvcSklladit=null), 
+		  	osClVO=OsClVO(srvcNo=null, outordNo=null, srvcFld=SRFL02, srvcKnd=SRKN03, srvcArctype=SRAR02), 
+		  	osKeywordVO=OsKeywordVO(kwrdNo=null, outordNo=null, kwrdNm=))
+		 */
+		//대분류 를 구별하기 위해 불러옴
+		String outordLclsf = outsouVO.getOutordLclsf();
+		
+		int result = 0;
+		
+		if(outordLclsf.equals("OULC01")) {//1.IT프로그래밍->mapper호출을 3회
+			// 1. Outsou 테이블에 먼저 insert
+			result += this.oustouMapper.insertOutsou(outsouVO);
+			
+			// 2. 외주 테이블에 자동 생성된 outordNo를 OutsouVO에 세팅
+			String outordNo = outsouVO.getOutordNo();
+			log.info("외주 테이블 자동 생성된 outordNo -> " + outordNo);
+			
+			// 3. OsDevalVO의 outordNo에도 같은 값 세팅
+			if (outsouVO.getOsDevalVO() != null ) {
+			    outsouVO.getOsDevalVO().setOutordNo(outordNo);
+			 }
+			
+			result += this.oustouMapper.insertOsDeval(outsouVO.getOsDevalVO());
+			
+			//언어, 데이터베이스, 클라우드 저장 
+			String srvcNo = outsouVO.getOsDevalVO().getSrvcNo();
+	        log.info("서비스 테이블 자동 생성된 srvcNo -> " + srvcNo);
+
+			//OsDevalVODP 저장된  외주 번호를 불러오기 
+	        String devOutordNo = outsouVO.getOsDevalVO().getOutordNo();
+	        
+	        //각  항목의의 리스트를 불러오기 
+	        
+	        //개발 언어 처리 
+	        List<OsdeLangVO> osdeLangVOList= outsouVO.getOsDevalVO().getOsdeLangVOList();
+	        if(osdeLangVOList != null && !osdeLangVOList.isEmpty()) {
+	        	for(OsdeLangVO osdeLangVO :  osdeLangVOList) {
+	        		osdeLangVO.setOutordNo(devOutordNo);
+	        		osdeLangVO.setSrvcNo(srvcNo);
+	        		result += this.oustouMapper.insertOsdeLang(osdeLangVO);
+	        		log.info("osdeLangVO -> " + osdeLangVO);
+	        	}
+	        }
+	        
+	        //데이터 베이스 처리 
+	        List<OsdeDatabaseVO> osdeDatabaseVOList = outsouVO.getOsDevalVO().getOsdeDatabaseVOList();
+	        if(osdeDatabaseVOList != null && !osdeDatabaseVOList.isEmpty() ) {
+	        	for(OsdeDatabaseVO osdeDatabaseVO : osdeDatabaseVOList) {
+	        		osdeDatabaseVO.setOutordNo(devOutordNo);
+	        		osdeDatabaseVO.setSrvcNo(srvcNo);
+	        		result += this.oustouMapper.insertOsdeDatabase(osdeDatabaseVO);
+	        		log.info("osdeDatabaseVO -> " + osdeDatabaseVO);
+	        	}
+	        }
+	        
+	        //클라우드 처리 
+	        List<OsdeCludVO> OsdeCludVOList = outsouVO.getOsDevalVO().getOsdeCludVOList();
+	        if(OsdeCludVOList != null && !OsdeCludVOList.isEmpty() ) {
+	        	for(OsdeCludVO osdeCludVO : OsdeCludVOList) {
+	        		osdeCludVO.setOutordNo(devOutordNo);
+	        		osdeCludVO.setSrvcNo(srvcNo);
+	        		result += this.oustouMapper.insertOsdeClud(osdeCludVO);
+	        		log.info("osdeCludVO -> " + osdeCludVO);
+	        	}
+	        }
+	        
+	        //키워드명 처리
+	        List<OsKeywordVO> osKeywordVOList = outsouVO.getOsKeywordVOList();
+	        if(osKeywordVOList != null && !osKeywordVOList.isEmpty() ) {
+	        	for(OsKeywordVO osKeywordVO : osKeywordVOList) {
+	        		osKeywordVO.setOutordNo(outordNo);
+	        		result += this.oustouMapper.insertOsKeywoed(osKeywordVO);
+	        		log.info("osKeywordVO -> " + osKeywordVO);
+	        	}
+	        }
+			
+		}else {//2.자기소개서->mapper호출을 2회
+			result += this.oustouMapper.insertOutsou(outsouVO);
+			
+			// 2. 자동 생성된 outordNo를 OutsouVO에 세팅
+			String outordNo = outsouVO.getOutordNo();
+			log.info("자동 생성된 outordNo -> " + outordNo);
+			
+			// 3. OsDevalVO의 outordNo에도 같은 값 세팅
+		    if (outsouVO.getOsClVO() != null ) {
+		        outsouVO.getOsClVO().setOutordNo(outordNo);
+		    }
+			result += this.oustouMapper.insertOsCl(outsouVO.getOsClVO());
+		}
+		
+		return result;
+	}
+	
+	//외주 상세 
+	@Override
+	public OutsouVO detail(String outordNo) {
+		
+		// 쿼리 결과로 OutsouVO를 가져옴
+        OutsouVO outsouVO = this.oustouMapper.detail(outordNo);
+        
+        // 메인 이미지, 상세이미지를 
+        	log.info("OutordMainFile: " + outsouVO.getOutordMainFile());
+        // 콤마(,)로 묶인 DETAIL_FILE_PATHS를 배열로 변환
+        if (outsouVO.getOutordDetailFile() != null) {
+            String detailFilePaths = outsouVO.getOutordDetailFile();
+            
+            // 콤마로 분리하여 경로 문자열을 리스트로 변환
+            List<String> detailFileList = Arrays.asList(detailFilePaths.split(","));
+            
+            // FileDetailVO 객체 리스트 생성
+            List<FileDetailVO> fileDetailVOList = new ArrayList<>();
+            
+            // 각 경로에 대해 FileDetailVO 객체 생성 후 리스트에 추가
+            for (String filePath : detailFileList) {
+                FileDetailVO fileDetailVO = new FileDetailVO();
+                fileDetailVO.setFilePathNm(filePath);  // 파일 경로 설정
+                fileDetailVOList.add(fileDetailVO);    // 리스트에 추가
+            }
+            log.info("OutordDetailFile: " + outsouVO.getOutordDetailFile());
+            
+            // OutsouVO에 FileDetailVO 리스트 설정
+            outsouVO.setFileDetailVOList(fileDetailVOList);
+        }
+        
+        //언어코드
+//        log.info("outsouVO.getOsDevalVO(): " + outsouVO.getOsDevalVO());
+//        if (outsouVO.getOsDevalVO().getOsdeLangVOList() != null) {
+//        	 log.info("SrvcLangCd: " + outsouVO.getOsDevalVO().getOsdeLangVOList());
+//            // 로깅: 변환 전 srvcLangCd 값 확인
+//            log.info("srvcLangCd 변환 전: " + outsouVO.getOsDevalVO().getOsdeLangVOList());
+//
+//            // 콤마로 구분된 언어 코드를 분리하여 리스트로 변환
+//            List<String> langList = Arrays.asList(outsouVO.getOsDevalVO().getSrvcLangCd().split(", "));
+//
+//            // 로깅: 변환된 리스트 확인
+//            log.info("변환된 언어 리스트: " + langList);
+//
+//            // 변환된 리스트를 OsdeLangVO 객체로 변환하여 List<OsdeLangVO>로 저장
+//            List<OsdeLangVO> osdeLangVOList = langList.stream().map(lang -> {
+//                OsdeLangVO osdeLangVO = new OsdeLangVO();
+//                osdeLangVO.setSrvcLangCd(lang);
+//                return osdeLangVO;
+//            }).collect(Collectors.toList());
+//
+//            // 변환된 리스트를 osDevalVO에 설정
+//            outsouVO.getOsDevalVO().setOsdeLangVOList(osdeLangVOList);
+//            
+//            // 로깅: 변환 후 OsdeLangVO 리스트 확인
+//            log.info("변환된 OsdeLangVO 리스트: " + outsouVO.getOsDevalVO().getOsdeLangVOList());
+//        }
+//
+//
+//        // 데이터베이스 코드 처리
+//        if (outsouVO.getOsDevalVO().getSrvcDatabaseCd() != null) {
+//            log.info("SrvcDatabaseCd: " + outsouVO.getOsDevalVO().getSrvcDatabaseCd());
+//
+//            // 콤마로 구분된 데이터베이스 코드를 분리하여 리스트로 변환
+//            List<String> dbList = Arrays.asList(outsouVO.getOsDevalVO().getSrvcDatabaseCd().split(", "));
+//
+//            // 로깅: 변환된 리스트 확인
+//            log.info("변환된 데이터베이스 리스트: " + dbList);
+//
+//            // 변환된 리스트를 OsdeDatabaseVO 객체로 변환하여 List<OsdeDatabaseVO>로 저장
+//            List<OsdeDatabaseVO> osdeDatabaseVOList = dbList.stream().map(db -> {
+//                OsdeDatabaseVO osdeDatabaseVO = new OsdeDatabaseVO();
+//                osdeDatabaseVO.setSrvcDatabaseCd(db);
+//                return osdeDatabaseVO;
+//            }).collect(Collectors.toList());
+//
+//            // 변환된 리스트를 osDevalVO에 설정
+//            outsouVO.getOsDevalVO().setOsdeDatabaseVOList(osdeDatabaseVOList);
+//
+//            // 로깅: 변환 후 OsdeDatabaseVO 리스트 확인
+//            log.info("변환된 OsdeDatabaseVO 리스트: " + outsouVO.getOsDevalVO().getOsdeDatabaseVOList());
+//        }
+//
+//        
+//        // 클라우드 코드 처리
+//        if (outsouVO.getOsDevalVO().getSrvcCludCd() != null) {
+//            log.info("SrvcCludCd: " + outsouVO.getOsDevalVO().getSrvcCludCd());
+//            
+//            // 콤마로 구분된 클라우드 코드를 분리하여 리스트로 변환
+//            List<String> cloudList = Arrays.asList(outsouVO.getOsDevalVO().getSrvcCludCd().split(", "));
+//            
+//            // 로깅: 변환된 리스트 확인
+//            log.info("변환된 클라우드 리스트: " + cloudList);
+//            
+//            // 변환된 리스트를 OsdeCludVO 객체로 변환하여 List<OsdeCludVO>로 저장
+//            List<OsdeCludVO> osdeCludVOList = cloudList.stream().map(cloud -> {
+//                OsdeCludVO osdeCludVO = new OsdeCludVO();
+//                osdeCludVO.setSrvcCludCd(cloud);
+//                return osdeCludVO;
+//            }).collect(Collectors.toList());
+//            
+//            // 변환된 리스트를 osDevalVO에 설정
+//            outsouVO.getOsDevalVO().setOsdeCludVOList(osdeCludVOList);
+//            
+//            // 로깅: 변환 후 OsdeCludVO 리스트 확인
+//            log.info("변환된 OsdeCludVO 리스트: " + outsouVO.getOsDevalVO().getOsdeCludVOList());
+//        }
+//        // 키워드 리스트 처리
+//        if (outsouVO.getOsKeywordVOList() != null) {
+//            log.info("키워드 리스트: " + outsouVO.getOsKeywordVOList());
+//
+//            // 콤마로 구분된 키워드를 분리하여 리스트로 변환
+//            List<String> kwrdList = outsouVO.getOsKeywordVOList().stream()
+//                .map(OsKeywordVO::getKwrdNm)
+//                .collect(Collectors.toList());
+//
+//            // 로깅: 변환된 키워드 리스트 확인
+//            log.info("변환된 키워드 리스트: " + kwrdList);
+//
+//            // 변환된 리스트를 OsKeywordVO 객체로 변환하여 List<OsKeywordVO>로 저장
+//            List<OsKeywordVO> osKeywordVOList = kwrdList.stream().map(kwrd -> {
+//                OsKeywordVO osKeywordVO = new OsKeywordVO();
+//                osKeywordVO.setKwrdNm(kwrd);
+//                return osKeywordVO;
+//            }).collect(Collectors.toList());
+//
+//            // 변환된 리스트를 outsouVO에 설정
+//            outsouVO.setOsKeywordVOList(osKeywordVOList);
+//
+//            // 로깅: 변환 후 OsKeywordVO 리스트 확인
+//            log.info("변환된 OsKeywordVO 리스트: " + outsouVO.getOsKeywordVOList());
+//        }
+
+            return outsouVO;
+	}
+
+	//외주 구매페이지 
+	@Override
+	public OutsouVO paydetail(String outordNo) {
+		return this.oustouMapper.paydetail(outordNo);
+	}
+	
+	//외주 삭제 
+	@Override
+	public int deletePost(String outordNo) {
+		return this.oustouMapper.deletePost(outordNo);
+	}
+	
+	
+
+}

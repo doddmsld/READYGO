@@ -1,0 +1,173 @@
+package kr.or.ddit.controller;
+
+import java.security.Principal;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.mapper.MemberMapper;
+import kr.or.ddit.security.CustomUser;
+import kr.or.ddit.service.MemberService;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.FileDetailVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.SearchVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Controller
+@Slf4j
+@RequestMapping("/member")
+public class MemberController {
+    
+    @Inject
+    MemberService memberService;
+    
+    @Inject
+    MemberMapper memberMapper;
+    
+    @Inject
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    // 로그인한 사용자의 mbrId를 가져오는 메서드
+    private String getLoggedInMbrId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUser userDetails = (CustomUser) authentication.getPrincipal();
+        return userDetails.getUsername(); // CustomUser에 mbrId 필드가 있다고 가정
+    }
+
+    @GetMapping("/detail")
+    public String detail(Model model) {
+        String mbrId = getLoggedInMbrId();
+        log.info("detail->mbrId : " + mbrId);
+        
+        MemberVO memberVO = this.memberService.detail(mbrId);
+        log.info("detail->memberVO : " + memberVO);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        String tlqkf = customUser.getMemVO().getFileGroupSn();
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        model.addAttribute("memberVO", memberVO);
+        return "member/mypage/detail";
+    }
+    
+    @ResponseBody
+    @PostMapping("/detailChk")
+    public boolean detailChk(@ModelAttribute MemberVO memberVO) {
+    	// 로그인된 mbrId로 설정
+    	boolean chk = false;
+    	String username = memberVO.getMbrId();
+    	MemberVO memVO = memberMapper.selectOne(username);
+    	
+    	log.info("detailChk->memberVO : " + memberVO);
+    	log.info("detailChk->memberVO : " + memVO.getMbrPswd());
+    	log.info("detailChk->memberVO : " + memberVO.getMbrPswd());
+    	if(bCryptPasswordEncoder.matches(memberVO.getMbrPswd(), memVO.getMbrPswd())) {
+    		chk = true;
+    	}
+    	log.info("detailChk->chk : " + chk);
+    	
+    	return chk;
+    }
+    
+    @PostMapping("/editPost")
+    public String editPost(@ModelAttribute MemberVO memberVO) {
+    	// 로그인된 mbrId로 설정
+        memberVO.setMbrId(getLoggedInMbrId());
+        log.info("editPost->memberVO : " + memberVO);
+        
+        int result = this.memberService.editPost(memberVO);
+        log.info("editPost->result : " + result);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUser customUser = (CustomUser) authentication.getPrincipal();
+        String tlqkf = customUser.getMemVO().getFileGroupSn();
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        log.info("editPost->tlqkf : " + tlqkf);
+        
+        return "redirect:/member/detail?mbrId=" + memberVO.getMbrId();
+    }
+    
+    // 회원 탈퇴
+    @PostMapping("/deletePost")
+    public String deletePost(HttpServletRequest request, HttpServletResponse response) {
+        String mbrId = getLoggedInMbrId();
+        int result = this.memberService.deletePost(mbrId);
+        log.info("deletePost->result : " + result);
+        
+        // 로그아웃 처리
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+
+        return "redirect:/"; 
+    }
+    
+    //회원 검색기록 불러오기
+    @GetMapping("/searchHistory")
+    public ResponseEntity<List<SearchVO>> searchHistory(
+    		@RequestParam(value = "mbrId", required = false) String mbrId) {
+        
+    	List<SearchVO> searchList = this.memberService.searchHistory(mbrId);
+        log.info("searchHistory->searchList : " + searchList);
+        
+        return ResponseEntity.ok(searchList);
+    }
+    
+  //회원 검색기록 선택 삭제
+    @GetMapping("/searchDelete")
+    public int searchDelete(
+    		@RequestParam(value = "searchNo", required = false) String searchNo) {
+        
+    	int result = this.memberService.searchDelete(searchNo);
+        log.info("searchDelete->result : " + result);
+        
+        return result;
+    }
+    
+  //회원 검색기록 전체 삭제
+    @GetMapping("/searchDeleteAll")
+    public int searchDeleteAll(
+    		@RequestParam(value = "mbrId", required = false) String mbrId) {
+        
+    	int result = this.memberService.searchDeleteAll(mbrId);
+        log.info("searchDeleteAll->result : " + result);
+        
+        return result;
+    }
+
+}

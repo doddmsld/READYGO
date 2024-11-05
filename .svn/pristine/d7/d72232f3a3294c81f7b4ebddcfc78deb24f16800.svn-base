@@ -1,0 +1,8 @@
+package kr.or.ddit.mapper;
+
+import kr.or.ddit.vo.AdminVO;
+import kr.or.ddit.vo.EnterVO;
+
+public interface AdminMapper {
+	public AdminVO selectOne(String adminVO);
+}

@@ -1,0 +1,46 @@
+package kr.or.ddit.enter.entservice.impl;
+
+import org.apache.commons.mail.DefaultAuthenticator;
+import org.apache.commons.mail.EmailAttachment;
+import org.apache.commons.mail.EmailException;
+import org.apache.commons.mail.MultiPartEmail;
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.enter.entservice.EmailService;
+@Service
+public class EmailServiceImpl implements EmailService {
+    private final String hostName = "smtp.gmail.com";
+    private final int smtpPort = 587;
+    private final String username = "minju990219@gmail.com"; // 발신자 이메일
+    private final String password = "kvup pdyc pgew ngtb"; // 구글 앱 비밀번호
+
+    public void sendEmail(String toEmail, String subject, String message) throws EmailException {
+      
+      // 이메일 객체 생성
+      MultiPartEmail email = new MultiPartEmail();
+//       첨부파일 생성을 위한 EmailAttachment 객체 생성
+         EmailAttachment attachment = new EmailAttachment();
+         attachment.setName("첨부파일.png"); //첨부파일의 이름설정
+         attachment.setDescription("이미지 입니다.");
+        
+         attachment.setPath("C:\\sts-bundle\\workspace\\readyGo\\src\\main\\webapp\\resources\\images\\logo.png");
+         attachment.setDisposition(EmailAttachment.ATTACHMENT);
+         
+//       Email email = new SimpleEmail();
+        email.setHostName(hostName);
+        email.setSmtpPort(smtpPort);
+        email.setAuthenticator(new DefaultAuthenticator(username, password));
+        email.setStartTLSRequired(true);
+        email.setFrom(username); // 발신자 이메일
+
+        email.setSubject(subject); // 메일 제목
+//        email.setSubject("메일 제목"); // 메일 제목
+        
+        email.setMsg(message); // 메일 내용
+//        email.setMsg("메일 내용"); // 메일 내용
+        email.addTo(toEmail); // 수신자 이메일
+//        email.addTo("lovely3529@naver.com"); // 수신자 이메일
+        email.attach(attachment);
+        email.send(); // 메일 전송
+    }
+}

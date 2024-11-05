@@ -1,0 +1,21 @@
+package kr.or.ddit.service;
+
+import java.util.List;
+
+import kr.or.ddit.vo.EnterVO;
+
+public interface EnterService {
+	
+	// 기업 프로필 조회
+	public EnterVO profile(String entId); 
+	
+	// 기업정보수정 폼
+	public EnterVO edit(String entId);
+
+	//기업정보수정 실행
+	public int editPost(EnterVO enterVO); 
+	
+	// 기업탈퇴
+	public int deleteAjax(String entId);
+
+}

@@ -1,0 +1,135 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+
+<style>
+/*외주 메인 전체*/
+.submainAll{
+	margin-top: 100px;
+    align-items: center;
+    justify-content: center;
+    display: flex;  /* display: flex 추가 */
+   	width: 1100px;
+}    
+
+.catnm{
+	margin: 10px auto;
+	width: 1100px;
+}
+
+.catnm p{
+	font-size: 23px;
+	margin:10px;
+}
+
+ 
+ /*게시글 항목 NEW / BEST  */ 
+.oust{
+	margin-top:10px;
+	padding :5px;
+	font-size: 20px;
+	font: bold;
+}
+ /*외주 추천 각 각 카테고리  */ 
+ .oucg{
+ 	 border: 1px solid #ffffff;
+     margin: 0 10px; /* 카테고리 항목 사이 간격 조절 */
+    width: 180px;
+    height: 50px;
+    text-align: center;
+    display: flex;    /* 내부 요소들의 정렬을 위한 flex 추가 */
+    justify-content: center; /* 가로로 가운데 정렬 */
+    align-items: center;    /* 세로로 가운데 정렬  */
+    border-radius: 0.5em;
+    background-color: #ffffff;
+}    
+
+ /* 게시글 목록 묶음  */ 
+ .newtboxAll {
+	display: flex;
+	margin: 10px auto;
+	width: 1100px;
+	flex-direction: column;
+	align-items: flex-start;  
+	justify-content: center; /* 가로로 가운데 정렬 */
+	
+}
+
+ .newtbox {
+	display: flex;
+	justify-content: center; /* 가로로 가운데 정렬 */
+	width:100%;
+	margin:10px;
+}
+
+.bestboxAll {
+	display: flex;
+	margin: 0 auto;
+	width: 1100px;
+	flex-direction: column;
+	align-items: flex-start;  
+	justify-content: center; /* 가로로 가운데 정렬 */
+}
+ .bestbox {
+	display: flex;
+	justify-content: center; /* 가로로 가운데 정렬 */
+	width: 1100px;
+	margin:10px;
+}
+
+
+ /* 각 게시글   */ 
+.item_box { 
+    width: 180px; 
+    border: 1px solid #ffffff;
+ 
+    margin : 20px; 
+    text-align: center; 
+} 
+
+ /* 각 게시글 이미지  */ 
+.item_thum img { 
+    width: 100%; 
+    height: auto; 
+    border-radius: 8%;
+    
+} 
+
+ /* 각 게시글 제목  */ 
+.item_tit { 
+     display: block; 
+     margin-top: 12px; 
+     color: #000; 
+     font-size: 15px;
+     text-align:left;
+} 
+ /* 각 게시글 가격  */ 
+.price{
+	margin-top : 0px;
+	font-size: 15px;
+    text-align:left;
+}
+ /* 각 게시글 제목,가격 사이 선  */ 
+.outhr{
+    border: 0;
+    border-top: 1px solid rgba(0, 0, 0, .1);
+	
+}
+ /* 리뷰 전체  */ 
+.review{
+	display: flex;
+	margin: 0 auto;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;    /* 세로로 가운데 정렬  */
+	width: 1100px;
+}
+
+/*페이지 처리*/
+.sub_paging_wrap{
+	padding: 40px 0 100px;
+    text-align: center;
+}
+
+

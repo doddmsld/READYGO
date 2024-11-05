@@ -1,0 +1,101 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+<
+style
+>
+ @charset "UTF-8";
+
+* {
+    font-family: pretendard;
+}
+
+<style>
+.content-wrapper {
+    background-color: white;
+    font-family: pretendard;
+}
+.ck-editor__main .ck-content {
+    height: 400px;
+    border: 1px solid #black;
+}
+
+.btn-default {
+    background-color: #24D59E;
+    border-color: none;
+    color: white;
+    border-radius: 8px;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    width: 120px;
+}
+
+.btn-default:hover,
+.btn-default:focus {
+    background-color: white;
+    color: #24D59E;
+    border-color: #24D59E;
+}
+
+.btn-list, .btn-regist {
+    height: 40px;
+    border-radius: 8px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 선택 필드와 제목 입력 필드 사이의 간격 조정 */
+    flex: 1; /* 제목 입력 필드의 길이에 따라 자동 조절 */
+}
+
+.cat_main .category{
+    border-radius: 8px; /* border-radius 추가 */
+    font-size: 15px;
+    border: 1px solid #D9D9D9; /* border-color 수정 */
+    padding: 10px ; /* padding 추가 */
+    min-width: 120px; /* 최소 너비 설정 */
+    flex-shrink: 0;
+    height:50px;
+    background-color: white;
+    margin-top: 20px;
+}
+.rvttit h2 {
+  text-align: left;
+  margin-bottom: 30px;
+  margin-top: 20px;
+  margin-left: 100px;
+}
+
+.title {
+    flex: 1; /* 남은 공간을 모두 차지하도록 설정 */
+    font-size: 15px;
+    border-radius: 8px; 
+    border: 1px solid #D9D9D9; 
+    height:50px;
+}
+
+.form-group {
+    margin-top: 20px;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+}
+.category{
+	width:100%;
+	height:100%;
+}
+.ck-placeholder {
+    color: #aaa;
+    white-space: pre-wrap; /* 줄바꿈을 처리합니다 */
+    font-size: 12px;
+}
+.btn-list{
+    width: 116px;
+    height: 40px;
+    margin-right: auto; /* 왼쪽으로 정렬 */
+}

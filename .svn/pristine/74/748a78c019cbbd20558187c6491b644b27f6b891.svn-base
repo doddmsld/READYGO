@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.EnterMapper">
+	<resultMap type="enterVO" id="enterMap">
+		<result property="userType" column="USER_TYPE"/>
+		<result property="entMail" column="ENT_MAIL"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="entPswd" column="ENT_PSWD"/>
+		<result property="entNm" column="ENT_NM"/>
+		<result property="entManagerTelno" column="ENT_MANAGER_TELNO"/>
+		<result property="entFxnum" column="ENT_FXNUM"/>
+		<result property="entAddr" column="ENT_ADDR"/>
+		<result property="entAddrDetail" column="ENT_ADDR_DETAIL"/>
+		<result property="entZip" column="ENT_ZIP"/>
+		<result property="entLogo" column="ENT_LOGO"/>
+		<result property="entRprsntvNm" column="ENT_RPRSNTV_NM"/>
+		<result property="entIntrcnsntnc" column="ENT_INTRCNSNTNC"/>
+		<result property="entStleCd" column="ENT_STLE_CD"/>
+		<result property="entEmpCnt" column="ENT_EMP_CNT"/>
+		<result property="entFndnYmd" column="ENT_FNDN_YMD"/>
+		<result property="entFndnYmds" column="ENT_FNDN_YMDS"/>
+		<result property="entHmpgUrl" column="ENT_HMPG_URL"/>
+		<result property="entBrno" column="ENT_BRNO"/>
+		<result property="entBrFile" column="ENT_BR_FILE"/>
+		<result property="enabled" column="ENABLED"/>
+		<association property="indutyVO" resultMap="indutyMap"></association>
+		<collection property="userAuthVOList" resultMap="enterAuthMap"></collection>
+		<collection property="codeVOList" resultMap="codeMap"></collection>
+	</resultMap>
+	
+	<resultMap type="indutyVO" id="indutyMap">
+		<result property="tpbizSeCd" column="TPBIZ_SE_CD"/>
+		<result property="entId" column="ENT_ID"/>	
+	</resultMap>
+	<resultMap type="userAuthVO" id="enterAuthMap">
+		<result property="entId" column="ENT_ID"/>
+		<result property="auth" column="AUTH"/>
+	</resultMap>
+
+	<resultMap type="codeVO" id="codeMap">
+	    <result property="comCode" column="COM_CODE"/>
+	    <result property="comCodeGrp" column="COM_CODE_GRP"/>
+	    <result property="comCodeNm" column="COM_CODE_NM"/>
+	    <result property="comCodeDesc" column="COM_CODE_DESC"/>
+	    <result property="useYn" column="USE_YN"/>
+	    <result property="upperComCode" column="UPPER_COM_CODE"/>
+	    <result property="upperComCodeGrp" column="UPPER_COM_CODE_GRP"/>
+	</resultMap>
+	
+	
+	<select id="selectOne" parameterType="String" resultMap="enterMap">
+		SELECT A.ENT_ID, A.ENT_PSWD, A.ENT_NM, A.ENT_MANAGER_TELNO, 
+		       A.ENT_FXNUM, A.ENT_ADDR, A.ENT_ADDR_DETAIL, A.ENT_ZIP, 
+		       A.ENT_LOGO, A.ENT_RPRSNTV_NM, A.ENT_INTRCNSNTNC, 
+		       A.ENT_STLE_CD, A.ENT_EMP_CNT, A.ENT_FNDN_YMD, A.ENT_HMPG_URL, 
+		       A.ENT_BRNO, A.ENT_BR_FILE, A.ENABLED, A.USER_TYPE,
+		       B.AUTH
+		FROM ENTER A, AUTH_ENT B
+		WHERE A.ENT_ID = B.ENT_ID
+		  AND A.ENT_ID = #{username}
+	</select>
+	
+	<!-- 기업프로필 -->
+	<select id="profile" parameterType="String" resultMap="enterMap">
+		SELECT A.ENT_NM
+			 , TO_CHAR(TO_DATE(A.ENT_FNDN_YMD, 'YYYYMMDD'), 'YYYY.MM.DD') AS ENT_FNDN_YMD
+			 , A.ENT_STLE_CD, A.ENT_EMP_CNT, A.ENT_LOGO, A.ENT_HMPG_URL
+			 , B.TPBIZ_SE_CD, A.ENT_RPRSNTV_NM,  A.ENT_HMPG_URL
+			 , SUBSTR(A.ENT_FXNUM, 1, 3) || '.' || SUBSTR(A.ENT_FXNUM, 4, 3) || '.' || SUBSTR(A.ENT_FXNUM, 7) AS ENT_FXNUM
+			 , A.ENT_ADDR
+		  FROM ENTER A, INDUTY B 
+		 WHERE A.ENT_ID = B.ENT_ID
+		   AND A.ENT_ID = #{entId}
+	</select>
+	
+	<!-- 기업 프로필 연도별  입사자수  -->
+	<select id="empYcnt" parameterType="String" resultType="enterEmpYcntVO">
+		SELECT ENT_YM, ENT_EMP_YCNT, ENT_NEWEMP, ENT_OUTEMP
+		  FROM ENT_EMP_YCNT
+		 WHERE ENT_ID = #{entId} 
+	</select>
+	
+	<!-- 기업정보수정 폼 -->
+	<select id="edit" parameterType="String" resultMap="enterMap">
+		SELECT A.ENT_NM, A.ENT_ID, A.ENT_PSWD, B.TPBIZ_SE_CD, A.ENT_LOGO
+		     , TO_CHAR(A.ENT_FNDN_YMD, 'YYYY.MM.DD') AS ENT_FNDN_YMDS
+		     , A.ENT_EMP_CNT, A.ENT_STLE_CD, A.ENT_RPRSNTV_NM
+		     , A.ENT_HMPG_URL
+		     , A.ENT_MANAGER_TELNO
+		     , A.ENT_FXNUM
+		     , A.ENT_MAIL, A.ENT_ZIP, A.ENT_ADDR, A.ENT_ADDR_DETAIL, A.ENT_BRNO, A.ENT_BR_FILE
+		FROM ENTER A, INDUTY B
+		WHERE A.ENT_ID = B.ENT_ID
+		AND A.ENT_ID = #{entId}
+	</select>
+
+	<!-- 기업정보수정에서 업종 출력 -->
+	<select id="getIndutyList" parameterType="String" resultMap="codeMap">
+	    SELECT COM_CODE, COM_CODE_NM 
+	    FROM CODE
+	    WHERE COM_CODE_GRP = 'CRDT'
+	    ORDER BY COM_CODE
+	</select>
+	<!-- 기업정보수정에서 기업형태 출력 -->
+	<select id="getEntStleCdList" parameterType="String" resultMap="codeMap">
+		SELECT COM_CODE, COM_CODE_NM 
+	    FROM CODE
+	    WHERE COM_CODE_GRP = 'ENST'
+	    ORDER BY COM_CODE		
+	</select>
+	
+	<!-- 기업정보수정 실행 -->
+	<update id="editPost1" parameterType="enterVO">
+		UPDATE ENTER
+		   SET ENT_NM = #{entNm}, ENT_PSWD = #{entPswd} 
+		     , ENT_FNDN_YMD = #{entFndnYmd}, ENT_EMP_CNT = #{entEmpCnt}, ENT_STLE_CD = #{entStleCd}, ENT_RPRSNTV_NM = #{entRprsntvNm}
+		     , ENT_HMPG_URL = #{entHmpgUrl}, ENT_MANAGER_TELNO = #{entManagerTelno}, ENT_FXNUM = #{entFxnum}, ENT_MAIL = #{entMail}, ENT_ZIP = #{entZip}
+		     , ENT_ADDR = #{entAddr}, ENT_ADDR_DETAIL = #{entAddrDetail}, ENT_BRNO = #{entBrno}, ENT_BR_FILE = #{entBrFile}
+		WHERE  ENT_ID = #{entId}	
+	</update>
+	<update id="editPost2" parameterType="enterVO">
+		UPDATE INDUTY
+		   SET TPBIZ_SE_CD = #{tpbizSeCd}
+		WHERE  ENT_ID = #{entId}
+	</update>
+
+	<!-- 기업탈퇴 -->
+	<update id="deleteAjax" parameterType="String">
+		UPDATE ENTER
+		   SET ENABLED = '2'     
+		 WHERE ENT_ID = #{entId}
+	</update>
+	
+	
+	<!-- 인재 스킬 -->
+	<select id="getSkillList" parameterType="String" resultMap="codeMap">
+		SELECT COM_CODE, COM_CODE_NM 
+	    FROM CODE
+	    WHERE COM_CODE_GRP = 'SK'
+	    ORDER BY COM_CODE	
+	</select>
+	
+	
+</mapper>

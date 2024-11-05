@@ -1,0 +1,19 @@
+package kr.or.ddit.oustou.service;
+
+import java.util.List;
+
+
+import kr.or.ddit.vo.OustouVO;
+
+
+
+public interface OustouService {
+	
+	
+	
+	/**
+	 * 외주 메인 카테고리 출력 
+	 */
+	public List<OustouVO> caregoryList();
+	
+}

@@ -1,0 +1,23 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.OustouVO;
+import kr.or.ddit.vo.PbancVO;
+
+public interface OustouMapper {
+
+	//외주 메인 카테고리 출력 
+	public List<OustouVO> caregoryList();
+	//외주 메인 최신글 출력 
+	
+	//외주 메인 BEST글 출력 
+	
+	//외주 리뷰 좋아요수 많은거 출력 
+	
+	
+
+
+	
+}

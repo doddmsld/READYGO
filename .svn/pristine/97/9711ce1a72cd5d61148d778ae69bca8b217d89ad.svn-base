@@ -1,0 +1,266 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<!-- 외주 css 파일 -->
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/oustou/main.css" />
+
+
+<div class="mainALL">
+
+	<div class="oucatrgoryAll">
+		<div id="ousttit">
+			<p class="oust">추천 카테고리</p>
+		</div>
+		<div class="oucatrgory">
+			<div class="oucg">
+				<img class="ouim" alt="" src="../resources/images/2463068.png"><a
+					href="#">홈페이지 개발</a>
+			</div>
+			<div class="oucg">
+				<img class="ouim" alt="" src="../resources/images/11641543.png"><a
+					href="#">쇼핑몰</a>
+			</div>
+			<div class="oucg">
+				<img class="ouim" alt="" src="../resources/images/2463068.png"><a
+					href="#">AI</a>
+			</div>
+			<div class="oucg">
+				<img class="ouim" alt="" src="../resources/images/11641543.png"><a
+					href="#">데이터 구축</a>
+			</div>
+			<div class="oucg">
+				<img class="ouim" alt="" src="../resources/images/11641543.png"><a
+					href="#">쇼핑몰</a>
+			</div>
+		</div>
+	</div>
+
+
+	<div>
+		<!-- 정렬 -->
+
+	</div>
+
+	<div class="newtboxAll">
+		<div>
+			<p class="oust">NEW</p>
+		</div>
+
+		<div class="newtbox">
+			<!-- 게시글 목록 -->
+			<div class="item_box">
+				<div class="plus"></div>
+				<a class="item_thum" target="_blank" href="#해당 상품의 상세 페이지로 이동 ">
+					<img src="../resources/assets/images/1585713917.jpg">
+				</a> <a class="item_tit"
+					href="../product/view.php?idx=5025&amp;code=1310"> [웹퍼블리싱의 모든것]
+					HTML, CSS, JQUERY 웹 홈페이지 제작</a>
+				<div class="item_info_wrap clear">
+					<div class="item_info">
+						<hr class="outhr">
+						<p class="price">5,000원~</p>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="item_box">
+				<div class="plus"></div>
+				<a class="item_thum" target="_blank" href="#해당 상품의 상세 페이지로 이동 ">
+					<img src="../resources/assets/images/1585713917.jpg">
+				</a> <a class="item_tit"
+					href="../product/view.php?idx=5025&amp;code=1310"> [웹퍼블리싱의 모든것]
+					HTML, CSS, JQUERY 웹 홈페이지 제작</a>
+				<div class="item_info_wrap clear">
+					<div class="item_info">
+						<hr class="outhr">
+						<p class="price">5,000원~</p>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="item_box">
+				<div class="plus"></div>
+				<a class="item_thum" target="_blank" href="#해당 상품의 상세 페이지로 이동 ">
+					<img src="../resources/assets/images/1585713917.jpg">
+				</a> <a class="item_tit"
+					href="../product/view.php?idx=5025&amp;code=1310"> [웹퍼블리싱의 모든것]
+					HTML, CSS, JQUERY 웹 홈페이지 제작</a>
+				<div class="item_info_wrap clear">
+					<div class="item_info">
+						<hr class="outhr">
+						<p class="price">5,000원~</p>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="item_box">
+				<div class="plus"></div>
+				<a class="item_thum" target="_blank" href="#해당 상품의 상세 페이지로 이동 ">
+					<img src="../resources/assets/images/1585713917.jpg">
+				</a> <a class="item_tit"
+					href="../product/view.php?idx=5025&amp;code=1310"> [웹퍼블리싱의 모든것]
+					HTML, CSS, JQUERY 웹 홈페이지 제작</a>
+				<div class="item_info_wrap clear">
+					<div class="item_info">
+						<hr class="outhr">
+						<p class="price">5,000원~</p>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="item_box">
+				<div class="plus"></div>
+				<a class="item_thum" target="_blank" href="#해당 상품의 상세 페이지로 이동 ">
+					<img src="../resources/assets/images/1585713917.jpg">
+				</a> <a class="item_tit"
+					href="../product/view.php?idx=5025&amp;code=1310"> [웹퍼블리싱의 모든것]
+					HTML, CSS, JQUERY 웹 홈페이지 제작</a>
+				<div class="item_info_wrap clear">
+					<div class="item_info">
+						<hr class="outhr">
+						<p class="price">5,000원~</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+	<div class="bestboxAll">
+		<div>
+			<p class="oust">BEST</p>
+		</div>
+		<div class="bestbox">
+			<!-- 게시글 목록 -->
+			<div class="item_box">
+				<div class="plus"></div>
+				<a class="item_thum" target="_blank" href="#해당 상품의 상세 페이지로 이동 ">
+					<img src="../resources/assets/images/1585713917.jpg">
+				</a> <a class="item_tit"
+					href="../product/view.php?idx=5025&amp;code=1310"> [웹퍼블리싱의 모든것]
+					HTML, CSS, JQUERY 웹 홈페이지 제작</a>
+				<div class="item_info_wrap clear">
+					<div class="item_info">
+						<hr class="outhr">
+						<p class="price">5,000원~</p>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="item_box">
+				<div class="plus"></div>
+				<a class="item_thum" target="_blank" href="#해당 상품의 상세 페이지로 이동 ">
+					<img src="../resources/assets/images/1585713917.jpg">
+				</a> <a class="item_tit"
+					href="../product/view.php?idx=5025&amp;code=1310"> [웹퍼블리싱의 모든것]
+					HTML, CSS, JQUERY 웹 홈페이지 제작</a>
+				<div class="item_info_wrap clear">
+					<div class="item_info">
+						<hr class="outhr">
+						<p class="price">5,000원~</p>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="item_box">
+				<div class="plus"></div>
+				<a class="item_thum" target="_blank" href="#해당 상품의 상세 페이지로 이동 ">
+					<img src="../resources/assets/images/1585713917.jpg">
+				</a> <a class="item_tit"
+					href="../product/view.php?idx=5025&amp;code=1310"> [웹퍼블리싱의 모든것]
+					HTML, CSS, JQUERY 웹 홈페이지 제작</a>
+				<div class="item_info_wrap clear">
+					<div class="item_info">
+						<hr class="outhr">
+						<p class="price">5,000원~</p>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="item_box">
+				<div class="plus"></div>
+				<a class="item_thum" target="_blank" href="#해당 상품의 상세 페이지로 이동 ">
+					<img src="../resources/assets/images/1585713917.jpg">
+				</a> <a class="item_tit"
+					href="../product/view.php?idx=5025&amp;code=1310"> [웹퍼블리싱의 모든것]
+					HTML, CSS, JQUERY 웹 홈페이지 제작</a>
+				<div class="item_info_wrap clear">
+					<div class="item_info">
+						<hr class="outhr">
+						<p class="price">5,000원~</p>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="item_box">
+				<div class="plus"></div>
+				<a class="item_thum" target="_blank" href="#해당 상품의 상세 페이지로 이동 ">
+					<img src="../resources/assets/images/1585713917.jpg">
+				</a> <a class="item_tit"
+					href="../product/view.php?idx=5025&amp;code=1310"> [웹퍼블리싱의 모든것]
+					HTML, CSS, JQUERY 웹 홈페이지 제작</a>
+				<div class="item_info_wrap clear">
+					<div class="item_info">
+						<hr class="outhr">
+						<p class="price">5,000원~</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="review">
+		<div>
+		<p class="oust">REVIEW</p>
+		</div>
+		<div class="review_box">
+			<div class="reimg">
+				<img src="../resources/assets/images/1585713917.jpg" class="reimg">
+			</div>
+
+			<div class="recont">
+				<p>s******</p>
+				<p>
+					의도치 않게 제가 많은 요청을 드렸으나, 빠르게 해주시고 너무 감사드립니다. 퀄리티도 너무 마음에
+					들어요. 다음에 기회가 되면 또 의뢰하겠습니다.
+				</p>
+			</div>
+		</div>
+
+		<div class="review_box">
+			<div class="reimg">
+				<img src="../resources/assets/images/1585713917.jpg" class="reimg">
+			</div>
+
+			<div class="recont">
+				<p>s******</p>
+				<p>
+					의도치 않게 제가 많은 요청을 드렸으나, 빠르게 해주시고 너무 감사드립니다.
+				</p>
+			</div>
+		</div>
+
+		<div class="review_box">
+			<div class="reimg">
+				<img src="../resources/assets/images/1585713917.jpg" class="reimg">
+			</div>
+
+			<div class="recont">
+				<p>s******</p>
+				<ps>
+					의도치 않게 제가 많은 요청을 드렸으나, 빠르게 해주시고 너무 감사드립니다.
+				</p>
+			</div>
+		</div>
+	</div>
+
+</div>

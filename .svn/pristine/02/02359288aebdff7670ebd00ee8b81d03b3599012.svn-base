@@ -1,0 +1,15 @@
+package kr.or.ddit.impl_DO;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.service_DO.NoticeService;
+
+@Service
+public class NoticeServiceImpl implements NoticeService {
+
+	@Override
+	public String list() {
+		return null;
+	}
+
+}

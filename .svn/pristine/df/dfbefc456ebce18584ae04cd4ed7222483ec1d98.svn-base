@@ -1,0 +1,54 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<meta charset="UTF-8">
+<title>회원프로필</title>
+<!-- 회원프로필css -->
+<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/member/profile.css" />
+<!-- chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- 구글 아이콘 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<style>
+.material-symbols-outlined {
+	font-size: 48px;
+	color: #5F6368;
+  	font-variation-settings:
+  	'FILL' 0,
+  	'wght' 300,
+  	'GRAD' 0,
+ 	'opsz' 48
+}
+</style>
+<body>
+	<br>
+	<div id="nav">
+		<img alt="" src="../resources/images/member/토끼.jpg" class="img">
+	</div>
+	<br>
+	<p id="mbrNm">${prfVO.mbrNm}</p>
+	<div id="introduce">
+		<p>아르르르르릉ㄹ아르을으랑랑라알아라아아아아아아아아 자자잠잠자자자졸려
+		<br>가나가나가나가나다라마바사</p>
+	</div>
+	<hr>
+	<div id="introduce2">
+		<p style="margin-top:25px;">주요 경력: ${prfVO.careerNm}</p>
+		<p>${prfVO.proflContent}</p>
+	</div>
+	
+	<div class="container">
+		
+	</div>
+	
+
+	<div id="div1">
+	<p>${prfCareerVOList}</p>
+	</div>
+	<p>${prfAcbgVOList}</p>
+	<p>${prfCrtfctVOList}</p>
+	<p>${prfWnpzVOList}</p>
+	<p>${prfActVOList}</p>
+	<p>${prfBusinessVOList}</p>
+
+</body>
+</html>

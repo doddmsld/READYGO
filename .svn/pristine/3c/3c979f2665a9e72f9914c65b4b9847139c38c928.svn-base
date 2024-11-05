@@ -1,0 +1,80 @@
+package kr.or.ddit.oustou.kakaoPayApi;
+
+import java.util.Map;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Controller
+@RequiredArgsConstructor
+@RequestMapping("/outsou")
+public class KakaoPayController {
+
+//	@Autowired
+//	KakaoPayService kakaoPayService;
+	
+	private final KakaoPayService kakaoPayService;
+	
+	@PostMapping("/pay/ready")
+	public @ResponseBody ReadyResponse payReady(@RequestBody Map<String, Object> data) {
+	    // 결제 준비 처리 로직
+	    String title = (String) data.get("title");
+	    int price = Integer.parseInt(data.get("price").toString());
+
+	    log.info("상품명: {}, 가격: {}", title, price);
+
+	    // 결제 준비 로직 호출
+	    ReadyResponse readyResponse = kakaoPayService.payReady(title, price);
+        
+        
+     // 카카오페이에서 반환된 tid 확인
+        String tid = readyResponse.getTid();
+        log.info("결제 고유번호(tid): " + tid);
+
+        // 결제 고유번호(tid)를 세션에 저장
+        SessionUtils.addAttribute("tid", tid);
+
+        log.info("결제 고유번호: " + tid);
+
+        return readyResponse;
+    }
+
+	
+	
+    @GetMapping("/payok")
+    public String payCompleted(@RequestParam("pg_token") String pgToken) {
+    
+    	 // 세션에서 결제 고유번호(tid)를 가져옵니다.
+        String tid = SessionUtils.getStringAttributeValue("tid");
+
+        // 결제 승인 로직을 처리
+        if (tid == null || tid.isEmpty()) {
+            log.error("세션에서 tid를 찾을 수 없습니다.");
+            return "redirect:/error-page";  // 오류 처리 페이지로 이동
+        }
+
+        // 로그로 pg_token을 출력해봅니다.
+        log.info("pg_token: " + pgToken);
+        log.info("tid: " + tid);
+
+        // 카카오 결제 승인 요청
+        AproveResponse aproveResponse = kakaoPayService.payApprove(tid, pgToken);
+
+        // 결제 승인 완료 후 페이지로 리다이렉트
+        return "outsou/regist/pay/payok";  // 성공 페이지로 리다이렉트
+    }
+    
+    
+    
+    
+	
+}

@@ -1,0 +1,255 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+.row{
+	flex-wrap: nowrap;
+}
+#topbox{
+	width : 1250px;
+	margin-left : 50px;
+}
+.box {
+	padding: 15px;
+    padding-left: 20px;
+    border : none;
+	margin : 10px;
+	width : 700px;
+	height : 72px;
+	border-radius : 12px;
+	font-size : 16px;
+}
+/* 전체 카운트 */
+#count {
+    font-size: 20px;
+    margin-left: 68px;
+    font-weight: 700;
+    color: #232323;
+    border-bottom: 5px solid #24D59E;
+    padding-bottom: 5px;
+    width: 90px;
+}
+#total{
+    background: #24D59E;
+    color: white;
+    padding: 7px 8px 7px 8px;
+    border-radius: 999px;
+    font-size: 20px;
+}
+/**/
+#h3{
+	margin-left:-40px;
+	font-weight : 700;
+	font-size : 30px;
+	color : #212529;
+}
+.num{
+    font-size: 32px;
+    font-weight: 700;
+    text-align: right;
+    margin-top: -17px;
+    color : #666363;
+}
+.num2{
+	font-size: 32px;
+    font-weight: 700;
+    text-align: right;
+    margin-top: -17px;
+	color : #24D59E;
+}
+.num3{
+	font-size: 32px;
+    font-weight: 700;
+    text-align: right;
+    margin-top: -17px;
+	color : rgb(255 112 112);
+}
+#fir{
+	color : #666363;
+	background:#F4F4F4;
+	font-weight : 600;
+}
+#fin {
+    color: rgb(255 112 112);
+    background-color: rgb(255 150 150 / 29%);
+    font-weight : 600;
+}
+#ing{
+	color : #24D59E;
+	background:#E8FAF8;
+	font-weight : 600;
+}
+.table th{
+	padding : 15px;
+}
+.table td{
+    border-top: 1px solid #dee2e6;
+    vertical-align: middle;
+}
+
+th{
+	text-align : center;
+	font-size : 16px;
+	width : 150px;
+}
+thead {
+    border-top: 2px solid #666363;
+    border-bottom: 2px solid #666363;
+}
+.table thead th {
+    vertical-align: bottom;
+    border-bottom:none;
+}
+.card-body.table-responsive.p-0 {
+    margin-left: 60px;
+    width: 1230px;
+}
+tbody{
+	text-align : center;
+	font-size : 14px;
+	color : #232323;
+}
+
+th.aplct{
+	 text-align:left; 
+	 padding-left:110px;
+}
+td.aplct{
+	 text-align:left; 
+	 padding-left:110px;
+	 font-size : 14px;
+	 font-weight : 700;
+}
+th.entNm {
+    text-align: left;
+    padding-left: 137px;
+
+}
+td.entNm {
+    text-align: left;
+    padding-left: 137px;
+    font-size : 14px;
+	font-weight : 550;    
+}
+.aplcont{
+	font-size : 12px;
+	color : #666363;
+	font-weight : normal;
+	cursor: pointer;
+	text-decoration: underline;
+}
+td.appymd {
+    font-size : 14px;
+	font-weight : 500; 
+}
+#dateInput1,#dateInput2{
+	width: 13%;
+    padding: 13px;
+    font-size: 16px;
+    border: 1px solid #232323;
+    border-radius: 5px;
+    height: 40px;
+    border: 1px solid #ddd;
+    color: #757575;
+}
+#dateInput2{
+    margin-right: 20px;
+}
+#keywordInput{
+	width : 270px;
+	padding: 13px;
+    font-size: 16px;
+    border: 1px solid #232323;
+    border-radius: 5px;
+    height: 40px;
+    border: 1px solid #ddd;
+    color: #757575;
+	margin-right: 7px;
+}
+/* icon */
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 200,
+  'GRAD' 0,
+  'opsz' 24;
+   vertical-align: middle;
+   font-size: 20px;  
+}
+#sricon {
+    font-size: 28px;
+    position: relative;
+    right: 135px;
+    color: #b2b2b2;
+}
+
+/* 검색 버튼 */
+.search{
+	width: 60px;
+	height: 40px;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+    position: relative;
+    bottom: 1px;
+
+}
+.search:hover{
+	width: 60px;
+	height: 40px;
+	background-color: #24D59E;
+	border: 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: white;
+	
+}
+#filter {
+    position: relative;
+    top: 7px;
+    left: 566px;
+}
+.aplctPrcsStatCd {
+    background: white;
+    font-weight: 450;
+    border: none;
+    padding: 10px;
+    border-radius: 999px;
+}
+
+/* 페이징 css 시작*/
+.page-link {
+    color: black; 
+    border-radius: 7px; 
+    margin:5px;
+}
+/* 버튼클릭했을 때! */
+.page-item.active .page-link {
+    z-index: 3;
+    font-weight : 700;
+    color: #24D59E;
+    background-color: rgba(44, 207, 195, 0.11); 
+    border-radius: 7px;
+}
+.write_date{
+	text-align: right;
+}
+
+
+.page-item.active .page-link {
+    border-color: #dee2e6;
+}
+a.page-link:hover {
+    color: #000000;
+    background-color: #dee2e6;
+}
+/* 페이징 css 끝*/
+
+
+

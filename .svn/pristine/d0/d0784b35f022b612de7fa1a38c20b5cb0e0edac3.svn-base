@@ -1,0 +1,485 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>면접관리 > 일반면접</title>
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/enter/intrvw.css" />
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript">
+//모달 제어
+document.addEventListener("DOMContentLoaded", function() {
+    var modal1 = document.getElementById("scoutModal1");
+    var modal2 = document.getElementById("scoutModal2");
+    var calButtons = document.querySelectorAll(".cal-btn");
+    var closeBtn1 = document.querySelector(".close1");
+    var closeBtn2 = document.querySelector(".close2");
+    var cancelButton1 = document.querySelector(".cancel-btn1");
+    var cancelButton2 = document.querySelector(".cancel-btn2");
+    
+ 
+    calButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+    	var intrvwtycd = $(this).closest('tr').find('.intrvwtycd').text();
+	    	if(intrvwtycd==='일반면접'){
+	            modal1.style.display = "block";    		
+	    	}else if(intrvwtycd==='화상면접'){
+	            modal2.style.display = "block";    		
+	    		
+	    	}
+        });
+    });
+ 
+    
+    // 닫기 버튼 클릭 시 모달 닫기
+    closeBtn1.onclick = function() {
+        modal1.style.display = "none";
+    }
+    // 닫기 버튼 클릭 시 모달 닫기
+    closeBtn2.onclick = function() {
+    	$("#jobPost option:eq(0)").prop("selected", true);
+    	$("#videoPost option:eq(0)").prop("selected", true);
+        modal2.style.display = "none";
+    }
+
+    // 취소 버튼 클릭 시 모달 닫기
+    cancelButton1.onclick = function() {
+        modal1.style.display = "none";
+    }
+    // 취소 버튼 클릭 시 모달 닫기
+    cancelButton2.onclick = function() {
+    	$("#jobPost option:eq(0)").prop("selected", true);
+    	$("#videoPost option:eq(0)").prop("selected", true);
+        modal2.style.display = "none";
+    }
+
+    // 모달 외부 클릭 시 모달 닫기
+    window.onclick = function(event) {
+        if (event.target == modal1 ||event.target == modal2 ) {
+            modal1.style.display = "none";
+            modal2.style.display = "none";
+        }
+    }
+});
+var day = new Date();
+$(function(){
+//    $(".interviewVal").each(function() {
+//     // 각 요소에서 작성된 날짜 텍스트를 가져옴
+//     var wrDate = $(this).text();
+//     console.log("작성된 날짜:", wrDate);
+
+//     // 현재 날짜를 구합니다.
+//     var currentDate = new Date();
+    
+//     // 작성된 날짜를 Date 객체로 변환
+//     var wrDateObj = new Date(wrDate);
+//     console.log("작성된 날짜 객체:", wrDateObj);
+
+//     // 현재 날짜의 시분까지만 남기고 초는 0으로 설정하여 비교
+//     var currentDateAdjusted = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), currentDate.getHours(), currentDate.getMinutes(), 0);
+//     console.log("현재 날짜 조정:", currentDateAdjusted);
+
+//     // 두 날짜를 비교합니다.
+//     if (wrDateObj < currentDateAdjusted) {
+//         console.log("작성된 날짜가 현재 날짜보다 이전입니다.");
+//     } else if (wrDateObj.getTime() === currentDateAdjusted.getTime()) {
+//         console.log("작성된 날짜와 현재 날짜가 같습니다.");
+//     } else {
+//         console.log("작성된 날짜가 현재 날짜보다 이후입니다.");
+//     }
+// });
+	$('.interviewVal').each(function(){
+		var btn = $(this).closest('tr').find('.cal-btn')
+		var selectval = $(this).text();
+		if(selectval==='-'){
+			btn.prop('disabled',false);
+		}else{
+			btn.prop('disabled',true);
+		}
+	})
+
+
+    $('.interviewBtn').each(function() {
+        
+        // 해당 tr 안에 있는 appliBtn을 찾음
+        var appliBtn = $(this).closest('tr').find('.appliBtn');
+        
+        // interviewBtn의 현재 선택된 값을 가져옴
+        var selectedValue = $(this).val();
+        
+        // 'tsnt01'일 경우 appliBtn을 비활성화, 그 외는 활성화
+        if (selectedValue === 'INST01' || selectedValue === 'INST02') {
+            appliBtn.prop('disabled', true);
+        }else {
+            appliBtn.prop('disabled', false);
+        }
+    });
+
+    // interviewBtn에서 값이 변경될 때 실행되는 이벤트
+    $('.interviewBtn').change(function() {
+        // 현재 선택된 interviewBtn이 속한 tr을 찾음
+        var currentTr = $(this).closest('tr');
+        
+        // 해당 tr 안에 있는 appliBtn을 찾음
+        var appliBtn = currentTr.find('.appliBtn');
+        
+        // interviewBtn에서 선택된 값이 있는지 확인
+        var selectedValue = $(this).val();
+        
+        // 'tsnt01'일 경우 appliBtn을 비활성화, 그 외는 활성화
+        if (selectedValue === 'INST01' || selectedValue === 'INST02') {
+            appliBtn.prop('disabled', true);
+        }else {
+            appliBtn.prop('disabled', false);
+        }
+        
+        
+    });
+    
+//     $('#scoutForm').on('submit', function(event) {
+//         // 폼 제출 시 페이지 리로드 방지
+//         event.preventDefault();
+
+//         var date = $('#date').val();
+
+//         // 폼 데이터를 처리하거나 서버에 전송하려면 여기서 추가 작업 수행
+//      	// 현재 날짜를 구합니다.
+//         var currentDate = new Date();
+        
+//         // 작성된 날짜를 Date 객체로 변환
+//         const wrDateObj = new Date(date);
+//         console.log(wrDateObj);
+//     });
+    
+    $("#jobPost").on('change',function(){
+    	var job = $(this).val();
+    	$.ajax({
+	        url: '/enter/videointrvwPost',
+	        type: 'POST',
+	        data: {
+	        	job : job,
+	        },
+			beforeSend:function(xhr){
+				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+			},
+	        success: function(response) {
+	        	 let text="<option value='' disabled selected>화상방을 선택해주세요.</option>";
+	            for(let i=0;i<response.length;i++){
+	            	text+="<option value='"+response[i].vcrNo+"'>"+response[i].vcrTtl+"</option>";
+	            }
+	            
+	            $('#videoPost').html(text);
+	        },
+	        error: function(error) {
+	        	console.log(error);
+	            alert('상태 저장 중 오류가 발생했습니다.', error);
+	        }
+	    });
+    	
+    	
+    	
+    
+    })
+    $("select[name='gubun']").on("change", function() {
+		//this : <select name="gubun"
+		let gubun = $(this).val();
+		let entId = "${param.entId}"; //test01 또는 null
+
+		console.log("gubun : ", gubun);
+		console.log("entId : ", entId);
+
+		// /enter/scout?entId=test01&gubun=new
+		// param : entId=test01&gubun=new
+		//요청URI를 새로 요청
+		location.href = "/enter/intrvw?entId=" + entId + "&gubun=" + gubun;
+	});
+    
+    $("select[name='gubunSt']").on("change", function() {
+		let gubunSt = $(this).val();
+		let entId = "${param.entId}"; //test01 또는 null
+		console.log("gubunSt : ", gubunSt);
+		console.log("entId : ", entId);
+		location.href = "/enter/intrvw?entId=" + entId + "&gubunSt=" + gubunSt;	
+	});
+    
+    $("select[name='gubunPbanc']").on("change", function() {
+		let gubunPbanc = $(this).val();
+		let entId = "${param.entId}"; //test01 또는 null
+		location.href = "/enter/intrvw?entId=" + entId + "&gubunPbanc=" + gubunPbanc;	
+	});
+    
+    $('.cal-btn').on('click',function(){
+    	var btn = $(this).closest('tr').find('.inNo').val();
+    	$('.intrvwNum').val(btn);
+    	console.log(btn);
+    	
+    })
+    
+    
+})
+</script>
+</head>
+<body>
+	<sec:authentication property="principal" var="prc" />
+	<div class="announcement-container">
+		<div><h2 style="margin: 0px 0px 0px;">면접관리 > 일반면접</h2></div>
+		<div class="search-box">
+			<!-- 셀렉트 박스 -->
+			<div class="sel-cls">
+				<div class="select-search">
+						<select name="gubun" class="gubun-select">
+							<option value="" disabled selected>신입/경력 선택</option>
+							<option value="" >신입/경력</option>
+							<option value="RSCA01">신입</option>
+							<option value="RSCA02">경력</option>
+						</select>
+				</div>
+				<div class="filter-dropdown">
+					<select name="gubunPbanc" id="announcementSelect">
+						<option value="" disabled selected>공고별 지원자 조회 선택</option>
+						<option value="" >공고별 지원자 전체 조회</option>
+						<c:forEach var="pbancVO" items="${pbancList}" varStatus="status">
+							<option value="${pbancVO.pbancTtl}">${pbancVO.pbancTtl}</option>
+						</c:forEach>
+					</select>
+				</div>
+				<div class="filter-dropdown">
+					<select name="gubunSt" class="aplct-sel">
+						<option value="" disabled selected>면접 상태 선택</option>
+						<option value="" >면접 상태 전체 조회</option>
+						<c:forEach var="instVO" items="${instList}">
+							<option value="${instVO.comCode}">${instVO.comCodeNm}</option>
+						</c:forEach>
+					</select>
+				</div>
+			</div>
+			<!-- 검색  -->
+			<form action="/enter/intrvw" method="get">
+				<div class="search">
+					<input type="hidden" id="entId" name="entId"
+						value="${prc.username}" />	
+					<input type="text" id="keywordInput" name="keywordInput"
+						placeholder="지원자명 입력" />
+					<input type="date" id="dateInput" name="dateInput"
+						placeholder="면접일 선택" value="면접일 선택"/>
+					<button type="submit">검색</button>
+					<sec:csrfInput />
+				</div>
+			</form>
+			<!-- 검색 -->
+		</div>
+
+		<table>
+			<thead>
+				<tr style="background: #ECECEC; border-top: 2px solid #232323;">
+					<th><input type="checkbox" /></th>
+					<th>번호</th>
+					<th class="th-center">지원자</th>
+					<th>이력서/자소서</th>
+					<th>면접종류</th>
+					<th><p class="ptag">면접일자</p></th>
+					<th class="th-center">면접 일정 등록</th>
+					<th class="th-center">면접 상태</th>
+					<th class="th-center">지원자 상태</th>
+				</tr>
+			</thead>
+			<tbody>
+			<c:forEach varStatus="stat" var="applicantVO" items="${articlePage.content}">
+				<tr>
+					<td><input type="checkbox" /><input class="inNo"type="hidden" value="${applicantVO.intrvwNo}"></td>
+					<td>${applicantVO.rnum}</td>
+					<td>
+						<div class="aplctIN">
+							<div class="aplctImg">
+								<img src="../resources/icon/인재.png">
+							</div>
+							<div class="aplctName">
+								<div>${applicantVO.mbrNm}</div>
+								<div class="aplctTp">${applicantVO.rsmCareerCd}</div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<div class="title">${applicantVO.rsmFile}</div>
+						<div class="industry">${applicantVO.skCd}</div>
+					</td>
+					<td class="intrvwtycd"style="text-align: center;">${applicantVO.intrvwTyCd}</td>
+					<td class="interviewVal" style="text-align: center;">${applicantVO.intrvwYmd}</td>
+					<td style="text-align: center;">
+							<button class="cal-btn" type="button" value="면접 일정 등록">면접 일정 등록</button>
+					</td>
+					<td style="text-align: center;">
+						<div class="filter-dropdown">
+							<select class="interviewBtn">
+								<option value="" disabled selected>면접 상태</option>
+								<c:forEach var="instVO" items="${instList}">
+									<option value="${ instVO.comCode}"
+									<c:if test="${instVO.comCode eq applicantVO.intrvwSttusCd}">selected</c:if>
+									>${instVO.comCodeNm}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</td>
+					<td style="text-align: center;">
+						<div class="filter-dropdown">
+								<select class="appliBtn">
+									<option value="" disabled selected>서류 합격</option>
+									<c:forEach var="proeVO" items="${proeList}">
+										<option value="${proeVO.comCode}">${proeVO.comCodeNm}</option>
+									</c:forEach>
+								</select>
+							</div>
+					</td>
+				</tr>
+			</c:forEach>
+			</tbody>
+			<tfoot>
+				<tr></tr>
+			</tfoot>
+
+		</table>
+		<div class="btnclass">
+			<a href="#">지원자 엑셀 저장</a>
+		</div>
+		<!-- 페이지네이션 -->
+		<div class="card-body table-responsive p-0"
+			style="display: flex; justify-content: center;">
+			<table>
+				<tr>
+					<td class="pageTable" colspan="4" style="text-align: center;">
+						<div class="dataTables_paginate" id="example2_paginate"
+							style="display: flex; justify-content: center; margin-top: -30px;">
+							<ul class="pagination">
+
+								<!-- 맨 처음 페이지로 이동 버튼 -->
+								<c:if test="${articlePage.currentPage gt 1}">
+									<li class="paginate_button page-item first"><a
+										href="/enter/intrvw?entId=${prc.username}&currentPage=1"
+										aria-controls="example2" data-dt-idx="0" tabindex="0"
+										class="page-link">&lt;&lt;</a></li>
+								</c:if>
+
+								<!-- 이전 페이지 버튼 -->
+								<c:if test="${articlePage.startPage gt 1}">
+									<li class="paginate_button page-item previous"
+										id="example2_previous"><a
+										href="/enter/intrvw?entId=${prc.username}&currentPage=${(articlePage.startPage - 1) lt 1 ? 1 : (articlePage.startPage - 1)}"
+										aria-controls="example2" data-dt-idx="0" tabindex="0"
+										class="page-link">&lt;</a></li>
+								</c:if>
+
+								<!-- 페이지 번호 -->
+								<c:forEach var="pNo" begin="${articlePage.startPage}"
+									end="${articlePage.endPage}">
+									<li
+										class="paginate_button page-item ${pNo == articlePage.currentPage ? 'active' : ''}">
+										<a
+										href="/enter/intrvw?entId=${prc.username}&currentPage=${pNo}"
+										aria-controls="example2" class="page-link">${pNo}</a>
+									</li>
+								</c:forEach>
+
+								<!-- 다음 페이지 버튼 -->
+								<c:if test="${articlePage.endPage lt articlePage.totalPages}">
+									<li class="paginate_button page-item next" id="example2_next">
+										<a
+										href="/enter/intrvw?entId=${prc.username}&currentPage=${articlePage.startPage+5}"
+										aria-controls="example2" data-dt-idx="7" tabindex="0"
+										class="page-link">&gt;</a>
+									</li>
+								</c:if>
+
+								<!-- 맨 마지막 페이지로 이동 버튼 -->
+								<c:if
+									test="${articlePage.currentPage lt articlePage.totalPages}">
+									<li class="paginate_button page-item last"><a
+										href="/enter/intrvw?entId=${prc.username}&currentPage=${articlePage.totalPages}"
+										aria-controls="example2" data-dt-idx="7" tabindex="0"
+										class="page-link">&gt;&gt;</a></li>
+								</c:if>
+
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<!-- 페이지네이션 끝 -->
+		
+		</div>
+		<!-- 일반면접 모달 창 구조 -->
+		<div id="scoutModal1" class="modal" style="display: none;">
+			<div class="modal-content">
+				<div
+					style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+					<h2>면접 일정 등록</h2>
+					<span class="close1">&times;</span>
+				</div>
+
+				<form id="scoutForm" action="/enter/intrvwFormPost2" method="post">
+					<div>
+						<input type="hidden" class="intrvwNum" name="intrvwNum" value="">
+						<input type="hidden" id="entId" name="entId" value="${prc.username}">
+						<label for="date" class="scout-title">면접 일자</label>
+						<input type="date" id="date" name="date">
+					</div>
+					<div>
+						<label for="date" class="scout-title">면접 시간</label>
+						<input type="time" id="startdate" name="startdate">
+						~
+						<input type="time" id="enddate" name="enddate">
+					</div>
+					
+					<div
+						style="display: flex; justify-content: space-evenly; margin-top: 50px;">
+						<button type="button" class="cancel-btn1">취소</button>
+						<button type="submit" id="submit-btn">등록</button>
+					</div>
+					<sec:csrfInput />
+				</form>
+			</div>
+		</div>
+		<!-- 화상면접 모달 창 구조2 -->
+		<div id="scoutModal2" class="modal" style="display: none;">
+			<div class="modal-content">
+				<div
+					style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+					<h2>면접 일정 등록</h2>
+					<span class="close2">&times;</span>
+				</div>
+				
+				<form id="intrvwForm" action="/enter/intrvwFormPost" method="post">
+					<div>
+						<input type="hidden" class="intrvwNum" name="intrvwNum" value="">
+						<input type="hidden" id="entId" name="entId" value="${prc.username}">
+						<label for="jobPost" class="scout-title">공고 선택</label> 
+						<select id="jobPost" name="jobPost">
+									<option value="" disabled selected>공고를 선택해주세요.</option>
+									<!-- 공고 리스트를 JSP에서 동적으로 추가 -->
+									<c:forEach var="pbanc" items="${pbancList}">
+										<option value="${pbanc.pbancNo}">${pbanc.pbancTtl}</option>
+									</c:forEach>
+						</select>
+					</div>
+					<div id="videolist">
+						<label for='videoPost' class='scout-title'>화상방 선택</label>
+		            	<select id='videoPost' name='videoPost'>
+		            		<option  value='' disabled selected>화상방을 선택해주세요.</option>
+		            	</select>
+					</div>
+					<div style="display: flex; justify-content: space-evenly; margin-top: 50px;">
+						<button type="button" class="cancel-btn2">취소</button>
+						<button type="submit" id="submit-btn">등록</button>
+					</div>
+					<sec:csrfInput />
+				</form>
+			</div>
+		</div>
+</body>
+</html>

@@ -1,0 +1,15 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+@Data
+public class RsmExpactEDCVO {
+	private String actNo;
+	private String rsmNo;
+	private String actSeCd;
+	private String actNm;
+	private String actEngn;
+	private String actBeginYmd;
+	private String actEndYmd;
+	private String actCn;
+}

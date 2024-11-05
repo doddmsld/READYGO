@@ -1,0 +1,47 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.PrfAcbgVO;
+import kr.or.ddit.vo.PrfActVO;
+import kr.or.ddit.vo.PrfBusinessVO;
+import kr.or.ddit.vo.PrfCareerVO;
+import kr.or.ddit.vo.PrfCrtfctVO;
+import kr.or.ddit.vo.PrfVO;
+import kr.or.ddit.vo.PrfWnpzVO;
+
+public interface MemProfileMapper {
+	
+    // 프로필 
+    public PrfVO profile(String mbrId);
+	
+	// 경력 목록 조회
+	public List<PrfCareerVO> careerList(String mbrId);
+	
+	// 경력 추가
+    public int careerAddAjax(PrfCareerVO prfCareerVO);
+    
+    // 경력 삭제
+    public int careerDelAjax(Map<String, Object> map);
+	
+	// 학력 목록 조회
+	public List<PrfAcbgVO> acbgList(String mbrId);
+	
+    // 자격증 목록 조회
+    public List<PrfCrtfctVO> crtfctList(String mbrId);
+    
+    // 수상 조회
+    public List<PrfWnpzVO> WnpzList(String mbrId);
+    
+    // 활동 조회
+    public List<PrfActVO> ActList(String mbrId);
+    
+    // 업종 조회
+    public List<PrfBusinessVO> BusinessList(String mbrId);
+    
+    
+    
+
+
+}

@@ -1,0 +1,254 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/member/aplctList.css" />
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/security/loginForm.css" />
+<script
+	src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="/resources/js/jquery.min.js"></script>
+<script src="/resources/js/sweetalert2.js"></script>
+<script src="/resources/js/html2canvas.js"></script>
+<script src="/resources/js/jspdf.min.js"></script>
+<script>
+var Toast = Swal.mixin({
+	toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+});
+
+$(function(){
+	    html2canvas($('#frame')[0]).then(function(canvas) { //저장 영역 div id
+		
+	    // 캔버스를 이미지로 변환
+	    var imgData = canvas.toDataURL('image/png');
+		     
+	    var imgWidth = 190; // 이미지 가로 길이(mm) / A4 기준 210mm
+	    var pageHeight = imgWidth * 1.414;  // 출력 페이지 세로 길이 계산 A4 기준
+	    var imgHeight = canvas.height * imgWidth / canvas.width;
+	    var heightLeft = imgHeight;
+	    var margin = 10; // 출력 페이지 여백설정
+	    var doc = new jsPDF('p', 'mm');
+	    var position = 0;
+	       
+	    // 첫 페이지 출력
+	    doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+	    heightLeft -= pageHeight;
+	         
+	    // 한 페이지 이상일 경우 루프 돌면서 출력
+	    while (heightLeft >= 20) {
+	        position = heightLeft - imgHeight;
+	        doc.addPage();
+	        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+	        heightLeft -= pageHeight;
+	    }
+	 
+	    // 파일 저장
+	    doc.save('file-name.pdf');
+	    window.close();
+	})
+})
+</script>
+<fmt:parseDate value="${resumeVO.mbrBrdt}" var="parsedDate" pattern="yyyyMMdd"/>
+<c:set var="formattedPhone" value="${fn:substring(resumeVO.mbrPhone, 0, 3)}-${fn:substring(resumeVO.mbrPhone, 3, 7)}-${fn:substring(resumeVO.mbrPhone, 7, 11)}" />
+<button id="downloadBtn">이력서 다운로드</button>
+<div class="row" id="main" style="    background-color: #a7a7a7;
+    padding: 30px 0px 30px 0px;">
+	<div id="frame" style="background-color: white;">
+		<div class="row" id="basicInfo">
+				<div class="basImg">
+					<img src="${resumeVO.fileDetailVOList[0].filePathNm }">
+				</div>
+				<div class="basText-s zz" style="padding: 20px 30px 20px 30px;">
+					<div>이름 : ${resumeVO.mbrNm }
+					</div>
+					<div>${resumeVO.mbrSexdstncdNm } | <fmt:formatDate value="${parsedDate}" pattern="yyyy.MM.dd"/>
+					</div>
+					<div>${resumeVO.rsmTtl }</div>
+				</div>
+				<div class="basText-s zz" style="padding: 20px 30px 20px 30px;">
+					<div>HP : ${formattedPhone }</div>
+					<div>EML : ${resumeVO.mbrEml }</div>
+					<div>${resumeVO.mbrAddr }</div>
+				</div>
+		</div>
+		<p class="title">학력</p>
+		<hr />
+		<c:forEach var="VO" items="${rsmAcademicVOList}" varStatus="stut" >
+		<div class="row" id="acbgInfo">
+				<div class="basText-xs">${VO.acbgSchlNm }</div>
+				<div class="basText-xs">${VO.acbgRcognacbgCdNm }</div>
+				<div class="basText-m">${VO.acbgMtcltnym.substring(0,4)}년 ${VO.acbgMtcltnym.substring(4,6)}월 ~ 
+				${VO.acbgGrdtnym.substring(0,4) }년 ${VO.acbgGrdtnym.substring(4,6) }월
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				${VO.acdmcrGrdtnSeCdNm }</div>
+		</div>
+		<hr />
+		</c:forEach>
+		<p class="title">경력</p>
+		<hr />
+		<c:forEach var="VO" items="${rsmCareerVOList}" varStatus="stut" >
+			<div class="row" id="acbgInfo" style="background-color: #b6ffea1f;">
+				<div class="basText-l">${VO.careerEntNm }</div>
+				<div class="basText-s">${VO.careerJncmpYmd.substring(0,4)}년 ${VO.careerJncmpYmd.substring(4,6)}월 
+					<c:choose>
+						<c:when test="${VO.careerRetireYmd != null }">
+							~ ${VO.careerRetireYmd.substring(0,4) }년 ${VO.careerRetireYmd.substring(4,6) }월
+						</c:when>
+						<c:otherwise>
+							재직중
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
+			<div class="row" id="acbgInfo">
+				<div class="basText-s">${VO.careerDtyCdNm } / ${VO.careerJbgdCdNm }</div>
+				<div class="basText-l">${VO.careerDept }</div>
+			</div>
+			<div class="row" id="acbgInfo">
+				<div class="basText-s">담당업무</div>
+				<div class="basText-l">${VO.careerTask }</div>
+			</div>
+			<hr />
+		</c:forEach>
+		<p class="title">업무 능력</p>
+		<hr />
+		<div class="row" id="acbgInfo">
+			<c:forEach var="VO" items="${rsmSkillVOList}" varStatus="stut" >
+				<span style="padding: 3px 10px 3px 10px; margin-right: 10px; background-color: pink; border-radius: 15px;">${VO.skCdNm }</span>
+			</c:forEach>
+		</div>
+		<p class="title">경험/활동/교육</p>
+		<hr />
+		<c:forEach var="VO" items="${rsmExpactEDCVOList}" varStatus="stut" >
+			<div class="row" id="acbgInfo" style="background-color: #b6ffea1f;">
+				<div class="basText-l">${VO.actSeCdNm } / ${VO.actNm }</div>
+				<div class="basText-s">${VOactEngn }</div>
+				<div class="basText-s">${VO.actBeginYmd.substring(0,4)}년 ${VO.actBeginYmd.substring(4,6)}월  ${VO.actBeginYmd.substring(6,8)}일
+					<c:choose>
+						<c:when test="${VO.actEndYmd != null }">
+							~ ${VO.actEndYmd.substring(0,4) }년 ${VO.actEndYmd.substring(4,6) }월 ${VO.actEndYmd.substring(6,8)}일
+						</c:when>
+						<c:otherwise>
+							활동중
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
+			<div class="row" id="acbgInfo">
+				<div class="basText-s">활동 내용</div>
+				<div class="basText-l">${VO.actCn }</div>
+			</div>
+			<hr />
+		</c:forEach>
+		<p class="title">경험/활동/교육</p>
+		<hr />
+		<c:forEach var="VO" items="${rsmCertificateVOList}" varStatus="stut" >
+			<div class="row" id="acbgInfo">
+				<div class="basText-l">${VO.crtfctAcqsSeCdNm } / ${VO.crtfctNm }</div>
+				<div class="basText-s">${VO.crtfctPblcnoffic }</div>
+				<div class="basText-s">
+				<c:if test="${VO.crtfctScr > 0 }">
+					 점수 : ${VO.crtfctScr }점
+				</c:if>
+				</div>
+				<div class="basText-s">
+					<c:if test="${VO.crtfctAcqsYm!=null }">
+						일자 : ${VO.crtfctAcqsYm.substring(0,4) }년 ${VO.crtfctAcqsYm.substring(4,6) }월
+					</c:if>
+				</div>
+			</div>
+			<hr />
+		</c:forEach>
+		<p class="title">포트폴리오</p>
+		<hr />
+		<c:forEach var="VO" items="${rsmPrtVOList}" varStatus="stut" >
+			<c:if test="${VO.prtUrl != null }">
+			<div class="row" id="acbgInfo">
+				<div class="basText-xl">${VO.prtUrl }</div>
+			</div>
+			<hr />
+			</c:if>
+		</c:forEach>
+		<p class="title">자기소개서</p>
+		<hr />
+		<c:forEach var="VO" items="${rsmClVOList}" varStatus="stut" >
+			<div class="row" id="acbgInfo" style="background-color: #b6ffea1f;">
+				<div class="basText-xl">${VO.clTtl }</div>
+			</div>
+			<br />
+			<div class="row" id="acbgInfo" style="background-color: #b6ffea1f;">
+				<div class="basText-max">${VO.clCn }</div>
+			</div>
+			<hr />
+		</c:forEach>
+	</div>
+</div>
+<style>
+#main{
+	justify-content: center;
+}
+#frame {
+	width: 1200px;
+	height: auto;
+	padding: 30px 100px 30px 100px;
+}
+#basicInfo{
+	width: 1000px;
+	height: auto;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+.basImg{
+	height: auto;
+	width: 100px;
+}
+.basImg img{
+	width: 100px;
+	height: 140px;
+}
+.basText-xs{
+	height: auto;
+	width: 200px;
+}
+.basText-s{
+	height: auto;
+	width: 300px;
+}
+.basText-m{
+	height: auto;
+	width: 400px;
+}
+.basText-l{
+	word-wrap: break-word;
+	height: auto;
+	width: 500px;
+}
+.basText-xl{
+	height: auto;
+	width: 600px;
+}
+.basText-max{
+	height: auto;
+	width: 100%;
+}
+.title{
+	margin-top: 30px;
+	font-size: 24px;
+	font-weight: 700;
+}
+#acbgInfo{
+	height: auto; 	
+	justify-content: space-between;
+}
+.zz div{
+	margin-bottom: 10px;
+}
+</style>

@@ -1,0 +1,20 @@
+package kr.or.ddit.controller;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import lombok.extern.slf4j.Slf4j;
+
+@RequestMapping("/member")
+@Slf4j
+@Controller
+@PreAuthorize("hasAnyRole('ROLE_MEMBER','ROLE_MEMENTER')")
+public class MemVideoController {
+	
+	@GetMapping("/videointrvw")
+	public String videointrvw() {
+		return "member/mypage/videointrvw";
+	}
+}

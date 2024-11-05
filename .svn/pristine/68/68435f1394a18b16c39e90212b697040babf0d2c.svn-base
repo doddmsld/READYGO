@@ -1,0 +1,60 @@
+@charset "UTF-8";
+#main{
+	justify-content: center;
+}
+#frame {
+	width: 1200px;
+	height: auto;
+	padding: 30px 100px 30px 100px;
+}
+#basicInfo{
+	width: 1000px;
+	height: auto;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+.basImg{
+	height: auto;
+	width: 100px;
+}
+.basImg img{
+	width: 100px;
+	height: 140px;
+}
+.basText-xs{
+	height: auto;
+	width: 200px;
+}
+.basText-s{
+	height: auto;
+	width: 300px;
+}
+.basText-m{
+	height: auto;
+	width: 400px;
+}
+.basText-l{
+	word-wrap: break-word;
+	height: auto;
+	width: 500px;
+}
+.basText-xl{
+	height: auto;
+	width: 600px;
+}
+.basText-max{
+	height: auto;
+	width: 100%;
+}
+.title{
+	margin-top: 30px;
+	font-size: 24px;
+	font-weight: 700;
+}
+#acbgInfo{
+	height: auto; 	
+	justify-content: space-between;
+}
+.zz div{
+	margin-bottom: 10px;
+}

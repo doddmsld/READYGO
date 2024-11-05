@@ -1,0 +1,169 @@
+package kr.or.ddit.service.impl;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.ddit.mapper.MemResumeMapper;
+import kr.or.ddit.service.MemResumeService;
+import kr.or.ddit.util.GetUserUtil;
+import kr.or.ddit.util.UploadController;
+import kr.or.ddit.vo.ResumeVO;
+import kr.or.ddit.vo.RsmAcademicVO;
+import kr.or.ddit.vo.RsmCareerVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class MemResumeServiceImpl implements MemResumeService {
+	@Inject
+	MemResumeMapper memResumeMapper;
+	
+	@Inject
+	UploadController uploadController;
+	
+	@Inject
+	GetUserUtil getUserUtil;
+
+	@Override
+	public ResumeVO openResume(String mbrId) {
+		return memResumeMapper.openResume(mbrId);
+	}
+
+	@Override
+	public List<ResumeVO> resumeList(Map<String, Object> mbrId) {
+		return memResumeMapper.resumeList(mbrId);
+	}
+	
+	// 이력서 이미지 파일 그룹에 저장후 그룹번호 받고 이력서에 인서트 이미 있으면 업데이트
+	@Override
+	public ResumeVO resumebasInfo(ResumeVO resumeVO) {
+		MultipartFile[] multipartFiles = resumeVO.getUploadFile();
+	    
+	    if(resumeVO.getRsmNo() == null || resumeVO.getRsmNo().trim().isEmpty()) {
+	    	if (multipartFiles == null || multipartFiles.length == 0 || multipartFiles[0].isEmpty()) {
+	    		resumeVO.setRsmFile(null);
+	    	}else {
+	    		String fileGroupSn = this.uploadController.multiImageUpload(multipartFiles, "/resume");
+				log.info("editPost->fileGroupSn : " + fileGroupSn);
+	    	}
+			memResumeMapper.insertResumebasInfo(resumeVO);
+		}else {
+			if (multipartFiles == null || multipartFiles.length == 0 || multipartFiles[0].isEmpty()) {
+				log.info("새로운 파일이 업로드되지 않았습니다. 기존 파일을 유지합니다.");
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("mbrId", resumeVO.getMbrId());
+				map.put("rsmNo", resumeVO.getRsmNo());
+				ResumeVO rsmVO =  memResumeMapper.selectOneResume(map);
+				if(rsmVO.getRsmFile()== null || rsmVO.getRsmFile().trim().isEmpty()) {
+					resumeVO.setRsmFile(null);
+				}else {
+					resumeVO.setRsmFile(rsmVO.getRsmFile());
+				}
+			} else {
+				// 새로운 파일 업로드 처리
+				String fileGroupSn = this.uploadController.multiImageUpload(multipartFiles, "/resume");
+				log.info("editPost->fileGroupSn : " + fileGroupSn);
+				
+				// 새로운 파일 그룹 번호 설정
+				resumeVO.setRsmFile(fileGroupSn);
+			}
+			memResumeMapper.updateResumebasInfo(resumeVO);
+		}
+		return resumeVO;
+	}
+
+	@Override
+	public ResumeVO updateHope(ResumeVO resumeVO) {
+		int result = memResumeMapper.updateHope(resumeVO);
+		log.info("result : " + result );
+		return resumeVO;
+	}
+
+	@Override
+	public ResumeVO acbgRegistPost(RsmAcademicVO rsmAcademicVO) {
+		String rsmNo = rsmAcademicVO.getRsmNo();
+		String AcbgNo = rsmAcademicVO.getAcbgNo().trim();
+		if(rsmAcademicVO.getAcbgMtcltnym().length()> 5) {
+			String mtcltnym =  rsmAcademicVO.getAcbgMtcltnym().replaceAll("-", "").substring(0, 6);
+			rsmAcademicVO.setAcbgMtcltnym(mtcltnym);
+		}
+		if(rsmAcademicVO.getAcbgGrdtnym().length() > 5) {
+			String grdtnym = rsmAcademicVO.getAcbgGrdtnym().replaceAll("-", "").substring(0, 6);
+			rsmAcademicVO.setAcbgGrdtnym(grdtnym);;
+		}
+		
+		log.info("AcbgNo : " + AcbgNo );
+		if(AcbgNo==null || AcbgNo.equals("")){
+			 memResumeMapper.insertAcdg(rsmAcademicVO);
+		}else {
+			memResumeMapper.updateAcdg(rsmAcademicVO);
+			
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("rsmNo", rsmNo);
+		map.put("mbrId", getUserUtil.getMemVO().getMbrId());
+		ResumeVO rsmVO = memResumeMapper.selectOneResume(map);
+		return rsmVO;
+	}
+
+	@Override
+	public ResumeVO acbgDeletePost(RsmAcademicVO rsmAcademicVO) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("rsmNo", rsmAcademicVO.getRsmNo());
+		map.put("AcbgNo", rsmAcademicVO.getAcbgNo());
+		memResumeMapper.deleteAcbg(map);
+		map.put("mbrId", getUserUtil.getMemVO().getMbrId());
+		ResumeVO rsmVO = memResumeMapper.selectOneResume(map);
+		return rsmVO;
+	}
+
+	@Override
+	public ResumeVO careerRegistPost(RsmCareerVO rsmCareerVO) {
+		String rsmNo = rsmCareerVO.getRsmNo();
+		String careerNo = rsmCareerVO.getCareerNo().trim();
+		log.info("서비스1");
+		if(rsmCareerVO.getCareerJncmpYmd().length()> 6) {
+			String careerJncmpYmd =  rsmCareerVO.getCareerJncmpYmd().replaceAll("-", "").substring(0, 8);
+			rsmCareerVO.setCareerJncmpYmd(careerJncmpYmd);
+			log.info("서비스2");
+		}
+		if(rsmCareerVO.getCareerRetireYmd().length() > 6) {
+			String careerRetireYmd = rsmCareerVO.getCareerRetireYmd().replaceAll("-", "").substring(0, 8);
+			rsmCareerVO.setCareerRetireYmd(careerRetireYmd);;
+			log.info("서비스3");
+		}
+		
+		if(careerNo==null || careerNo.equals("")){
+			memResumeMapper.insertCareer(rsmCareerVO);
+			log.info("서비스4");
+		}else {
+			memResumeMapper.updateCareer(rsmCareerVO);
+			
+		}
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("rsmNo", rsmNo);
+		map.put("mbrId", getUserUtil.getMemVO().getMbrId());
+		log.info("서비스5");
+		ResumeVO rsmVO = memResumeMapper.selectOneResume(map);
+		return rsmVO;
+	}
+
+	@Override
+	public ResumeVO careerDeletePost(RsmCareerVO rsmCareerVO) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("rsmNo", rsmCareerVO.getRsmNo());
+		map.put("careerNo", rsmCareerVO.getCareerNo());
+		memResumeMapper.deleteCareer(map);
+		map.put("mbrId", getUserUtil.getMemVO().getMbrId());
+		ResumeVO rsmVO = memResumeMapper.selectOneResume(map);
+		return rsmVO;
+	}
+}

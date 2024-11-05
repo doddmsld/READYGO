@@ -1,0 +1,269 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+.row{
+	flex-wrap: nowrap;
+}
+#topbox{
+	width : 1250px;
+	margin-left : 50px;
+}
+.box {
+	padding: 15px;
+    padding-left: 20px;
+    border : none;
+	margin : 10px;
+	width : 700px;
+	height : 72px;
+	border-radius : 12px;
+	font-size : 16px;
+}
+#h3{
+	margin-left:-40px;
+	font-weight : 700;
+	font-size : 30px;
+	color : #212529;
+}
+#count{
+	font-size : 20px;
+	margin-left : 68px;
+	font-weight: 700;
+    color: #232323;
+    border-bottom: 5px solid #2CCFC3;
+    padding-bottom: 5px;
+    width: 90px;
+}
+.num, .num2 {
+    font-size: 34px;
+    font-weight: 700;
+    text-align: right;
+    margin-top: -17px;
+    color : #666363;
+}
+.num2{
+	color : #2CCFC3;
+}
+#fir, #fin{
+	color : #666363;
+	background:#F4F4F4;
+	font-weight : 600;
+}
+#ing{
+	color : #2CCFC3;
+	background:#E8FAF8;
+	font-weight : 600;
+}
+.table th{
+	padding : 15px;
+}
+
+th{
+	text-align : center;
+	font-size : 16px;
+	width : 150px;
+}
+thead {
+    border-top: 2px solid #666363;
+    border-bottom: 2px solid #666363;
+}
+.table thead th {
+    vertical-align: bottom;
+    border-bottom:none;
+}
+.card-body.table-responsive.p-0 {
+    margin-left: 61px;
+    width: 1230px;
+}
+tbody{
+	text-align : center;
+	font-size : 14px;
+	color : #232323;
+}
+#total{
+    background: #2CCFC3;
+    color: white;
+    padding: 7px 8px 7px 8px;
+    border-radius: 999px;
+    font-size: 20px;
+}
+th.aplct{
+	 text-align:left; 
+	 padding-left:110px;
+}
+td.aplct{
+	 text-align:left; 
+	 padding-left:110px;
+	 font-size : 14px;
+	 font-weight : 700;
+}
+th.entNm {
+    text-align: left;
+    padding-left: 137px;
+
+}
+td.entNm {
+    text-align: left;
+    padding-left: 137px;
+    font-size : 14px;
+	font-weight : 550;
+	padding-top: 23px;    
+}
+.aplcont{
+	font-size : 12px;
+	color : #666363;
+	font-weight : normal;
+	cursor: pointer;
+}
+td.appymd {
+    font-size : 14px;
+	font-weight : 500; 
+	padding-top: 23px;
+}
+#btnCancel{
+	width : 100px;
+	height : 35px;
+	background: none;
+	border-radius : 5px;
+	border : 1px solid #24D59E;
+	color : #24D59E;
+	font-weight : 500;
+	font-size : 14px;
+	margin-top: 2.5px;
+}
+#btnCancel:hover{
+	background:#24D59E;
+	color : #ffffff;
+	font-weight : 600;
+}
+#cancelSuc{
+	width: 100px;
+    height: 35px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    background: #ECECEC;
+    border : 1px solid #A7A7A7;
+}
+/* table hover */
+.table-hover tbody tr:hover {
+    color: #212529;
+    background: none;
+}
+
+
+
+/* Modal CSS */
+select {
+    word-wrap: normal;
+    width: 500px;
+    height: 53px;
+    border: 1px solid #A7A7A7;
+    border-radius: 5px;
+    font-size : 16px;
+    padding-left: 15px;
+}
+.modal-content {
+    width: 790px;
+    height: 400px;
+    border-radius: 8px;
+    border: none;
+    margin: 220px 0px 0px -60px;
+}
+.modal-body{
+	text-align : center;
+    padding: 30px 8px 10px 0;
+}
+label{
+	margin-right : 30px;
+	font-size : 16px;
+	font-weight : 700;
+	color : #232323;
+}
+option{
+	font-size : 16px;
+}
+.modal-header {
+    font-size: 26px;
+    font-weight: 500;
+}
+
+span#title {
+    margin-left: 326px;
+    padding: 5px 0 5px 0;
+}
+
+#close, #submit {
+    width: 120px;
+    height: 40px;
+    font-size: 18px;
+    margin: 0px 6px;
+}
+#close{
+	border-radius: 5px;
+    font-size: 18px;
+    color: #666363;
+}
+#submit{
+	border-radius: 5px;
+    background:#24D59E;
+    color: #ffffff;
+    border : none;
+} 
+
+div#control {
+    text-align: center;
+    margin-top: 70px;    
+}
+#modalPbancTtl,#modalEntNm{
+	width : 500px;
+	height : 36px;
+	font-size : 16px;
+	border-radius: 5px;
+	background: #ECECEC;
+	border : 1px solid #A7A7A7;
+	padding-left: 15px;
+}
+
+/* icon */
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 200,
+  'GRAD' 0,
+  'opsz' 24;
+   vertical-align: middle;
+   font-size: 20px;  
+  
+}
+
+/* 페이징 css 시작*/
+.page-link {
+    color: black; 
+    border-radius: 7px; 
+    margin:5px;
+}
+/* 버튼클릭했을 때! */
+.page-item.active .page-link {
+    z-index: 3;
+    font-weight : 700;
+    color: #24D59E;
+    background-color: rgba(44, 207, 195, 0.11); 
+    border-radius: 7px;
+}
+.write_date{
+	text-align: right;
+}
+
+
+.page-item.active .page-link {
+    border-color: #dee2e6;
+}
+a.page-link:hover {
+    color: #000000;
+    background-color: #dee2e6;
+}
+/* 페이징 css 끝*/
+
+
+

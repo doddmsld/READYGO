@@ -1,0 +1,39 @@
+package kr.or.ddit.service;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.SearchVO;
+
+public interface MemberService {
+	
+	// 회원 상세
+	public MemberVO detail(String mbrId);
+	
+	// 개인정보 수정
+	public int editPost(MemberVO memberVO);
+	
+	// 회원 탈퇴
+	public int deletePost(String mbrId);
+	
+	//회원 검색기록
+	public List<SearchVO> searchHistory(String mbrId);
+
+	//회원 검색기록 선택 삭제
+	public int searchDelete(String searchNo);
+	
+	//회원 검색기록 전체 삭제
+	public int searchDeleteAll(String mbrId);
+	
+	//회원 검색기록 저장
+	public int searchInsert(Map<String, Object> map);
+	
+	// 프로필 이미지 수정
+    public int editPrfImg(MemberVO memberVO);
+    
+    // 회원 비밀번호 수정
+    public int updatePswd(MemberVO memberVO);
+
+
+}

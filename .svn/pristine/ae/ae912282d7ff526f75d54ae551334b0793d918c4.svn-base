@@ -1,0 +1,111 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="/resources/ckeditor5/ckeditor.js"></script>
+
+<!-- Spring Security 인증 정보를 가져오기 -->
+<sec:authentication property="principal" var="prc"/>
+
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script><!-- 웹소켓 -->
+<script type="text/javascript">
+var socket = null;
+var username = "${prc.username}";
+
+$(document).ready(function(){
+    if(username !== "anonymousUser"){
+        connectWs();
+    }
+});
+
+function connectWs(){
+    console.log("WebSocket 연결 시작");
+    var ws = new SockJS("/alarm");
+    ws.onopen = function() {
+        console.log('WebSocket 연결 성공');
+    };
+    ws.onmessage = function(event) {
+        console.log("서버로부터 메시지 받음: " + event.data);
+
+        // 메시지를 제대로 화면에 표시하는지 확인하기 위한 로그
+        console.log("받은 메시지: ", event.data);
+
+        let $socketAlert = $('#socketAlert');
+
+        // 메시지 내용 업데이트
+        $socketAlert.html(event.data);
+
+        // 알림 표시 (CSS 클래스를 통한 애니메이션 효과)
+        $socketAlert.removeClass('hidden').addClass('visible');
+        
+        // 5초 후 알림 숨기기
+        setTimeout(function(){
+            $socketAlert.removeClass('visible').addClass('hidden');
+        }, 10000);
+    };
+
+    ws.onclose = function() {
+        console.log('WebSocket 연결 종료');
+    };
+    socket = ws;  // 웹소켓을 저장
+}
+
+</script>
+
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    font-family: pretendard;
+    background-color: #fff;
+}
+
+.container {
+    width: 80%;
+    margin: 0 auto;
+    margin-left: 20%;
+}
+/* 알림 박스 스타일 */
+.socket-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    background-color: #24D59E; /* 알림 배경색 (초록색) */
+    color: #fff; /* 텍스트 색상 */
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+    font-size: 16px;
+    font-family: 'Pretendard', sans-serif;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transform: translateY(-20px);
+}
+
+/* 알림 박스 표시할 때 */
+.socket-alert.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 알림 박스 숨길 때 */
+.socket-alert.hidden {
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+</style>
+
+<div class="container">
+    <header>
+        <h1>소켓 확인</h1>
+    </header>
+    <div><p>들어와라</p></div>
+    <div id="socketAlert" class="socket-alert hidden">
+    <div class="socket-alert-content">
+        <i class="fas fa-bell"></i> <!-- 알림 아이콘 -->
+        <span class="alert-message"></span> <!-- 실제 알림 메시지 -->
+    </div>
+</div>
+</div>

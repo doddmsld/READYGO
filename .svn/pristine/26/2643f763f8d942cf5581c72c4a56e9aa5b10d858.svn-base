@@ -1,0 +1,62 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Param;
+
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.EnterEmpYcntVO;
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.IndutyVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PbancVO;
+
+public interface EnterMapper {
+	public EnterVO selectOne(String enterVO);
+	
+	//기업프로필
+	public EnterVO profile(String entId);
+	
+	//기업 프로필 연도별 입사자수
+	public List<EnterEmpYcntVO> empYcnt(String entId);
+	
+	//기업프로필 - 업종
+	public List<CodeVO> getIndutyList();
+	
+	//기업정보수정 폼
+	public EnterVO edit(String entId);
+
+	//기업정보수정 - 기업형태
+	public List<CodeVO> getEntStleCdList();
+
+	//기업정보수정 실행
+	public int editPost1(EnterVO enterVO);//ENTER 테이블의 대상 컬럼들을 업데이트
+	//INDUTY(업종) 테이블을 업데이트
+	public int editPost2(EnterVO enterVO);
+
+	//기업탈퇴
+	public int deleteAjax(String entId);
+
+	//인재-스킬
+	public List<CodeVO> getSkillList();
+
+	//인재리스트
+	public List<MemberVO> getInjaeList(Map<String, Object> map);
+	public int getTotal();
+	
+	//기업추천인재
+	public List<MemberVO> getRecommendList();
+
+	//기업 스카우트 제안 공고
+	public List<PbancVO> pbancList(String entId);
+	
+	//기업 공고관리
+	public List<PbancVO> getPbancList(String entId);
+
+
+
+
+	
+}

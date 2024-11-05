@@ -1,0 +1,86 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+
+<style>
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+.GigFormInput{
+	display: flex;
+	flex-direction: column; 
+}
+/*제목*/
+.form-group {
+	display: flex;
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px;
+	width: 55%;
+}
+
+.label1{
+	margin: 10px 80px 10px 10px; 
+	display:inline-block;
+	text-align:left;
+}
+.title_1{
+	border: 1px solid #ffffff;
+	width: 75%;
+}
+
+
+/*카테고리 구분*/
+.form-group1{
+	display: flex;
+	flex-direction: row; 
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px;	
+	width: 55%;
+}
+.label2{
+	margin: 10px; 
+	display:inline-block;
+	text-align:left;
+	width: 80px;
+}
+.form-sub-group{
+	display : flex;
+	flex-direction: column;
+	width: 100%;
+}
+.category{
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 5px;	
+	background-color: #eeeeee;
+}
+.label2_1{
+	margin: 10px; 
+	display:inline-block;
+	text-align:center;
+	width: 100px;
+}
+
+.title_2{
+	border: 1px solid #eeeeee;
+	font-size: 16px;
+	width: 80%;
+	background-color: #eeeeee;
+}
+
+.form-group2{
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+	padding: 10px;
+	margin: 10px;
+	width: 55%;
+}
+
+

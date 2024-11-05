@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.AdminMapper">
+	<resultMap type="adminVO" id="adminMap">
+		<result property="admId" column="ADM_ID"/>
+		<result property="admPswd" column="ADM_PSWD"/>
+		<result property="enabled" column="ENABLED"/>
+		<result property="userType" column="USER_TYPE"/>
+		<collection property="UserAuthVOList" resultMap="adminAuthMap"></collection>
+	</resultMap>
+	<resultMap type="userAuthVO" id="adminAuthMap">
+		<result property="admId" column="ADM_ID"/>
+		<result property="auth" column="AUTH"/>
+	</resultMap>
+	<select id="selectOne" parameterType="String" resultMap="adminMap">
+		SELECT A.ADM_ID, A.ADM_PSWD, 
+		       A.ENABLED, A.USER_TYPE,
+		       B.AUTH
+		FROM ADMIN A, AUTH_ADMIN B
+		WHERE A.ADM_ID = B.ADM_ID
+		  AND A.ADM_ID = #{username}
+	</select>
+</mapper>

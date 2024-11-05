@@ -1,0 +1,298 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+h5 {
+	color: #232323;
+}
+h2{
+	color:#232323;
+	font-weight: 600;
+}
+#fmenu{
+	margin-bottom: 10px;
+}
+.fc .fc-button-primary {
+    background-color: gray;
+     opacity : 0.7;
+	border: 1px solid gray;
+}
+#maintop {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 20px;
+}
+
+#mainright {
+	height: 500px;
+	display: flex;
+	flex-direction: column;
+}
+#mainleft{
+	height: 500px;
+}
+
+/*왼쪽 스타일*/
+.header-area.header-sticky {
+	min-height: 0px;
+}
+.fc-daygrid-day-number{
+	font-size:12px;
+}
+#calendar {
+	width: 680px;
+	height: auto;
+}
+
+#yrModal {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(41, 41, 41, 0.67);
+	display: none;
+	z-index: 1000;
+}
+
+#cont {
+	margin: 50px auto;
+	width: 50%;
+	height: 70%;
+	background-color: white;
+	color: rgba(35, 35, 35, 1);
+	border-radius: 15px;
+}
+
+#closeModal {
+	text-align: right;
+	margin-right: 50px;
+	margin-top: 30px;
+}
+
+.close {
+	border: 1px solid rgba(167, 167, 167, 1);
+	color: rgba(35, 35, 35, 1);
+	background: white;
+	border-radius: 3px;
+}
+
+.close:hover {
+	background: rgba(236, 236, 236, 1);
+}
+
+#schFColor {
+	margin-bottom: 70px;
+}
+
+#ModalContent {
+	text-align: justify;
+	padding-left: 20%;
+	line-height: 50px;
+}
+
+#add {
+	border: 1px solid #24D59E;
+	border-radius: 5px;
+	height: 34px;
+	background: white;
+	color: #24D59E;
+}
+
+#add:hover {
+	background: #24D59E;
+	color: white;
+}
+
+label {
+	display: inline-block;
+	width: 80px;
+	height: 30px;
+}
+
+.fc-h-event {
+	border: none;
+}
+
+/*오른쪽 스타일*/
+#fast {
+	width: 600px;
+	height: 100px;
+	border: 1px solid #B6B6B6;
+	border-radius: 20px;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+#pbanc, #prf, #proposal, #applicant {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.fmtitle {
+	font-size: 14px;
+	color: #232323;
+	font-weight: 500;
+}
+
+.v-line {
+	border-left: 1px solid #B6B6B6;
+	height: 70px;
+}
+
+#fastmenu {
+	width: 600px;
+	height: 110px;
+	margin-top: 40px;
+}
+
+#fastmenubtn {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	
+}
+
+#pr, #pb, #ap, #pro {
+	width: 120px;
+	height: 50px;
+	border: 1px solid #B6B6B6;
+	border-radius: 15px;
+	background: #FFFFFF;
+}
+#pr:hover, #pb:hover, #ap:hover, #pro:hover {
+	border-color: #24D59E;
+	color: #24D59E;
+}
+#pbancmenu {
+	width: 600px;
+	height: 130px;
+}
+
+#pbanctitle {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 20px;
+	margin-bottom: 10px;
+}
+
+#pbancex {
+	width: 600px;
+	height: 200px;
+	border: 1px solid #B6B6B6;
+	border-radius: 20px;
+}
+
+#pbanclist {
+	margin: 20px auto;
+	width: 500px;
+	height: 150px;
+	border-top: 1px solid #666363;
+	border-bottom: 1px solid #666363;
+	overflow-y: auto;
+}
+
+/* 인재 추천*/
+#mainbtm {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.prfmenu {
+	flex: 0 0 auto;
+	width: 180px;
+	height: 120px;
+	border: 1px solid #E5F8ED;
+	padding: 10px;
+	border-radius: 10px;
+	background-color: #E5F8ED;
+	cursor: pointer;
+/* 	transition: background-color 0.3s ease; */
+	margin-right: 25px;
+}
+
+.circle {
+	width: 35px;
+	height: 35px;
+	border-radius: 50%;
+}
+
+.info {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	margin: 1px;
+}
+
+.p-line {
+	border-left: 1px solid #dddddd;
+	height: 150px;
+	margin-left: 30px;
+}
+
+#newbie, #personal {
+	display: flex;
+	width: 600px;
+	justify-content: space-between;
+}
+.injae{
+	width:110px;
+	text-align: left;
+	font-size: 14px;
+}
+.skill{
+	text-align:center;
+	font-size: 12px;
+}
+a {
+    color: #232323;
+}
+a:hover{
+	color: #24D59E;
+}
+.num{
+	font-size: 30px;
+}
+#pblist{
+	display: flex;
+	align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #D9D9D9;
+}
+.pbl{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.pblso1{
+	display: flex;
+	flex-direction: column;
+	width:120px;
+}
+.pblso{
+	display: flex;
+	flex-direction: column;
+}
+.fbig{
+	font-size: 16px;
+	color: #666363;
+}
+.fbigtt{
+	font-size: 16px;
+	color: #666363;
+}
+.fbigtt:hover{
+	color: #24D59E;
+}
+.fmid{
+	font-size: 12px;
+	color: #666363;
+}
+.fsmall{
+	font-size: 10px;
+	color: #666363;
+}

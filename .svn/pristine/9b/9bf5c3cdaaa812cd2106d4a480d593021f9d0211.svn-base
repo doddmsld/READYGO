@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.NotificationMapper">
+	<resultMap type="notificationVO" id="notificaitonMap">
+		<result property="ntcnNo" column="NTCN_NO"/>
+		<result property="commonId" column="COMMON_ID"/>
+		<result property="ntcnCn" column="NTCN_CN"/>
+		<result property="ntcnUrl" column="NTCN_URL"/>
+		<result property="ntcnIdntyYn" column="NTCN_IDNTY_YN"/>
+		<result property="ntcnYmd" column="NTCN_YMD"/>
+		<result property="ntcnTrgettblNm" column="NTCN_TRGETTBL_NM"/>
+		<result property="ntcnTrgettblPk" column="NTCN_TRGETTBL_PK"/>
+		<result property="ntcnTrgettblAsstnfrmlasprgrp" column="NTCN_TRGETTBL_ASSTNFRMLASPRGRP"/>
+		<result property="ntcnRsvtYmday" column="NTCN_RSVT_YMDAY"/>
+	</resultMap>
+	
+	<insert id="sendAlram" parameterType="notificationVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="ntcnNo">
+	        SELECT LPAD(NVL(MAX(NTCN_NO), '0') + 1, 4, '0') AS NTCN_NO
+	        FROM NOTIFICATION
+		</selectKey>
+		INSERT INTO NOTIFICATION(NTCN_NO, COMMON_ID, NTCN_CN, NTCN_URL,NTCN_YMD)
+		VALUES (#{ntcnNo},#{commonId},#{ntcnCn},#{ntcnUrl},SYSDATE)
+	</insert>
+	
+	<select id="alramList" parameterType="String" resultType="notificationVO">
+		SELECT *
+		FROM NOTIFICATION
+		WHERE COMMON_ID = #{commonId} AND NTCN_IDNTY_YN=1
+	</select>
+	
+	<update id="alramDel" parameterType="String">
+	    UPDATE NOTIFICATION
+	    SET NTCN_IDNTY_YN = 0
+	    WHERE NTCN_NO = #{ntcnNo}
+	</update>
+	
+	<update id="alramAllDel" parameterType="String">
+		UPDATE NOTIFICATION
+		SET NTCN_IDNTY_YN = 0
+		WHERE COMMON_ID = #{comonId}
+	</update>
+	
+</mapper>

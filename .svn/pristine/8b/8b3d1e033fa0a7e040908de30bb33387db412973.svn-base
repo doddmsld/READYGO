@@ -1,0 +1,30 @@
+package kr.or.ddit.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.mapper.MemResumeMapper;
+import kr.or.ddit.service.MemResumeService;
+import kr.or.ddit.vo.ResumeVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class MemResumeServiceImpl implements MemResumeService {
+	@Inject
+	MemResumeMapper memResumeMapper;
+
+	@Override
+	public ResumeVO openResume(String mbrId) {
+		return memResumeMapper.openResume(mbrId);
+	}
+
+	@Override
+	public List<ResumeVO> resumeList(Map<String, Object> mbrId) {
+		return memResumeMapper.resumeList(mbrId);
+	}
+}

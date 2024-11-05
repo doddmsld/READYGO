@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.EnterListMapper">
+<sql id="where">
+	<if test="selCity != null and selCity.size() > 0">
+		<!-- <if test="'WRGN18-001' in selCity"> -->
+		<!-- selCity에 전국(WRGN18-001)이 포함되어 있을 때 전체 값을 출력 -->
+		<!-- 아무 조건도 추가하지 않음 -->
+		<!-- </if> -->
+		<if test="'WRGN18-001' not in selCity">
+			AND (
+			<foreach collection="selCity" item="city" separator=" OR ">
+				A.ENT_RPRSRGN = #{city}
+			</foreach>
+			)
+		</if>
+	</if>
+
+	<if test="selJob != null and selJob.size() > 0">
+		AND (
+		<foreach collection="selJob" item="job" separator=" OR ">
+			A.TPBIZ_SE_CD = #{job}
+		</foreach>
+		)
+	</if>
+
+	<if test="keyword != null and keyword != ''">
+		AND (A.ENT_NM LIKE '%' || #{keyword} || '%')
+	</if>
+	<!-- </where> -->
+	<if test="order!=null and order!=''">
+		<choose>
+			<when test="order=='pbancNo'">
+				ORDER BY RNUM DESC
+			</when>
+			<when test="order=='revenueAmount'">
+				ORDER BY B.REVENUE_AMOUNT DESC
+			</when>
+		</choose>
+	</if>
+</sql>
+
+	<resultMap type="PbancVO" id="pbancMap">
+		<result property="pbancSttus" column="PBANC_STTUS"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="pbancPicNm" column="PBANC_PIC_NM"/>
+		<result property="pbancPicTelno" column="PBANC_PIC_TELNO"/>
+		<result property="pbancPicMbtlnum" column="PBANC_PIC_MBTLNUM"/>
+		<result property="pbancPicEml" column="PBANC_PIC_EML"/>
+		<result property="pbancAplctEduCd" column="PBANC_APLCT_EDU_CD"/>
+		<result property="pbancRprsrgn" column="PBANC_RPRSRGN"/>
+		<result property="pbancTtl" column="PBANC_TTL"/>
+		<result property="pbancWorkstleCd" column="PBANC_WORKSTLE_CD"/>
+		<result property="pbancApntcpd" column="PBANC_APNTCPD"/>
+		<result property="pbancSalary" column="PBANC_SALARY"/>
+		<result property="pbancWorkHrCd" column="PBANC_WORK_HR_CD"/>
+		<result property="pbancWorkDayCd" column="PBANC_WORK_DAY_CD"/>
+		<result property="pbancRcptMthdCd" column="PBANC_RCPT_MTHD_CD"/>
+		<result property="pbancAppofeForm" column="PBANC_APPOFE_FORM"/>
+		<result property="pbancRprsDty" column="PBANC_RPRS_DTY"/>
+		<result property="pbancRcptPd" column="PBANC_RCPT_PD"/>
+		<result property="pbancBgngDt" column="PBANC_BGNG_DT"/>
+		<result property="pbancBgngDts" column="PBANC_BGNG_DTS"/>
+		<result property="pbancDdlnDt" column="PBANC_DDLN_DT"/>
+		<result property="pbancDdlnDts" column="PBANC_DDLN_DTS"/>
+		<result property="pbancDlnDt" column="PBANC_DLN_DT"/>
+		<result property="pbancTmplt" column="PBANC_TMPLT"/>
+		<result property="pbancWrtDt" column="PBANC_WRT_DT"/>
+		<result property="pbancMdfcnDt" column="PBANC_MDFCN_DT"/>
+		<result property="pbancDelDt" column="PBANC_DEL_DT"/>
+		<result property="pbancScrapCo" column="PBANC_SCRAP_CO"/>
+		<result property="pbancDelYn" column="PBANC_DEL_YN"/>
+		<result property="pbancRdcnt" column="PBANC_RDCNT"/>
+		<result property="pbancBeforeWrt" column="PBANC_BEFORE_WRT"/>
+		<result property="pbancDlnDt" column="PBANC_DLN_DT"/>
+		<result property="rnum" column="RNUM"/>
+		<result property="entStleNm" column="ENT_STLE_NM"/>
+		<result property="entNm" column="ENT_NM"/>
+		<result property="pbancRprsrgnNm" column="PBANC_RPRSRGN_NM"/>
+		<result property="pbancAplctEdu" column="PBANC_APLCT_EDU"/>
+		<result property="rcritCareerNm" column="RCRIT_CAREER_NM"/>
+		<result property="pbancTpbizNm" column="PBANC_TPBIZ_NM"/>
+	</resultMap>
+	
+	<resultMap type="tbcIndutyVO" id="tbcIndutyMap">
+		<result property="tpbizCd" column="TPBIZ_CD"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+	</resultMap>
+	
+	<resultMap type="tbcRecruitmentVO" id="tbcRecruitmentMap">
+		<result property="rcritNo" column="RCRIT_NO"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="rcritNm" column="RCRIT_NM"/>
+		<result property="rcritCareerCd" column="RCRIT_CAREER_CD"/>
+		<result property="rcritTask" column="RCRIT_TASK"/>
+		<result property="rcritDept" column="RCRIT_DEPT"/>
+		<result property="rcritJbttlCd" column="RCRIT_JBTTL_CD"/>
+	</resultMap>
+	
+	<resultMap type="enterVO" id="enterMap">
+		<result property="userType" column="USER_TYPE"/>
+		<result property="entMail" column="ENT_MAIL"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="entPswd" column="ENT_PSWD"/>
+		<result property="entNm" column="ENT_NM"/>
+		<result property="entManagerTelno" column="ENT_MANAGER_TELNO"/>
+		<result property="entFxnum" column="ENT_FXNUM"/>
+		<result property="entAddr" column="ENT_ADDR"/>
+		<result property="entAddrDetail" column="ENT_ADDR_DETAIL"/>
+		<result property="entZip" column="ENT_ZIP"/>
+		<result property="entLogo" column="ENT_LOGO"/>
+		<result property="entRprsntvNm" column="ENT_RPRSNTV_NM"/>
+		<result property="entIntrcnsntnc" column="ENT_INTRCNSNTNC"/>
+		<result property="entStleCd" column="ENT_STLE_CD"/>
+		<result property="entEmpCnt" column="ENT_EMP_CNT"/>
+		<result property="entFndnYmd" column="ENT_FNDN_YMD"/>
+		<result property="entHmpgUrl" column="ENT_HMPG_URL"/>
+		<result property="entBrno" column="ENT_BRNO"/>
+		<result property="entBrFile" column="ENT_BR_FILE"/>
+		<result property="enabled" column="ENABLED"/>
+		<result property="tpbizSeCd" column="TPBIZ_SE_CD"/>
+		<collection property="userAuthVOList" resultMap="enterAuthMap"></collection>
+		<collection property="codeVOList" resultMap="codeMap"></collection>
+		<collection property="pbancVOList" resultMap="pbancMap"></collection>
+		<collection property="fileDetailVOList" resultMap="fileDetailMap"></collection>
+	</resultMap>
+	
+	<resultMap type="fileDetailVO" id="fileDetailMap">
+		<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="orgnlFileNm" column="ORGNL_FILE_NM"/>
+		<result property="strgFileNm" column="STRG_FILE_NM"/>
+		<result property="filePathNm" column="FILE_PATH_NM"/>
+		<result property="fileSz" column="FILE_SZ"/>
+		<result property="fileExtnNm" column="FILE_EXTN_NM"/>
+		<result property="fileMime" column="FILE_MIME"/>
+		<result property="fileFancysize" column="FILE_FANCYSIZE"/>
+		<result property="fileStrgYmd" column="FILE_STRG_YMD"/>
+		<result property="fileDwnldCnt" column="FILE_DWNLD_CNT"/>
+	</resultMap>
+	
+	
+	<resultMap type="userAuthVO" id="enterAuthMap">
+		<result property="entId" column="ENT_ID"/>
+		<result property="auth" column="AUTH"/>
+	</resultMap>
+	
+	<resultMap type="codeVO" id="codeMap">
+	<result property="comCode" column="COM_CODE"/>
+	<result property="comCodeGrp" column="COM_CODE_GRP"/>
+	<result property="comCodeNm" column="COM_CODE_NM"/>
+	<result property="comCodeDesc" column="COM_CODE_DESC"/>
+	<result property="useYn" column="USE_YN"/>
+	<result property="upperComCode" column="UPPER_COM_CODE"/>
+	<result property="upperComCodeGrp" column="UPPER_COM_CODE_GRP"/>
+	</resultMap>
+	
+	 <resultMap type="memberVO" id="memberMap">
+      <result property="mbrId" column="MBR_ID"/>
+      <result property="mbrPswd" column="MBR_PSWD"/>
+      <result property="mbrNm" column="MBR_NM"/>
+      <result property="mbrBrdt" column="MBR_BRDT"/>
+      <result property="mbrSexdstnCd" column="MBR_SEXDSTN_CD"/>
+      <result property="mbrEml" column="MBR_EML"/>
+      <result property="mbrTelno" column="MBR_TELNO"/>
+      <result property="mbrZip" column="MBR_ZIP"/>
+      <result property="mbrAddr" column="MBR_ADDR"/>
+      <result property="mbrAddrDtl" column="MBR_ADDR_DTL"/>
+      <result property="mbrJoinYmd" column="MBR_JOIN_YMD"/>
+      <result property="mbrWhdwlYmd" column="MBR_WHDWL_YMD"/>
+      <result property="enabled" column="ENABLED"/>
+      <result property="mbrWarnCo" column="MBR_WARN_CO"/>
+      <result property="mbrAcnutno" column="MBR_ACNUTNO"/>
+      <result property="entId" column="ENT_ID"/>
+      <result property="userType" column="USER_TYPE"/>
+      <result property="fileGroupSn" column="FILE_GROUP_SN"/>      
+   </resultMap>
+	
+	
+	<resultMap type="applicantVO" id="applicantMap">
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="rsmTtl" column="RSM_TTL"/>
+		<result property="rsmNo" column="RSM_NO"/>
+		<result property="aplctAppymd" column="APLCT_APPYMD"/>
+		<result property="aplctAppymds" column="APLCT_APPYMDS"/>
+		<result property="aplctPrcsStatCd" column="APLCT_PRCS_STAT_CD"/>
+		<result property="aplctFile" column="APLCT_FILE"/>
+		<result property="aplctPrvcagreYmd" column="APLCT_PRVCAGRE_YMD"/>
+		<result property="aplctCancelCd" column="APLCT_CANCEL_CD"/>
+		
+		
+		<result property="entNm" column="ENT_NM"/>
+		<result property="pbancTtl" column="PBANC_TTL"/>
+		
+		<result property="mbrNm" column="MBR_NM"/>
+		<result property="intrvwYmd" column="INTRVW_YMD"/>
+	</resultMap>
+
+	<select id="list" parameterType="hashMap" resultType="enterVO">
+    WITH T AS
+    (
+       SELECT ROWNUM AS RNUM, A.ENT_ID, A.ENT_NM, get_file_path(A.ENT_LOGO) ENT_LOGO
+       	, get_common_code_name(A.ENT_STLE_CD) ENT_STLE_CD_NM
+        , get_common_code_name(A.TPBIZ_SE_CD) TPBIZ_SE_CD_NM
+        , get_common_code_name(SUBSTR(A.ENT_RPRSRGN, 1, 6)) ENT_RPRSRGN_NM
+        , get_common_code_name(A.ENT_RPRSRGN) ENT_CITY_NM
+        FROM ENTER A
+        LEFT OUTER JOIN ENTER_REVENUE B ON(A.ENT_ID = B.ENT_ID)
+        WHERE 1 = 1
+        AND(B.REVENUE_YEAR = 2023)
+        AND(A.ENABLED = 1)
+        <include refid="where"></include>
+    )
+    SELECT * FROM T
+    WHERE T.RNUM BETWEEN (#{currentPage} * 10) - (10 - 1) AND (#{currentPage} * 10)
+	</select>
+
+	<!-- 전체 행의 수 -->
+	<select id="getTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM ENTER A
+        LEFT OUTER JOIN ENTER_REVENUE B ON(A.ENT_ID = B.ENT_ID)
+		WHERE 1 = 1
+		AND(B.REVENUE_YEAR = 2023)
+		AND(A.ENABLED = 1)
+        <include refid="where"></include>
+	</select>
+
+</mapper>

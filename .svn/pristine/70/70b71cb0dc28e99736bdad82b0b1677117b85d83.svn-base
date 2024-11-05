@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.ChatMapper">
+	
+	<resultMap type="chatRoomVO" id="chatRoomMap">
+		<result property="roomNo" column="ROOM_NO"/>
+		<result property="senderUser" column="SENDER_USER"/>
+		<result property="receiveUser" column="RECEIVE_USER"/>
+		<result property="roomCreateDate" column="ROOM_CREATE_DATE"/>
+	</resultMap>
+
+
+    <!-- 채팅방 생성 쿼리 -->
+    <insert id="createChatRoom" useGeneratedKeys="true" keyProperty="roomNo">
+        <selectKey keyProperty="roomNo" resultType="String" order="BEFORE">
+            SELECT 'R_' || LPAD(chat_room_seq.NEXTVAL, 6, '0') AS roomNo FROM dual
+        </selectKey>
+        
+        INSERT INTO CHAT_ROOM (ROOM_NO, SENDER_USER, RECEIVE_USER, ROOM_CREATE_DATE)
+        VALUES (#{roomNo}, #{senderUser}, #{receiveUser}, CURRENT_TIMESTAMP)
+    </insert>
+
+    <!-- 채팅방 존재 여부 확인 쿼리 -->
+	<select id="findChatRoom" resultMap="chatRoomMap">
+	    SELECT * FROM CHAT_ROOM 
+	    WHERE (SENDER_USER = #{senderUser} AND RECEIVE_USER = #{receiveUser})
+	       OR (SENDER_USER = #{receiveUser} AND RECEIVE_USER = #{senderUser})
+	</select>
+
+	
+	    
+</mapper>

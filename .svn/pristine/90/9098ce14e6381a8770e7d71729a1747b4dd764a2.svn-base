@@ -1,0 +1,358 @@
+package kr.or.ddit.api;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+
+/*
+	load()와 saveData()메서드에서 POI를 활용한 데이터 저장/출력을 함
+ */
+public class PoI {
+	// 띄어쓰기를 쓰면 scanner에서 오류 나중에 알려줌
+	Scanner scan;
+	private HashMap<String, Phone> phoneMap;
+	// 데이터 변경 여부
+	private boolean changeChk;
+
+	// 생성자
+	public PoI() {
+		phoneMap = (HashMap<String, Phone>) load();
+		scan = new Scanner(System.in);
+		changeChk = false;
+	}
+
+	public static void main(String[] args) {
+		PoI p = new PoI();
+		p.startProgram();
+	}
+
+	public void startProgram() {
+		// 시작 시 데이터가 있다면 데이터를 phoneMap에 저장함
+		load();
+
+		while (true) {
+			int choice = menu();
+			System.out.println();
+			switch (choice) {
+			case 1:
+				insert();
+				break;
+			case 2:
+				update();
+				break;
+			case 3:
+				delete();
+				break;
+			case 4:
+				search();
+				break;
+			case 5:
+				print();
+				break;
+			case 6:
+				saveData();
+				break;
+			case 0:
+				saveData();
+				System.out.println("프로그램을 종료합니다...");
+				return;
+			default:
+				System.out.println("잘못된 입력입니다.");
+			}
+		}
+	}
+
+	private int menu() {
+		System.out.println();
+		System.out.println("\t메  뉴");
+		System.out.println();
+		System.out.println("1. 전화번호 등록");
+		System.out.println("2. 전화번호 수정");
+		System.out.println("3. 전화번호 삭제");
+		System.out.println("4. 전화번호 검색");
+		System.out.println("5. 전화번호 전체 출력");
+		System.out.println("6. 전화번호 저장");
+		System.out.println("0. 프로그램 종료");
+		System.out.print("메뉴선택 : ");
+		return scan.nextInt();
+	}
+
+	// 초기에 엑셀 데이터가 있다면 phoneMap에 저장
+	// 이름 전화번호 주소
+	private Map<String, Phone> load() {
+		File file = new File("D:/d_other/phonedata.xlsx");
+		// 데이터가 없다면 종료
+		if (!file.exists()) {
+			return new HashMap<String, Phone>();
+		}
+		HashMap<String, Phone> pMap = new HashMap<String, Phone>();
+
+		FileInputStream fin =null;
+		try {
+			fin = new FileInputStream(file);
+			
+			XSSFWorkbook workbook = new XSSFWorkbook(fin);
+			// 시트 가져오기 ( 첫번째 시트에 데이터 저장 )
+			XSSFSheet sheet = workbook.getSheetAt(0);
+			// 존재하는 행 갯수 가져오기
+			int rows = sheet.getPhysicalNumberOfRows();
+			
+			// 각 행별로 데이터 출력
+			// 첫번째 row는 인덱스임으로 포함시키지않음
+			for(int r = 1 ; r < rows ; r++) {
+				// row번호가 변할 때마다 데이터 초기화
+				String name = "";
+				Phone phone = new Phone();
+				
+				// 행 가져오기
+				XSSFRow row = sheet.getRow(r);
+				
+				int cells = row.getPhysicalNumberOfCells(); // 행의 셀 갯수 가져오기
+				
+				for(int c = 0 ; c < cells; c++) {
+					XSSFCell cell = row.getCell(c); // 셀 값 가져오기
+					
+					String value = "";
+					if(cell!=null) {
+						// 모든 타입이 String이기때문에 String으로 가져옴
+						value = cell.getStringCellValue();
+					}
+					// 셀의 값 저장
+					switch (c) {
+					// c = 0 이름
+					case 0:
+						name = value;
+						phone.setName(value);
+						break;
+					// c = 1 전화번호
+					case 1:
+						phone.setTelNo(value);
+						break;
+					// c = 2 주소
+					case 2:
+						phone.setAddress(value);
+						break;
+					default:
+						break;
+					}
+				}
+				// 해당 phone 객체에 데이터를 모두 저장한 뒤에 하나의 데이터를 map에 저장
+				// 맵에 값을 저장
+				pMap.put(name, phone);
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+			 
+		return pMap;
+	}
+
+	// 데이터 저장
+	// 엑셀로 데이터 저장함
+	private void saveData() {
+		// true값은 변경
+		if (!changeChk) {
+			System.out.println("변경할 것이 없습니다");
+			return;
+		}
+		// 해당 엑셀을 가져옴
+		File file = new File("D:/d_other/phonedata.xlsx");
+		FileOutputStream fout = null;
+		XSSFWorkbook workbook = new XSSFWorkbook();
+		Sheet sheet = workbook.createSheet();
+		
+		try {
+			fout = new FileOutputStream(file);
+			
+			// 첫번째 row는 인덱스
+			Row row0 = sheet.createRow(0);
+			row0.createCell(0).setCellValue("이름");
+			row0.createCell(1).setCellValue("전화번호");
+			row0.createCell(2).setCellValue("주소");
+			
+			// 1부터 데이터를 찾음
+			int rowNum = 1;
+			// 데이터 입력
+			for(String name : phoneMap.keySet()) {
+				// 이름을 꺼내서 저장
+				Phone phone = phoneMap.get(name);
+				// rowNum 값을 저장한 뒤에 나중에 +1을 해줌
+				Row row = sheet.createRow(rowNum++);
+				
+				String telNo = phone.getTelNo();
+				String addr = phone.getAddress();
+				
+				// 해당 cell번호에 해당하는 값에 데이터 입력
+				row.createCell(0).setCellValue(name);
+				row.createCell(1).setCellValue(telNo);
+				row.createCell(2).setCellValue(addr);
+			}
+			workbook.write(fout); // workbook을 FileOutputStream을 사용하여 파일에 씁니다.
+			System.out.println("저장되었습니다");
+			
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if(fout!=null) try {
+				fout.close(); // 스트림을 닫습니다.
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+		}
+	}
+
+	
+	
+	
+	// 기존에 있던 메소드 수정X------------------------------------------------------------
+	private void insert() {
+		System.out.println("새롭게 등록할 전화번호 정보를 입력하세요.");
+		System.out.print("이름 >> ");
+		String name = scan.next();
+		if (phoneMap.containsKey(name)) {
+			System.out.println("'" + name + "'은 이미 등록된 사람입니다.");
+			return;
+		}
+		System.out.print("전화번호 >> ");
+		String telNo = scan.next();
+		scan.nextLine(); // 입력 버퍼 엔터 비움
+		System.out.print("주소 >> ");
+		String address = scan.nextLine();
+		Phone p = new Phone();
+		p.setName(name);
+		p.setTelNo(telNo);
+		p.setAddress(address);
+		phoneMap.put(name, p);
+		System.out.println("'" + name + "' 전화번호 등록 완료!!");
+		changeChk = true;
+	}
+
+	private void update() {
+		System.out.println("변경할 이름을 입력해주세요");
+		String name = scan.next();
+		if (!phoneMap.containsKey(name)) {
+			System.out.println("'" + name + "'은 등록되지 않은 사람입니다.");
+			return;
+		}
+		System.out.print("전화번호 >> ");
+		String telNo = scan.next();
+		scan.nextLine(); // 입력 버퍼 엔터 비움
+		System.out.print("주소 >> ");
+		String address = scan.nextLine();
+		Phone p = new Phone();
+		p.setName(name);
+		p.setTelNo(telNo);
+		p.setAddress(address);
+		phoneMap.put(name, p);
+		System.out.println("'" + name + "' 전화번호 변경 완료!!");
+		changeChk = true;
+	}
+
+	private void delete() {
+		System.out.println("삭제할 이름을 입력해주세요");
+		String name = scan.next();
+		if (!phoneMap.containsKey(name)) {
+			System.out.println("'" + name + "'은 등록되지 않은 사람입니다.");
+			return;
+		}
+		phoneMap.remove(name);
+		System.out.println("'" + name + "' 삭제 완료!!");
+		changeChk = true;
+	}
+
+	private void search() {
+		System.out.println("검색할 이름을 입력해주세요");
+		String name = scan.next();
+		if (!phoneMap.containsKey(name)) {
+			System.out.println("조회 결과가 없습니다.");
+			return;
+		}
+		System.out.println("----------------------------------------");
+		System.out.println("이름\t전화번호\t\t주소");
+		System.out.println("----------------------------------------");
+		System.out.println(name + "\t" + phoneMap.get(name).getTelNo() + "\t" + phoneMap.get(name).getAddress());
+		System.out.println("----------------------------------------");
+	}
+
+	private void print() {
+		System.out.println();
+		System.out.println("----------------------------------------");
+		System.out.println("번호\t이름\t전화번호\t\t주소");
+		System.out.println("----------------------------------------");
+		int count = 0;
+		if (phoneMap.size() == 0) {
+			System.out.println("등록된 전화번호 정보가 하나도 없습니다...");
+		} else {
+//			for(String name : phoneMap.keySet()) {
+//				Phone phone = phoneMap.get(name);
+//				String telNo = phone.getTelNo();
+//				String address = phone.getAddress();
+//				System.out.println(++count + "\t" + name + "\t" + telNo + "\t" + address);
+//			}
+
+			for (Map.Entry<String, Phone> entry : phoneMap.entrySet()) {
+				String name = entry.getKey();
+				Phone phone = entry.getValue();
+				String telNo = phone.getTelNo();
+				String address = phone.getAddress();
+				System.out.println(++count + "\t" + name + "\t" + telNo + "\t" + address);
+			}
+		}
+		System.out.println("----------------------------------------");
+		System.out.println("출력 끝...");
+		System.out.println();
+	}
+
+}
+
+class Phone {
+	private String name;
+	private String address;
+	private String telNo;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getTelNo() {
+		return telNo;
+	}
+
+	public void setTelNo(String telNo) {
+		this.telNo = telNo;
+	}
+
+}

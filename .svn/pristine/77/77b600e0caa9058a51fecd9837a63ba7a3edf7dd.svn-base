@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.OutsouMapper">
+
+
+	
+	<!-- 공통 코드 중 대분류, 중뷴류를 나눠서 가져오기 위함 -->
+	<select id="cacodeSelect" resultType="codeVO" parameterType="String">
+		SELECT A.COM_CODE, A.COM_CODE_GRP, A.COM_CODE_NM, 
+		       A.COM_CODE_DESC, A.USE_YN, A.UPPER_COM_CODE, 
+		       A.UPPER_COM_CODE_GRP
+		FROM CODE A, CODE_GRP B
+		WHERE A.COM_CODE_GRP = B.COM_CODE_GRP
+		  AND B.USE_YN = 1
+		  AND A.COM_CODE_GRP = 'OUML'
+		  AND A.COM_CODE LIKE #{comCode}||'%'
+	</select>
+	
+	<!--  외주 테이블 저장 -->
+	<insert id="insertOutsou" parameterType="outsouVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="outordNo">
+ 			SELECT TO_CHAR(NVL(MAX(TO_NUMBER(OUTORD_NO)),0)+1) FROM OUTSOU
+ 		</selectKey>
+		INSERT INTO OUTSOU(OUTORD_NO, OUTORD_LCLSF, OUTORD_MLSFC, OUTORD_TTL
+		                 , OUTORD_EXPLN, OUTORD_AMT, OUTORD_AMT_EXPLN, OUTORD_MAIN_FILE
+		                 , OUTORD_DETAIL_FILE, OUTORD_DMNDMATTER, OUTORD_PROVDPROCSS
+		                 , OUTORD_REFNDREGLTN, OUTORD_WRTDE, MBR_ID)
+		VALUES(#{outordNo}, #{outordLclsf}, #{outordMlsfc}, #{outordTtl}
+			 , #{outordExpln}, #{outordAmt}, #{outordAmtExpln}, #{outordMainFile}
+			 , #{outordDetailFile}, #{outordDmndmatter}, #{outordProvdprocss}
+			 , #{outordRefndregltn}, SYSDATE, #{mbrId})
+	</insert>
+	
+	<!--  외주 개발 서비스 저장  -->
+	<insert id="insertOsDeval" parameterType="osDevalVO"> 
+		<selectKey resultType="String" order="BEFORE" keyProperty="srvcNo">
+ 			SELECT TO_CHAR(NVL(MAX(TO_NUMBER(SRVC_NO)),0)+1) FROM OS_DEVAL
+ 		</selectKey>
+		INSERT INTO OS_DEVAL(SRVC_NO, OUTORD_NO, SRVC_LEVEL_CD, SRVC_TEAMSCALE_CD
+			               , SRVC_ETC, SRVC_JOBPD, SRVC_UPDTNMTM, SRVC_FILEPROVDYN, SRVC_SKLLADIT)
+		VALUES(#{srvcNo}, #{outordNo}, #{srvcLevelCd}, #{srvcTeamscaleCd}
+		     , #{srvcEtc}, #{srvcJobpd}, #{srvcUpdtnmtm}, #{srvcFileprovdyn}, #{srvcSklladit})
+	</insert>
+	
+	<!-- 언어코드 저장  -->
+	<insert id="insertOsdeLang" parameterType="osdeLangVO">
+		INSERT INTO OSDE_LANG(SRVC_LANG_CD, SRVC_NO, OUTORD_NO)
+		VALUES (#{srvcLangCd}, #{srvcNo}, #{outordNo})
+	</insert>
+	<!-- 데이터베이스코드 저장  -->
+	<insert id="insertOsdeDatabase" parameterType="OsdeDatabaseVO">
+		INSERT INTO OSDE_DATABASE(SRVC_LANG_CD, SRVC_NO, OUTORD_NO)
+		VALUES (#{srvcDatabaseCd}, #{srvcNo}, #{outordNo})
+	</insert>
+	<!-- 클라우드코드 저장  -->
+	<insert id="insertOsdeCludVO" parameterType="OsdeCludVO">
+		INSERT INTO OSDE_CLUD(SRVC_LANG_CD, SRVC_NO, OUTORD_NO)
+		VALUES (#{srvcCludCd}, #{srvcNo}, #{outordNo})
+	</insert>
+	
+	
+	
+	<!-- 외주 자소서 서비스 저장  -->
+	<insert id="insertOsCl" parameterType="osClVO">
+	    <selectKey resultType="String" order="BEFORE" keyProperty="srvcNo">
+	        SELECT TO_CHAR(NVL(MAX(TO_NUMBER(SRVC_NO)),0)+1) FROM OS_CL
+	    </selectKey>
+	    INSERT INTO OS_CL(SRVC_NO, OUTORD_NO, SRVC_FLD, SRVC_KND, SRVC_ARCTYPE)
+	    VALUES(#{srvcNo}, #{outordNo}, #{srvcFld}, #{srvcKnd}, #{srvcArctype})
+	</insert>
+	
+	
+	<!-- 외주 키워드 저장  -->
+	<insert id="insertOsKeywoed" parameterType="osKeywordVO">
+	    <selectKey resultType="String" order="BEFORE" keyProperty="kwrdNo">
+	        SELECT TO_CHAR(NVL(MAX(TO_NUMBER(KWRD_NO)),0)+1) FROM OS_KEYWOED
+	    </selectKey>
+	    INSERT INTO OS_KEYWOED(KWRD_NO, OUTORD_NO, KWRD_NM)
+	    VALUES(#{kwrdNo}, #{outordNo}, #{kwrdNm})
+	</insert>
+	
+	
+		<!-- 
+	outsouMap
+		- OUTSOU : OS_DEVAL : OS_CL = 1 : 1 : 1
+		- OUTSOU : FILE_DT = 1 : N
+	 -->
+	
+	<resultMap type="outsouVO" id="outsouMap">
+		<result property="outordNo" column="OUTORD_NO"/>
+	    <result property="outordLclsf" column="OUTORD_LCLSF"/>
+	    <result property="outordMlsfc" column="OUTORD_MLSFC"/>
+	    <result property="outordTtl" column="OUTORD_TTL"/>
+	    <result property="outordExpln" column="OUTORD_EXPLN"/>
+	    <result property="outordAmt" column="OUTORD_AMT"/>
+	    <result property="outordAmtExpln" column="OUTORD_AMT_EXPLN"/>
+	    <result property="outordMainFile" column="OUTORD_MAIN_FILE"/>
+	    <result property="outordDetailFile" column="OUTORD_DETAIL_FILE"/>
+	    <result property="outordDmndmatter" column="OUTORD_DMNDMATTER"/>
+	    <result property="outordProvdprocss" column="OUTORD_PROVDPROCSS"/>
+	    <result property="outordRefndregltn" column="OUTORD_REFNDREGLTN"/>
+	    <result property="outordWrtde" column="OUTORD_WRTDE"/>
+	    <result property="outordUpdde" column="OUTORD_UPDDE"/>
+	    <result property="outordDelde" column="OUTORD_DELDE"/>
+	    <result property="outordRdcnt" column="OUTORD_RDCNT"/>
+	    <result property="kwrdNm" column="KWRD_NM"/>
+	    <result property="mbrId" column="MBR_ID"/>
+	    <association property="osDevalVO" resultMap="osDevalMap"></association>
+	    <association property="osClVO" resultMap="osClMap"></association>
+	    <collection property="osKeywordVOList" resultMap="osKeywordMap"></collection>
+	    <collection property="fileDetailVOList" resultMap="fileDetailMap"></collection>
+	</resultMap>
+	
+	<resultMap type="osDevalVO" id="osDevalMap">
+        <result property="outordNo" column="OUTORD_NO"/>
+        <result property="srvcNo" column="SRVC_NO"/>
+        <result property="srvcLevelCd" column="SRVC_LEVEL_CD"/>
+        <result property="srvcTeamscaleCd" column="SRVC_TEAMSCALE_CD"/>
+        <result property="srvcEtc" column="SRVC_ETC"/>
+        <result property="srvcJobpd" column="SRVC_JOBPD"/>
+        <result property="srvcUpdtnmtm" column="SRVC_UPDTNMTM"/>
+        <result property="srvcFileprovdyn" column="SRVC_FILEPROVDYN"/>
+        <result property="srvcSklladit" column="SRVC_SKLLADIT"/>
+        <result property="srvcLangCd" column="SRVC_LANG_CD"/>
+        <result property="srvcDatabaseCd" column="SRVC_DATABASE_CD"/>
+        <result property="srvcCludCd" column="SRVC_CLUD_CD"/>
+        <collection property="osdeLangVOList" resultMap="osdeLangMap"></collection>
+        <collection property="osdeDatabaseVOList" resultMap="osdeDatabaseMap"></collection>
+        <collection property="osdeCludVOList" resultMap="osdeCludMap"></collection>
+    </resultMap>
+    
+    <resultMap type="osdeLangVO" id="osdeLangMap">
+    	<result property="srvcLangCd" column="SRVC_LANG_CD"/>
+		<result property="srvcNo" column="SRVC_NO"/>
+		<result property="outordNo" column="OUTORD_NO"/>
+    </resultMap>
+    
+    <resultMap type="osdeDatabaseVO" id="osdeDatabaseMap">
+    	<result property="srvcDatabaseCd" column="SRVC_DATABASE_CD"/>
+		<result property="srvcNo" column="SRVC_NO"/>
+		<result property="outordNo" column="OUTORD_NO"/>
+    </resultMap>
+    
+    <resultMap type="osdeCludVO" id="osdeCludMap">
+    	<result property="srvcCludCd" column="SRVC_CLUD_CD"/>
+		<result property="srvcNo" column="SRVC_NO"/>
+		<result property="outordNo" column="OUTORD_NO"/>
+    </resultMap>
+    
+    
+    <resultMap type="osClVO" id="osClMap">
+		<result property="outordNo" column="OUTORD_NO"/>
+		<result property="srvcNo" column="SRVC_NO"/>
+		<result property="srvcFld" column="SRVC_FLD"/>
+		<result property="srvcKnd" column="SRVC_KND"/>
+		<result property="srvcArctype" column="SRVC_ARCTYPE"/>
+	</resultMap>
+	
+	<resultMap type="OsKeywordVO" id="osKeywordMap">
+		<result property="kwrdNo" column="KWRD_NO"/>
+		<result property="outordNo" column="OUTORD_NO"/>
+		<result property="kwrdNm" column="KWRD_NM"/>
+	</resultMap>
+	
+	<resultMap type="fileDetailVO" id="fileDetailMap">
+		<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+		<result property="gubun" column="GUBUN" />
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="orgnlFileNm" column="ORGNL_FILE_NM"/>
+		<result property="strgFileNm" column="STRG_FILE_NM"/>
+		<result property="filePathNm" column="FILE_PATH_NM"/>
+		<result property="fileSz" column="FILE_SZ"/>
+		<result property="fileExtnNm" column="FILE_EXTN_NM"/>
+		<result property="fileMime" column="FILE_MIME"/>
+		<result property="fileFancysize" column="FILE_FANCYSIZE"/>
+		<result property="fileStrgYmd" column="FILE_STRG_YMD"/>
+		<result property="fileDwnldCnt" column="FILE_DWNLD_CNT"/>
+	</resultMap>
+	
+	<!-- 외주 상세정보 
+	outsouMap
+		- OUTSOU : OS_DEVAL : OS_CL = 1 : 1 : 1
+		- OUTSOU : FILE_DT = 1 : N
+	 -->
+	
+	<select id="detail" parameterType="String" resultMap="outsouMap">
+		SELECT OU.OUTORD_NO,
+		        get_common_code_name(OU.OUTORD_LCLSF) AS OUTORD_LCLSF,
+		        get_common_code_name(OU.OUTORD_MLSFC) AS OUTORD_MLSFC,
+		        OU.OUTORD_TTL, OU.OUTORD_EXPLN, OU.OUTORD_AMT,  OU.OUTORD_AMT_EXPLN,
+		        (SELECT F.FILE_PATH_NM
+		           FROM FILE_DT F
+		          WHERE F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+		            AND ROWNUM = 1) AS OUTORD_MAIN_FILE,
+		        (SELECT LISTAGG(F_DETAIL.FILE_PATH_NM, ', ') WITHIN GROUP (ORDER BY F_DETAIL.FILE_PATH_NM)
+		           FROM FILE_DT F_DETAIL
+		          WHERE F_DETAIL.FILE_GROUP_SN = OU.OUTORD_DETAIL_FILE) AS OUTORD_DETAIL_FILE,
+		        OU.OUTORD_DMNDMATTER,
+		        OU.OUTORD_PROVDPROCSS,
+		        OU.OUTORD_REFNDREGLTN,
+		        OU.OUTORD_WRTDE,
+		        OU.OUTORD_RDCNT,
+		        OU.MBR_ID,
+		        OSD.SRVC_NO,
+		        get_common_code_name(OSD.SRVC_LEVEL_CD) AS SRVC_LEVEL_CD, 
+		        get_common_code_name(OSD.SRVC_TEAMSCALE_CD) AS SRVC_TEAMSCALE_CD,
+		        OSD.SRVC_ETC,
+		        get_common_code_name(OSD.SRVC_JOBPD) AS SRVC_JOBPD,
+		        get_common_code_name(OSD.SRVC_UPDTNMTM) AS SRVC_UPDTNMTM,
+		        OSD.SRVC_FILEPROVDYN,
+		        OSD.SRVC_SKLLADIT,
+		        OSC.SRVC_NO,
+		        get_common_code_name(OSC.SRVC_FLD) AS SRVC_FLD,
+		        get_common_code_name(OSC.SRVC_KND) AS SRVC_KND,
+		        get_common_code_name(OSC.SRVC_ARCTYPE) AS SRVC_ARCTYPE,
+		        (SELECT LISTAGG(get_common_code_name(OSL.SRVC_LANG_CD), ', ') WITHIN GROUP (ORDER BY OSL.SRVC_LANG_CD)
+				   FROM OSDE_LANG OSL
+				  WHERE OSL.OUTORD_NO = OSD.OUTORD_NO) AS SRVC_LANG_CD,
+		        (SELECT LISTAGG(get_common_code_name(OSDA.SRVC_DATABASE_CD), ', ') WITHIN GROUP (ORDER BY OSDA.SRVC_DATABASE_CD)
+		          FROM OSDE_DATABASE OSDA
+		         WHERE OSDA.OUTORD_NO = OSD.OUTORD_NO) AS SRVC_DATABASE_CD,
+		        (SELECT LISTAGG(get_common_code_name(OSCL.SRVC_CLUD_CD), ', ') WITHIN GROUP (ORDER BY OSCL.SRVC_CLUD_CD)
+		          FROM OSDE_CLUD OSCL
+		         WHERE OSCL.OUTORD_NO = OSD.OUTORD_NO) AS SRVC_CLUD_CD,
+		         (SELECT LISTAGG(OSK.KWRD_NM, ', ') WITHIN GROUP (ORDER BY OSK.KWRD_NM)
+		          FROM OS_KEYWOED OSK
+		         WHERE OSk.OUTORD_NO = OSD.OUTORD_NO) AS KWRD_NM
+		    FROM OUTSOU OU
+		    LEFT OUTER JOIN OS_DEVAL OSD ON OU.OUTORD_NO = OSD.OUTORD_NO
+		    LEFT OUTER JOIN OS_CL OSC ON OU.OUTORD_NO = OSC.OUTORD_NO
+		    WHERE OU.OUTORD_NO = #{outordNo}
+	</select>
+	
+	<!-- 외주 결제정보 가져옥;ㅣ  -->
+	<select id="paydetail" parameterType="String" resultMap="outsouMap">
+		SELECT OU.OUTORD_NO,
+		        get_common_code_name(OU.OUTORD_LCLSF) AS OUTORD_LCLSF,
+		        get_common_code_name(OU.OUTORD_MLSFC) AS OUTORD_MLSFC,
+		        OU.OUTORD_TTL, OU.OUTORD_EXPLN, OU.OUTORD_AMT,
+		        (SELECT F.FILE_PATH_NM
+		           FROM FILE_DT F
+		          WHERE F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+		            AND ROWNUM = 1) AS OUTORD_MAIN_FILE,
+		        OU.OUTORD_WRTDE,
+		        OU.OUTORD_RDCNT,
+		        OU.MBR_ID,
+		        OSD.SRVC_NO,
+		        get_common_code_name(OSD.SRVC_LEVEL_CD) AS SRVC_LEVEL_CD, 
+		        get_common_code_name(OSD.SRVC_TEAMSCALE_CD) AS SRVC_TEAMSCALE_CD,
+		        OSD.SRVC_ETC,
+		        get_common_code_name(OSD.SRVC_JOBPD) AS SRVC_JOBPD,
+		        get_common_code_name(OSD.SRVC_UPDTNMTM) AS SRVC_UPDTNMTM,
+		        OSD.SRVC_FILEPROVDYN,
+		        OSD.SRVC_SKLLADIT,
+		        OSC.SRVC_NO,
+		        get_common_code_name(OSC.SRVC_FLD) AS SRVC_FLD,
+		        get_common_code_name(OSC.SRVC_KND) AS SRVC_KND,
+		        get_common_code_name(OSC.SRVC_ARCTYPE) AS SRVC_ARCTYPE,
+		        (SELECT LISTAGG(OSL.SRVC_LANG_CD, ', ') WITHIN GROUP (ORDER BY OSL.SRVC_LANG_CD)
+		          FROM OSDE_LANG OSL
+		         WHERE OSL.OUTORD_NO = OSD.OUTORD_NO) AS SRVC_LANG_CD,
+		        (SELECT LISTAGG(OSDA.SRVC_DATABASE_CD, ', ') WITHIN GROUP (ORDER BY OSDA.SRVC_DATABASE_CD)
+		          FROM OSDE_DATABASE OSDA
+		         WHERE OSDA.OUTORD_NO = OSD.OUTORD_NO) AS SRVC_DATABASE_CD,
+		        (SELECT LISTAGG(OSCL.SRVC_CLUD_CD, ', ') WITHIN GROUP (ORDER BY OSCL.SRVC_CLUD_CD)
+		          FROM OSDE_CLUD OSCL
+		         WHERE OSCL.OUTORD_NO = OSD.OUTORD_NO) AS SRVC_CLUD_CD,
+		         (SELECT LISTAGG(OSCL.SRVC_CLUD_CD, ', ') WITHIN GROUP (ORDER BY OSCL.SRVC_CLUD_CD)
+		          FROM OSDE_CLUD OSCL
+		         WHERE OSCL.OUTORD_NO = OSD.OUTORD_NO) AS SRVC_CLUD_CD
+		    FROM OUTSOU OU
+		    LEFT OUTER JOIN OS_DEVAL OSD ON OU.OUTORD_NO = OSD.OUTORD_NO
+		    LEFT OUTER JOIN OS_CL OSC ON OU.OUTORD_NO = OSC.OUTORD_NO
+		    WHERE OU.OUTORD_NO = #{outordNo}
+	</select>
+	
+	<!-- 외주 삭제  -->
+	<update id="deletePost" parameterType="String">
+   		UPDATE OUTSOU
+		SET OUTORD_DEL_YN = 'Y'
+		WHERE OUTORD_NO = #{outordNo}
+   </update>
+
+</mapper>

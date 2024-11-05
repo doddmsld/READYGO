@@ -1,0 +1,140 @@
+@charset "UTF-8";
+
+* {
+    font-family: pretendard;
+}
+#nav{
+	background: #E5FAF7;
+	border: none;
+	height: 260px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.btn{
+	border : 1px solid #24D59E;
+	border-radius : 5px;
+	height : 40px;
+	width: 120px;
+	background: white;
+	color:#24D59E; 
+}
+.btn:hover{
+	background: #24D59E;
+	color: white;
+}	
+.img{
+	border-radius: 50%;
+	height: 142px;
+	width: 142px;
+	margin-top: 250px;
+}
+#comName{ /*기업명*/
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin-top: 75px;
+}
+#btndiv{
+	display: flex;
+	justify-content: flex-end;
+	margin-top: 30px;
+}
+#div1{ /*프로필 박스*/
+	border: 1px solid rgba(217, 217, 217, 1);
+	border-radius: 10px;
+	width : 1200px;
+	height: 150px;
+	margin: 0 auto;
+	margin-top: 30px;
+	display: flex;
+	justify-content: space-around;
+}
+#div1-1, #div1-2, #div1-3{
+	margin-top: 23px;
+}
+.profilebox{
+	margin-bottom: 1px;
+}
+.profilebox1{
+	color: #5F6368;
+}
+#div2{ /*기업 프로필 내용*/
+	display: flex;
+	width : 1200px;
+	margin: 0 auto;
+	margin-top: 20px;
+}
+#div2-1{
+	width : 600px;
+}
+#div2-2{
+	width : 600px;
+}
+#div3{
+	width : 1200px;
+	margin: 0 auto;	
+	display: flex;
+	margin-top: 30px;
+	margin-bottom: 30px;
+}
+#div3-1{
+	width : 550px;
+	margin-right: 50px;
+}
+#div3-2{
+	width : 550px;
+}
+#div4{ /*해당 기업 공고*/
+	width : 1200px;
+	margin: 0 auto;
+}
+#div4-1{ /*해당 기업 공고 전체*/
+	display: flex;
+}
+#div4-2, #div4-3, #div4-4, #div4-5{
+	border: 1px solid rgba(217, 217, 217, 1);
+	border-radius: 8px;		
+	height: 150px;
+	width: 280px;
+	margin: 5px;
+	margin: 0 auto;
+	margin-bottom: 20px;
+}
+.chartbtn{
+	border : 1px solid #24D59E;
+	border-radius : 5px;
+	height : 34px;
+	background: white;
+	color:#24D59E; 
+}
+.chartbtn:hover{
+	background: #24D59E;
+	color: white;
+}
+#btnParent{
+	margin: 10px;
+	justify-content: flex-end;
+	display: flex;
+}	
+#atag{
+	display: flex;
+	justify-content: flex-start;
+	width : 1180px;
+}
+#atag1{
+	color: rgba(35, 35, 35, 1);
+}
+#atag1:hover{
+	color:#24D59E;
+	text-decoration: underline;
+}
+.material-symbols-outlined {
+	font-size: 48px;
+	color: #5F6368;
+  	font-variation-settings:
+  	'FILL' 0,
+  	'wght' 300,
+  	'GRAD' 0,
+ 	'opsz' 48
+}

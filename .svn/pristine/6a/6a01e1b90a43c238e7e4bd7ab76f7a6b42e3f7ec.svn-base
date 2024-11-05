@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.InquiryBoardMapper">
+	<resultMap type="boardVO" id="boardMap">
+		<result property="pstSn" column="PST_SN"/>
+		<result property="seNo" column="SE_NO"/>
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="pstTtl" column="PST_TTL"/>
+		<result property="pstOthbcscope" column="PST_OTHBCSCOPE"/>
+		<result property="pstCn" column="PST_CN"/>
+		<result property="pstWrtDt" column="PST_WRT_DT"/>
+		<result property="pstMdfcnDt" column="PST_MDFCN_DT"/>
+		<result property="pstDelYn" column="PST_DEL_YN"/>
+		<result property="pstInqCnt" column="PST_INQ_CNT"/>
+		<result property="pstFile" column="PST_FILE"/>
+		<result property="etymanmttrSn" column="ETYMANMTTR_SN"/>
+		<result property="pstGood" column="PST_GOOD"/>
+		<result property="pstBad" column="PST_BAD"/>
+	</resultMap>
+	<resultMap type="BoardTypeVO" id="boardTypeMap">
+		<result property="seNo" column="SE_NO"/>
+		<result property="bbsNm" column="BBS_NM"/>
+	</resultMap>
+		
+	<select id="list" parameterType="hashMap" resultMap="boardMap">
+		WITH T AS
+		(
+			SELECT ROW_NUMBER() OVER(ORDER BY PST_SN DESC) RNUM,
+	    		A.PST_SN, A.SE_NO, A.MBR_ID, A.PST_TTL, A.PST_OTHBCSCOPE, 
+	            A.PST_CN, TO_CHAR(A.PST_WRT_DT, 'YYYY-MM-DD') AS PST_WRT_DT, A.PST_MDFCN_DT, A.PST_DEL_YN, A.PST_INQ_CNT, 
+	            A.PST_FILE, A.ETYMANMTTR_SN, A.PST_GOOD, A.PST_BAD,
+	            B.BBS_NM
+	    FROM BOARD A, BOARD_TYPE B
+	    WHERE  A.SE_NO = B.SE_NO AND A.SE_NO = '4'
+	    ORDER BY A.PST_SN DESC
+	    )
+		SELECT * FROM T
+		WHERE T.RNUM BETWEEN (#{currentPage} * 10) - (10 - 1) AND (#{currentPage} * 10)
+	</select>
+
+	
+	<select id="regist" resultType="int">
+		SELECT LPAD(NVL(MAX(PST_SN), '0') + 1, 4, '0') AS NEW_PST_SN
+		FROM BOARD
+		WHERE SE_NO = '4'
+	</select>
+	
+	<insert id="registPost" parameterType="BoardVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="pstSn">
+			SELECT LPAD(NVL(MAX(PST_SN), '0') + 1, 4, '0') AS PST_SN
+			FROM BOARD
+			WHERE SE_NO = '4'
+		</selectKey>
+		INSERT INTO BOARD(PST_SN, SE_NO, MBR_ID, PST_TTL, PST_OTHBCSCOPE, 
+		            PST_CN, PST_WRT_DT, PST_MDFCN_DT, PST_DEL_YN, PST_INQ_CNT, 
+		            PST_GOOD, PST_BAD)
+		VALUES (#{pstSn}, 4, #{mbrId}, #{pstTtl}, #{pstOthbcscope}, #{pstCn}, SYSDATE, SYSDATE, '1', '0',0,0)
+	</insert>
+	
+	<select id="detail" parameterType="String" resultMap="boardMap">
+		SELECT  SE_NO, PST_SN, PST_TTL, PST_OTHBCSCOPE, PST_CN, MBR_ID, TO_CHAR(PST_MDFCN_DT, 'YYYY-MM-DD') AS PST_MDFCN_DT
+		FROM 	BOARD
+		WHERE   SE_NO='4' AND PST_SN=#{pstSn}
+	</select>
+	
+	<select id="getPostDetails" parameterType="String" resultType="BoardVO">
+	    SELECT SE_NO,PST_SN, PST_TTL, PST_OTHBCSCOPE, PST_CN, MBR_ID, TO_CHAR(PST_MDFCN_DT, 'YYYY-MM-DD') AS PST_MDFCN_DT
+	    FROM BOARD
+	    WHERE SE_NO='4' AND PST_SN = #{pstSn}
+	</select>
+
+	<update id="updatePost" parameterType="BoardVO">
+	    UPDATE BOARD
+	    SET PST_TTL = #{pstTtl},
+	        PST_OTHBCSCOPE = #{pstOthbcscope},
+	        PST_CN = #{pstCn},
+	        PST_MDFCN_DT = SYSDATE
+	    WHERE PST_SN = #{pstSn}
+	</update>
+	
+    <!-- 전체 게시글 수 조회 -->
+    <select id="getTotal" resultType="int">
+        SELECT COUNT(*) FROM BOARD WHERE SE_NO='4'
+    </select>
+
+</mapper>

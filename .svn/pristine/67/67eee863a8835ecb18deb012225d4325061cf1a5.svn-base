@@ -1,0 +1,75 @@
+package kr.or.ddit.oustou.service.impl;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.ddit.mapper.OutsouMainMapper;
+import kr.or.ddit.mapper.OutsouMapper;
+import kr.or.ddit.mapper.UserMapper;
+import kr.or.ddit.oustou.controller.OutsouController;
+import kr.or.ddit.oustou.service.OutsouMainService;
+import kr.or.ddit.oustou.service.OutsouService;
+import kr.or.ddit.util.UploadController;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.FileDetailVO;
+import kr.or.ddit.vo.OsClVO;
+import kr.or.ddit.vo.OsDevalVO;
+import kr.or.ddit.vo.OsKeywordVO;
+import kr.or.ddit.vo.OsdeCludVO;
+import kr.or.ddit.vo.OsdeDatabaseVO;
+import kr.or.ddit.vo.OsdeLangVO;
+import kr.or.ddit.vo.OutsouVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class OutsouMainServiceImpl implements OutsouMainService {
+	
+	@Inject
+	OutsouMainMapper outsouMainMapper;
+	
+	//서비스 게시판 번호를 가져오기 위함
+	@Autowired
+	OutsouController outsouController; 
+	
+	//파일 처리를 위한 
+	@Autowired
+	UploadController uploadController;
+
+	
+	//조회수가 많은 카테고리 5개 
+	@Override
+	public List<OutsouVO> getCategory(){
+		return this.outsouMainMapper.getCategory();
+	}
+	
+	//메인 새로운 게시글 5개 
+	@Override
+	public List<OutsouVO> getnewList(){
+		return this.outsouMainMapper.getnewList();
+	}
+	
+	// 조회수 높은거 5개 
+	@Override
+	public List<OutsouVO> getBestList(){
+		return this.outsouMainMapper.getBestList();
+	}
+	
+	
+	//대분류 -> 중분류에 따라서 보여주기   -->
+	@Override
+	public List<OutsouVO> getDetailList(OutsouVO outsouVO) {
+		return this.outsouMainMapper.getDetailList(outsouVO);
+	}
+	
+
+}

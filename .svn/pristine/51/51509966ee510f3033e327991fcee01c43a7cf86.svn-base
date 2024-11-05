@@ -1,0 +1,11 @@
+package kr.or.ddit.service;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.ResumeVO;
+
+public interface MemResumeService {
+	public ResumeVO openResume(String mbrId);
+	public List<ResumeVO> resumeList(Map<String, Object> map);
+}

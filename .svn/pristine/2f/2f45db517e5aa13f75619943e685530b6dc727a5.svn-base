@@ -1,0 +1,47 @@
+package kr.or.ddit.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.mapper.MemAplctMapper;
+import kr.or.ddit.service.MemAplctService;
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.CodeVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class MemAplctServiceImpl implements MemAplctService {
+
+    @Inject
+    MemAplctMapper memAplctMapper;
+
+    // 입사 지원 목록
+	@Override
+	public List<ApplicantVO> aplctList(Map<String, Object> map) {
+		return this.memAplctMapper.aplctList(map);
+	}
+
+	// 전체 입사 행 수 
+	@Override
+	public int getTotal() {
+		return this.memAplctMapper.getTotal();
+	}
+
+	// 입사 지원 취소 사유 항목
+	@Override
+	public List<CodeVO> cancelList() {
+		return this.memAplctMapper.cancelList();
+	}
+	
+	// 특정 공고 입사 지원 취소 사유 update
+	@Override
+	public int aplctCancel(Map<String, Object> map) {
+		return this.memAplctMapper.aplctCancel(map);
+	}
+
+
+}

@@ -1,0 +1,204 @@
+package kr.or.ddit.oustou.controller;
+
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.mapper.OustouMapper;
+import kr.or.ddit.mapper.UserMapper;
+import kr.or.ddit.oustou.service.OustouService;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.OustouVO;
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
+@Controller
+@RequestMapping("/oustou")
+public class OustouController {
+
+	@Inject
+	OustouService oustouService;
+	
+	//공통코드를 가져오기 위함 
+	@Autowired
+	UserMapper userMapper;
+	@Autowired
+	OustouMapper oustouMapper;
+ 
+	
+	/**
+	 * 외주 게시판 목록
+	 * 
+	 * 
+	 */
+	@GetMapping("/list")
+	public String list(Model model) {		
+		return "oustou/list";
+	}
+	
+
+	/** 외주 게시판 기본 정보 등록폼
+	 * 요청URI: /oustou/regist
+	 * 요청파라미터 : 
+	 * 요청방식 :get
+	 */
+	@GetMapping("/regist")
+	public String regit1(Model model) {
+		//1차카테고리
+		List<CodeVO> OUCLcodeVOList = this.userMapper.codeSelect("OULC");
+		//2차 카테고리 카테고리 
+		//List<CodeVO> OUMLcodeVOList = this.userMapper.codeSelect("OUML");
+		//직업분야
+		List<CodeVO> SRFLcodeVOList = this.userMapper.codeSelect("SRFL");
+		//기업 종류
+		List<CodeVO> SRKNcodeVOList = this.userMapper.codeSelect("SRKN");
+		//지원 종류
+		List<CodeVO> SRARcodeVOList = this.userMapper.codeSelect("SRAR");
+		//기술수준
+		List<CodeVO> SRLEcodeVOList = this.userMapper.codeSelect("SRLE");
+		//팀규모
+		List<CodeVO> SRTEcodeVOList = this.userMapper.codeSelect("SRTE");
+		//개발언어 공통코드 
+		List<CodeVO> SRLAcodeVOList = this.userMapper.codeSelect("SRLA");
+		//데이터베이스 공통코드
+		List<CodeVO> SRDBcodeVOList = this.userMapper.codeSelect("SRDB");
+		//클라우드
+		List<CodeVO> SRCLcodeVOList = this.userMapper.codeSelect("SRCL");
+		//작업기간
+		List<CodeVO> SRJPcodeVOList = this.userMapper.codeSelect("SRJP");
+		//수정횟수
+		List<CodeVO> SRUMcodeVOList = this.userMapper.codeSelect("SRUM");
+		
+		
+		
+		//공통코드 
+		model.addAttribute("OUCLcodeVOList",OUCLcodeVOList);//it카테고리
+		//model.addAttribute("OUMLcodeVOList",OUMLcodeVOList);//자기소개서 카테고리
+		model.addAttribute("SRFLcodeVOList",SRFLcodeVOList);//직업분야
+		model.addAttribute("SRKNcodeVOList",SRKNcodeVOList);//기업종류
+		model.addAttribute("SRARcodeVOList",SRARcodeVOList);//지원종류
+		model.addAttribute("SRLEcodeVOList",SRLEcodeVOList);//기술수준
+		model.addAttribute("SRTEcodeVOList",SRTEcodeVOList);//팀규모
+		model.addAttribute("SRLAcodeVOList",SRLAcodeVOList);//개발언어
+		model.addAttribute("SRDBcodeVOList",SRDBcodeVOList);//데이터베이스
+		model.addAttribute("SRCLcodeVOList",SRCLcodeVOList);//클라우드
+		model.addAttribute("SRJPcodeVOList",SRJPcodeVOList);//작업기간
+		model.addAttribute("SRUMcodeVOList",SRUMcodeVOList);//수정횟수
+		
+		return "oustou/regist/regist";
+	}
+	
+	/**
+	 * 외주 게시판 등록실행 
+	 * 요청URI: /ousrou/registPost
+	 * 요청파라미터 : 
+	 * 요청방식 :get
+	 */
+	@PostMapping("/registPost")
+	public String registPost(@ModelAttribute OustouVO oustouVO) {//ModelAttribute로 폼 데이터 받기
+		log.info("registPost->oustouVO : " + oustouVO);
+		 
+		 int result = this.oustouService.registPost(oustouVO);
+		 log.info("registPost->result : " + result);
+		 
+		 
+		//redirect : 새로운 URI
+		return "redirect:/oustou/detail?outordNo="+oustouVO.getOutordNo();
+		
+	}
+	
+	
+	
+	/**
+	 * 1차 카테고리에 따른 2차 카테고리 선택
+	 * 요청URI : /oustou/category2
+	 * 요청파라미터 : JSON {comCode:OUML}
+	 * 요청방식 : POST
+	 *
+	 * @ResponseBody : 반환 데이터를 JSON 형식으로 변환하는 애너테이션
+	 */
+	@ResponseBody
+	@PostMapping("/category2")
+	public List<CodeVO> category2(@RequestBody Map<String, String> data, Model model) {
+	    String comCode = data.get("comCode");  // 1차 카테고리에서 선택한 comCode 값
+	    log.info("category2 -> comCode : " + comCode);
+	    //2차 카테고리 카테고리 
+	  	List<CodeVO> OUMLcodeVOList = this.oustouMapper.cacodeSelect(comCode);
+	    log.info("category2 -> OUMLcodeVOList : " + OUMLcodeVOList);
+	    model.addAttribute("OUMLcodeVOList",OUMLcodeVOList);//자기소개서 카테고리
+
+	    // 1차 카테고리 값에 따른 2차 카테고리 데이터를 DB에서 조회
+	    List<CodeVO> codeVOList = userMapper.codeSelect(comCode);
+	    log.info("category2 -> codeVOList : " + codeVOList);
+	    
+	    return codeVOList;  // JSON 형식으로 2차 카테고리 데이터를 클라이언트에 반환
+	}
+	
+	
+	
+	
+	/**
+	 * 외주 게시판 수정 폼 
+	 */
+	
+	/**
+	 * 외주 게시판 수정 실행 
+	 */
+	
+	
+	/**
+	 * 외주 게시판 삭제 실행
+	 */
+	
+	
+	/**
+	 * 외주 게시판 상세
+	 * 요청 URI : /readyUP/oustou/detail
+	 * 요청파라미터 : {outordNo=1}
+	 * @return
+	 */
+	@GetMapping("/detail")
+	public String detail() {
+		//log.info("detail->outordNo : " + outorNo);
+		
+		
+		
+		
+		return "oustou/detail";
+		
+		
+	}
+	
+	/**
+	 * 외주 결제 상세 
+	 * 요청 URI : /readyUP/oustou/paydetail
+	 * 요청파라미터 : {outordNo=1}
+	 * @return
+	 */
+	@GetMapping("/paydetail")
+	public String paydetail() {
+		//log.info("detail->outordNo : " + outorNo);
+		
+		
+		
+		
+		return "oustou/paydetail";
+		
+		
+	}
+
+}

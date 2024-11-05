@@ -1,0 +1,283 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>   
+<!-- 기업정보수정css -->   
+<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/enter/edit.css" />
+<!-- daum주소 api -->
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> 
+<!-- jquery -->
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script>
+
+$(function(){
+   /*우편번호,주소*/	
+   $("#btnPost").on("click",function(){
+      console.log("우편번호 검색!")
+      new daum.Postcode({
+         
+         // 다음 창에서 검색이 완료되어 클릭하면 콜백함수에 의해
+         // 결과 데이터(JSON string)가 data 객체로 들어온당
+         oncomplete:function(data){
+            //data{"zoncode":"12345", "address":"대전 중구", "buildingName":"123-123ㅁ"}
+            $("#entZip").val(data.zonecode);
+            $("#entAddr").val(data.address);
+            $("#entAddrDetail").val(data.buildingName);
+            // focus : 테두리와 커서 잡힘
+            $("#entAddrDetail").focus();
+         }
+      }).open();
+   });
+   
+   // 수정 버튼 클릭
+   $("#edit").on("click",function(){
+      $("#spn1").css("display","none");
+      $("#spn2").css("display","block");
+      $("#btnPost").css("display","block");
+      
+      $('.edit-control').removeAttr("readonly");
+   
+	  // 데이터 백업
+      entNm = $("input[name='entNm']").val();
+      entId = $("input[name='entId']").val();
+      entPswd = $("input[name='entPswd']").val();
+      indutyVOList = $("input[name='indutyVOList']").val();
+      entFndnYmd = $("input[name='entFndnYmd']").val();
+      entEmpCnt = $("input[name='entEmpCnt']").val();
+      entStleCd = $("input[name='entStleCd']").val();
+      entRprsntvNm = $("input[name='entRprsntvNm']").val();
+      entHmpgUrl = $("input[name='entHmpgUrl']").val();
+      entManagerTelno = $("input[name='entManagerTelno']").val();
+      entFxnum = $("input[name='entFxnum']").val();
+      entMail = $("input[name='entMail']").val();
+      entZip = $("input[name='entZip']").val();
+      entAddr = $("input[name='entAddr']").val();
+      entAddrDetail = $("input[name='entAddrDetail']").val();
+      entBrno = $("input[name='entBrno']").val();
+      entBrFile = $("input[name='entBrFile']").val();
+	  });
+     
+      // 취소 -> 일반모드 전환
+      $("#cancel").on("click",function(){
+         $("#spn1").css("display","block");
+         $("#spn2").css("display","none");
+         $("#btnPost").css("display","none");
+         
+         $('.edit-control').attr("readonly",true);
+         
+ 	  	// 데이터 백업
+         $("input[name='entNm']").val(entNm);
+         $("input[name='entId']").val(entId);
+         $("input[name='entPswd']").val(entPswd);
+         $("input[name='IndutyVOList']").val(IndutyVOList);
+         $("input[name='entFndnYmd']").val(entFndnYmd);
+         $("input[name='entEmpCnt']").val(entEmpCnt);
+         $("input[name='entStleCd']").val(entStleCd);
+         $("input[name='entRprsntvNm']").val(entRprsntvNm);
+         $("input[name='entHmpgUrl']").val(entHmpgUrl);
+         $("input[name='entManagerTelno']").val(entManagerTelno);
+         $("input[name='entFxnum']").val(entFxnum);
+         $("input[name='entMail']").val(entMail);
+         $("input[name='entZip']").val(entZip);
+         $("input[name='entAddr']").val(entAddr);
+         $("input[name='entAddrDetail']").val(entAddrDetail);
+         $("input[name='entBrno']").val(entBrno);
+         $("input[name='entBrFile']").val(entBrFile);
+      });
+      
+      /*기업탈퇴*/ 
+      $("#btnDelete").on("click",function(){
+
+  		$("#editForm").attr("action","/enter/edit");
+  		
+  		let data = "test01"
+  		
+  		$.ajax({
+  			url:"/enter/deleteAjax",
+  			contentType:"application/json;charset=utf-8",
+  			data:data,
+  			type:"post",
+  			dataType:"json",
+  			beforeSend:function(xhr){
+  				xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+  			},
+  			success:function(result){
+  				console.log("result : ", result);
+  				$("#entId").val(result.entId);
+  			}
+  		});  		
+  		let result = confirm("정말로 기업 탈퇴를 하시겠습니까?");
+  		
+  		console.log("result : " + result);
+  		
+  		if(result>0){ //true
+  			// 파라미터를 보내야하므로
+  			$("#editForm").submit();
+  			alert("기업 탈퇴를 성공하였습니다.")
+  		} else{ //false
+  			alert("기업 탈퇴를 실패하였습니다.")
+  		}
+  		location.reload();
+      })
+   })
+
+</script>
+
+<br>
+<div class="container">
+	<h3>기업정보 수정</h3>
+	<br><br>
+    <form name="editForm" id="editForm" action="/enter/editPost" method="post">
+        <div class="row">
+            <div class="col-left">
+                <div class="profile-edit">
+                    <br><br>
+                    <div class="profile-photo">
+                        <img src="/resources/images/sjh.jpg" alt="sjh.jpg" id="profileImg" /><br>
+                       	<div id="entNameParent"><p id="entName"><a class="entName1" href="/enter/profile">${enterVO.entNm}</a></p></div>
+	                    <br><br>
+<%-- 	                    <input type="hidden" name="entId" id="entId" value="${enterVO.entId}"/> --%>
+<%-- 	                    <p id="entId">${enterVO.entId}</p> --%>
+                    </div>
+                </div>
+            </div>
+            <div class="flexInfo">
+			<div class="left">
+            <div class="col-right">
+                <h4>기본정보</h4>
+                <br>
+                <div class="form-group">
+                    <label for="entNm">기업명</label> 
+                    <input type="text" id="entNm" name="entNm" class="edit-control" 
+                    	placeholder="기업명" value="${enterVO.entNm}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="entId">아이디</label> 
+					    <input type="text" id="entId" name="entId" class="edit-control" 
+					    	value="${enterVO.entId}" readonly placeholder="아이디">
+                </div>	
+
+                <div class="form-group">
+                    <label for="entPswd">비밀번호</label> 
+                    <input type="text" id="entPswd" name="entPswd" class="edit-control" 
+                    	placeholder="비밀번호" value="${enterVO.entPswd}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="IndutyVOList">업종</label> 
+                    <input type="text" id="indutyVOList[0].tpbizSeCd" name="indutyVOList[0].tpbizSeCd" class="edit-control" 
+                    	placeholder="업종" value="${enterVO.indutyVOList[0].tpbizSeCd}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="entFndnYmd">설립일</label> 
+                    <input type="text" id="entFndnYmd" name="entFndnYmd" class="edit-control" 
+                    	placeholder="설립일" value="${enterVO.entFndnYmd}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="entEmpCnt">사원수</label> 
+                    <input type="text" id="entEmpCnt" name="entEmpCnt" class="edit-control" 
+                    	placeholder="사원수" value="${enterVO.entEmpCnt}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="entStleCd">기업형태</label> 
+                    <input type="text" id="entStleCd" name="entStleCd" class="edit-control" 
+                    	placeholder="기업형태" value="${enterVO.entStleCd}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="entRprsntvNm">대표자명</label> 
+                    <input type="text" id="entRprsntvNm" name=entRprsntvNm class="edit-control" 
+                    	placeholder="대표자명" value="${enterVO.entRprsntvNm}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="entHmpgUrl">홈페이지 URL</label> 
+                    <input type="text" id="entHmpgUrl" name="entHmpgUrl" class="edit-control" 
+                    	placeholder="홈페이지 URL" value="${enterVO.entHmpgUrl}" readonly>
+                </div>
+			</div>
+                <br><br>
+            <div class="right">
+                <h4>연락처 정보</h4>
+                <br>
+                <div class="form-group">
+                    <label for="entManagerTelno">담당자 연락처</label> 
+                    <input type="text" id="entManagerTelno" name="entManagerTelno" class="edit-control" 
+                    	placeholder="담당자 연락처" value="${enterVO.entManagerTelno}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="entFxnum">팩스번호</label> 
+                    <input type="text" id="entFxnum" name="entFxnum" class="edit-control" 
+                    	placeholder="팩스번호" value="${enterVO.entFxnum}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="entMail">이메일</label> 
+                    <input type="text" id="entMail" name="entMail" class="edit-control" 
+                    	placeholder="이메일" value="${enterVO.entMail}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="entZip">우편번호</label> 
+                    <input type="text" id="entZip" name="entZip" class="edit-control" value="${enterVO.entZip}" readonly>
+                    <input type="button" class="btn btn-primary" id="btnPost" 
+                    	placeholder="우편번호" value="우편번호 검색" style="display:none;"/>
+                </div>
+
+                <div class="form-group">
+                    <label for="entAddr">주소</label> 
+                    <input type="text" id="entAddr" name="entAddr" class="edit-control" 
+                    	placeholder="주소" value="${enterVO.entAddr}" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="entAddrDetail">상세주소</label> 
+                    <input type="text" id="entAddrDetail" name="entAddrDetail" 
+                    	placeholder="상세주소" class="edit-control" value="${enterVO.entAddrDetail}" readonly>
+                </div>
+                
+                <br><br>
+                <h4>사업자등록증 정보</h4>
+                <br>
+                <div class="form-group">
+                    <label for="entBrno">사업자 등록번호</label> 
+                    <input type="text" id="entBrno" name="entBrno" class="edit-control" 
+                    	placeholder="사업자 등록번호" value="${enterVO.entBrno}" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="entBrFile">사업자 등록증</label> 
+                    <input type="text" id="entBrFile" name="entBrFile" class="edit-control" 
+                    	placeholder="사업자 등록증" value="${enterVO.entBrFile}" readonly>
+                </div>
+            	</div>
+            	</div>   
+            	</div>
+                <!-- 폼 페이지에는 csrf써줘야함 -->
+			</div>
+                <!-- 일반 모드 시작 -->
+                <div class="groupButton">
+                <span id="spn1" class="button-group">
+                    <p>
+                        <div class="button1"><input type="button" id="edit" value="수정" /></div>
+                        <div class="button1"><input type="button" id="btnDelete" value="기업 탈퇴"/></div>
+                    </p>
+                </span>
+                <!-- 일반 모드 끝 -->
+
+                <!-- 수정 모드 시작 -->
+                <span id="spn2" class="button-group" style="display: none;">
+                    <p>
+                        <input type="submit" id="save" value="저장" /> 
+                        <input type="button" id="cancel" value="취소" />
+                    </p>
+                </span>
+        </div>
+        <sec:csrfInput />
+    </form>
+</div>
+

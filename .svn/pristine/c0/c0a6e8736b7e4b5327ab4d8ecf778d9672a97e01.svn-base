@@ -1,0 +1,41 @@
+package kr.or.ddit.service_DO;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.CodeGrpVO;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.EnterVO;
+
+public interface AdminService {
+    // 공통 코드 목록을 반환하도록 변경
+    public List<CodeVO> codeManage(String comCodeGrp);
+
+	public int codeGrpAdd(CodeGrpVO codeGrpVO);
+
+	public int codeGrpDel(CodeGrpVO codeGrpVO);
+
+	public int codeAdd(CodeVO codeVO);
+
+	public int codeDel(String comCode);
+
+	public int getTotal(Map<String, Object> map);
+	
+	//기업관리 시작
+	public List<EnterVO> enterList();
+
+	public int entOk(String entId);
+
+	public int entNo(String entId);
+
+	public EnterVO entDetail(String entId);
+
+	
+	//회원관리 시작
+	public String memManage();
+	
+	
+	//관리자메인
+	public String main();
+    
+}

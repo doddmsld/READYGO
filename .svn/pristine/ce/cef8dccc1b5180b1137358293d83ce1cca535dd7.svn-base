@@ -1,0 +1,144 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+.announcement-container {
+    width: 80%;
+    margin: 0 auto;
+}
+h2 {
+    text-align: left;
+    margin-top:50px;
+	color: #232323;
+}
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+thead th {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 2px solid #ddd;
+    font-weight: bold;
+    font-size: 20px;
+    color: #232323;
+}
+.ptag{
+	text-align: left;
+    font-weight: bold;
+    font-size: 20px;
+    color: #232323;
+    margin-left: 5px;
+}
+tbody td {
+    padding: 15px 10px;
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+}
+.title{
+	color: #232323;
+	font-weight: 400;
+}
+.title:hover{
+	color: #24D59E;
+}
+.industry {
+    font-size: 14px;
+    color: #636e72; /* 분류 텍스트 색상 */
+    margin-top: 5px;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.pagination button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pagination button:hover {
+    background-color: #ddd;
+}
+.details-button {
+   width : 100px;
+   height : 40px;
+   border : 1px solid #A7A7A7;
+   color : #666363;
+   background:white;
+   border-radius : 7px;   
+   font-size : 16px;
+   font-weight : 400;
+}
+.details-button:hover {
+    background-color: #ECECEC;
+}
+.filter-dropdown {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+.filter-dropdown select {
+    height: 30px;
+    margin-left: auto;
+    margin-right: 0;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+.filter-dropdown button {
+    height: 30px;
+    padding: 5px 10px;
+    background-color: #00b894;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.filter-dropdown button:hover {
+    background-color: #008c9e;
+}
+.date-info {
+    color: #636e72;
+    font-size: 12px;
+}
+.pagination button.active {
+    background-color: #24D59E;;
+    color: white;
+}
+.insert-button{
+   width : 100px;
+   height : 40px;
+   background: white;
+   border : 1px solid #24D59E; 
+   color : #24D59E;
+   border-radius : 7px;
+   margin-top: 30px;
+   font-size : 16px;
+   font-weight : 400;
+   margin-right: 38px;
+}
+.insert-button:hover{
+   background: #24D59E;
+   border : none;
+   color : white;
+}	
+.btnclass{
+	display: flex;
+	justify-content: flex-end;
+}	
+select{
+	border-radius: 5px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+.detail{
+	display: flex;
+	justify-content:flex-end; 
+}
+.detail-cell {
+    text-align: center; 
+}

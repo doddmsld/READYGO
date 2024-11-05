@@ -1,0 +1,94 @@
+package kr.or.ddit.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import kr.or.ddit.service.CalendarService;
+import kr.or.ddit.util.GetUserUtil;
+import kr.or.ddit.vo.PbancVO;
+import kr.or.ddit.vo.ScheduleVO;
+import lombok.extern.slf4j.Slf4j;
+
+@PreAuthorize("hasAnyRole('ROLE_MEMBER','ROLE_MEMENTER')")
+@Controller
+@Slf4j
+@RequestMapping("/member")
+public class CalendarController {
+	
+	@Inject
+	CalendarService calendarService;
+	
+    @Inject
+    GetUserUtil getUserUtil;
+
+	
+	@RequestMapping(value="/calendar",method=RequestMethod.GET)
+	public ModelAndView calendar(ModelAndView mav) {
+		
+		String mbrId = getUserUtil.getLoggedInUserId();
+		
+		Map<String, Object> map = new HashMap<String,Object>();
+        map.put("mbrId", mbrId);
+		List<PbancVO> scrapList = calendarService.scrapList(map);
+		List<ScheduleVO> scheduleList = calendarService.scheduleList(map);
+		
+		List<PbancVO> calendarList = this.calendarService.calendarList(mbrId);
+		List<ScheduleVO> calendarList2 = this.calendarService.calendarList2(mbrId);
+		log.info("calendarList : "+calendarList);
+		
+		
+		mav.addObject("mbrId", mbrId);
+		mav.addObject("scrapList",scrapList);
+		mav.addObject("scheduleList",scheduleList);
+		
+		mav.addObject("calendarList",calendarList);
+		mav.addObject("calendarList2",calendarList2);
+		
+		mav.setViewName("member/mypage/calendar");
+		
+		return mav;
+	}
+	
+	
+	@RequestMapping(value="/saveEvent", method=RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> saveEvent(@RequestBody Map<String, Object> event) {
+		log.info("Received event: " + event);
+		
+		// 필요한 정보 추출
+		String title = (String) event.get("title");
+		String start = (String) event.get("start");
+		String end = (String) event.get("end");
+		boolean allDay = (Boolean) event.get("allDay");
+		String backgroundColor = (String) event.get("backgroundColor");
+		String textColor = (String) event.get("textColor");
+
+		// scheduleList 메서드 호출하여 DB에 저장
+		Map<String, Object> map = new HashMap<>();
+		map.put("title", title);
+		map.put("start", start);
+		map.put("end", end);
+		map.put("allDay", allDay);
+		map.put("backgroundColor", backgroundColor);
+		map.put("textColor", textColor);
+
+		// DB에 저장하는 메서드 호출
+//		calendarService.scheduleList(map);
+
+		// 응답 반환
+		Map<String, Object> response = new HashMap<>();
+		response.put("status", "success");
+		response.put("message", "Event saved successfully");
+		return ResponseEntity.ok(response);
+	}
+}

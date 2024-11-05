@@ -1,0 +1,13 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+// 프로필 수상 내역 조회
+@Data
+public class PrfWnpzVO {
+	private String wnpzNo;
+	private String mbrId;
+	private String wnpzCntstNm;
+	private String wnpzAuspcengn;
+	private String wnpzPssrpYm;
+}

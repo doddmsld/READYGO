@@ -1,0 +1,146 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<link rel="stylesheet" href="/resources/css/security/loginForm.css">
+<div id="content" class="join_cont_wrap">
+    
+<div class="join_page_wrap">
+    <div class="join_content join_input_wrap">
+        <div class="join_box login_input_wrap">
+            <ul class="tab_member_type" role="tablist">
+                <li role="none"><button type="button" class="btn_tab t_per active" role="tab" onclick="location.href='/security/memSignin'">개인회원</button></li>
+                <li role="none">
+                    <button type="button" class="btn_tab t_com" role="tab" onclick="location.href='/security/entSignin'">기업회원
+                    </button>
+                </li>
+            </ul>
+
+            <!-- join box -->
+            <div class="social_login_box">
+                <div class="social_login_tit">
+                    <p class="tit">소셜 계정으로 간편 가입하기</p>
+                </div>
+                <ul class="social_login" id="wrap_social_login"><li class="login_naver">
+                            <a href="/zf_user/auth/sign-in-with?provider=naver.com&amp;display=popup" class="sl_naver ga_data_layer" data-provider="naver" data-ga_data_layer="ga_lead|member_join|join_pc|naver" aria-describedby="last_login_naver"><span class="wrap_icon"><svg class="icon"><use xlink:href="#icon_login_naver"></use></svg></span></a></li><li class="login_kakao">
+                            <a href="/zf_user/auth/sign-in-with?provider=kakao.com&amp;display=popup" class="sl_kakao ga_data_layer" data-provider="kakao" data-ga_data_layer="ga_lead|member_join|join_pc|kakao"><span class="wrap_icon"><svg class="icon"><use xlink:href="#icon_login_kakao"></use></svg></span></a></li><li class="login_google">
+                            <a href="/zf_user/auth/sign-in-with?provider=google.com&amp;display=popup" class="sl_google ga_data_layer" data-provider="google" data-ga_data_layer="ga_lead|member_join|join_pc|google"><span class="wrap_icon"><svg class="icon"><use xlink:href="#icon_login_google"></use></svg></span></a></li><li class="login_facebook">
+                            <a href="/zf_user/auth/sign-in-with?provider=facebook.com&amp;display=popup" class="sl_facebook ga_data_layer" data-provider="facebook" data-ga_data_layer="ga_lead|member_join|join_pc|facebook"><span class="wrap_icon"><svg class="icon"><use xlink:href="#icon_login_facebook"></use></svg></span></a></li><li class="login_apple">
+                            <a href="/zf_user/auth/sign-in-with?provider=apple.com&amp;display=popup" class="sl_apple ga_data_layer" data-provider="apple" data-ga_data_layer="ga_lead|member_join|join_pc|apple"><span class="wrap_icon"><svg class="icon"><use xlink:href="#icon_login_apple"></use></svg></span></a></li></ul>            </div>
+
+            <div class="join_form">
+                <button type="button" class="BtnType SizeL login_btn ga_data_layer" data-ga_data_layer="ga_lead|member_join|join_pc|id_reg" onclick="location.href='/zf_user/member/registration/join-detail'+location.search">사람인 아이디 만들기
+                </button>
+                <div class="login_bottom">
+                    <p>이미 계정이 있나요?<a href="/zf_user/auth?url=%2Fzf_user%2F">로그인</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="join_content join_banner_wrap">
+        <div class="intro swiper swiper-container-horizontal">
+            <div class="swiper-wrapper" style="transition-duration: 0ms; transform: translate3d(-3284px, 0px, 0px);"><div class="section info04 swiper-slide swiper-slide-duplicate swiper-slide-duplicate-active" style="width: 791px; margin-right: 30px;" data-swiper-slide-index="3">
+                    <div class="intro_txt">
+                        <p class="tit">
+                            이직 성공하고<br><span>축하금 받으세요!</span>
+                        </p>
+                        <p class="txt">
+                            제안 받은 공고에 합격하면<br>축하금 50만원을 드려요
+                        </p>
+                    </div>
+                </div>
+                <div class="section info01 swiper-slide swiper-slide-duplicate-next" style="width: 791px; margin-right: 30px;" data-swiper-slide-index="0">
+                    <div class="intro_txt">
+                        <p class="tit">
+                            <span>나의 강점과 적성</span>을<br>상세히 진단해보세요!
+                        </p>
+                        <p class="txt">
+                            인적성 검사로 진단하면 내가 잘하고<br>좋아하는 일을 확인하고 시작할 수 있어요
+                        </p>
+                    </div>
+                </div>
+                <div class="section info02 swiper-slide" style="width: 791px; margin-right: 30px;" data-swiper-slide-index="1">
+                    <div class="intro_txt">
+                        <p class="tit">
+                            내게 딱 맞는 공고<br><span>Ai 매칭</span> 받으세요!
+                        </p>
+                        <p class="txt">
+                            선호하는 조건을 체크하면,<br>합격률이 높은 공고와 매칭근거를 알려줘요
+                        </p>
+                    </div>
+                </div>
+                <div class="section info03 swiper-slide swiper-slide-prev" style="width: 791px; margin-right: 30px;" data-swiper-slide-index="2">
+                    <div class="intro_txt">
+                        <p class="tit">
+                            지원하기 전에<br><span>포지션 제안</span> 받으세요!
+                        </p>
+                        <p class="txt">
+                            사람인에 프로필만 등록하면,<br>조건이 맞는 기업에서 포지션 제안이 와요
+                        </p>
+                    </div>
+                </div>
+                <div class="section info04 swiper-slide swiper-slide-active" style="width: 791px; margin-right: 30px;" data-swiper-slide-index="3">
+                    <div class="intro_txt">
+                        <p class="tit">
+                            이직 성공하고<br><span>축하금 받으세요!</span>
+                        </p>
+                        <p class="txt">
+                            제안 받은 공고에 합격하면<br>축하금 50만원을 드려요
+                        </p>
+                    </div>
+                </div>
+            <div class="section info01 swiper-slide swiper-slide-duplicate swiper-slide-next" style="width: 791px; margin-right: 30px;" data-swiper-slide-index="0">
+                    <div class="intro_txt">
+                        <p class="tit">
+                            <span>나의 강점과 적성</span>을<br>상세히 진단해보세요!
+                        </p>
+                        <p class="txt">
+                            인적성 검사로 진단하면 내가 잘하고<br>좋아하는 일을 확인하고 시작할 수 있어요
+                        </p>
+                    </div>
+                </div></div>
+            <div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets"><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 1"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 2"></span><span class="swiper-pagination-bullet" tabindex="0" role="button" aria-label="Go to slide 3"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" role="button" aria-label="Go to slide 4"></span></div>
+            <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+        <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+    </div>
+</div>
+<script>
+    var swiper = new Swiper(".intro", {
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: {
+            delay: 3000,
+            disableOnInteraction: false
+        },
+        loop: true,
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        }
+    });
+
+    jQuery('.social_login').on('click', 'a', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var link = jQuery(e.currentTarget).attr('href'),
+            provider = jQuery(e.currentTarget).data('provider');
+
+        if((navigator.userAgent.toLowerCase().indexOf("msie") !== -1) && provider === 'apple'){
+            if(confirm('IE10이하 버전의 인터넷 익스플로러에서는 Apple 로그인이 정상 작동하지 않을 수 있습니다.\n' +
+                '인터넷 익스플로러를 최신 버전으로 업데이트 해주세요'))
+            {
+                window.open(link, '_blank', 'width=480,height=640');
+            }
+            return;
+        }
+        window.open(link, '_blank', 'width=480,height=640');
+    });
+
+    jQuery('.social_tooltip').show();
+    setTimeout(function () {
+        jQuery('.social_tooltip').fadeOut();
+    }, 5000);
+</script>
+</div>

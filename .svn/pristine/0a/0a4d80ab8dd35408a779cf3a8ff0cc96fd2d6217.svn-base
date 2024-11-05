@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.OutsouMainMapper">
+
+<resultMap type="outsouVO" id="outsouMap">
+		<result property="outordNo" column="OUTORD_NO"/>
+		<result property="outordTtl" column="OUTORD_TTL"/>
+		<result property="outordLclsf" column="OUTORD_LCLSF"/>
+		<result property="outordLclsfNm" column="OUTORD_LCLSF_NM"/>
+		<result property="outordMlsfc" column="OUTORD_MLSFC"/>
+		<result property="outordMlsfcNm" column="OUTORD_MLSFC_NM"/>
+		<result property="outordAmt" column="OUTORD_AMT"/>
+		<result property="outordAmtExpln" column="OUTORD_AMT_EXPLN"/>
+		<result property="outordExpln" column="OUTORD_EXPLN"/>
+		<result property="outordProvdprocss" column="OUTORD_PROVDPROCSS"/>
+		<result property="outordRefndregltn" column="OUTORD_REFNDREGLTN"/>
+		<result property="outordMainFile" column="OUTORD_MAIN_FILE"/>
+		<result property="outordDetailFile" column="OUTORD_DETAIL_FILE"/>
+		<result property="outordDmndmatter" column="OUTORD_DMNDMATTER"/>
+		<result property="outordWrtde" column="OUTORD_WRTDE"/>
+		<result property="outordUpdde" column="OUTORD_UPDDE"/>
+		<result property="outordDelYn" column="OUTORD_DEL_YN"/>
+		<result property="outordRdcnt" column="OUTORD_RDCNT"/>
+		<result property="mbrId" column="MBR_ID"/>
+		<collection property="codeVOList" resultMap="codeMap"></collection>
+	    <collection property="fileDetailVOList" resultMap="fileDetailMap"></collection>
+	</resultMap>
+	
+	<resultMap type="fileDetailVO" id="fileDetailMap">
+		<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+		<result property="gubun" column="GUBUN" />
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="orgnlFileNm" column="ORGNL_FILE_NM"/>
+		<result property="strgFileNm" column="STRG_FILE_NM"/>
+		<result property="filePathNm" column="FILE_PATH_NM"/>
+		<result property="fileSz" column="FILE_SZ"/>
+		<result property="fileExtnNm" column="FILE_EXTN_NM"/>
+		<result property="fileMime" column="FILE_MIME"/>
+		<result property="fileFancysize" column="FILE_FANCYSIZE"/>
+		<result property="fileStrgYmd" column="FILE_STRG_YMD"/>
+		<result property="fileDwnldCnt" column="FILE_DWNLD_CNT"/>
+	</resultMap>
+	
+	<resultMap type="codeVO" id="codeMap"> <!-- 공통코드 -->
+		<result property="comCode" column="COM_CODE"/>
+		<result property="comCodeGrp" column="COM_CODE_GRP"/>
+		<result property="comCodeNm" column="COM_CODE_NM"/>
+		<result property="comCodeDesc" column="COM_CODE_DESC"/>
+		<result property="useYn" column="USE_YN"/>
+		<result property="upperComCode" column="UPPER_COM_CODE"/>
+		<result property="upperComCodeGrp" column="UPPER_COM_CODE_GRP"/>
+	</resultMap>
+	
+	<!-- 조회수가 많은 카테고리 5개 가져오기  -->
+	<select id="getCategory" parameterType="outsouVO" resultType="outsouVO">
+	 <![CDATA[
+		SELECT OUTORD_MLSFC ,
+		      get_common_code_name(OUTORD_MLSFC) AS OUTORD_MLSFC_NM,  
+		      OUTORD_RDCNT
+		FROM
+		(SELECT OUTORD_MLSFC,     
+		    SUM(OUTORD_RDCNT) AS OUTORD_RDCNT
+		FROM OUTSOU
+		GROUP BY OUTORD_MLSFC
+		ORDER BY OUTORD_RDCNT DESC)
+		WHERE ROWNUM <= 5
+		]]>
+	</select>
+	
+	<!-- 최신글 5개 가져오기  -->
+	<select id="getnewList" parameterType="outsouVO" resultType="outsouVO">
+	 <![CDATA[
+		SELECT OUTORD_NO, OUTORD_TTL, OUTORD_LCLSF, OUTORD_MLSFC, OUTORD_AMT, 
+		        OUTORD_AMT_EXPLN, OUTORD_EXPLN, OUTORD_PROVDPROCSS, OUTORD_REFNDREGLTN, OUTORD_MAIN_FILE, 
+		        OUTORD_DETAIL_FILE, OUTORD_DMNDMATTER, OUTORD_WRTDE, OUTORD_DEL_YN, OUTORD_RDCNT
+		FROM(
+		SELECT  OUTORD_NO, OUTORD_TTL, OUTORD_LCLSF, OUTORD_MLSFC, OUTORD_AMT, 
+		        OUTORD_AMT_EXPLN, OUTORD_EXPLN, OUTORD_PROVDPROCSS, OUTORD_REFNDREGLTN, 
+		        (SELECT F.FILE_PATH_NM
+		           FROM FILE_DT F
+		          WHERE F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+		            AND ROWNUM = 1) AS OUTORD_MAIN_FILE,
+		        (SELECT LISTAGG(F_DETAIL.FILE_PATH_NM, ', ') WITHIN GROUP (ORDER BY F_DETAIL.FILE_PATH_NM)
+		           FROM FILE_DT F_DETAIL
+		          WHERE F_DETAIL.FILE_GROUP_SN = OU.OUTORD_DETAIL_FILE) AS OUTORD_DETAIL_FILE,
+		        OUTORD_DMNDMATTER, OUTORD_WRTDE, OUTORD_DEL_YN, OUTORD_RDCNT
+		FROM OUTSOU OU
+		WHERE OUTORD_DEL_YN ='N'
+		ORDER BY OUTORD_WRTDE DESC)
+		WHERE ROWNUM <= 5
+		]]>
+	</select>
+	
+	<!-- 조회수 높은거 5개 가져오기   -->
+	<select id="getBestList" parameterType="outsouVO" resultType="outsouVO">
+	 <![CDATA[
+		SELECT OUTORD_NO, OUTORD_TTL, OUTORD_LCLSF, OUTORD_MLSFC, OUTORD_AMT, 
+		        OUTORD_AMT_EXPLN, OUTORD_EXPLN, OUTORD_PROVDPROCSS, OUTORD_REFNDREGLTN, OUTORD_MAIN_FILE, 
+		        OUTORD_DETAIL_FILE, OUTORD_DMNDMATTER, OUTORD_WRTDE, OUTORD_DEL_YN, OUTORD_RDCNT
+		FROM(
+		SELECT  OUTORD_NO, OUTORD_TTL, OUTORD_LCLSF, OUTORD_MLSFC, OUTORD_AMT, 
+		        OUTORD_AMT_EXPLN, OUTORD_EXPLN, OUTORD_PROVDPROCSS, OUTORD_REFNDREGLTN, 
+		        (SELECT F.FILE_PATH_NM
+		           FROM FILE_DT F
+		          WHERE F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+		            AND ROWNUM = 1) AS OUTORD_MAIN_FILE,
+		        (SELECT LISTAGG(F_DETAIL.FILE_PATH_NM, ', ') WITHIN GROUP (ORDER BY F_DETAIL.FILE_PATH_NM)
+		           FROM FILE_DT F_DETAIL
+		          WHERE F_DETAIL.FILE_GROUP_SN = OU.OUTORD_DETAIL_FILE) AS OUTORD_DETAIL_FILE,
+		        OUTORD_DMNDMATTER, OUTORD_WRTDE, OUTORD_DEL_YN, OUTORD_RDCNT
+		FROM OUTSOU OU
+		WHERE OUTORD_DEL_YN ='N'
+		ORDER BY OUTORD_RDCNT DESC)
+		WHERE ROWNUM <= 5
+		]]>
+	</select>
+
+	<!-- 기술수준 코드  -->
+	<select id="getSrleList" parameterType="String" resultMap="codeMap">
+		SELECT COM_CODE, COM_CODE_NM 
+	    FROM CODE
+	    WHERE COM_CODE_GRP = 'SRLE'
+	    ORDER BY COM_CODE	
+	</select>   
+
+	<!-- 팀규모 코드  -->
+	<select id="getSrteList" parameterType="String" resultMap="codeMap">
+		SELECT COM_CODE, COM_CODE_NM 
+	    FROM CODE
+	    WHERE COM_CODE_GRP = 'SRTE'
+	    ORDER BY COM_CODE	
+	</select> 
+	
+<!--  /////////// 카테고리 별 화면  시작 ////////////////// -->	
+	<!-- 웹제작 목록  -->
+	<select id="getWebList" parameterType="hashMap" resultType="outsouVO">
+		 WITH T AS
+	     (
+	      SELECT ROW_NUMBER() OVER(ORDER BY TO_NUMBER(OU.OUTORD_NO) DESC) RNUM,
+	             OU.OUTORD_NO, OU.OUTORD_TTL,
+		         OU.OUTORD_LCLSF,
+		         get_common_code_name(OU.OUTORD_LCLSF) AS OUTORD_LCLSF_NM,
+		         OU.OUTORD_MLSFC,
+		         get_common_code_name(OU.OUTORD_MLSFC) AS OUTORD_MLSFC_NM,
+		         OU.OUTORD_AMT,
+		         (SELECT F.FILE_PATH_NM
+		            FROM FILE_DT F
+		           WHERE F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+		             AND ROWNUM = 1) AS OUTORD_MAIN_FILE,
+		         OU.OUTORD_WRTDE,OUTORD_UPDDE, OU.OUTORD_DEL_YN, OU.OUTORD_RDCNT, OU.MBR_ID,
+		         OSD.SRVC_NO,
+		         OSD.SRVC_LEVEL_CD,
+		         get_common_code_name(OSD.SRVC_LEVEL_CD) AS SRVC_LEVEL_NM, 
+		         OSD.SRVC_TEAMSCALE_CD,
+		         get_common_code_name(OSD.SRVC_TEAMSCALE_CD) AS SRVC_TEAMSCALE_NM
+		    FROM OUTSOU OU
+		    LEFT OUTER JOIN OS_DEVAL OSD ON OU.OUTORD_NO = OSD.OUTORD_NO
+	       WHERE 1 = 1
+	         AND OU.OUTORD_DEL_YN = 'N'      -- 삭제한 항목은 나타나지 않음
+	         AND OUTORD_MLSFC IN ('OULC01-001','OULC01-002','OULC01-003')
+         
+	    )
+	    SELECT * FROM T
+	   WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 10 + 1 AND #{currentPage} * 10
+	</select>
+	
+
+	<!-- Web 전체 행의 수 -->
+	<select id="getWebTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM OUTSOU OU
+        WHERE 1 = 1
+        AND OU.OUTORD_DEL_YN = 'N'
+	</select>
+	
+	
+	<!-- 프로그램 제작 목록  -->
+	<select id="getPGList" parameterType="hashMap" resultType="outsouVO">
+		 WITH T AS
+	     (
+	      SELECT ROW_NUMBER() OVER(ORDER BY TO_NUMBER(OU.OUTORD_NO) DESC) RNUM,
+	             OU.OUTORD_NO, OU.OUTORD_TTL,
+		         OU.OUTORD_LCLSF,
+		         get_common_code_name(OU.OUTORD_LCLSF) AS OUTORD_LCLSF_NM,
+		         OU.OUTORD_MLSFC,
+		         get_common_code_name(OU.OUTORD_MLSFC) AS OUTORD_MLSFC_NM,
+		         OU.OUTORD_AMT,
+		         (SELECT F.FILE_PATH_NM
+		            FROM FILE_DT F
+		           WHERE F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+		             AND ROWNUM = 1) AS OUTORD_MAIN_FILE,
+		         OU.OUTORD_WRTDE,OUTORD_UPDDE, OU.OUTORD_DEL_YN, OU.OUTORD_RDCNT, OU.MBR_ID,
+		         OSD.SRVC_NO,
+		         OSD.SRVC_LEVEL_CD,
+		         get_common_code_name(OSD.SRVC_LEVEL_CD) AS SRVC_LEVEL_NM, 
+		         OSD.SRVC_TEAMSCALE_CD,
+		         get_common_code_name(OSD.SRVC_TEAMSCALE_CD) AS SRVC_TEAMSCALE_NM
+		    FROM OUTSOU OU
+		    LEFT OUTER JOIN OS_DEVAL OSD ON OU.OUTORD_NO = OSD.OUTORD_NO
+	       WHERE 1 = 1
+	         AND OU.OUTORD_DEL_YN = 'N'      -- 삭제한 항목은 나타나지 않음
+	         AND OUTORD_MLSFC IN ('OULC01-004','OULC01-005','OULC01-006')
+         
+	    )
+	    SELECT * FROM T
+	   WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 10 + 1 AND #{currentPage} * 10
+	</select>
+	
+
+	<!-- 프로그램 전체 행의 수 -->
+	<select id="getPGTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM OUTSOU OU
+        WHERE 1 = 1
+        AND OU.OUTORD_DEL_YN = 'N'
+	</select>
+	
+	
+	<!-- 데이터 제작 목록  -->
+	<select id="getDataList" parameterType="hashMap" resultType="outsouVO">
+		 WITH T AS
+	     (
+	      SELECT ROW_NUMBER() OVER(ORDER BY TO_NUMBER(OU.OUTORD_NO) DESC) RNUM,
+	             OU.OUTORD_NO, OU.OUTORD_TTL,
+		         OU.OUTORD_LCLSF,
+		         get_common_code_name(OU.OUTORD_LCLSF) AS OUTORD_LCLSF_NM,
+		         OU.OUTORD_MLSFC,
+		         get_common_code_name(OU.OUTORD_MLSFC) AS OUTORD_MLSFC_NM,
+		         OU.OUTORD_AMT,
+		         (SELECT F.FILE_PATH_NM
+		            FROM FILE_DT F
+		           WHERE F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+		             AND ROWNUM = 1) AS OUTORD_MAIN_FILE,
+		         OU.OUTORD_WRTDE,OUTORD_UPDDE, OU.OUTORD_DEL_YN, OU.OUTORD_RDCNT, OU.MBR_ID,
+		         OSD.SRVC_NO,
+		         OSD.SRVC_LEVEL_CD,
+		         get_common_code_name(OSD.SRVC_LEVEL_CD) AS SRVC_LEVEL_NM, 
+		         OSD.SRVC_TEAMSCALE_CD,
+		         get_common_code_name(OSD.SRVC_TEAMSCALE_CD) AS SRVC_TEAMSCALE_NM
+		    FROM OUTSOU OU
+		    LEFT OUTER JOIN OS_DEVAL OSD ON OU.OUTORD_NO = OSD.OUTORD_NO
+	       WHERE 1 = 1
+	         AND OU.OUTORD_DEL_YN = 'N'      -- 삭제한 항목은 나타나지 않음
+	         AND OUTORD_MLSFC IN ('OULC01-007','OULC01-008','OULC01-009')
+         
+	    )
+	    SELECT * FROM T
+	   WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 10 + 1 AND #{currentPage} * 10
+	</select>
+	
+
+	<!-- 데이터 전체 행의 수 -->
+	<select id="getDataTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM OUTSOU OU
+        WHERE 1 = 1
+        AND OU.OUTORD_DEL_YN = 'N'
+	</select>
+	
+	
+	<!-- AI 제작 목록  -->
+	<select id="getAIList" parameterType="hashMap" resultType="outsouVO">
+		 WITH T AS
+	     (
+	      SELECT ROW_NUMBER() OVER(ORDER BY TO_NUMBER(OU.OUTORD_NO) DESC) RNUM,
+	             OU.OUTORD_NO, OU.OUTORD_TTL,
+		         OU.OUTORD_LCLSF,
+		         get_common_code_name(OU.OUTORD_LCLSF) AS OUTORD_LCLSF_NM,
+		         OU.OUTORD_MLSFC,
+		         get_common_code_name(OU.OUTORD_MLSFC) AS OUTORD_MLSFC_NM,
+		         OU.OUTORD_AMT,
+		         (SELECT F.FILE_PATH_NM
+		            FROM FILE_DT F
+		           WHERE F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+		             AND ROWNUM = 1) AS OUTORD_MAIN_FILE,
+		         OU.OUTORD_WRTDE,OUTORD_UPDDE, OU.OUTORD_DEL_YN, OU.OUTORD_RDCNT, OU.MBR_ID,
+		         OSD.SRVC_NO,
+		         OSD.SRVC_LEVEL_CD,
+		         get_common_code_name(OSD.SRVC_LEVEL_CD) AS SRVC_LEVEL_NM, 
+		         OSD.SRVC_TEAMSCALE_CD,
+		         get_common_code_name(OSD.SRVC_TEAMSCALE_CD) AS SRVC_TEAMSCALE_NM
+		    FROM OUTSOU OU
+		    LEFT OUTER JOIN OS_DEVAL OSD ON OU.OUTORD_NO = OSD.OUTORD_NO
+	       WHERE 1 = 1
+	         AND OU.OUTORD_DEL_YN = 'N'      -- 삭제한 항목은 나타나지 않음
+	         AND OUTORD_MLSFC IN ('OULC01-010','OULC01-011','OULC01-012')
+         
+	    )
+	    SELECT * FROM T
+	   WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 10 + 1 AND #{currentPage} * 10
+	</select>
+	
+
+	<!-- AI 전체 행의 수 -->
+	<select id="getAITotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM OUTSOU OU
+        WHERE 1 = 1
+        AND OU.OUTORD_DEL_YN = 'N'
+	</select>
+	
+	
+	<!-- 직무직군 제작 목록  -->
+	<select id="getJobList" parameterType="hashMap" resultType="outsouVO">
+		 WITH T AS
+	     (
+	      SELECT ROW_NUMBER() OVER(ORDER BY TO_NUMBER(OU.OUTORD_NO) DESC) RNUM,
+	             OU.OUTORD_NO, OU.OUTORD_TTL,
+		         OU.OUTORD_LCLSF,
+		         get_common_code_name(OU.OUTORD_LCLSF) AS OUTORD_LCLSF_NM,
+		         OU.OUTORD_MLSFC,
+		         get_common_code_name(OU.OUTORD_MLSFC) AS OUTORD_MLSFC_NM,
+		         OU.OUTORD_AMT,
+		         (SELECT F.FILE_PATH_NM
+		            FROM FILE_DT F
+		           WHERE F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+		             AND ROWNUM = 1) AS OUTORD_MAIN_FILE,
+		         OU.OUTORD_WRTDE,OUTORD_UPDDE, OU.OUTORD_DEL_YN, OU.OUTORD_RDCNT, OU.MBR_ID,
+		         OSD.SRVC_NO,
+		         OSD.SRVC_LEVEL_CD,
+		         get_common_code_name(OSD.SRVC_LEVEL_CD) AS SRVC_LEVEL_NM, 
+		         OSD.SRVC_TEAMSCALE_CD,
+		         get_common_code_name(OSD.SRVC_TEAMSCALE_CD) AS SRVC_TEAMSCALE_NM
+		    FROM OUTSOU OU
+		    LEFT OUTER JOIN OS_DEVAL OSD ON OU.OUTORD_NO = OSD.OUTORD_NO
+	       WHERE 1 = 1
+	         AND OU.OUTORD_DEL_YN = 'N'      -- 삭제한 항목은 나타나지 않음
+	         AND OUTORD_MLSFC IN ('OULC01-013','OULC01-014','OULC01-015','OULC01-016')
+         
+	    )
+	    SELECT * FROM T
+	   WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 10 + 1 AND #{currentPage} * 10
+	</select>
+	
+
+	<!-- 직무직군 전체 행의 수 -->
+	<select id="getJobTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM OUTSOU OU
+        WHERE 1 = 1
+        AND OU.OUTORD_DEL_YN = 'N'
+	</select>
+	
+	
+	<!-- 자기소개서 제작 목록  -->
+	<select id="getSIList" parameterType="hashMap" resultType="outsouVO">
+		 WITH T AS
+	     (
+	      SELECT ROW_NUMBER() OVER(ORDER BY TO_NUMBER(OU.OUTORD_NO) DESC) RNUM,
+	             OU.OUTORD_NO, OU.OUTORD_TTL,
+		         OU.OUTORD_LCLSF,
+		         get_common_code_name(OU.OUTORD_LCLSF) AS OUTORD_LCLSF_NM,
+		         OU.OUTORD_MLSFC,
+		         get_common_code_name(OU.OUTORD_MLSFC) AS OUTORD_MLSFC_NM,
+		         OU.OUTORD_AMT,
+		         (SELECT F.FILE_PATH_NM
+		            FROM FILE_DT F
+		           WHERE F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+		             AND ROWNUM = 1) AS OUTORD_MAIN_FILE,
+		         OU.OUTORD_WRTDE,OUTORD_UPDDE, OU.OUTORD_DEL_YN, OU.OUTORD_RDCNT, OU.MBR_ID,
+		         OSD.SRVC_NO,
+		         OSD.SRVC_LEVEL_CD,
+		         get_common_code_name(OSD.SRVC_LEVEL_CD) AS SRVC_LEVEL_NM, 
+		         OSD.SRVC_TEAMSCALE_CD,
+		         get_common_code_name(OSD.SRVC_TEAMSCALE_CD) AS SRVC_TEAMSCALE_NM
+		    FROM OUTSOU OU
+		    LEFT OUTER JOIN OS_DEVAL OSD ON OU.OUTORD_NO = OSD.OUTORD_NO
+	       WHERE 1 = 1
+	         AND OU.OUTORD_DEL_YN = 'N'      -- 삭제한 항목은 나타나지 않음
+	         AND OUTORD_LCLSF = 'OULC02'
+           
+	    )
+	    SELECT * FROM T
+	   WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 10 + 1 AND #{currentPage} * 10
+	</select>
+	
+
+	<!-- 자기소개서 전체 행의 수 -->
+	<select id="getSITotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM OUTSOU OU
+        WHERE 1 = 1
+        AND OU.OUTORD_DEL_YN = 'N'
+	</select>
+	
+<!--  /////////// 카테고리 별 화면  끝 ////////////////// -->		
+	
+	
+	
+	
+<!--  /////////// 검색 결과  ////////////////// -->	
+<!-- 각 카테고리 별 목록  -->
+	<select id="getscarchList" parameterType="hashMap" resultType="outsouVO">
+		WITH T AS
+	    (
+	       SELECT ROW_NUMBER() OVER(ORDER BY TO_NUMBER(OU.OUTORD_NO) DESC) RNUM, 
+	              OU.OUTORD_NO, 
+	              OU.OUTORD_TTL,
+	              OU.OUTORD_AMT,
+	              (SELECT F.FILE_PATH_NM
+	                 FROM FILE_DT F
+	                WHERE F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+	                  AND ROWNUM = 1) AS OUTORD_MAIN_FILE,
+	               OU.OUTORD_WRTDE,OUTORD_UPDDE, OU.OUTORD_DEL_YN, OU.OUTORD_RDCNT, OU.MBR_ID,
+	               (SELECT LISTAGG(OSK.KWRD_NM, ', ') WITHIN GROUP (ORDER BY OSK.KWRD_NM)
+			          FROM OS_KEYWOED OSK
+			         WHERE OSK.OUTORD_NO = OU.OUTORD_NO) AS KWRD_NM
+	            FROM OUTSOU OU
+		       WHERE 1 = 1
+		         AND OU.OUTORD_DEL_YN = 'N'      -- 삭제한 항목은 나타나지 않음         
+	    )
+	    SELECT * 
+	      FROM T
+	     WHERE T.OUTORD_TTL LIKE '%'||#{keyword}||'%' OR T.KWRD_NM LIKE '%'||#{keyword}||'%'
+	       AND T.RNUM BETWEEN (#{currentPage} - 1) * 10 + 1 AND #{currentPage} * 10
+	</select>
+	
+	<!-- 전체 행의 수 -->
+	<select id="getscarchTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM OUTSOU OU
+        WHERE 1 = 1
+        AND OU.OUTORD_DEL_YN = 'N'      -- 삭제한 항목은 나타나지 않음         
+	</select>
+</mapper>

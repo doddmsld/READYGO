@@ -1,0 +1,623 @@
+var Toast = Swal.mixin({
+	toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+});
+function execDaumPostcode() {
+	new daum.Postcode(
+			{
+				oncomplete : function(data) {
+					var fullAddr = data.address;
+					var extraAddr = '';
+
+					if (data.addressType === 'R') {
+						if (data.bname !== '') {
+							extraAddr += data.bname;
+						}
+						if (data.buildingName !== '') {
+							extraAddr += (extraAddr !== '' ? ', '
+									+ data.buildingName : data.buildingName);
+						}
+						fullAddr += (extraAddr !== '' ? ' (' + extraAddr
+								+ ')' : '');
+					}
+
+					$('#mbrZip').val(data.zonecode);
+					$('#mbrAddr').val(fullAddr);
+					$('#mbrAddrDtl').focus();
+				}
+			}).open();
+}
+function handleImg(e) {
+	let files = e.target.files; // 선택한 파일들
+	let fileArr = Array.prototype.slice.call(files);
+	let accumStr = "";
+	fileArr.forEach(function(f) {
+		if (!f.type.match("image.*")) {
+			alert("이미지 확장자만 가능합니다");
+			return; // 함수 자체가 종료됨
+		}
+		let reader = new FileReader();
+		reader.onload = function(e) {// "+e.target+result+" - 이미지를 다 읽었으면 결과를 가져와라 -> 그것을 누적
+			accumStr += "<img src='"+e.target.result+"'/>"; // 누적 String
+			$(".pImg").html(accumStr);
+		}
+		reader.readAsDataURL(f);
+
+	});
+}
+$(function() {
+	$(".warning").hide();
+	 // 글자 수 실시간 업데이트
+    $(".modalCont").on("input", function() {
+        let currentLength = $(this).val().length;
+        $(this).parent().find(".charCount").text(currentLength);
+        if (currentLength > 2000) {
+            $(this).parent().find(".warning").show();  // 경고 메시지 표시
+            $(this).val($(this).val().substring(0, 2000));  // 글자 수 제한
+            $(this).parent().find(".charCount").text(2000);  // 2000자까지만 표시
+        } else {
+        	 $(this).parent().find(".warning").hide();  // 경고 메시지 숨김
+        }
+
+    });
+
+		
+	$("#mbrAddr").on("click", function() {
+		execDaumPostcode();
+	})
+
+	$(".pImg").on("click", function(e) {
+		$("#uploadFile").click();
+	})
+	$("#uploadFile").on("change", function(e) {
+		let file = e.target.files[0];
+		if (!file) {
+			return;
+		}
+
+		if (!file.type.match("image.*")) {
+			alert("이미지 파일만 업로드 가능합니다.");
+			return;
+		}
+
+		let reader = new FileReader();
+		reader.onload = function(e) {
+			$(".pImg").attr("src", e.target.result);
+		}
+		reader.readAsDataURL(file);
+	});
+	
+	let skillListRaw = "${codeGrpVOMap.get('SK')}";
+    let skillList = [];
+	    
+    function parseJavaObject(str) {
+        let codeVORegex = /CodeVO\(([^)]+)\)/g;
+        let codeVOMatches = str.match(codeVORegex);
+        
+        if (codeVOMatches) {
+            skillList = codeVOMatches.map(match => {
+                try {
+                    let props = match.slice(7, -1).split(', ');
+                    let obj = {};
+                    props.forEach(prop => {
+                        let [key, value] = prop.split('=');
+                        obj[key.trim()] = value.trim(); // 공백 제거
+                    });
+                    return {
+                        codeNm: obj.comCodeNm || "",  // 값이 없을 경우 빈 문자열 처리
+                        codeNo: obj.comCode || ""     // 값이 없을 경우 빈 문자열 처리
+                    };
+                } catch (e) {
+                    console.error("Error parsing CodeVO object:", e);
+                    return null;  // 파싱 실패 시 null 리턴
+                }
+            }).filter(item => item !== null); // null 값 제거
+        }
+    }
+
+    try {
+        parseJavaObject(skillListRaw);
+    } catch (e) {
+        console.error("Error parsing skill data:", e);
+    }
+	
+	$("#skillSearch").on("input", function() {
+        let searchStr = $("#skillSearch").val().toLowerCase();
+        console.log(searchStr);
+        if(searchStr==""){
+        	$(".search-results").html("");
+        	return;
+        }
+       	$(".search-results").html("");
+        let filteredSkills = skillList.filter(skill => 
+            skill.codeNm.toLowerCase().includes(searchStr)
+        );
+
+        updateSearchResults(filteredSkills, searchStr);
+    });
+
+	function updateSearchResults(skills, searchStr) {
+	    let searchResults = $(".search-results");
+	    searchResults.empty();
+	    let skillItem = "";
+
+	    skills.forEach(skill => {
+	    	 skillItem += '<a class="list-group-item" data-code-no="'
+                    + skill.codeNo 
+                    + '" data-code-nm="'
+                    + skill.codeNm
+                    + '"><div class="search-title">'
+                    + skill.codeNm 
+                    + '</div></a>';
+	    });
+
+	    // 검색 결과를 추가하고 나서 클릭 이벤트를 함께 바인딩
+	    searchResults.html(skillItem);
+
+	    // 리스트 아이템에 클릭 이벤트 핸들러 추가
+	    $(".list-group-item").on("click", function() {
+	        let codeNm = $(this).data("code-nm");
+	        let codeNo = $(this).data("code-no");
+
+	        console.log(codeNm);
+	        console.log(codeNo);
+
+	        addSelectedSkill({ codeNm: codeNm, codeNo: codeNo });
+	    });
+	}
+	    
+	    
+	function addSelectedSkill(skill) {
+    	let selectedSkills = $("#selectedSkills"); // 선택된 스킬을 표시할 컨테이너
+
+	    // 이미 선택된 스킬이 아닌 경우에만 추가
+	   if ($("#skill-select-box").find('[data-code-no="' + skill.codeNo + '"]').length === 0) {
+		    let skillTag = '<span class="selected-skill" data-code-no="'
+		                 + skill.codeNo 
+		                 + '">'
+		                 + skill.codeNm 
+		                 + ' x </span>';
+		
+		    let save = $("#skill-select-box").html();
+		    save += skillTag;
+		    $("#skill-select-box").html(save);
+		}
+
+    	// 입력 필드와 검색 결과 초기화
+	    $("#skillSearch").val("").focus();  // 입력 필드 초기화 후 포커스
+	    $(".search-results").empty();
+	}
+	$("#skill-select-box").on('click', '.selected-skill', function() {
+	    $(this).remove(); // 선택된 스킬 삭제
+	});
+	
+	
+	$("#basInfoBtn").on("click", function(){
+	    if ($('#mbrNm').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'이름을 입력해 주세요.'
+			});
+	        $('#mbrNm').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrSexdstncd').val() == null) {
+	    	Toast.fire({
+				icon:'warning',
+				title:'성별을 입력해 주세요.'
+			});
+	        $('#mbrSexdstncd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrBrdt').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'생년월일을 입력해 주세요.'
+			});
+	    	$('#mbrBrdt').focus();
+	    	event.preventDefault();
+	    	return false;
+	    }
+	    if ($('#mbrPhone').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'휴대폰번호를 입력해 주세요.'
+			});
+	        $('#mbrPhone').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrEml').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'이메일을 입력해 주세요.'
+			});
+	        $('#mbrEml').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#rsmCareerCd').val() == null) {
+	    	Toast.fire({
+				icon:'warning',
+				title:'직무능력을 입력해 주세요.'
+			});
+	        $('#rsmCareerCd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrAddr').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+
+				title:'주소를 입력해 주세요.'
+			});
+	        $('#mbrAddr').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrAddrDtl').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'상세 주소를 입력해 주세요.'
+			});
+	        $('#mbrAddrDtl').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    
+	    let mbrNm = $("#mbrNm").val();
+		let mbrSexdstncd = $("#mbrSexdstncd").val();
+		let mbrBrdt = $("#mbrBrdt").val();
+		let mbrPhone = $("#mbrPhone").val();
+		let mbrTelno = $("#mbrTelno").val();
+		let mbrEml = $("#mbrEml").val();
+		let rsmCareerCd = $("#rsmCareerCd").val();
+		let mbrAddr = $("#mbrAddr").val();
+		let mbrZip = $("#mbrZip").val();
+		let mbrAddrDtl = $("#mbrAddrDtl").val();
+		let rsmTtl = $("#rsmTtl").val();
+		let rsmNo = $("#rsmNo").val();
+		var uploadFile = $("#uploadFile")[0].files[0];
+		// FormData 객체 생성 (필요한 경우)
+		let formData = new FormData();
+
+		console.log(mbrNm);
+		console.log(mbrSexdstncd);
+		console.log(mbrBrdt);
+		console.log(mbrPhone);
+		console.log(mbrTelno);
+		console.log(mbrEml);
+		console.log(rsmCareerCd);
+		console.log(mbrAddr);
+		console.log(mbrZip);
+		console.log(mbrAddrDtl);
+		console.log(rsmTtl);
+		console.log(rsmNo);
+		console.log(uploadFile);
+		// FormData에 값 추가
+		formData.append("mbrNm", mbrNm);
+		formData.append("mbrSexdstncd", mbrSexdstncd);
+		formData.append("mbrBrdt", mbrBrdt);
+		formData.append("mbrPhone", mbrPhone);
+		if(mbrTelno !== null||$('#mbrTelno').val().trim() !== ""){
+			formData.append("mbrTelno", mbrTelno);
+		}
+		formData.append("mbrEml", mbrEml);
+		formData.append("rsmCareerCd", rsmCareerCd);
+		formData.append("mbrAddr", mbrAddr);
+		formData.append("mbrZip", mbrZip);
+		formData.append("mbrAddrDtl", mbrAddrDtl);
+		if(rsmTtl != null||$('#rsmTtl').val().trim() !== ""){
+			formData.append("rsmTtl", rsmTtl);
+		}
+		if(rsmNo != null||$('#rsmNo').val().trim() !== ""){
+			formData.append("rsmNo", rsmNo);
+		}
+		if(uploadFile != null){
+			formData.append("uploadFile", uploadFile);
+		}
+		$.ajax({
+			url : "/member/resumebasInfoPost",
+			processData : false,
+			contentType : false,
+			enctype: 'multipart/form-data',
+			data : formData,
+			type : "post",
+			dataType: "json",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+			},
+			success : function(result) {
+				console.log("result : " + result);
+				// success, error, warning, info, question
+				if (result == null) {
+					Toast.fire({
+						icon : 'error',
+						title : '저장 실패'
+					});
+					return;
+				}
+				Toast.fire({
+					icon : 'success',
+					title : '저장 성공'
+				});
+				let rsmNo = result.rsmNo;
+				let mbrId = result.mbrId;
+				$("#rsmNo").val(rsmNo);
+				$("#mbrId").val(mbrId);
+			}
+		})
+	})
+	$("#hopeBtn").on("click",function(){
+		if ($('#rsmCrdtCd').val() == null) {
+	    	Toast.fire({
+				icon:'warning',
+				title:'희망·직무·직업을 선택해 주세요.'
+			});
+	        $('#rsmCrdtCd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#rsmSalCd').val() == null) {
+	    	Toast.fire({
+				icon:'warning',
+				title:'희망 연봉을 선택해 주세요.'
+			});
+	        $('#rsmSalCd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    
+	    
+	    let rsmCrdtCd = $("#rsmCrdtCd").val();
+		let rsmSalCd = $("#rsmSalCd").val();
+		let rsmMemo = $("#rsmMemo").val();
+		let rsmNo = $("#rsmNo").val();
+		let mbrId = $("#mbrId").val();
+		
+		// FormData 객체 생성 (필요한 경우)
+		let formData = new FormData();
+		
+		// FormData에 값 추가
+		formData.append("rsmCrdtCd", rsmCrdtCd);
+		formData.append("rsmSalCd", rsmSalCd);
+		formData.append("rsmMemo", rsmMemo);
+		formData.append("rsmNo", rsmNo);
+		formData.append("mbrId", mbrId);
+		
+		$.ajax({
+			url : "/member/hopePost",
+			processData : false,
+			contentType : false,
+			data : formData,
+			type : "post",
+			dataType : "json",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+			},
+			success : function(result) {
+				console.log("result : " + result);
+				// success, error, warning, info, question
+				if (result == null) {
+					Toast.fire({
+						icon : 'error',
+						title : '저장 실패'
+					});
+					return;
+				}
+				Toast.fire({
+					icon : 'success',
+					title : '저장 성공'
+				});
+			}
+		})
+	})
+	
+	$("#acbgSeCd").on("change", function(){
+		let val = $(this).val();
+		if($(this).val()==="ACSE001"){
+			$('#acbgRcognacbgCd').parents(".form-group").attr("hidden", true);
+			$('#acbgSchlNm').parents(".form-group").attr("hidden", false);
+			$('#acbgMjrNm').parents(".form-group").attr("hidden", false);
+			$('#acdmcrGrdtnSeCd').parents(".form-group").attr("hidden", false);
+			$('#acbgMtcltnym').parents(".form-group").attr("hidden", false);
+			$('#acbgGrdtnym').parents(".form-group").attr("hidden", false);
+			$('#acbgPntCd').parents(".form-group").attr("hidden", true);
+			$('#acbgPnt').parents(".form-group").attr("hidden", true);
+			$('#acbgRcognacbgCd').val(null);
+			$('#acbgSchlNm').val(null);
+			$('#acbgMjrNm').val(null);
+			$('#acdmcrGrdtnSeCd').val(null);
+			$('#acbgMtcltnym').val(null);
+			$('#acbgGrdtnym').val(null);
+			$('#acbgPntCd').val(null);
+			$('#acbgPnt').val(null);
+		}
+		if($(this).val()==="ACSE002"){
+			$('#acbgRcognacbgCd').parents(".form-group").attr("hidden", false);
+			$('#acbgSchlNm').parents(".form-group").attr("hidden", false);
+			$('#acbgMjrNm').parents(".form-group").attr("hidden", false);
+			$('#acdmcrGrdtnSeCd').parents(".form-group").attr("hidden", false);
+			$('#acbgMtcltnym').parents(".form-group").attr("hidden", false);
+			$('#acbgGrdtnym').parents(".form-group").attr("hidden", false);
+			$('#acbgPntCd').parents(".form-group").attr("hidden", false);
+			$('#acbgPnt').parents(".form-group").attr("hidden", false);
+			$('#acbgRcognacbgCd').val(null);
+			$('#acbgSchlNm').val(null);
+			$('#acbgMjrNm').val(null);
+			$('#acdmcrGrdtnSeCd').val(null);
+			$('#acbgMtcltnym').val(null);
+			$('#acbgGrdtnym').val(null);
+			$('#acbgPntCd').val(null);
+			$('#acbgPnt').val(null);
+		}
+		if($(this).val()==="ACSE003"){
+			$('#acbgRcognacbgCd').parents(".form-group").attr("hidden", false);
+			$('#acbgSchlNm').parents(".form-group").attr("hidden", false);
+			$('#acbgMjrNm').parents(".form-group").attr("hidden", false);
+			$('#acdmcrGrdtnSeCd').parents(".form-group").attr("hidden", false);
+			$('#acbgMtcltnym').parents(".form-group").attr("hidden", false);
+			$('#acbgGrdtnym').parents(".form-group").attr("hidden", false);
+			$('#acbgPntCd').parents(".form-group").attr("hidden", true);
+			$('#acbgPnt').parents(".form-group").attr("hidden", true);
+			$('#acbgRcognacbgCd').val(null);
+			$('#acbgSchlNm').val(null);
+			$('#acbgMjrNm').val(null);
+			$('#acdmcrGrdtnSeCd').val(null);
+			$('#acbgMtcltnym').val(null);
+			$('#acbgGrdtnym').val(null);
+			$('#acbgPntCd').val(null);
+			$('#acbgPnt').val(null);
+		}
+	})
+	$("#acbgBtn").on("click", function(){
+		if ($('#acbgSeCd').val() == null) {
+	    	Toast.fire({
+				icon:'warning',
+				title:'학력 구분을 선택해 주세요.'
+			});
+	        $('#acbgSeCd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+		if ($('#acbgSeCd').val() == "ACSE002" ||$('#acbgSeCd').val() == "ACSE003") {
+			if($('#acbgRcognacbgCd').val() == null){
+		    	Toast.fire({
+					icon:'warning',
+					title:'인정 학력을 선택해 주세요.'
+				});
+		        $('#acbgSeCd').focus();
+		        event.preventDefault();
+		        return false;
+			}
+	    }
+	    if ($('#acbgSchlNm').val().trim() ===	 "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'학교명을 입력해 주세요.'
+			});
+	        $('#acbgSchlNm').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#acbgMjrNm').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'전공명을 입력해 주세요.'
+			});
+	        $('#acbgMjrNm').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#acdmcrGrdtnSeCd').val() == null) {
+	    	Toast.fire({
+				icon:'warning',
+				title:'졸업 여부를 선택해 주세요.'
+			});
+	        $('#acdmcrGrdtnSeCd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+        // 학력 정보 추출
+        let acbgNo = $("#acbgNo").val();
+        let rsmNo = $("#rsmNo").val();
+        let acbgSeCd = $("#acbgSeCd").val();
+        let acbgRcognacbgCd = $("#acbgRcognacbgCd").val();
+        let acbgSchlNm = $("#acbgSchlNm").val();
+        let acbgMjrNm = $("#acbgMjrNm").val();
+        let acdmcrGrdtnSeCd = $("#acdmcrGrdtnSeCd").val();
+        let acbgMtcltnym = $("#acbgMtcltnym").val();
+        let acbgGrdtnym = $("#acbgGrdtnym").val();
+        let acbgPnt = $("#acbgPnt").val();
+        let acbgPntCd = $("#acbgPntCd").val();
+        // FormData 객체 생성
+        let formData = new FormData();
+
+        // 학력 정보 추가
+        if($('#acbgMjrNm').val().trim() !== ""||$('#acbgMjrNm').val()!==null){
+	        formData.append("acbgNo", acbgNo);
+        }
+        formData.append("rsmNo", rsmNo);
+        formData.append("acbgSeCd", acbgSeCd);
+        formData.append("acbgRcognacbgCd", acbgRcognacbgCd);
+        formData.append("acbgSchlNm", acbgSchlNm);
+        formData.append("acbgMjrNm", acbgMjrNm);
+        formData.append("acdmcrGrdtnSeCd", acdmcrGrdtnSeCd);
+        formData.append("acbgMtcltnym", acbgMtcltnym);
+        formData.append("acbgGrdtnym", acbgGrdtnym);
+        formData.append("acbgPntCd", acbgPntCd);
+        formData.append("acbgPnt", acbgPnt);
+
+        $.ajax({
+            url: "/member/acbgPost",
+            processData: false,
+            contentType: false,
+            data: formData,
+            type: "post",
+            dataType: "json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(result) {
+                if (result == null || !result.rsmAcademicVOList) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: '데이터 로드 실패'
+                    });
+                    return;
+                }
+                
+                Toast.fire({
+                    icon: 'success',
+                    title: '데이터 로드 성공'
+                });
+                let code = "";
+                result.rsmAcademicVOList.forEach(function(item, index) {
+                    
+                    code += `<tr>
+                        <td class="aplct">`+item.acbgSchlNm+`<br>
+                            <span class="aplcont">`+item.acbgRcognacbgCd+`</span>
+                        </td>
+                        <td class="aplct">`+item.acbgMjrNm+`<br>
+                            <span class="aplcont">인정 학점 :`+item.acbgPnt+`</span>&nbsp;&nbsp;&nbsp;
+                            <span class="aplcont">기준 학점 : `+item.acbgPntCd+`</span>
+                        </td>
+                        <td class="aplct">`+item.acdmcrGrdtnSeCd+`<br>
+                            <span class="aplcont">입학년도 : `+item.acbgMtcltnym+`</span>&nbsp;&nbsp;&nbsp;
+                            <span class="aplcont">졸업년도 : `+item.acbgGrdtnym+`</span>
+                        </td>
+                        <td>
+                        	<button type="button" class="btn btn-default aplctCancel acbgDeleteBtn"
+                        		data-acbg-no="`+item.acbgNo+`">삭제</button>
+                            <button type="button" class="btn btn-default aplctCancel acbgEditBtn"
+                               data-acbg-no="`+item.acbgNo+`"
+                               data-acbg-se-cd="`+item.acbgSeCd+`" 
+                               data-acbg-rcognacbg-cd="`+item.acbgRcognacbgCd+`" 
+                               data-acbg-schl-nm="`+item.acbgSchlNm+`" 
+                               data-acbg-mjr-nm="`+item.acbgMjrNm+`" 
+                               data-acdmcr-grdtn-se-cd="`+item.acdmcrGrdtnSeCd+`" 
+                               data-acbg-mtcltnym="`+item.acbgMtcltnym+`" 
+                               data-acbg-grdtnym="`+item.acbgGrdtnym+`" 
+                               data-acbg-pnt-cd="`+item.acbgPntCd+`" 
+                               data-acbg-pnt="`+item.acbgPnt+`">수정</button>
+                        </td>
+                     </tr>`;
+                });
+                
+                $('#acbgTbody').html(code);
+            },
+            error: function(xhr, status, error) {
+                console.error("Ajax 요청 실패:", status, error);
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Ajax 요청 실패'
+                });
+            }
+        });
+	})
+	
+})

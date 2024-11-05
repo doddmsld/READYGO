@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.NonMapper">
+	
+	<select id="enterSearch" parameterType="hashMap" resultType="enterVO">
+		SELECT * FROM ENTER WHERE ENT_NM=#{entNm}
+	</select>
+	
+	<update id="updateMem" parameterType="hashMap">
+		UPDATE MEMBER SET ENT_ID = #{entId}
+		WHERE MBR_ID=#{mbrId}
+	</update>
+	
+	<insert id="roleMem" parameterType="hashMap">
+		INSERT INTO AUTH_MEM(AUTH,MBR_ID)
+		VALUES('ROLE_MEMENTER',#{mbrId})
+	</insert>
+	
+	<delete id="deleteEntmem" parameterType="hashMap">
+		DELETE FROM ENT_MEMBER
+		WHERE MBR_ID = #{mbrId}
+		AND ENT_ID = #{entId}
+	</delete>
+	
+</mapper>

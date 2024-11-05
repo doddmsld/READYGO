@@ -1,0 +1,339 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/enter/pbancInsert.css" />
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=eaad16168d2cb5b733bf76e1a41ced77"></script>
+<script type="text/javascript" src="/resources/ckeditor5/ckeditor.js"></script>
+<script type="text/javascript" src="/resources/ckeditor5/sample/css/sample.css"></script>
+</head>
+<script>
+
+$(function(){
+// 이미지 지도에 표시할 마커입니다
+var marker = {
+    position: new kakao.maps.LatLng(33.450701, 126.570667), 
+    text: '텍스트를 표시할 수 있어요!' // text 옵션을 설정하면 마커 위에 텍스트를 함께 표시할 수 있습니다
+};
+
+var staticMapContainer  = document.getElementById('staticMap'), // 이미지 지도를 표시할 div
+    staticMapOption = { 
+        center: new kakao.maps.LatLng(33.450701, 126.570667), // 이미지 지도의 중심좌표
+        level: 3, // 이미지 지도의 확대 레벨
+        marker: marker // 이미지 지도에 표시할 마커
+    };
+
+// 이미지 지도를 생성합니다
+var staticMap = new kakao.maps.StaticMap(staticMapContainer, staticMapOption);
+});
+</script>
+<body>
+	<h2>공고 등록</h2>
+     <div class="background">
+            <!-- 담 당자 정보 -->
+			<section class="section">
+			    <h4>담당자 정보</h4>
+			    <h5>먼저 인사담당자님과 기업 정보가 맞는지 확인해주세요</h5>
+			    <form action="#" method="post">
+			        <div class="form-group">
+			            <label for="name">담당자 성함 <b>*</b></label>
+			            <input type="text" id="name" name="name" required>
+			        </div>
+			        <div class="form-group multi-input">
+			            <label for="phone">팩스번호 <b>*</b></label>
+			            <input type="tel" id="phone1" name="phone1" required>
+			        </div>
+			        <div class="form-group multi-input">
+			            <label for="mobile">휴대폰 번호</label>
+			            <input type="tel" id="mobile1" name="mobile1">
+			        </div>
+			        <div class="form-group">
+			            <label for="email">이메일 주소 <b>*</b></label>
+			            <input type="email" id="email" name="email" required>
+			        </div>
+			        <div class="form-group">
+			            <label for="industry">업종 <b>*</b></label>
+			            <select id="industry" name="industry" required>
+		            		<option>업종</option>
+			            </select>
+			        </div>
+			        <div class="form-group">
+			            <label for="location">대표 근무지역 <b>*</b></label>
+			            <input type="text" id="location1" name="location1" required>
+			            <input type="text" id="location2" name="location2" required>
+			            <button type="button" class="map-button">지도 위치 확인</button>
+			        </div>
+			        <div id="staticMap" class="map" style="width:600px;height:350px;"></div>
+			    </form>
+			</section>
+            <!-- 모집 정보 -->
+			<section class="section">
+              	<h4>모집 분야</h4>
+			    <h5>어떤일을 담당할 직원을 찾으시나요?</h5>
+	              <div class="form-group">
+	                  <label for="jobType">모집분야명 <b>*</b></label>
+	                  <input type="text" id="jobType" name="jobType" placeholder="예: 앱개발자" required>
+	                  <input type="number" id="applicants" name="applicants" min="0" placeholder="0" required>
+	                  <label for="applicants">명 모집</label>
+	              </div>
+	              <div class="form-group radio-group">
+	                  <label>경력여부 <b>*</b></label>
+	                  <div>
+	                      <select>
+	                      	<option>신입</option>
+	                      </select>
+	                  </div>
+	              </div>
+	              <div class="form-group">
+	                  <label for="task">담당업무</label>
+	                  <input type="text" id="task" name="task" placeholder="예: 앱 개발 및 유지보수" >
+	              </div>
+	              <div class="form-group">
+	                  <label for="work">근무부서</label>
+	                  <input type="text" id="work" name="work" placeholder="예: 개발팀">
+	              </div>
+	              <div class="form-group">
+	                  <label for="grade">직급/직책</label>
+	                  <select>
+	                  	<option>사원</option>
+	                  </select>
+	              </div>
+	              <h6><b class="bb">추가</b>를 클릭하면 필수/우대 조건을 추가할 수 있습니다.</h6>
+	              <div class="form-group">
+	                  <label for="required">필수 조건 <b>*</b></label>
+	                  <input type="text" id="required" name="required" placeholder="예: 해당 직무 근무 경험" required>
+	                  <button type="button" class="add-btn">추가</button>
+	              </div>
+	              <div class="form-group">
+	                  <label for="prefer">우대 조건</label>
+	                  <input type="text" id="prefer" name="prefer" placeholder="예: 정보처리기사 자격증 보유자">
+	                  <button type="button" class="add-btn">추가</button>
+	              </div>
+          	</section>
+
+             <!-- 자격/조건 정보 -->
+            <section class="section">
+              	<h4>자격/조건</h4>
+			    <h5>어떤일을 담당할 직원을 찾으시나요?</h5>
+                <div class="form-group">
+                    <label for="education">지원자 학력 <b>*</b></label>
+                    <select id="education" name="education">
+                        <option value="대학교졸업">대학교졸업(4년)</option>
+                        <option value="고등학교졸업">고등학교졸업</option>
+                        <option value="선택">선택</option>
+                    </select>
+                    <select id="additional-education" name="additional-education">
+                        <option value="기타">기타 학력사항</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="gender">지원자 성별</label>
+                    <select id="gender" name="gender">
+                        <option value="성별무관">성별무관</option>
+                        <option value="남성">남성</option>
+                        <option value="여성">여성</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="age">지원자 연령</label>
+                    <select id="age" name="age">
+                        <option value="연령무관">연령무관</option>
+                        <option value="20대">20대</option>
+                        <option value="30대">30대</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="salary">연봉/급여 <b>*</b></label>
+                    <select id="salary-type" name="salary-type">
+                        <option value="연봉">연봉</option>
+                        <option value="월급">월급</option>
+                    </select>
+                    <select id="salary-money" name="salary-money">
+                        <option value="3000~3200만원">3000~3200만원</option>
+                        <option value="3200~3400만원">3200~3400만원</option>
+                    </select>
+                    <input type="text" id="additional-salary" name="additional-salary" placeholder="기타 급여사항">
+                </div>
+                	<p class="sal-standard">최저시급 9,860원, 주 40시간 기준 최저연봉 2,060,740원 <a class="sal-line">최저임금제도 안내</a><br>
+								최저임금을 준수하지 않는 경우, 공고 강제 마감 및 행정처분을 받을 수 있습니다.</p>
+                
+                <div class="form-group">
+                    <label>근무형태 <b>*</b></label>
+                    <div class="checkbox-group">
+                        <select>
+                        	<option>정규직</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="workday">근무요일</label>
+                    <select>
+                    	<option>주 5일 (월~금)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="worktime">근무시간</label>
+                    <select>
+                    	<option>오전 9시 ~ 오후 6시</option>
+                    </select>
+                </div>
+            </section>
+            
+           <!-- 채용절차 -->
+            <section class="section">
+                <h4>채용 절차</h4>
+			    <h5>채용 절차는 어떻게 되나요?</h5>
+                <div class="form-group">
+                    <label for="position">공고 대표 직무 <b>*</b></label>
+                    <input type="text" id="position" name="position" placeholder="예: 개발자" required>
+                </div>
+                <div class="form-group">
+                    <label for="period">지원 접수 기간 <b>*</b></label>
+                    <input type="date" id="start-date" name="start-date" required>&nbsp; ~ &nbsp;
+                    <input type="date" id="end-date" name="end-date" required>
+                </div>
+                <div class="form-group">
+                    <label>지원 접수 방법 <b>*</b></label>
+                    <select>
+                    	<option>Ready Go 접수</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="application-form">지원서 양식 <b>*</b></label>
+                    <select id="application-form" name="application-form">
+                        <option value="이력서">Ready Go 이력서</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>전형절차 <b>*</b></label>
+                    <div class="step-group">
+                      <select>
+                      	<option>서류합격</option>
+                      </select>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- 필수/우대조건 -->
+            <section class="section">
+                <h4>필수/우대 조건</h4>
+			    <h5>필수/우대 조건을 입력해주세요</h5>
+                <div class="form-group">
+                    <label for="required-condition">필수 조건 <b>*</b></label>
+                    <input type="text" id="required-condition" name="required-condition" placeholder="필수 조건을 입력하세요" >
+                </div>
+                <div class="form-group">
+                    <label for="prefer-condition">우대 조건</label>
+                    <input type="text" id="prefer-condition" name="prefer-condition" placeholder="우대 조건을 입력하세요" >
+                </div>
+            </section>
+            
+            <!-- 공고 내용 -->
+            <section class="section">
+                <h4>공고 내용</h4>
+			    <h5>공고 내용을 입력해주세요</h5>
+                <div class="form-group">
+                    <label for="title">공고 제목 <b>*</b></label>
+                    <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    <label for="content-ta" class="con-pbanc-title">공고 내용 <b>*</b></label>
+                    <textarea id="content-ta" name="content-ta" rows="auto" cols="110" placeholder="내용을 작성해주세요.">
+                    </textarea>
+                </div>
+            </section>
+            <!-- 버튼 섹션 -->
+            <section class="button-section">
+				<div class="btn-last1">
+	                <button type="button" class="btn save-btn">임시 저장</button>
+				</div>
+				<div class="btn-last2">
+	                <button type="button" class="btn cancel-btn">취소</button>
+	                <button type="submit" class="btn submit-btn">공고 등록</button>
+				</div>
+            </section>
+            
+        </div>
+</body>
+
+</html>
+<script>
+
+let instance;
+
+ClassicEditor
+.create(document.querySelector('#content-ta'), {
+    toolbar: {
+        items: [
+            'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|',
+            'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|', 'alignment', 'link', '|',
+            'bulletedList', 'numberedList', 'outdent', 'indent', '|', 'blockQuote', 'insertTable', '|',
+            'imageUpload', 'mediaEmbed', 'undo', 'redo'
+        ]
+    },
+    fontSize: {
+        options: [
+            'tiny', 'small', 'default', 'big', 'huge'
+        ]
+    },
+    fontFamily: {
+        options: [
+            'default', 'Arial, Helvetica, sans-serif', 'Courier New, Courier, monospace', 
+            'Georgia, serif', 'Lucida Sans, Lucida Grande, Lucida Sans Unicode, sans-serif', 
+            'Tahoma, Geneva, sans-serif', 'Times New Roman, Times, serif', 'Verdana, Geneva, sans-serif'
+        ]
+    },
+    fontColor: {
+        columns: 5,
+        documentColors: 10
+    },
+    fontBackgroundColor: {
+        columns: 5,
+        documentColors: 10
+    },
+    image: {
+        toolbar: [
+            'imageStyle:alignLeft', 'imageStyle:alignCenter', 'imageStyle:alignRight',
+            '|', 'imageTextAlternative', 'linkImage'
+        ],
+        styles: [
+            'alignLeft', 'alignCenter', 'alignRight'
+        ]
+    },
+    ckfinder: {
+        uploadUrl: '/image/upload?${_csrf.parameterName}=${_csrf.token}' // 파일 업로드 엔드포인트
+    }
+})
+.then(editor => {
+	instance = editor;
+    console.log('Editor was initialized', editor);
+    instance.setData("어렵고 복잡한, 그렇지만 우리 일상 생활에 깊숙이 관여하고 있는 금융.핀다는 소수만 누릴 수 있던 금융의 정보 접근성과 혜택을 모든 사람들이 누리고 더 나은 금융 선택을 할 수 있도록 돕고자 합니다.");    
+})
+
+.catch(error => {
+    console.error(error);
+});
+$(function(){
+	$("#content-ta").on("keyup",function(){
+		console.log(instance.getData());
+	})
+	
+	//CKEditor 글 복제
+   $(".ck-blurred").keydown(function(){
+      //window.editor : CKEditor 객체
+      console.log("str : " + instance.getData());
+   
+      $("#content-ta").val(instance.getData());
+   });
+	
+	//CKEditor로부터 커서이동 또는 마우스 이동 시 실행
+	   $(".ck-blurred").focusout(function(){
+	      $("#content-ta").val(instance.getData());
+	   });
+})
+</script>

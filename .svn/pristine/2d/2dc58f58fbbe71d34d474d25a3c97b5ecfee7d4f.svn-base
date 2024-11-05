@@ -1,0 +1,268 @@
+package kr.or.ddit.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.mapper.UserMapper;
+import kr.or.ddit.security.CustomUser;
+import kr.or.ddit.service.MemProfileService;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.PrfAcbgVO;
+import kr.or.ddit.vo.PrfActVO;
+import kr.or.ddit.vo.PrfBusinessVO;
+import kr.or.ddit.vo.PrfCareerVO;
+import kr.or.ddit.vo.PrfCrtfctVO;
+import kr.or.ddit.vo.PrfVO;
+import kr.or.ddit.vo.PrfWnpzVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Controller
+@RequestMapping("/member")
+public class MemProfileController {
+
+    @Autowired
+    private MemProfileService memProfileService;
+    
+    @Autowired
+    UserMapper userMapper;
+    
+    // 로그인한 사용자의 mbrId를 가져오는 메서드
+    private String getLoggedInMbrId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUser userDetails = (CustomUser) authentication.getPrincipal();
+        return userDetails.getUsername(); // CustomUser에 mbrId 필드가 있다고 가정
+    }
+    
+    // 프로필 조회
+    @GetMapping("/profile")
+    public String profile(Model model) {
+    	  // 로그인된 사용자 ID
+        String mbrId = getLoggedInMbrId();
+        
+        // 프로필 조회
+        PrfVO prfVO = this.memProfileService.profile(mbrId);
+        log.info("profile -> prfVO : " , prfVO);
+        
+        // 경력 리스트 조회
+        List<PrfCareerVO> prfCareerVOList = memProfileService.careerList(mbrId);
+        
+        // 학력 조회
+        List<PrfAcbgVO> prfAcbgVOList = memProfileService.acbgList(mbrId);   
+        // 프로필 학력 항목
+        List<CodeVO> prseList = memProfileService.prseList();     
+        // 학위 항목
+        List<CodeVO> acdeList = memProfileService.acdeList();       
+        // 전공계열 항목
+        List<CodeVO> acspList = memProfileService.acspList();
+        
+        // 자격증 조회
+        List<PrfCrtfctVO> prfCrtfctVOList = memProfileService.crtfctList(mbrId);
+        
+        // 수상 조회
+        List<PrfWnpzVO> prfWnpzVOList = memProfileService.WnpzList(mbrId);
+        
+        // 활동 조회
+        List<PrfActVO> prfActVOList = memProfileService.ActList(mbrId);
+        
+        // 업종 조회
+        List<PrfBusinessVO> prfBusinessVOList = memProfileService.BusinessList(mbrId);
+     
+        
+        model.addAttribute("prfVO", prfVO);
+        model.addAttribute("prfCareerVOList", prfCareerVOList);
+        model.addAttribute("prfAcbgVOList", prfAcbgVOList);
+        model.addAttribute("prseList", prseList);
+        model.addAttribute("acdeList", acdeList);
+        model.addAttribute("acspList", acspList);
+        model.addAttribute("prfCrtfctVOList", prfCrtfctVOList);
+        model.addAttribute("prfWnpzVOList", prfWnpzVOList);
+        model.addAttribute("prfActVOList", prfActVOList);
+        model.addAttribute("prfBusinessVOList", prfBusinessVOList);
+        
+        
+        return "member/profile";  // profile.jsp 페이지로 이동
+    }
+
+    
+    // 경력 추가
+    @ResponseBody
+    @PostMapping("/careerAddAjax")
+    public int careerAddAjax(@RequestBody PrfCareerVO prfCareerVO) {
+    	
+    	log.info("careerAddAjax->prfCareerVO : " + prfCareerVO);
+    	
+    	int result = this.memProfileService.careerAddAjax(prfCareerVO);
+    	
+    	return result;
+    }
+    // 경력 수정
+    @ResponseBody
+    @PostMapping("/careerUpdateAjax")
+    public int careerUpdateAjax(@RequestBody Map<String, Object> map) {
+    	
+    	int result = this.memProfileService.careerUpdateAjax(map);
+    	
+    	return result;
+    }
+    
+    // 경력 삭제
+    @ResponseBody
+    @PostMapping("/careerDelAjax")
+    public int careerDelAjax(@RequestBody Map<String, Object> map) {
+    	 	
+    	int result = this.memProfileService.careerDelAjax(map);
+    	
+    	return result;
+
+    }
+    
+    // 학력 추가
+    /*
+	    {
+		    "mbrId": "test1",
+		    "prseSeCd": "PRSE01",
+		    "acbgSchlNm": "1",
+		    "acdeSeCd": "ACDE01",
+		    "acspSeCd":"",
+		    "acbgMjrNm": "PRSE01",
+		    "acbgMtcltnym": "3",
+		    "acbgGrdtnym": "5"
+		}
+	 */
+    @ResponseBody
+    @PostMapping("/acbgAddAjax")
+    public int acbgAddAjax(@RequestBody PrfAcbgVO prfAcbgVO) {
+    	log.info("prfAcbgVO : " + prfAcbgVO);
+    	
+    	int result = this.memProfileService.acbgAddAjax(prfAcbgVO);
+    	
+    	return result;
+    }
+    // 학력 수정
+    @ResponseBody
+    @PostMapping("/acbgUpdateAjax")
+    public int acbgUpdateAjax(@RequestBody Map<String, Object> map) {
+    	
+    	int result = this.memProfileService.acbgUpdateAjax(map);
+    	
+    	return result;
+    }
+    
+    
+    // 학력 삭제
+    @ResponseBody
+    @PostMapping("/acbgDelAjax")
+    public int acbgDelAjax(@RequestBody Map<String, Object> map) {
+    	 	
+    	int result = this.memProfileService.acbgDelAjax(map);
+    	
+    	return result;
+
+    }
+    
+    
+    // 수상 추가
+    @ResponseBody
+    @PostMapping("/WnpzAddAjax")
+    public int WnpzAddAjax(@RequestBody PrfWnpzVO prfWnpzVO) {
+    	
+    	int result = this.memProfileService.WnpzAddAjax(prfWnpzVO);
+    	
+    	return result;
+    }
+    // 수상 수정
+    @ResponseBody
+    @PostMapping("/wnpzUpdateAjax")
+    public int wnpzUpdateAjax(@RequestBody Map<String, Object> map) {
+    	
+    	int result = this.memProfileService.wnpzUpdateAjax(map);
+    	
+    	return result;
+    }
+    
+    // 수상 삭제
+    @ResponseBody
+    @PostMapping("/WnpzDelAjax")
+    public int WnpzDelAjax(@RequestBody Map<String, Object> map) {
+    	 	
+    	int result = this.memProfileService.WnpzDelAjax(map);
+    	
+    	return result;
+
+    }
+    
+    // 활동 추가
+    @ResponseBody
+    @PostMapping("/actAddAjax")
+    public int actAddAjax(@RequestBody PrfActVO prfActVO) {
+    	
+    	int result = this.memProfileService.actAddAjax(prfActVO);
+    	
+    	return result;
+    }
+    // 활동 수정
+    @ResponseBody
+    @PostMapping("/actUpdateAjax")
+    public int actUpdateAjax(@RequestBody Map<String, Object> map) {
+    	
+    	int result = this.memProfileService.actUpdateAjax(map);
+    	
+    	return result;
+    }
+    // 활동 삭제
+    @ResponseBody
+    @PostMapping("/actDelAjax")
+    public int actDelAjax(@RequestBody Map<String, Object> map) {
+    	 	
+    	int result = this.memProfileService.actDelAjax(map);
+    	
+    	return result;
+
+    }
+    
+    // 자격증 추가
+    @ResponseBody
+    @PostMapping("/crtfctAddAjax")
+    public int crtfctAddAjax(@RequestBody PrfCrtfctVO prfCrtfctVO) {
+    	
+    	int result = this.memProfileService.crtfctAddAjax(prfCrtfctVO);
+    	
+    	return result;
+    }
+    // 자격증 수정
+    @ResponseBody
+    @PostMapping("/crtfctUpdateAjax")
+    public int crtfctUpdateAjax(@RequestBody Map<String, Object> map) {
+    	
+    	int result = this.memProfileService.crtfctUpdateAjax(map);
+    	
+    	return result;
+    }
+    // 자격증 삭제
+    @ResponseBody
+    @PostMapping("/crtfctDelAjax")
+    public int crtfctDelAjax(@RequestBody Map<String, Object> map) {
+    	 	
+    	int result = this.memProfileService.crtfctDelAjax(map);
+    	
+    	return result;
+
+    }
+    
+    
+    
+    
+}

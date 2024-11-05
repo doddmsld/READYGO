@@ -1,0 +1,9 @@
+package kr.or.ddit.enter.entservice;
+
+import org.apache.commons.mail.EmailException;
+import org.springframework.stereotype.Service;
+
+
+public interface EmailService {
+	    void sendEmail(String toEmail, String subject, String message) throws EmailException;
+}

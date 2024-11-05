@@ -1,0 +1,136 @@
+package kr.or.ddit.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+import org.springframework.stereotype.Service;
+import kr.or.ddit.mapper.MemProfileMapper;
+import kr.or.ddit.service.MemProfileService;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.PrfAcbgVO;
+import kr.or.ddit.vo.PrfActVO;
+import kr.or.ddit.vo.PrfBusinessVO;
+import kr.or.ddit.vo.PrfCareerVO;
+import kr.or.ddit.vo.PrfCrtfctVO;
+import kr.or.ddit.vo.PrfVO;
+import kr.or.ddit.vo.PrfWnpzVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class MemProfileServiceImpl implements MemProfileService {
+
+    @Inject
+    MemProfileMapper memProfileMapper;
+    
+
+    // 프로필
+	@Override
+	public PrfVO profile(String mbrId) {
+		return this.memProfileMapper.profile(mbrId);
+	}
+
+    // 경력 목록
+    @Override
+    public List<PrfCareerVO> careerList(String mbrId) {
+        return this.memProfileMapper.careerList(mbrId);
+    }
+	// 경력 추가
+	@Override
+	public int careerAddAjax(PrfCareerVO prfCareerVO) {
+		return this.memProfileMapper.careerAddAjax(prfCareerVO);
+	}
+	// 경력 삭제
+	@Override
+	public int careerDelAjax(Map<String, Object> map) {
+		return this.memProfileMapper.careerDelAjax(map);
+	}
+	
+
+    // 학력 목록 조회
+    @Override
+    public List<PrfAcbgVO> acbgList(String mbrId) {
+    	return this.memProfileMapper.acbgList(mbrId);
+    }
+    // 학력 추가
+	@Override
+	public int acbgAddAjax(PrfAcbgVO prfAcbgVO) {
+		return this.memProfileMapper.acbgAddAjax(prfAcbgVO);
+	}
+	// 프로필 학력 항목
+	@Override
+	public List<CodeVO> prseList() {
+		return this.memProfileMapper.prseList();
+	}
+	// 학위 항목
+	@Override
+	public List<CodeVO> acdeList() {
+		return this.memProfileMapper.acdeList();
+	}
+	// 전공계열 항목
+	@Override
+	public List<CodeVO> acspList() {
+		return this.memProfileMapper.acspList();
+	}
+    
+	
+    // 자격증 조회
+	@Override
+	public List<PrfCrtfctVO> crtfctList(String mbrId) {
+		return this.memProfileMapper.crtfctList(mbrId);
+	}
+	// 자격증 추가
+	@Override
+	public int crtfctAddAjax(PrfCrtfctVO prfCrtfctVO) {
+		return this.memProfileMapper.crtfctAddAjax(prfCrtfctVO);
+	}
+	// 자격증 삭제
+	@Override
+	public int crtfctDelAjax(Map<String, Object> map) {
+		return this.memProfileMapper.crtfctDelAjax(map);
+	}
+
+
+	
+	// 수상 내역 조회
+	@Override
+	public List<PrfWnpzVO> WnpzList(String mbrId) {
+		return this.memProfileMapper.WnpzList(mbrId);
+	}
+	// 수상 추가
+	@Override
+	public int WnpzAddAjax(PrfWnpzVO prfWnpzVO) {
+		return this.memProfileMapper.WnpzAddAjax(prfWnpzVO);
+	}
+	// 수상 삭제
+	@Override
+	public int WnpzDelAjax(Map<String, Object> map) {
+		return this.memProfileMapper.WnpzDelAjax(map);
+	}
+
+	
+	// 활동 내역 조회
+	@Override
+	public List<PrfActVO> ActList(String mbrId) {
+		return this.memProfileMapper.ActList(mbrId);
+	}
+	// 활동 추가
+	@Override
+	public int actAddAjax(PrfActVO prfActVO) {
+		return this.memProfileMapper.actAddAjax(prfActVO);
+	}
+	// 활동 삭제
+	@Override
+	public int actDelAjax(Map<String, Object> map) {
+		return this.memProfileMapper.actDelAjax(map);
+	}
+
+	
+	// 업종 조회
+	@Override
+	public List<PrfBusinessVO> BusinessList(String mbrId) {
+		return this.memProfileMapper.BusinessList(mbrId);
+	}
+
+}

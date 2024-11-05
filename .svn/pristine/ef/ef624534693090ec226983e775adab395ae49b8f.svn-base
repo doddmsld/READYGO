@@ -1,0 +1,66 @@
+package kr.or.ddit.enter.entservice.impl;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.mapper.EnterMapper;
+import kr.or.ddit.enter.entservice.*;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.EnterEmpYcntVO;
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.IndutyVO;
+import kr.or.ddit.vo.PbancVO;
+
+@Service
+public class EnterServiceImpl implements EnterService {
+
+	@Inject
+	EnterMapper enterMapper;
+	
+	//기업프로필
+	@Override
+	public EnterVO profile(String entId) {
+		return this.enterMapper.profile(entId);
+	}
+	
+	// 기업 프로필 연도별 입사자수
+	@Override
+	public List<EnterEmpYcntVO> empYcnt(String entId) {
+		return this.enterMapper.empYcnt(entId);
+	}
+	// 기업프로필- 업종리스트
+	@Override
+	public List<CodeVO> getIndutyList() {
+		return this.enterMapper.getIndutyList();
+	}
+	
+	// 기업정보수정폼
+	@Override
+	public EnterVO edit(String entId) {
+		return this.enterMapper.edit(entId);
+	}
+	// 기업정보수정실행 합친거
+	@Override
+	public int editPost(EnterVO enterVO) {
+		
+		int result = 0;
+		result += this.enterMapper.editPost1(enterVO);
+		result += this.enterMapper.editPost2(enterVO);
+		
+		return result;
+	}
+	
+	// 기업탈퇴
+	@Override
+	public int deleteAjax(String entId) {
+		return this.enterMapper.deleteAjax(entId);
+	}
+
+
+
+
+
+}

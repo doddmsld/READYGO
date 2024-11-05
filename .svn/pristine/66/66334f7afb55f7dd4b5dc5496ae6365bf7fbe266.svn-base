@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.EnterMapperS">
+	
+	<resultMap type="PbancVO" id="pbancMap">
+		<result property="pbancSttus" column="PBANC_STTUS"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="pbancPicNm" column="PBANC_PIC_NM"/>
+		<result property="pbancPicTelno" column="PBANC_PIC_TELNO"/>
+		<result property="pbancPicMbtlnum" column="PBANC_PIC_MBTLNUM"/>
+		<result property="pbancPicEml" column="PBANC_PIC_EML"/>
+		<result property="pbancAplctEduCd" column="PBANC_APLCT_EDU_CD"/>
+		<result property="pbancRprsrgn" column="PBANC_RPRSRGN"/>
+		<result property="pbancTtl" column="PBANC_TTL"/>
+		<result property="pbancWorkstleCd" column="PBANC_WORKSTLE_CD"/>
+		<result property="pbancApntcpd" column="PBANC_APNTCPD"/>
+		<result property="pbancSalary" column="PBANC_SALARY"/>
+		<result property="pbancWorkHrCd" column="PBANC_WORK_HR_CD"/>
+		<result property="pbancWorkDayCd" column="PBANC_WORK_DAY_CD"/>
+		<result property="pbancRcptMthdCd" column="PBANC_RCPT_MTHD_CD"/>
+		<result property="pbancAppofeForm" column="PBANC_APPOFE_FORM"/>
+		<result property="pbancRprsDty" column="PBANC_RPRS_DTY"/>
+		<result property="pbancRcptPd" column="PBANC_RCPT_PD"/>
+		<result property="pbancBgngDt" column="PBANC_BGNG_DT"/>
+		<result property="pbancBgngDts" column="PBANC_BGNG_DTS"/>
+		<result property="pbancDdlnDt" column="PBANC_DDLN_DT"/>
+		<result property="pbancDdlnDts" column="PBANC_DDLN_DTS"/>
+		<result property="pbancDlnDt" column="PBANC_DLN_DT"/>
+		<result property="pbancTmplt" column="PBANC_TMPLT"/>
+		<result property="pbancWrtDt" column="PBANC_WRT_DT"/>
+		<result property="pbancMdfcnDt" column="PBANC_MDFCN_DT"/>
+		<result property="pbancDelDt" column="PBANC_DEL_DT"/>
+		<result property="pbancScrapCo" column="PBANC_SCRAP_CO"/>
+		<result property="pbancDelYn" column="PBANC_DEL_YN"/>
+		<result property="pbancRdcnt" column="PBANC_RDCNT"/>
+		<result property="pbancBeforeWrt" column="PBANC_BEFORE_WRT"/>
+		
+		<result property="entStleNm" column="ENT_STLE_NM"/>
+		<result property="pbancRprsrgnNm" column="PBANC_RPRSRGN_NM"/>
+		<result property="pbancAplctEdu" column="PBANC_APLCT_EDU"/>
+		<result property="rcritCareerNm" column="RCRIT_CAREER_NM"/>
+		<result property="pbancTpbizNm" column="PBANC_TPBIZ_NM"/>
+		
+		<association property="enterVO" resultMap="enterMap"/>
+		<association property="codeVO" resultMap="codeMap"/>
+		<association property="tbcRecruitmentVO" resultMap="tbcRecruitmentMap"/>
+		<association property="tbcIndutyVO" resultMap="tbcIndutyMap"/>
+	</resultMap>
+	
+	<resultMap type="tbcIndutyVO" id="tbcIndutyMap">
+		<result property="tpbizCd" column="TPBIZ_CD"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+	</resultMap>
+	
+	<resultMap type="tbcRecruitmentVO" id="tbcRecruitmentMap">
+		<result property="rcritNo" column="RCRIT_NO"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="rcritNm" column="RCRIT_NM"/>
+		<result property="rcritCareerCd" column="RCRIT_CAREER_CD"/>
+		<result property="rcritTask" column="RCRIT_TASK"/>
+		<result property="rcritDept" column="RCRIT_DEPT"/>
+		<result property="rcritJbttlCd" column="RCRIT_JBTTL_CD"/>
+	</resultMap>
+	
+	<resultMap type="enterVO" id="enterMap">
+		<result property="userType" column="USER_TYPE"/>
+		<result property="entMail" column="ENT_MAIL"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="entPswd" column="ENT_PSWD"/>
+		<result property="entNm" column="ENT_NM"/>
+		<result property="entManagerTelno" column="ENT_MANAGER_TELNO"/>
+		<result property="entFxnum" column="ENT_FXNUM"/>
+		<result property="entAddr" column="ENT_ADDR"/>
+		<result property="entAddrDetail" column="ENT_ADDR_DETAIL"/>
+		<result property="entZip" column="ENT_ZIP"/>
+		<result property="entLogo" column="ENT_LOGO"/>
+		<result property="entRprsntvNm" column="ENT_RPRSNTV_NM"/>
+		<result property="entIntrcnsntnc" column="ENT_INTRCNSNTNC"/>
+		<result property="entStleCd" column="ENT_STLE_CD"/>
+		<result property="entEmpCnt" column="ENT_EMP_CNT"/>
+		<result property="entFndnYmd" column="ENT_FNDN_YMD"/>
+		<result property="entHmpgUrl" column="ENT_HMPG_URL"/>
+		<result property="entBrno" column="ENT_BRNO"/>
+		<result property="entBrFile" column="ENT_BR_FILE"/>
+		<result property="enabled" column="ENABLED"/>
+	</resultMap>
+	
+	<resultMap type="codeVO" id="codeMap">
+	<result property="comCode" column="COM_CODE"/>
+	<result property="comCodeGrp" column="COM_CODE_GRP"/>
+	<result property="comCodeNm" column="COM_CODE_NM"/>
+	<result property="comCodeDesc" column="COM_CODE_DESC"/>
+	<result property="useYn" column="USE_YN"/>
+	<result property="upperComCode" column="UPPER_COM_CODE"/>
+	<result property="upperComCodeGrp" column="UPPER_COM_CODE_GRP"/>
+	</resultMap>
+	
+	
+	<!-- 진행중 공고 카운트 -->
+	<select id="pbCount" parameterType="String" resultType="int">
+		SELECT  count(*) FROM PBANC WHERE PBANC_DDLN_DT  <![CDATA[>]]> SYSDATE-1 and ent_id=#{entId}
+	</select>
+	
+	<!--  열람 지원자 카운트 -->
+	<select id="openCount" parameterType="String" resultType="int">
+	select count(*)
+	from pbanc a,enter b, applicant c
+	where a.ent_id = b.ent_id
+	and c.pbanc_no = a.pbanc_no
+	and b.ent_id = #{entId}
+	</select>
+	
+	<!--  미열람 지원자 카운트 -->
+	<select id="closeCount" parameterType="String" resultType="int">
+	select count(*)
+	from pbanc a,enter b, applicant c
+	where a.ent_id = b.ent_id
+	and c.pbanc_no = a.pbanc_no
+	and b.ent_id = #{entId}
+	and c.APLCT_VIEWSTTUS=1
+	</select>
+	
+	<!-- 스카우트제안 카운트 -->
+	<select id="ppCount" parameterType="String" resultType="int">
+	SELECT count(*) FROM proposal where ent_id=#{entId}
+	</select>
+	
+	<!-- 기업이 등록한 공고 -->
+	<select id="pbancList" parameterType="String" resultMap="pbancMap">
+	SELECT B.ENT_NM,(SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE=B.ENT_STLE_CD)AS ENT_STLE_NM,CONCAT(SUBSTR(A.PBANC_TTL,0,7),'...')AS PBANC_TTL,
+            (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE=A.PBANC_RPRSRGN)AS PBANC_RPRSRGN_NM,
+            (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE=A.PBANC_APLCT_EDU_CD) AS PBANC_APLCT_EDU,
+            TO_CHAR(A.PBANC_DDLN_DT,'MM.DD(DY)') as PBANC_DLN_DT,(TO_CHAR(SYSDATE,'YYYYMMDD')-TO_CHAR(A.PBANC_WRT_DT,'YYYYMMDD'))as PBANC_BEFORE_WRT,
+            (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = D.RCRIT_CAREER_CD)AS RCRIT_CAREER_NM,
+           (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = TPBIZ_CD) AS PBANC_TPBIZ_NM
+		FROM PBANC A, enter B, TBC_RECRUITMENT D,TBC_INDUTY E
+		WHERE A.ent_id=b.ent_id
+		AND A.PBANC_NO = D.PBANC_NO
+		AND A.PBANC_NO = E.PBANC_NO
+		and A.ENT_ID = #{entId}
+		and A.PBANC_DDLN_DT  <![CDATA[>]]> SYSDATE-1
+		order by A.pbanc_wrt_dt desc
+	</select>
+	
+	<!-- 캘린더 공고 조회 -->
+	<select id="pbancCalendarList" parameterType="String" resultType="pbancVO">
+	SELECT  PBANC_NO, ENT_ID, PBANC_PIC_NM, PBANC_PIC_TELNO, PBANC_PIC_MBTLNUM, PBANC_PIC_EML, PBANC_APLCT_EDU_CD,
+        PBANC_RPRSRGN, PBANC_TTL, PBANC_WORKSTLE_CD, PBANC_APNTCPD, PBANC_SALARY, PBANC_WORK_HR_CD, PBANC_WORK_DAY_CD,
+        PBANC_RCPT_MTHD_CD, PBANC_APPOFE_FORM, PBANC_RPRS_DTY, PBANC_RCPT_PD, TO_CHAR(PBANC_BGNG_DT,'YYYY-MM-DD') as PBANC_BGNG_DTS , TO_CHAR(PBANC_DDLN_DT,'YYYY-MM-DD') as PBANC_DDLN_DTS,
+        PBANC_TMPLT, PBANC_WRT_DT, PBANC_MDFCN_DT, PBANC_DEL_DT, PBANC_SCRAP_CO, PBANC_DEL_YN, PBANC_RDCNT, PBANC_STTUS FROM PBANC WHERE PBANC_DDLN_DT> SYSDATE-1 and ent_id=#{entId}
+	</select>
+	
+</mapper>

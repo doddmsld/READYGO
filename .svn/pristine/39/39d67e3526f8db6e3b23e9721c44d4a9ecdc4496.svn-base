@@ -1,0 +1,31 @@
+package kr.or.ddit.vo;
+
+import java.util.Date;
+
+import lombok.Data;
+
+@Data
+public class OustouVO {
+	private Date outordDelde;
+	private Date outordUpdde;
+	private Date outordWrtde;
+	private String mbrId;
+	private String outordAmt;
+	private String outordAmtExpln;
+	private String outordDetailFile;
+	private String outordDmndmatter;
+	private String outordExpln;
+	private String outordLclsf;
+	private String outordMainFile;
+	private String outordMlsfc;
+	private String outordNo;
+	private String outordProvdprocss;
+	private String outordRefndregltn;
+	private String outordTtl;
+	private int outordRdcnt;
+	
+	
+	//카테고리 
+	private String comCodeGrp;
+	private String comCodeNm;
+}

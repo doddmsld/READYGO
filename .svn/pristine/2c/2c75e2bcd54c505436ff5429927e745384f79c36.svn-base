@@ -1,0 +1,25 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.ResumeVO;
+import kr.or.ddit.vo.RsmAcademicVO;
+import kr.or.ddit.vo.RsmCareerVO;
+
+public interface MemResumeMapper {
+	public ResumeVO openResume(String mbrId);
+	public ResumeVO selectOneResume(Map<String, Object> map);
+	public List<ResumeVO> resumeList(Map<String, Object> mbrId);
+	public int resumeListTotal(String mbrId);
+	public int insertResumebasInfo(ResumeVO resumeVO);
+	public int updateResumebasInfo(ResumeVO resumeVO);
+	public int updateHope(ResumeVO resumeVO);
+	public int insertAcdg(RsmAcademicVO rsmAcademicVO);
+	public int updateAcdg(RsmAcademicVO rsmAcademicVO);
+	public List<RsmAcademicVO> selectAcdgList(String rsmNo);
+	public int deleteAcbg(Map<String, Object> map);
+	public int insertCareer(RsmCareerVO rsmCareerVO);
+	public int updateCareer(RsmCareerVO rsmCareerVO);
+	public int deleteCareer(Map<String, Object> map);
+}

@@ -1,0 +1,221 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+.container {
+	margin-left: 500px;
+	margin-top: 80px;
+}
+
+*, ::after, ::before {
+	box-sizing: content-box;
+}
+
+h3 {
+	font-size: 25px;
+	font-weight: 650;
+}
+
+.container {
+	padding-left: 30px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: #232323;
+}
+
+.row {
+	justify-content: center;
+	margin-left: 60px;
+}
+
+.container1 {
+	padding: 10px;
+	border-radius: 5px;
+	background-color: white;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	transition: background-color 0.3s ease;
+	margin-left: 320px;
+	width: 1400px;
+	height: 700px;
+	display: flex;
+	align-items: center;
+}
+
+h2 {
+	margin-left: 320px;
+	margin-bottom: 30px;
+	font-weight: 700;
+}
+
+.all {
+	margin-top: 50px;
+}
+
+
+.container {
+	margin-left: 500px;
+	margin-top: 80px;
+}
+
+.container {
+	padding-left: 30px;
+}
+
+*, ::after, ::before {
+	box-sizing: content-box;
+}
+
+h3 {
+	font-size: 25px;
+	font-weight: 650;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	color: #232323;
+}
+
+.row {
+	justify-content: center;
+	margin-left: 60px;
+}
+
+.container1 {
+	padding: 10px;
+	border-radius: 5px;
+	background-color: white;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	transition: background-color 0.3s ease;
+	margin-left: 320px;
+	width: 1500px;
+	height: 700px;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+}
+
+.member-form {
+	display: flex;
+	justify-content: space-around;
+	flex-wrap: wrap;
+	gap: 15px;
+	width: 1450px;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.form-row {
+	display: flex;
+	align-items: flex-end;
+}
+
+.form-label {
+	margin-right: 10px;
+}
+
+.required {
+	color: red;
+}
+
+.form-input {
+	width: 100%;
+	padding: 8px;
+	border: 1px solid #ced4da;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
+
+.submit-button {
+	padding: 10px 20px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.submit-button:hover {
+	background-color: #0056b3;
+}
+
+
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+thead th {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 2px solid #ddd;
+    font-weight: 500;
+    font-size: 20px;
+    color: #232323;
+}
+tbody td {
+    padding: 20px 9px;
+    background-color: white;
+    border-bottom: 1px solid #ddd;
+}
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+.pagination button {
+    padding: 10px 15px;
+    margin: 0 5px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.pagination button:hover {
+    background-color: #ddd;
+}
+.ptag{
+	text-align: left;
+    font-weight: 500;
+    font-size: 20px;
+    color: #232323;
+    margin-left: 5px;
+}
+thead, tfoot {
+    border-top: 2px solid #232323;
+}
+
+tfoot td {
+    text-align: center;
+    padding: 10px; /* 하단의 셀 패딩 추가 */
+}
+/* 페이징 css 시작*/
+.page-link {
+	color: black;
+	border-radius: 7px;
+	margin: 5px;
+}
+/* 버튼클릭했을 때! */
+.page-item.active .page-link {
+	z-index: 3;
+	font-weight: 700;
+	color: #24D59E;
+	background-color: rgba(44, 207, 195, 0.11);
+	border-radius: 7px;
+}
+
+.write_date {
+	text-align: right;
+}
+
+.page-item.active .page-link {
+	border-color: #dee2e6;
+}
+
+a.page-link:hover {
+	color: #000000;
+	background-color: #dee2e6;
+}
+/* 페이징 css 끝*/

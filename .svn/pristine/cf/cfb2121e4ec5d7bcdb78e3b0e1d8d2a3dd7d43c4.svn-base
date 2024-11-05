@@ -1,0 +1,77 @@
+package kr.or.ddit.service.impl;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.ddit.mapper.FileDetailMapper;
+import kr.or.ddit.mapper.MemberMapper;
+import kr.or.ddit.service.MemberService;
+import kr.or.ddit.util.UploadController;
+import kr.or.ddit.vo.MemberVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class MemberServiceImpl implements MemberService {
+
+	@Inject
+	MemberMapper memberMapper;
+	
+	@Inject
+	FileDetailMapper fileDetailMapper;
+	
+	@Inject
+	UploadController uploadController;
+	
+   // DI, IoC
+   // c:\\upload
+   @Inject
+   String uploadPath;
+
+	// 회원 상세
+	@Override
+	public MemberVO detail(String mbrId) {
+		return this.memberMapper.detail(mbrId);
+	}
+
+	// 개인정보 수정
+	@Override
+	public int editPost(MemberVO memberVO) {
+	    int result = 0;
+
+	    MultipartFile[] multipartFiles = memberVO.getUploadFile();
+
+	    // 파일이 없을 경우 기존 파일 유지
+	    if (multipartFiles == null || multipartFiles.length == 0 || multipartFiles[0].isEmpty()) {
+	        log.info("새로운 파일이 업로드되지 않았습니다. 기존 파일을 유지합니다.");
+	        
+	        // 기존 회원 정보 가져오기
+	        MemberVO existingMemberVO = this.memberMapper.detail(memberVO.getMbrId());
+	        
+	        // 기존 파일 그룹 번호 유지
+	        memberVO.setFileGroupSn(existingMemberVO.getFileGroupSn());
+	    } else {
+	        // 새로운 파일 업로드 처리
+	        String fileGroupSn = this.uploadController.multiImageUpload(multipartFiles, "/member");
+	        log.info("editPost->fileGroupSn : " + fileGroupSn);
+	        
+	        // 새로운 파일 그룹 번호 설정
+	        memberVO.setFileGroupSn(fileGroupSn);
+	    }
+
+	    // 데이터 등록
+	    result += this.memberMapper.editPost(memberVO);
+
+	    // 항상 int 값 반환
+	    return result;
+	}
+
+	@Override
+	public int deletePost(String mbrId) {
+		return this.memberMapper.deletePost(mbrId);
+	}
+
+
+}

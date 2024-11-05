@@ -1,0 +1,15 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+// 프로필 학력
+@Data
+public class PrfAcbgVO {
+	private String mbrId;
+	private String acbgSeCd;	// 학력 구분 코드
+	private String acbgSchlNm;	// 학력 학교 명
+	private String acbgMjrNm;	// 학력 전공 명
+	private String acbgMtcltnym;// 학력 입학년월
+	private String acbgGrdtnym;	// 학력 졸업년월
+
+}

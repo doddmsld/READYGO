@@ -1,0 +1,55 @@
+package kr.or.ddit.controller_DO;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.service_DO.ChatService;
+import kr.or.ddit.vo.ChatMsgVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Controller
+@RequestMapping("/chat")
+@Slf4j
+public class ChatController {
+	
+	@Inject
+	ChatService chatService;
+	
+	//지금 테스트하는 채팅방
+	@GetMapping("/socket")
+	public String socket() {
+		
+		return "adm/socket";
+	}
+	//지금 테스트하는 채팅방
+	@GetMapping("/memChatList")
+	public String memChatList() {
+		
+		return "member/mypage/memChatList";
+	}
+	
+	
+	@PostMapping("/createChatRoom")
+	@ResponseBody
+	public String createChatRoom(@RequestParam String senderUser, @RequestParam String receiveUser) {
+	    try {
+	        chatService.createChatRoom(senderUser, receiveUser); // 채팅방 생성 서비스 호출
+	        log.info("생성했다!");
+	        return "success";
+	    } catch (Exception e) {
+	        return "fail";
+	    }
+	}
+
+	
+}

@@ -1,0 +1,20 @@
+package kr.or.ddit.vo;
+
+import java.util.Date;
+
+import lombok.Data;
+
+// 제안
+@Data
+public class ProposalVO {
+	private String propseNo;
+	private String entId;
+	private String mbrId;
+	private String pbancNo;
+	private String propseJbttl;
+	private String propseDept;
+	private String propseTtl;
+	private String propseCn;
+	private Date propseDate;
+	private String propseFile;
+}

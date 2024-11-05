@@ -1,0 +1,92 @@
+package kr.or.ddit.enter.entservice.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.enter.entservice.EnterServiceS;
+import kr.or.ddit.mapper.EnterMapperS;
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.NotificationVO;
+import kr.or.ddit.vo.PbancVO;
+
+@Service
+public class EnterServiceImplS implements EnterServiceS {
+	
+	
+	@Inject
+	EnterMapperS enterMapperS;
+
+	@Override
+	public int pbCount(String entId) {
+		// TODO Auto-generated method stub
+		return this.enterMapperS.pbCount(entId);
+	}
+
+	@Override
+	public int openCount(String entId) {
+		// TODO Auto-generated method stub
+		return this.enterMapperS.openCount(entId);
+	}
+
+	@Override
+	public int closeCount(String entId) {
+		// TODO Auto-generated method stub
+		return this.enterMapperS.closeCount(entId);
+	}
+
+	@Override
+	public int ppCount(String entId) {
+		// TODO Auto-generated method stub
+		return this.enterMapperS.ppCount(entId);
+	}
+
+	@Override
+	public List<PbancVO> pbancList(String entId) {
+		// TODO Auto-generated method stub
+		return this.enterMapperS.pbancList(entId);
+	}
+
+	@Override
+	public List<PbancVO> pbancCalendarList(String entId) {
+		// TODO Auto-generated method stub
+		return this.enterMapperS.pbancCalendarList(entId);
+	}
+
+	@Override
+	public List<NotificationVO> alarmList(String entId) {
+		// TODO Auto-generated method stub
+		return this.enterMapperS.alarmList(entId);
+	}
+
+	@Override
+	public List<ApplicantVO> intrvwList(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		return this.enterMapperS.intrvwList(map);
+	}
+
+	@Override
+	public List<PbancVO> pbancsList(String entId) {
+		// TODO Auto-generated method stub
+		return this.enterMapperS.pbancsList(entId);
+	}
+
+	@Override
+	public List<MemberVO> injaeNewList() {
+		// TODO Auto-generated method stub
+		return this.enterMapperS.injaeNewList();
+	}
+
+	@Override
+	public List<MemberVO> injaeOldList() {
+		// TODO Auto-generated method stub
+		return this.enterMapperS.injaeOldList();
+	}
+
+
+	
+}

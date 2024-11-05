@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC 
+"-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" 
+"http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+<!-- tiles 설정 -->
+<tiles-definitions>
+
+	<!--  folder안 jsp들 -->
+	<!-- main layout -->
+<!-- 	<definition name="tiles-layout" template="/WEB-INF/views/tiles/index.jsp"> -->
+<!-- 		<put-attribute name="header" value="/WEB-INF/views/tiles/header.jsp" /> -->
+<!-- 		<put-attribute name="aside" value="/WEB-INF/views/tiles/asideno.jsp" /> -->
+<!-- 		<put-attribute name="body" value="" /> -->
+<!-- 		<put-attribute name="footer" value="/WEB-INF/views/tiles/footer.jsp" /> -->
+<!-- 	</definition> -->
+	<!-- name의 */*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("buyprod/list")
+		2) return "buyprod/list";
+	 -->
+<!-- 	<definition name="*/*" extends="tiles-layout"> -->
+<!-- 		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}.jsp" /> -->
+<!-- 	</definition> -->
+	
+	
+	<!-- board -->
+	<!-- main layout -->
+<!-- 	<definition name="tiles-layout5" template="/WEB-INF/views/tiles/index.jsp"> -->
+<!-- 		<put-attribute name="header" value="/WEB-INF/views/tiles/headerno.jsp" /> -->
+<!-- 		<put-attribute name="aside" value="/WEB-INF/views/tiles/asideno.jsp" /> -->
+<!-- 		<put-attribute name="body" value="" /> -->
+<!-- 		<put-attribute name="footer" value="/WEB-INF/views/tiles/footer.jsp" /> -->
+<!-- 	</definition> -->
+	<!-- name의 */*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("buyprod/list")
+		2) return "buyprod/list";
+	 -->
+<!-- 	<definition name="*/*/*" extends="tiles-layout5"> -->
+<!-- 		<put-attribute name="body" value="/WEB-INF/views/{1}/{2}/{3}.jsp" /> -->
+<!-- 	</definition> -->
+	
+	
+	<!-- views/home.jsp 위치 -->
+	<!-- login layout -->
+<!-- 	<definition name="tiles-layout2" template="/WEB-INF/views/tiles/index.jsp"> -->
+<!-- 		<put-attribute name="header" value="/WEB-INF/views/tiles/header.jsp" /> -->
+<!-- 		<put-attribute name="aside" value="/WEB-INF/views/tiles/aside.jsp" /> -->
+<!-- 		<put-attribute name="body" value="" /> -->
+<!-- 		<put-attribute name="footer" value="/WEB-INF/views/tiles/footer.jsp" /> -->
+<!-- 	</definition> -->
+	<!-- name의 *은 body의 value에서 1에 해당 -->
+<!-- 		controller에서 forwarding 시 return "1"; -->
+<!-- 		1) mav.setViewName("login") -->
+<!-- 		2) return "loginForm"; -->
+<!-- 	<definition name="*" extends="tiles-layout2"> -->
+<!-- 		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" /> -->
+<!-- 	</definition> -->
+	
+	
+	<!-- ///////////////////////////////////////////////////////////////////////////////////////// -->
+	
+
+	
+	<!-- 기업 enter pbanc layout -->
+	<definition name="tiles-layout14" template="/WEB-INF/views/tilesEnter/indexent3.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tilesEnter/header.jsp"/>
+		<put-attribute name="aside" value="/WEB-INF/views/tilesEnter/asidePbanc.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/tilesEnter/footer.jsp" />
+	</definition>
+	<!-- name의 enter/*/*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("enter/buyprod/list")
+		2) return "enter/buyprod/list";
+	 -->
+	<definition name="enter/*/*/*/*" extends="tiles-layout14">
+		<put-attribute name="body" value="/WEB-INF/views/enter/{1}/{2}/{3}/{4}.jsp" />
+	</definition>
+	
+	<!-- 기업 enter mypage layout -->
+	<definition name="tiles-layout3" template="/WEB-INF/views/tilesEnter/indexent2.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tilesEnter/headerno.jsp" />
+		<put-attribute name="aside" value="/WEB-INF/views/tilesEnter/aside.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/tilesEnter/footer.jsp" />
+	</definition>
+	<!-- name의 enter/*/*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("enter/buyprod/list")
+		2) return "enter/buyprod/list";
+	 -->
+	<definition name="enter/*/*/*" extends="tiles-layout3">
+		<put-attribute name="body" value="/WEB-INF/views/enter/{1}/{2}/{3}.jsp" />
+	</definition>
+	
+	<!-- 기업 enter main layout -->
+	<definition name="tiles-layout4" template="/WEB-INF/views/tilesEnter/indexent.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tilesEnter/header.jsp" />
+		<put-attribute name="aside" value="/WEB-INF/views/tilesEnter/asideno.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/tilesEnter/footer.jsp" />
+	</definition>
+	<!-- name의 enter/*/*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("enter/buyprod/list")
+		2) return "enter/buyprod/list";
+	 -->
+	<definition name="enter/*/*" extends="tiles-layout4">
+		<put-attribute name="body" value="/WEB-INF/views/enter/{1}/{2}.jsp" />
+	</definition>
+	
+	<!-- //////////////////////////////////////////////////////////////////////////////////////// -->
+	
+	
+	
+	<!-- 관리자 enter mypage layout -->
+	<definition name="tiles-layout6" template="/WEB-INF/views/tilesadmin/indexadmin.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tilesadmin/headerno.jsp" />
+		<put-attribute name="aside" value="/WEB-INF/views/tilesadmin/aside_admin.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/tilesadmin/footer.jsp" />
+	</definition>
+	<!-- name의 enter/*/*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("enter/buyprod/list")
+		2) return "enter/buyprod/list";
+	 -->
+	<definition name="boardAdm/*/*/*" extends="tiles-layout6">
+		<put-attribute name="body" value="/WEB-INF/views/boardAdm/{1}/{2}/{3}.jsp" />
+	</definition>
+	
+	<!-- 관리자 enter main layout -->
+	<definition name="tiles-layout7" template="/WEB-INF/views/tilesadmin/indexadmin.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tilesadmin/headerno.jsp" />
+		<put-attribute name="aside" value="/WEB-INF/views/tilesadmin/aside_admin.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/tilesadmin/footer.jsp" />
+	</definition>
+	<!-- name의 enter/*/*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("enter/buyprod/list")
+		2) return "enter/buyprod/list";
+	 -->
+	<definition name="boardAdm/*/*" extends="tiles-layout7">
+		<put-attribute name="body" value="/WEB-INF/views/boardAdm/{1}/{2}.jsp" />
+	</definition>
+	
+	<!-- 관리자 enter main layout -->
+	<definition name="tiles-layout8" template="/WEB-INF/views/tilesadmin/indexadmin.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tilesadmin/headerno.jsp" />
+		<put-attribute name="aside" value="/WEB-INF/views/tilesadmin/aside_admin.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/tilesadmin/footer.jsp" />
+	</definition>
+	<!-- name의 enter/*/*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("enter/buyprod/list")
+		2) return "enter/buyprod/list";
+	 -->
+	<definition name="boardAdm/*" extends="tiles-layout8">
+		<put-attribute name="body" value="/WEB-INF/views/boardAdm/{1}.jsp" />
+	</definition>
+	
+	<!-- 회원 프로필 layout -->
+	<definition name="tiles-layout9" template="/WEB-INF/views/tilesMem/indexmem2.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tilesMem/header.jsp" />
+		<put-attribute name="aside" value="/WEB-INF/views/tilesMem/asideno.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/tilesMem/footer.jsp" />
+	</definition>
+	<!-- name의 enter/*/*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("enter/buyprod/list")
+		2) return "enter/buyprod/list";
+	 -->
+	<definition name="member/*" extends="tiles-layout9">
+		<put-attribute name="body" value="/WEB-INF/views/member/{1}.jsp" />
+	</definition>
+	
+	
+	<!-- 회원 마이페이지 layout -->
+	<definition name="tiles-layout10" template="/WEB-INF/views/tilesMem/indexmem.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tilesMem/header_mypage.jsp" />
+		<put-attribute name="aside" value="/WEB-INF/views/tilesMem/aside.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/tilesMem/footer.jsp" />
+	</definition>
+	<!-- name의 enter/*/*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("enter/buyprod/list")
+		2) return "enter/buyprod/list";
+	 -->
+	<definition name="member/*/*" extends="tiles-layout10">
+		<put-attribute name="body" value="/WEB-INF/views/member/{1}/{2}.jsp" />
+	</definition>
+	
+	
+	
+<!-- 외주 프로필 layout -->
+	<definition name="tiles-layout11" template="/WEB-INF/views/tilesoustou/indexoust.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tilesoustou/header.jsp" />
+		<put-attribute name="aside" value="/WEB-INF/views/tilesoustou/asideno.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/tilesoustou/footer.jsp" />
+	</definition>
+	<!-- name의 enter/*/*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("enter/buyprod/list")
+		2) return "enter/buyprod/list";
+	 -->
+	<definition name="oustou/*" extends="tiles-layout11">
+		<put-attribute name="body" value="/WEB-INF/views/oustou/{1}.jsp" />
+	</definition>
+	
+	<!-- 외주 등록, 수정layout -->
+	<definition name="tiles-layout18" template="/WEB-INF/views/tilesoustou/indexoust.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tilesoustou/header_reg.jsp" />
+		<put-attribute name="aside" value="/WEB-INF/views/tilesoustou/asideno.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/tilesoustou/footer.jsp" />
+	</definition>
+	<!-- name의 enter/*/*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("enter/buyprod/list")
+		2) return "enter/buyprod/list";
+	 -->
+	<definition name="oustou/*/*" extends="tiles-layout18">
+		<put-attribute name="body" value="/WEB-INF/views/oustou/{1}/{2}.jsp" />
+	</definition>
+	
+	
+<!-- 메인 layout -->
+	<definition name="tiles-layout12" template="/WEB-INF/views/tiles/index.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tiles/header.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/tiles/footer.jsp" />
+	</definition>
+	<!-- name의 enter/*/*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("enter/buyprod/list")
+		2) return "enter/buyprod/list";
+	 -->
+	<definition name="*" extends="tiles-layout12">
+		<put-attribute name="body" value="/WEB-INF/views/{1}.jsp" />
+	</definition>
+	
+		<!-- security layout -->
+	<definition name="tiles-layout13" template="/WEB-INF/views/tiles/index.jsp">
+		<put-attribute name="header" value="/WEB-INF/views/tiles/header.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/views/tiles/footer.jsp" />
+	</definition>
+	<!-- name의 enter/*/*은 body의 value에서 1과 2에 해당
+		controller에서 forwarding 시 return "1/2";
+		1) mav.setViewName("enter/buyprod/list")
+		2) return "enter/buyprod/list";
+	 -->
+	<definition name="security/*" extends="tiles-layout13">
+		<put-attribute name="body" value="/WEB-INF/views/security/{1}.jsp" />
+	</definition>
+	
+	
+</tiles-definitions>

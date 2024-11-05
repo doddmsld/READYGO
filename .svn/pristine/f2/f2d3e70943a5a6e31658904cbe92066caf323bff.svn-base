@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.EnterMapper">
+	
+	<sql id="where"> <!-- 스카우트 제안 -->
+		<if test="gubun!=null and gubun!=''">
+			AND R.RSM_CAREER_CD = #{gubun}
+		</if>
+		<if test="keyword!=null and keyword!=''">
+			AND M.MBR_NM LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="date!=null and date!=''">
+			AND P.PROPSE_DATE = TO_DATE(#{date})
+		</if>
+	</sql>
+
+	<sql id="aplct"> <!-- 지원자관리 -->
+		<if test="keyword!=null and keyword!=''">
+			AND B.MBR_NM LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="date!=null and date!=''">
+			<choose>
+				<when test="gubun1=='aplctAppymds'">
+					AND A.APLCT_APPYMD = TO_DATE(#{date})
+				</when>
+				<when test="gubun1=='intrvwYmd'">
+					AND C.INTRVW_YMD = TO_DATE(#{date})
+				</when>
+			</choose>
+		</if>
+		<if test="gubun!=null and gubun!=''">
+			AND R.RSM_CAREER_CD = #{gubun}
+		</if>
+		<if test="gubunSt!=null and gubunSt!=''">
+			AND A.APLCT_PRCS_STAT_CD = #{gubunSt}
+		</if>
+		<if test="gubunPbanc!=null and gubunPbanc!=''">
+			AND P.PBANC_TTL LIKE #{gubunPbanc} || '%'
+		</if>
+	</sql>
+	
+	<sql id="pbanc"> <!-- 공고관리 -->
+		<if test="keyword!=null and keyword!=''">
+			AND A.PBANC_TTL LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="date!=null and date!=''">
+			<choose>
+				<when test="gubun=='wrt'">
+					AND A.PBANC_WRT_DT = TO_DATE(#{date})
+				</when>
+				<when test="gubun=='bgng'">
+					AND A.PBANC_BGNG_DT = TO_DATE(#{date})
+				</when>
+				<when test="gubun=='ddln'">
+					AND A.PBANC_DDLN_DT = TO_DATE(#{date})
+				</when>
+			</choose>
+		</if>
+		<if test="gubunDate!=null and gubunDate!=''">
+			<choose>
+				<when test="gubunDate=='insert'">
+					ORDER BY A.PBANC_WRT_DT DESC
+				</when>
+				<when test="gubunDate=='start'">
+					ORDER BY A.PBANC_BGNG_DT DESC
+				</when>
+				<when test="gubunDate=='last'">
+					ORDER BY A.PBANC_DDLN_DT DESC
+				</when>
+			</choose>		
+		</if>
+	</sql>
+
+	<resultMap type="PbancVO" id="pbancMap"> <!-- 공고 -->
+		<result property="pbancSttus" column="PBANC_STTUS"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="pbancPicNm" column="PBANC_PIC_NM"/>
+		<result property="pbancPicTelno" column="PBANC_PIC_TELNO"/>
+		<result property="pbancPicMbtlnum" column="PBANC_PIC_MBTLNUM"/>
+		<result property="pbancPicEml" column="PBANC_PIC_EML"/>
+		<result property="pbancAplctEduCd" column="PBANC_APLCT_EDU_CD"/>
+		<result property="pbancRprsrgn" column="PBANC_RPRSRGN"/>
+		<result property="pbancTtl" column="PBANC_TTL"/>
+		<result property="pbancWorkstleCd" column="PBANC_WORKSTLE_CD"/>
+		<result property="pbancApntcpd" column="PBANC_APNTCPD"/>
+		<result property="pbancSalary" column="PBANC_SALARY"/>
+		<result property="pbancWorkHrCd" column="PBANC_WORK_HR_CD"/>
+		<result property="pbancWorkDayCd" column="PBANC_WORK_DAY_CD"/>
+		<result property="pbancRcptMthdCd" column="PBANC_RCPT_MTHD_CD"/>
+		<result property="pbancAppofeForm" column="PBANC_APPOFE_FORM"/>
+		<result property="pbancRprsDty" column="PBANC_RPRS_DTY"/>
+		<result property="pbancRcptPd" column="PBANC_RCPT_PD"/>
+		<result property="pbancBgngDt" column="PBANC_BGNG_DT"/>
+		<result property="pbancBgngDts" column="PBANC_BGNG_DTS"/>
+		<result property="pbancDdlnDt" column="PBANC_DDLN_DT"/>
+		<result property="pbancDdlnDts" column="PBANC_DDLN_DTS"/>
+		<result property="pbancDlnDt" column="PBANC_DLN_DT"/>
+		<result property="pbancTmplt" column="PBANC_TMPLT"/>
+		<result property="pbancWrtDt" column="PBANC_WRT_DT"/>
+		<result property="pbancMdfcnDt" column="PBANC_MDFCN_DT"/>
+		<result property="pbancDelDt" column="PBANC_DEL_DT"/>
+		<result property="pbancScrapCo" column="PBANC_SCRAP_CO"/>
+		<result property="pbancDelYn" column="PBANC_DEL_YN"/>
+		<result property="pbancRdcnt" column="PBANC_RDCNT"/>
+		<result property="pbancBeforeWrt" column="PBANC_BEFORE_WRT"/>
+		<result property="pbancDlnDt" column="PBANC_DLN_DT"/>
+		<result property="rnum" column="RNUM"/>
+		<result property="entStleNm" column="ENT_STLE_NM"/>
+		<result property="entNm" column="ENT_NM"/>
+		<result property="pbancRprsrgnNm" column="PBANC_RPRSRGN_NM"/>
+		<result property="pbancAplctEdu" column="PBANC_APLCT_EDU"/>
+		<result property="rcritCareerNm" column="RCRIT_CAREER_NM"/>
+		<result property="pbancTpbizNm" column="PBANC_TPBIZ_NM"/>
+	</resultMap>
+	
+	<resultMap type="tbcIndutyVO" id="tbcIndutyMap"> <!-- 업종 -->
+		<result property="tpbizCd" column="TPBIZ_CD"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+	</resultMap>
+	
+	<resultMap type="tbcRecruitmentVO" id="tbcRecruitmentMap"> <!-- 모집분야 -->
+		<result property="rcritNo" column="RCRIT_NO"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="rcritNm" column="RCRIT_NM"/>
+		<result property="rcritCareerCd" column="RCRIT_CAREER_CD"/>
+		<result property="rcritTask" column="RCRIT_TASK"/>
+		<result property="rcritDept" column="RCRIT_DEPT"/>
+		<result property="rcritJbttlCd" column="RCRIT_JBTTL_CD"/>
+	</resultMap>
+	
+	<resultMap type="enterVO" id="enterMap"> <!-- 기업 -->
+		<result property="userType" column="USER_TYPE"/>
+		<result property="entMail" column="ENT_MAIL"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="entPswd" column="ENT_PSWD"/>
+		<result property="entNm" column="ENT_NM"/>
+		<result property="entManagerTelno" column="ENT_MANAGER_TELNO"/>
+		<result property="entFxnum" column="ENT_FXNUM"/>
+		<result property="entAddr" column="ENT_ADDR"/>
+		<result property="entAddrDetail" column="ENT_ADDR_DETAIL"/>
+		<result property="entZip" column="ENT_ZIP"/>
+		<result property="entLogo" column="ENT_LOGO"/>
+		<result property="entRprsntvNm" column="ENT_RPRSNTV_NM"/>
+		<result property="entIntrcnsntnc" column="ENT_INTRCNSNTNC"/>
+		<result property="entStleCd" column="ENT_STLE_CD"/>
+		<result property="entEmpCnt" column="ENT_EMP_CNT"/>
+		<result property="entFndnYmd" column="ENT_FNDN_YMD"/>
+		<result property="entHmpgUrl" column="ENT_HMPG_URL"/>
+		<result property="entBrno" column="ENT_BRNO"/>
+		<result property="entBrFile" column="ENT_BR_FILE"/>
+		<result property="enabled" column="ENABLED"/>
+		<result property="tpbizSeCd" column="TPBIZ_SE_CD"/>
+		<collection property="userAuthVOList" resultMap="enterAuthMap"></collection>
+		<collection property="codeVOList" resultMap="codeMap"></collection>
+		<collection property="pbancVOList" resultMap="pbancMap"></collection>
+		<collection property="fileDetailVOList" resultMap="fileDetailMap"></collection>
+	</resultMap>
+	
+	<resultMap type="fileDetailVO" id="fileDetailMap"> <!-- 파일 -->
+		<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="orgnlFileNm" column="ORGNL_FILE_NM"/>
+		<result property="strgFileNm" column="STRG_FILE_NM"/>
+		<result property="filePathNm" column="FILE_PATH_NM"/>
+		<result property="fileSz" column="FILE_SZ"/>
+		<result property="fileExtnNm" column="FILE_EXTN_NM"/>
+		<result property="fileMime" column="FILE_MIME"/>
+		<result property="fileFancysize" column="FILE_FANCYSIZE"/>
+		<result property="fileStrgYmd" column="FILE_STRG_YMD"/>
+		<result property="fileDwnldCnt" column="FILE_DWNLD_CNT"/>
+	</resultMap>
+	
+	
+	<resultMap type="userAuthVO" id="enterAuthMap"> <!-- 권한 -->
+		<result property="entId" column="ENT_ID"/>
+		<result property="auth" column="AUTH"/>
+	</resultMap>
+	
+	<resultMap type="codeVO" id="codeMap"> <!-- 공통코드 -->
+	<result property="comCode" column="COM_CODE"/>
+	<result property="comCodeGrp" column="COM_CODE_GRP"/>
+	<result property="comCodeNm" column="COM_CODE_NM"/>
+	<result property="comCodeDesc" column="COM_CODE_DESC"/>
+	<result property="useYn" column="USE_YN"/>
+	<result property="upperComCode" column="UPPER_COM_CODE"/>
+	<result property="upperComCodeGrp" column="UPPER_COM_CODE_GRP"/>
+	</resultMap>
+	
+	 <resultMap type="memberVO" id="memberMap"> <!-- 회원 -->
+      <result property="mbrId" column="MBR_ID"/>
+      <result property="mbrPswd" column="MBR_PSWD"/>
+      <result property="mbrNm" column="MBR_NM"/>
+      <result property="mbrBrdt" column="MBR_BRDT"/>
+      <result property="mbrSexdstnCd" column="MBR_SEXDSTN_CD"/>
+      <result property="mbrEml" column="MBR_EML"/>
+      <result property="mbrTelno" column="MBR_TELNO"/>
+      <result property="mbrZip" column="MBR_ZIP"/>
+      <result property="mbrAddr" column="MBR_ADDR"/>
+      <result property="mbrAddrDtl" column="MBR_ADDR_DTL"/>
+      <result property="mbrJoinYmd" column="MBR_JOIN_YMD"/>
+      <result property="mbrWhdwlYmd" column="MBR_WHDWL_YMD"/>
+      <result property="enabled" column="ENABLED"/>
+      <result property="mbrWarnCo" column="MBR_WARN_CO"/>
+      <result property="mbrAcnutno" column="MBR_ACNUTNO"/>
+      <result property="entId" column="ENT_ID"/>
+      <result property="userType" column="USER_TYPE"/>
+      <result property="fileGroupSn" column="FILE_GROUP_SN"/>  
+      
+      <result property="rsmCareerCd" column="RSM_CAREER_CD"/>    
+      <result property="skCd" column="SK_CD"/>    
+      <result property="tpbizSeCd" column="TPBIZ_SE_CD"/>    
+      <result property="tpbizSeNm" column="TPBIZ_SE_NM"/>    
+   </resultMap>
+	
+	<resultMap type="applicantVO" id="applicantMap"> <!-- 지원자 -->
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="rsmFile" column="RSM_FILE"/>
+		<result property="aplctAppymd" column="APLCT_APPYMD"/>
+		<result property="aplctAppymds" column="APLCT_APPYMDS"/>
+		<result property="aplctPrcsStatCd" column="APLCT_PRCS_STAT_CD"/>
+		<result property="aplctFile" column="APLCT_FILE"/>
+		<result property="aplctPrvcagreYmd" column="APLCT_PRVCAGRE_YMD"/>
+		<result property="aplctCancelCd" column="APLCT_CANCEL_CD"/>
+		
+		<result property="entNm" column="ENT_NM"/> 
+		<result property="pbancTtl" column="PBANC_TTL"/>
+		<result property="pbancDdlnDt" column="PBANC_DDLN_DT"/>
+		<result property="rsmCareerCd" column="RSM_CAREER_CD"/>
+		<result property="mbrNm" column="MBR_NM"/>
+		<result property="intrvwYmd" column="INTRVW_YMD"/>
+	</resultMap>
+	
+	<resultMap type="proposalVO" id="proposalMap"> <!-- 제안 -->
+		<result property="propseNo" column="PROPSE_NO"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="propsePbancTtl" column="PROPSE_PBANC_TTL"/>
+		<result property="propseTtl" column="PROPSE_TTL"/>
+		<result property="propseCn" column="PROPSE_CN"/>
+		<result property="propseDate" column="PROPSE_DATE"/>
+		<result property="propseFile" column="PROPSE_FILE"/>
+		<result property="propseSttus" column="PROPSE_STTUS"/>
+		
+		<result property="mbrNm" column="MBR_NM"/>	
+		<result property="mbrBrdt" column="MBR_BRDT"/>
+		<result property="rsmCareerCd" column="RSM_CAREER_CD"/>
+		<result property="entNm" column="ENT_NM"/>
+	</resultMap>
+	
+	<!-- ***** 쿼리 시작 ***** -->	
+	
+	<!-- 시큐리티 -->
+	<select id="selectOne" parameterType="String" resultMap="enterMap">
+		SELECT A.ENT_ID, A.ENT_PSWD, A.ENT_NM, A.ENT_MANAGER_TELNO, 
+             A.ENT_FXNUM, A.ENT_ADDR, A.ENT_ADDR_DETAIL, A.ENT_ZIP
+             , (SELECT F.FILE_PATH_NM FROM FILE_DT F WHERE F.FILE_GROUP_SN = A.ENT_LOGO) AS ENT_LOGO
+             , A.ENT_RPRSNTV_NM, 
+             A.ENT_STLE_CD, A.ENT_EMP_CNT, A.ENT_FNDN_YMD, A.ENT_HMPG_URL, 
+             A.ENT_BRNO, A.ENT_BR_FILE, A.ENABLED, A.USER_TYPE,
+             B.AUTH
+		      FROM ENTER A LEFT OUTER JOIN AUTH_ENT B ON(A.ENT_ID = B.ENT_ID)
+		      WHERE  A.ENT_ID = #{username}
+	</select>
+
+	<!-- 기업프로필 -->
+	<select id="profile" parameterType="String" resultMap="enterMap">
+		SELECT A.ENT_NM,
+			   A.ENT_FNDN_YMD
+			 , (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = A.ENT_STLE_CD) ENT_STLE_CD
+			 , A.ENT_EMP_CNT
+             , (SELECT F.FILE_PATH_NM FROM FILE_DT F WHERE F.FILE_GROUP_SN = A.ENT_LOGO) AS ENT_LOGO
+             , A.ENT_HMPG_URL
+			 , (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = A.TPBIZ_SE_CD) TPBIZ_SE_CD
+             , A.ENT_RPRSNTV_NM
+			 , A.ENT_FXNUM
+			 , A.ENT_ADDR
+		  FROM ENTER A
+		 WHERE A.ENT_ID = #{entId}
+	</select>
+	
+	<!-- 기업 프로필 연도별  입사자수  -->
+	<select id="empYcnt" parameterType="String" resultType="enterEmpYcntVO">
+		SELECT ENT_YM, ENT_EMP_YCNT, ENT_NEWEMP, ENT_OUTEMP
+		  FROM ENT_EMP_YCNT
+		 WHERE ENT_ID = #{entId} 
+	</select>
+	
+	<!-- 기업정보수정 폼 -->
+	<select id="edit" parameterType="String" resultMap="enterMap">
+		SELECT A.ENT_NM, A.ENT_ID
+             , A.ENT_PSWD
+             , (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = A.TPBIZ_SE_CD) TPBIZ_SE_CD
+             , (SELECT F.FILE_PATH_NM FROM FILE_DT F WHERE F.FILE_GROUP_SN = A.ENT_LOGO) AS ENT_LOGO
+		     , A.ENT_FNDN_YMD
+		     , A.ENT_EMP_CNT
+		     , (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = A.ENT_STLE_CD) ENT_STLE_CD
+		     , A.ENT_RPRSNTV_NM
+		     , A.ENT_HMPG_URL
+		     , A.ENT_MANAGER_TELNO
+		     , A.ENT_FXNUM
+		     , A.ENT_MAIL
+             , A.ENT_ZIP
+             , A.ENT_ADDR
+             , A.ENT_ADDR_DETAIL
+             , (SUBSTR(A.ENT_BRNO,0,3)||'-'||SUBSTR(A.ENT_BRNO,4,2)||'-'||SUBSTR(A.ENT_BRNO,6)) AS ENT_BRNO
+             , (SELECT F.FILE_PATH_NM FROM FILE_DT F WHERE F.FILE_GROUP_SN = A.ENT_BR_FILE) AS ENT_BR_FILE
+		FROM ENTER A 
+		WHERE A.ENT_ID = #{entId}
+	</select>
+
+	<!-- 기업정보수정에서 업종 출력 -->
+	<select id="getIndutyList" parameterType="String" resultMap="codeMap">
+	    SELECT COM_CODE, COM_CODE_NM 
+	      FROM CODE
+	     WHERE COM_CODE_GRP = 'CRDT'
+	     ORDER BY COM_CODE
+	</select>
+	
+	<!-- 기업정보수정에서 기업형태 출력 -->
+	<select id="getEntStleCdList" parameterType="String" resultMap="codeMap">
+		SELECT COM_CODE, COM_CODE_NM 
+	      FROM CODE
+	     WHERE COM_CODE_GRP = 'ENST'
+	     ORDER BY COM_CODE		
+	</select>
+	
+	<!-- 기업정보수정 실행 -->
+	<update id="editPost1" parameterType="enterVO">
+		UPDATE ENTER
+		   SET ENT_NM = #{entNm}, ENT_PSWD = #{entPswd}, ENT_FNDN_YMD = #{entFndnYmd}, ENT_EMP_CNT = #{entEmpCnt}
+		     , ENT_STLE_CD = #{entStleCd}, ENT_RPRSNTV_NM = #{entRprsntvNm}, ENT_HMPG_URL = #{entHmpgUrl}
+		     , ENT_MANAGER_TELNO = #{entManagerTelno}, ENT_FXNUM = #{entFxnum}, ENT_MAIL = #{entMail}, ENT_ZIP = #{entZip}
+		     , ENT_LOGO = #{entLogo}, ENT_ADDR = #{entAddr}, ENT_ADDR_DETAIL = #{entAddrDetail}, ENT_BRNO = #{entBrno}
+		     , ENT_BR_FILE = #{entBrFile}
+		WHERE  ENT_ID = #{entId}	
+	</update>
+
+	<!-- 기업탈퇴 -->
+	<update id="deleteAjax" parameterType="String">
+		UPDATE ENTER
+		   SET ENABLED = '2'     
+		 WHERE ENT_ID = #{entId}
+	</update>
+	
+	<!-- 인재리스트 -->
+	<select id="getInjaeList" parameterType="map" resultMap="memberMap">
+	 WITH T AS (
+		SELECT 
+		    ROW_NUMBER() OVER (ORDER BY M.MBR_NM ASC) AS RNUM,
+		    M.MBR_NM, 
+		    CASE 
+		        WHEN M.MBR_BRDT IS NOT NULL THEN FLOOR(MONTHS_BETWEEN(SYSDATE, TO_DATE(M.MBR_BRDT, 'YYYYMMDD')) / 12) 
+		        ELSE NULL 
+		    END AS MBR_BRDT,
+		    NVL(
+		        (SELECT C.COM_CODE_NM 
+		           FROM CODE C 
+		          WHERE C.COM_CODE = P.TPBIZ_SE_CD), 
+		        '업종 분야 없음') AS TPBIZ_SE_CD,
+		    NVL(
+		        LISTAGG((SELECT C.COM_CODE_NM 
+		                   FROM CODE C 
+		                  WHERE C.COM_CODE = S.SK_CD), ', ') 
+		                  WITHIN GROUP (ORDER BY S.SK_CD), 
+		        'SKILL NONE') AS SK_CD,
+		  		(SELECT DECODE(MAX(PC.CAREER_NO), NULL, '신입', '경력') 
+		       FROM PRF_CAREER PC 
+		     WHERE M.MBR_ID = PC.MBR_ID) AS CAREER    
+		FROM MEMBER M
+		LEFT JOIN RESUME R ON M.MBR_ID = R.MBR_ID
+		LEFT JOIN PRF_SKILL S ON M.MBR_ID = S.MBR_ID
+		LEFT JOIN PRF_BUSINESS P ON M.MBR_ID = P.MBR_ID
+		GROUP BY M.MBR_ID, M.MBR_NM, M.MBR_BRDT, R.RSM_CAREER_CD, P.TPBIZ_SE_CD
+		ORDER BY TPBIZ_SE_CD
+		     )
+		     SELECT * 
+		     FROM T
+		     WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 5 + 1 AND #{currentPage} * 5
+	</select>
+	
+	<!-- 인재 스킬 -->
+	<select id="getSkillList" parameterType="String" resultMap="codeMap">
+		SELECT COM_CODE, COM_CODE_NM 
+	    FROM CODE
+	    WHERE COM_CODE_GRP = 'SK'
+	    ORDER BY COM_CODE	
+	</select>   
+	
+	<!-- 기업추천인재 -->
+	<select id="getRecommendList" parameterType="String" resultType="memberVO">
+	    SELECT *
+	    FROM (
+			SELECT A.MBR_NM
+			         , A.MBR_ID
+			         , (SELECT MAX(F.FILE_PATH_NM) 
+			            FROM FILE_DT F 
+			            WHERE A.FILE_GROUP_SN = F.FILE_GROUP_SN) AS FILE_GROUP_SN
+			         , (SELECT LISTAGG(C.COM_CODE_NM, ', ') WITHIN GROUP (ORDER BY C.COM_CODE)
+			            FROM PRF_BUSINESS B 
+			            JOIN CODE C ON C.COM_CODE = B.TPBIZ_SE_CD
+			            JOIN ENTER E ON B.TPBIZ_SE_CD = E.TPBIZ_SE_CD
+			            WHERE A.MBR_ID = B.MBR_ID
+			            AND E.ENT_ID = #{entId}
+			            AND B.TPBIZ_SE_CD IS NOT NULL) AS TPBIZ_SE_NM
+			         , SUBSTR((SELECT LISTAGG(D.COM_CODE_NM, ', ') WITHIN GROUP (ORDER BY D.COM_CODE)
+			            FROM PRF_SKILL S
+			            JOIN CODE D ON D.COM_CODE = S.SK_CD
+			            WHERE S.MBR_ID = A.MBR_ID), 1, 12) || '..' AS SK_CD
+			         , (SELECT DECODE(MAX(PC.CAREER_NO), NULL, '신입', '경력') 
+			             FROM PRF_CAREER PC 
+			             WHERE A.MBR_ID = PC.MBR_ID) AS CAREER
+			    FROM MEMBER A
+			    JOIN PRF P ON A.MBR_ID = P.MBR_ID
+			    GROUP BY A.MBR_NM, A.MBR_ID, A.FILE_GROUP_SN 
+			    HAVING (SELECT LISTAGG(C.COM_CODE_NM, ', ') WITHIN GROUP (ORDER BY C.COM_CODE)
+			            FROM PRF_BUSINESS B 
+			            JOIN CODE C ON C.COM_CODE = B.TPBIZ_SE_CD
+			            JOIN ENTER E ON B.TPBIZ_SE_CD = E.TPBIZ_SE_CD
+			            WHERE A.MBR_ID = B.MBR_ID
+			            AND E.ENT_ID = #{entId}
+			            AND B.TPBIZ_SE_CD IS NOT NULL) IS NOT NULL
+			    ORDER BY DBMS_RANDOM.VALUE
+	    )
+	    <![CDATA[
+	    WHERE ROWNUM <= 3  
+	    ]]>
+	</select>
+
+	<!-- 인재 스카우트 제안에서 공고 꺼내기 -->
+	<select id="pbancList" parameterType="String" resultType="pbancVO">
+		SELECT DISTINCT CONCAT(SUBSTR(PBANC_TTL,0,20),'...') AS PBANC_TTL
+		FROM PBANC
+		WHERE ENT_ID = #{entId}
+	</select>
+	
+   <!-- 전체 행의 수(인재) -->
+   <select id="getTotalInjae" parameterType="hashMap" resultType="int">
+		 SELECT COUNT(*)
+		   FROM MEMBER M
+		   JOIN RESUME R ON M.MBR_ID = R.MBR_ID
+		   JOIN PRF_SKILL S ON M.MBR_ID = S.MBR_ID
+		  WHERE M.MBR_BRDT IS NOT NULL
+   </select>  
+   	
+	<!-- 공고관리 -->
+	<select id="getPbancList" parameterType="map" resultMap="pbancMap">
+		WITH T AS (
+			SELECT ROW_NUMBER() OVER (ORDER BY A.PBANC_WRT_DT DESC) AS RNUM    
+		            , B.ENT_NM
+		            , B.ENT_ID
+					, TO_CHAR(A.PBANC_WRT_DT, 'YYYY.MM.DD') AS PBANC_WRT_DT 
+				    , TO_CHAR(A.PBANC_MDFCN_DT, 'YYYY.MM.DD') AS PBANC_MDFCN_DT
+				    , TO_CHAR(A.PBANC_DDLN_DT, 'YYYY.MM.DD') AS PBANC_DDLN_DT
+				    , TO_CHAR(A.PBANC_BGNG_DT, 'YYYY.MM.DD') AS PBANC_BGNG_DT
+			        , (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE=B.ENT_STLE_CD) AS ENT_STLE_NM
+					, CONCAT(SUBSTR(A.PBANC_TTL,0,45),'...') AS PBANC_TTL
+					, (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE=A.PBANC_RPRSRGN)AS PBANC_RPRSRGN_NM
+					, (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE=A.PBANC_APLCT_EDU_CD) AS PBANC_APLCT_EDU
+					, TO_CHAR(A.PBANC_DDLN_DT,'MM.DD(DY)') AS PBANC_DLN_DT
+					, (TO_CHAR(SYSDATE,'YYYYMMDD')-TO_CHAR(A.PBANC_WRT_DT,'YYYYMMDD'))AS PBANC_BEFORE_WRT
+					, (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = D.RCRIT_CAREER_CD) AS RCRIT_CAREER_NM
+					, (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = TPBIZ_CD) AS PBANC_TPBIZ_NM
+				FROM PBANC A, ENTER B, TBC_RECRUITMENT D,TBC_INDUTY E
+				WHERE A.ENT_ID=B.ENT_ID
+				AND A.PBANC_NO = D.PBANC_NO
+				AND A.PBANC_NO = E.PBANC_NO
+				AND A.ENT_ID = #{entId}
+				AND A.PBANC_DDLN_DT  > SYSDATE-1
+				<include refid="pbanc"></include>
+		)
+		SELECT * 
+		FROM T
+		WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 5 + 1 AND #{currentPage} * 5
+	</select>
+
+   <!-- 전체 행의 수(공고관리) -->
+   <select id="getTotalPbanc" parameterType="hashMap" resultType="int">
+		 SELECT COUNT(*)
+		   FROM PBANC A, ENTER B, TBC_RECRUITMENT D,TBC_INDUTY E
+		  WHERE A.ENT_ID=B.ENT_ID
+		    AND A.PBANC_NO = D.PBANC_NO
+		    AND A.PBANC_NO = E.PBANC_NO
+		    AND A.ENT_ID = #{entId}
+		    AND A.PBANC_DDLN_DT  > SYSDATE-1
+         <include refid="pbanc"></include>	
+   </select>  
+	
+	<!-- 지원자리스트 -->
+	<select id="aplctList" parameterType="map" resultMap="applicantMap">
+    WITH T AS (
+       SELECT ROW_NUMBER() OVER (ORDER BY A.APLCT_APPYMD DESC) AS RNUM
+		     , A.MBR_ID
+		     , A.PBANC_NO
+		     , TO_CHAR(A.APLCT_APPYMD, 'YYYY.MM.DD') AS APLCT_APPYMDS
+		     , A.RSM_FILE
+		     , A.APLCT_PRCS_STAT_CD
+		     , A.APLCT_FILE
+		     , TO_CHAR(TO_DATE(A.APLCT_PRVCAGRE_YMD, 'YYYY/MM/DD'), 'YYYY.MM.DD') AS APLCT_PRVCAGRE_YMD
+		     , A.APLCT_VIEWSTTUS
+		     , A.APLCT_CANCEL_CD
+		     , B.MBR_NM
+		     , CONCAT(SUBSTR(P.PBANC_TTL,0,20),'...') AS PBANC_TTL
+		     , TO_CHAR(P.PBANC_DDLN_DT, 'YYYY.MM.DD') AS PBANC_DDLN_DT
+		     , NVL(TO_CHAR(TO_DATE(C.INTRVW_YMD, 'YYYY/MM/DDHH24MISS'), 'YYYY.MM.DD'),'-') AS INTRVW_YMD
+		     , (SELECT LISTAGG(D.COM_CODE_NM, ', ') WITHIN GROUP (ORDER BY D.COM_CODE)
+		          FROM PRF_SKILL S
+		          JOIN CODE D ON D.COM_CODE = S.SK_CD
+		         WHERE S.MBR_ID = A.MBR_ID) AS SK_CD
+		     , (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = R.RSM_CAREER_CD) AS RSM_CAREER_CD
+		  FROM APPLICANT A
+		  JOIN MEMBER B ON B.MBR_ID = A.MBR_ID
+		  JOIN INTERVIEW C ON A.PBANC_NO = C.PBANC_NO
+		  JOIN PBANC P ON P.PBANC_NO = A.PBANC_NO
+		  JOIN RESUME R ON R.MBR_ID = B.MBR_ID
+		 WHERE C.ENT_ID = #{entId}
+			<include refid="aplct"></include>		      
+	 )
+       SELECT * 
+       FROM T
+       WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 5 + 1 AND #{currentPage} * 5		   
+	</select>
+
+	<!-- 지원자 리스트 엑셀 -->
+	<select id="AplctListExcel" parameterType="map" resultMap="applicantMap">
+       SELECT ROW_NUMBER() OVER (ORDER BY A.APLCT_APPYMD DESC) AS RNUM
+		     , A.MBR_ID
+		     , A.PBANC_NO
+		     , TO_CHAR(A.APLCT_APPYMD, 'YYYY.MM.DD') AS APLCT_APPYMDS
+		     , A.RSM_FILE
+		     , A.APLCT_PRCS_STAT_CD
+		     , A.APLCT_FILE
+		     , TO_CHAR(TO_DATE(A.APLCT_PRVCAGRE_YMD, 'YYYY/MM/DD'), 'YYYY.MM.DD') AS APLCT_PRVCAGRE_YMD
+		     , A.APLCT_VIEWSTTUS
+		     , A.APLCT_CANCEL_CD
+		     , B.MBR_NM
+		     , CONCAT(SUBSTR(P.PBANC_TTL,0,20),'...') AS PBANC_TTL
+		     , TO_CHAR(P.PBANC_DDLN_DT, 'YYYY.MM.DD') AS PBANC_DDLN_DT
+		     , NVL(TO_CHAR(TO_DATE(C.INTRVW_YMD, 'YYYY/MM/DDHH24MISS'), 'YYYY.MM.DD'),'-') AS INTRVW_YMD
+		     , (SELECT LISTAGG(D.COM_CODE_NM, ', ') WITHIN GROUP (ORDER BY D.COM_CODE)
+		          FROM PRF_SKILL S
+		          JOIN CODE D ON D.COM_CODE = S.SK_CD
+		         WHERE S.MBR_ID = A.MBR_ID) AS SK_CD
+		     , (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = R.RSM_CAREER_CD) AS RSM_CAREER_CD
+		  FROM APPLICANT A
+		  JOIN MEMBER B ON B.MBR_ID = A.MBR_ID
+		  JOIN INTERVIEW C ON A.PBANC_NO = C.PBANC_NO
+		  JOIN PBANC P ON P.PBANC_NO = A.PBANC_NO
+		  JOIN RESUME R ON R.MBR_ID = B.MBR_ID
+		 WHERE C.ENT_ID = #{entId}
+	</select>
+	
+	<!-- 지원자상태저장 -->
+	<update id="updateAplctSt" parameterType="map">
+		UPDATE APPLICANT A
+		SET A.APLCT_PRCS_STAT_CD = #{status}
+		WHERE A.MBR_ID = #{mbrId}
+		  AND A.PBANC_NO = #{pbancNo}
+		  AND EXISTS (SELECT 1 
+		                FROM PBANC P 
+		               WHERE A.PBANC_NO = P.PBANC_NO)		
+	</update>
+
+   <!-- 전체 행의 수(지원자리스트) -->
+   <select id="getTotalListAplct" parameterType="hashMap" resultType="int">
+		 SELECT COUNT(*)
+		  FROM APPLICANT A
+		  JOIN MEMBER B ON B.MBR_ID = A.MBR_ID
+		  JOIN INTERVIEW C ON A.PBANC_NO = C.PBANC_NO
+		  JOIN PBANC P ON P.PBANC_NO = A.PBANC_NO
+		  JOIN RESUME R ON R.MBR_ID = B.MBR_ID
+		 WHERE C.ENT_ID = #{entId}
+         <include refid="aplct"></include>	
+   </select>   
+   	
+	<!-- 스카우트 제안 페이지 -->
+	<select id="scoutList" parameterType="map" resultMap="proposalMap">
+    WITH T AS (
+		 SELECT ROW_NUMBER() OVER (ORDER BY P.PROPSE_DATE DESC) AS RNUM
+		     , P.PROPSE_TTL
+		     , P.PROPSE_CN
+		     , TO_CHAR(P.PROPSE_DATE, 'YYYY.MM.DD') AS PROPSE_DATES
+		     , P.PROPSE_FILE
+		     , P.PROPSE_PBANC_TTL
+		     , M.MBR_NM
+		     , FLOOR(MONTHS_BETWEEN(SYSDATE, TO_DATE(M.MBR_BRDT, 'YYYYMMDD')) / 12) AS MBR_BRDT
+		     , (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = R.RSM_CAREER_CD) AS RSM_CAREER_CD
+		     , E.ENT_NM
+		  FROM PROPOSAL P
+		  JOIN ENTER E ON P.ENT_ID = E.ENT_ID
+		  JOIN MEMBER M ON P.MBR_ID = M.MBR_ID
+		  JOIN RESUME R ON R.MBR_ID = M.MBR_ID
+		 WHERE E.ENT_ID = #{entId}
+		   AND M.MBR_BRDT IS NOT NULL
+		   <include refid="where"></include>	   
+	 )
+       SELECT * 
+       FROM T
+       WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 5 + 1 AND #{currentPage} * 5		
+	</select>
+	
+	<!-- 스카우트 제안 엑셀 -->
+	<select id="scoutListExcel" parameterType="map" resultMap="proposalMap">
+		 SELECT ROW_NUMBER() OVER (ORDER BY P.PROPSE_DATE DESC) AS RNUM
+		     , P.PROPSE_TTL
+		     , P.PROPSE_CN
+		     , TO_CHAR(P.PROPSE_DATE, 'YYYY.MM.DD') AS PROPSE_DATES
+		     , P.PROPSE_FILE
+		     , P.PROPSE_PBANC_TTL
+		     , M.MBR_NM
+		     , FLOOR(MONTHS_BETWEEN(SYSDATE, TO_DATE(M.MBR_BRDT, 'YYYYMMDD')) / 12) AS MBR_BRDT
+		     , (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = R.RSM_CAREER_CD) AS RSM_CAREER_CD
+		     , E.ENT_NM
+		  FROM PROPOSAL P
+		  JOIN ENTER E ON P.ENT_ID = E.ENT_ID
+		  JOIN MEMBER M ON P.MBR_ID = M.MBR_ID
+		  JOIN RESUME R ON R.MBR_ID = M.MBR_ID
+		 WHERE E.ENT_ID = #{entId}
+		   AND M.MBR_BRDT IS NOT NULL
+	</select>
+
+   <!-- 전체 행의 수(스카우트 제안)
+   				(조건이 있다면 조건도 포함되어야 함) -->
+   <select id="getTotal" parameterType="hashMap" resultType="int">
+         SELECT COUNT(*) 
+         FROM PROPOSAL P
+		  JOIN ENTER E ON P.ENT_ID = E.ENT_ID
+		  JOIN MEMBER M ON P.MBR_ID = M.MBR_ID
+		  JOIN RESUME R ON R.MBR_ID = M.MBR_ID
+		 WHERE E.ENT_ID = #{entId}
+		   AND M.MBR_BRDT IS NOT NULL
+         <include refid="where"></include>	
+   </select>  
+	
+</mapper>

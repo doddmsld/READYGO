@@ -1,0 +1,100 @@
+package kr.or.ddit.oustou.kakaoPayApi;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
+@Service
+public class KakaoPayServiceImpl implements KakaoPayService {
+	
+	
+	// 카카오페이 결제창 연결
+	@Override
+    public ReadyResponse payReady(String name, int totalPrice) {
+    
+		//로그인한 사용자의 아이디 가져오기 
+		String userId =getCurrentUserId();
+		
+		
+		Map<String, String> parameters = new HashMap<>();
+	    parameters.put("cid", "TC0ONETIME");                                    // 가맹점 코드(테스트용)
+	    parameters.put("partner_order_id", "1234567890");                       // 주문번호
+	    parameters.put("partner_user_id", userId);                          // 회원 아이디
+	    parameters.put("item_name", name);                                      // 상품명
+	    parameters.put("quantity", "1");                                        // 상품 수량
+	    parameters.put("total_amount", String.valueOf(totalPrice));             // 상품 총액
+	    parameters.put("tax_free_amount", "0");                                 // 상품 비과세 금액
+	    parameters.put("approval_url", "http://localhost/outsou/payok");  // 결제 성공 시 이동할 URL
+	    parameters.put("cancel_url", "http://localhost/outsou/pay/cancel");      // 결제 취소 시 URL
+	    parameters.put("fail_url", "http://localhost/outsou/pay/fail");          // 결제 실패 시 URL
+
+	    HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+
+	    RestTemplate template = new RestTemplate();
+	    String url = "https://open-api.kakaopay.com/online/v1/payment/ready";
+	    ResponseEntity<ReadyResponse> responseEntity = template.postForEntity(url, requestEntity, ReadyResponse.class);
+	    log.info("결제준비 응답객체: " + responseEntity.getBody());
+
+	    return responseEntity.getBody();
+    }
+
+    // 카카오페이 결제 승인
+    // 사용자가 결제 수단을 선택하고 비밀번호를 입력해 결제 인증을 완료한 뒤,
+    // 최종적으로 결제 완료 처리를 하는 단계
+	@Override
+    public AproveResponse payApprove(String tid, String pgToken) {
+		
+		//로그인한 사용자의 아이디 가져오기 
+		String userId =getCurrentUserId();
+		
+		Map<String, String> parameters = new HashMap<>();
+	    parameters.put("cid", "TC0ONETIME");                // 가맹점 코드(테스트용)
+	    parameters.put("tid", tid);                         // 결제 고유번호
+	    parameters.put("partner_order_id",  "1234567890"); // 주문번호
+	    parameters.put("partner_user_id", userId);    // 회원 아이디
+	    parameters.put("pg_token", pgToken);                // 결제승인 요청을 인증하는 토큰
+
+	    HttpEntity<Map<String, String>> requestEntity = new HttpEntity<>(parameters, this.getHeaders());
+
+	    RestTemplate template = new RestTemplate();
+	    String url = "https://open-api.kakaopay.com/online/v1/payment/approve";
+	    AproveResponse aproveResponse = template.postForObject(url, requestEntity, AproveResponse.class);
+	    log.info("결제승인 응답객체: " + aproveResponse);
+
+	    return aproveResponse;
+	}
+    
+	// 카카오페이 측에 요청 시 헤더부에 필요한 값
+    private HttpHeaders getHeaders() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization" , "SECRET_KEY DEVB4E51D0683AC7A19D69FFBA85114089962579");
+        headers.set("Content-type", "application/json");
+
+        return headers;
+    }
+    
+ // 로그인된 사용자 아이디 가져오기
+    private String getCurrentUserId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            return userDetails.getUsername();  // 로그인된 사용자의 아이디 반환
+        }
+        return null;
+    }
+	
+	
+
+}

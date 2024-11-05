@@ -1,0 +1,261 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>면접관리 > 화상면접방 생성</title>
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/enter/videointrvw.css" />
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript">
+//모달 제어
+document.addEventListener("DOMContentLoaded", function() {
+    var modal = document.getElementById("scoutModal");
+    var calButtons = document.querySelectorAll(".cal-btn");
+    var closeBtn = document.querySelector(".close");
+    var cancelButton = document.getElementById("cancel-btn");
+
+    // 모든 "스카우트 제안하기" 버튼에 클릭 이벤트 추가
+    calButtons.forEach(function(button) {
+        button.addEventListener("click", function() {
+            modal.style.display = "block";
+        });
+    });
+
+    // 닫기 버튼 클릭 시 모달 닫기
+    closeBtn.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // 취소 버튼 클릭 시 모달 닫기
+    cancelButton.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    // 모달 외부 클릭 시 모달 닫기
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+});
+
+
+$(function(){
+	
+})
+</script>
+</head>
+<body>
+	<sec:authentication property="principal" var="prc" />
+	<div class="announcement-container">
+		<div><h2 style="margin: 0px 0px 0px;">면접관리 > 화상면접방 생성</h2></div>
+		<div class="search-box">
+			<!-- 셀렉트 박스 -->
+			<div class="sel-cls">
+				<div class="select-search">
+					<select name="gubun" class="gubun-select" onchange="filterApplicants3()">
+						<option value=""selected>면접 구분</option>
+						<option value="new">면접 완료</option>
+						<option value="old">면접 미완료</option>
+					</select>
+				</div>			
+
+			</div>
+			<!-- 검색  -->
+			<form action="/enter/listAplct" method="get">
+				<div class="search">
+					<input type="hidden" id="entId" name="entId"
+						value="${prc.username}" />
+					<input type="text" id="keywordInput" name="keywordInput"
+						placeholder="지원자명 입력" />
+					<div class="select-search">
+						<select name="gubun" class="gubun-select-date">
+							<option value="" disabled selected>일자 선택</option>
+							<option value="aplctAppymds">시작일자</option>
+							<option value="intrvwYmd">마감일자</option>
+						</select>
+					</div>
+					<input type="date" id="dateInput" name="dateInput"
+						placeholder="면접일 선택" />
+					<button type="submit">검색</button>
+					<sec:csrfInput />
+				</div>
+			</form>
+			<!-- 검색 -->
+		</div>
+
+		<table>
+			<thead>
+				<tr style="background: #ECECEC; border-top: 2px solid #232323;">
+					<th><input type="checkbox" /></th>
+					<th>번호</th>
+					<th class="th-center">화상방 제목</th>
+					<th class="th-center">화상방 상태</th>
+					<th class="th-center">인원</th>
+					<th class="th-center">입장 버튼</th>
+					<th class="th-center">취소 버튼</th>
+				</tr>
+			</thead>
+			<tbody>
+			<c:forEach varStatus="stat" var="applicantVO" items="${applicantVOList}">
+				<tr>
+					<td><input type="checkbox" /></td>
+					<td>${applicantVO.rnum}</td>
+					<td>
+						<div class="aplctIN">
+							<div class="aplctName">
+								<div>09/07일자 대덕인턴모집 임원 면접</div>
+								<div class="aplctTp">시작 시간 : 09월 07일 12시 00분 </div>
+								<div class="aplctTp">마감 시간 : 09월 07일 12시 05분 </div>
+							</div>
+						</div>
+					</td>
+					<td>
+						<p style="text-align: center;">완료</p>
+					</td>
+					<td style="text-align: center;">
+							<p>접속중인 인원 : 0/3 </p>
+					</td>
+					<td style="text-align: center;">
+						<button class="btnopen" type="button">입장</button>						
+					</td>
+					<td style="text-align: center;">
+						<button class="btndel" type="button">삭제</button>
+					</td>
+				</tr>
+			</c:forEach>
+			</tbody>
+			<tfoot>
+				<tr></tr>
+			</tfoot>
+			
+		</table>
+		<div class="btnclass">
+        		<button class="cal-btn">공고 등록</button>
+		</div>
+		<!-- 페이지네이션 -->
+		<div class="card-body table-responsive p-0"
+			style="display: flex; justify-content: center;">
+			<table>
+				<tr>
+					<td class="pageTable" colspan="4" style="text-align: center;">
+						<div class="dataTables_paginate" id="example2_paginate"
+							style="display: flex; justify-content: center; margin-top: -30px;">
+							<ul class="pagination">
+
+								<!-- 맨 처음 페이지로 이동 버튼 -->
+								<c:if test="${articlePage.currentPage gt 1}">
+									<li class="paginate_button page-item first"><a
+										href="/enter/intrvw?entId=${prc.username}&currentPage=1"
+										aria-controls="example2" data-dt-idx="0" tabindex="0"
+										class="page-link">&lt;&lt;</a></li>
+								</c:if>
+
+								<!-- 이전 페이지 버튼 -->
+								<c:if test="${articlePage.startPage gt 1}">
+									<li class="paginate_button page-item previous"
+										id="example2_previous"><a
+										href="/enter/intrvw?entId=${prc.username}&currentPage=${(articlePage.startPage - 1) lt 1 ? 1 : (articlePage.startPage - 1)}"
+										aria-controls="example2" data-dt-idx="0" tabindex="0"
+										class="page-link">&lt;</a></li>
+								</c:if>
+
+								<!-- 페이지 번호 -->
+								<c:forEach var="pNo" begin="${articlePage.startPage}"
+									end="${articlePage.endPage}">
+									<li
+										class="paginate_button page-item ${pNo == articlePage.currentPage ? 'active' : ''}">
+										<a
+										href="/enter/intrvw?entId=${prc.username}&currentPage=${pNo}"
+										aria-controls="example2" class="page-link">${pNo}</a>
+									</li>
+								</c:forEach>
+
+								<!-- 다음 페이지 버튼 -->
+								<c:if test="${articlePage.endPage lt articlePage.totalPages}">
+									<li class="paginate_button page-item next" id="example2_next">
+										<a
+										href="/enter/intrvw?entId=${prc.username}&currentPage=${articlePage.startPage+5}"
+										aria-controls="example2" data-dt-idx="7" tabindex="0"
+										class="page-link">&gt;</a>
+									</li>
+								</c:if>
+
+								<!-- 맨 마지막 페이지로 이동 버튼 -->
+								<c:if
+									test="${articlePage.currentPage lt articlePage.totalPages}">
+									<li class="paginate_button page-item last"><a
+										href="/enter/intrvw?entId=${prc.username}&currentPage=${articlePage.totalPages}"
+										aria-controls="example2" data-dt-idx="7" tabindex="0"
+										class="page-link">&gt;&gt;</a></li>
+								</c:if>
+
+							</ul>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<!-- 페이지네이션 끝 -->
+		
+		</div>
+		<!-- 모달 창 구조 -->
+				<div id="scoutModal" class="modal" style="display: none;">
+					<div class="modal-content">
+						<div
+							style="display: flex; justify-content: space-between; margin-bottom: 30px;">
+							<h2>화상방 생성</h2>
+							<span class="close">&times;</span>
+						</div>
+						<form id="scoutForm" method="post">
+							<div>
+								<label for="date" class="scout-title">화상방 제목 <span
+									style="color: red;">*</span></label>
+								<input type="text" id="date" name="date">
+							</div>
+							<div>
+								<label for="date" class="scout-title">화상방 경로 <span
+									style="color: red;">*</span></label>
+								<input type="text" id="date" name="date">
+							</div>
+							<div>
+								<label for="date" class="scout-title">면접 최대 인원 <span
+									style="color: red;">*</span></label>
+								<input type="number" id="date" name="date">
+							</div>
+							<div>
+								<label for="date" class="scout-title">비밀번호 <span
+									style="color: red;">*</span></label>
+								<input type="password" id="date" name="date">
+							</div>
+							<div style="display: flex">
+							<div style="margin-right:20px;">
+								<label for="date" class="scout-title">시작시간 <span
+									style="color: red;">*</span></label>
+								<input type="datetime-local" id="date" name="date">
+							</div>
+							<div>
+								<label for="date" class="scout-title">종료시간 <span
+									style="color: red;">*</span></label>
+								<input type="datetime-local" id="date" name="date">
+							</div>
+							</div>
+							<input type="hidden" id="liveMaxJoinCount" name="liveMaxJoinCount" value="100">
+							<input type="hidden" id="sfuIncludeAll" name="sfuIncludeAll" value="true">
+							
+							<div
+								style="display: flex; justify-content: space-evenly; margin-top: 50px;">
+								<button type="button" id="cancel-btn">취소</button>
+								<button type="submit" id="submit-btn">등록</button>
+							</div>
+							<sec:csrfInput />
+						</form>
+					</div>
+				</div>
+</body>
+</html>

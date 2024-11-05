@@ -1,0 +1,44 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.OsClVO;
+import kr.or.ddit.vo.OsDevalVO;
+import kr.or.ddit.vo.OsKeywordVO;
+import kr.or.ddit.vo.OutsouVO;
+
+public interface OutsouMapper {
+
+	//공통코드 
+	public List<CodeVO> cacodeSelect(String comCode);
+	
+	//<!--  외주 테이블 저장  -->
+	public int insertOutsou(OutsouVO oustouVO);
+	
+	
+	//<!--  외주 개발 서비스 저장   -->
+	public int insertOsDeval(OsDevalVO oustouDevalVO);
+	
+	
+	//<!-- 외주 자소서 서비스 저장  -->
+	public int insertOsCl(OsClVO oustouClVO);
+	
+	//외주 키워트 저장 
+	public int insertOsKeywoed(OsKeywordVO osKeywordVO);
+	
+	//외주 번호 불러오기 
+	public String selectoutsouNo(String mbrId);
+	
+	
+	//외주 메인 최신글 출력 
+	
+	//외주 메인 BEST글 출력 
+	
+	//외주 리뷰 좋아요수 많은거 출력 
+	
+	
+
+
+	
+}

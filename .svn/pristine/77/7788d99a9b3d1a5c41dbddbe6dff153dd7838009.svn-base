@@ -1,0 +1,16 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.PbancVO;
+
+public interface CalendarMapper {
+	
+	//스크랩 목록
+	List<PbancVO> scrapList(Map<String, Object> map);
+	
+	//캘린더 표시정보(스크랩, 일정)
+	List<PbancVO> calendarList(String mbrId);
+
+}

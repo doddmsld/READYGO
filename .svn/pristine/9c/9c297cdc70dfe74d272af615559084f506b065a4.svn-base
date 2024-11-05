@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.FreeBoardMapper">
+	<resultMap type="boardVO" id="boardMap">
+		<result property="pstSn" column="PST_SN"/>
+		<result property="seNo" column="SE_NO"/>
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="pstTtl" column="PST_TTL"/>
+		<result property="pstOthbcscope" column="PST_OTHBCSCOPE"/>
+		<result property="pstCn" column="PST_CN"/>
+		<result property="pstWrtDt" column="PST_WRT_DT"/>
+		<result property="pstMdfcnDt" column="PST_MDFCN_DT"/>
+		<result property="pstDelYn" column="PST_DEL_YN"/>
+		<result property="pstInqCnt" column="PST_INQ_CNT"/>
+		<result property="pstFile" column="PST_FILE"/>
+		<result property="etymanmttrSn" column="ETYMANMTTR_SN"/>
+		<result property="pstGood" column="PST_GOOD"/>
+		<result property="pstBad" column="PST_BAD"/>
+	</resultMap>
+	<resultMap type="BoardTypeVO" id="boardTypeMap">
+		<result property="seNo" column="SE_NO"/>
+		<result property="bbsNm" column="BBS_NM"/>
+	</resultMap>
+		
+	<select id="admList" parameterType="hashMap" resultMap="boardMap">
+	    WITH REPLY_COUNT AS (
+	        SELECT PST_SN, COUNT(*) AS REPLY_CNT
+	        FROM "COMMENT"
+	        GROUP BY PST_SN
+	    ),
+	    T AS (
+	        SELECT ROW_NUMBER() OVER(ORDER BY A.PST_SN DESC) RNUM,
+	               A.PST_SN, A.SE_NO, A.MBR_ID, A.PST_TTL, A.PST_OTHBCSCOPE, 
+	               A.PST_CN, TO_CHAR(A.PST_WRT_DT, 'YYYY.MM.DD') AS PST_WRT_DT, 
+	               A.PST_MDFCN_DT, A.PST_DEL_YN, A.PST_INQ_CNT, A.PST_FILE, 
+	               A.ETYMANMTTR_SN, A.PST_GOOD, A.PST_BAD,
+	               B.BBS_NM,
+	               COALESCE(RC.REPLY_CNT, 0) AS REPLY_CNT
+	        FROM BOARD A
+	        JOIN BOARD_TYPE B ON A.SE_NO = B.SE_NO
+	        LEFT JOIN REPLY_COUNT RC ON A.PST_SN = RC.PST_SN
+	        WHERE A.SE_NO = '3' 
+	        AND A.PST_DEL_YN='1'
+	        <if test="pstOthbcscope != ''">
+	            AND A.PST_OTHBCSCOPE = #{pstOthbcscope}
+	        </if>
+	        <if test="searchKeyword != ''">
+	            AND A.PST_TTL LIKE #{searchKeyword}
+	        </if>
+	        ORDER BY RNUM
+	    )
+	    SELECT * FROM T
+	    WHERE T.RNUM BETWEEN (#{currentPage} * 10) - (10 - 1) AND (#{currentPage} * 10)
+	</select>
+
+
+<!-- 전체 게시글 수 조회 -->
+<select id="getTotal" parameterType="map" resultType="int">
+    SELECT COUNT(*)
+    FROM BOARD
+    WHERE SE_NO='3'
+    <if test="pstOthbcscope != ''">
+        AND PST_OTHBCSCOPE = #{pstOthbcscope}
+    </if>
+</select>
+
+
+    
+    <!-- 게시글 등록 -->
+	<select id="admRegist" resultType="int">
+		SELECT LPAD(NVL(MAX(PST_SN), '0') + 1, 4, '0') AS NEW_PST_SN
+		FROM BOARD
+	</select>
+	
+	<insert id="admRegistPost" parameterType="boardVO">
+	    <selectKey resultType="String" order="BEFORE" keyProperty="pstSn">
+	        SELECT LPAD(NVL(MAX(PST_SN), '0') + 1, 4, '0') AS PST_SN
+	        FROM BOARD
+	    </selectKey>
+	
+	    INSERT INTO BOARD(
+	        PST_SN, SE_NO, MBR_ID, PST_TTL, PST_OTHBCSCOPE, 
+	        PST_CN, PST_WRT_DT, PST_MDFCN_DT, PST_DEL_YN, 
+	        PST_INQ_CNT, PST_GOOD, PST_BAD
+	        , PST_FILE <if test="pstFile != null">,FILE_GROUP_SN</if>
+	    )
+	    VALUES (
+	        #{pstSn}, 3, #{mbrId}, #{pstTtl}, #{pstOthbcscope}, 
+	        #{pstCn}, SYSDATE, SYSDATE, '1', '0', 0, 0
+	        , #{pstFile,jdbcType=VARCHAR}<if test="pstFile != null">,#{fileGroupSn,jdbcType=VARCHAR}</if>
+	    )
+	</insert>
+	<!-- 게시글 수정 -->
+<update id="updatePost" parameterType="boardVO">
+    UPDATE BOARD
+    SET 
+        PST_TTL = #{pstTtl}, 
+        PST_OTHBCSCOPE = #{pstOthbcscope}, 
+        PST_CN = #{pstCn}, 
+        PST_MDFCN_DT = SYSDATE,
+        <if test="pstFile != null">
+            PST_FILE = #{pstFile,jdbcType=VARCHAR},
+            FILE_GROUP_SN = #{fileGroupSn,jdbcType=VARCHAR}
+        </if>
+        <if test="pstFile == null">
+            PST_FILE = null,
+            FILE_GROUP_SN = null
+        </if>
+    WHERE PST_SN = #{pstSn}
+</update>
+
+	
+	<!-- 게시글상세 -->
+	<select id="admDetail" parameterType="String" resultMap="boardMap">
+		SELECT  SE_NO, PST_SN, PST_TTL, PST_OTHBCSCOPE, PST_CN, MBR_ID, TO_CHAR(PST_MDFCN_DT, 'YYYY.MM.DD') AS PST_MDFCN_DT, PST_INQ_CNT, PST_FILE ,FILE_GROUP_SN
+		FROM 	BOARD
+		WHERE   SE_NO='3' AND PST_SN=#{pstSn}
+	</select>	
+	<select id="getFileDetailsByPstSn" resultType="fileDetailVO">
+    SELECT FILE_GROUP_SN, FILE_SN, ORGNL_FILE_NM, STRG_FILE_NM, FILE_PATH_NM, 
+           FILE_SZ, FILE_EXTN_NM, FILE_MIME, FILE_FANCYSIZE, 
+           FILE_STRG_YMD, FILE_DWNLD_CNT
+    FROM FILE_DT
+    WHERE FILE_GROUP_SN = (
+        SELECT FILE_GROUP_SN
+        FROM BOARD
+        WHERE PST_SN = #{pstSn}
+	    )
+	</select>
+	
+	<select id="getPostDetails" parameterType="String" resultType="boardVO">
+	    SELECT SE_NO,PST_SN, PST_TTL, PST_OTHBCSCOPE, PST_CN, MBR_ID, TO_CHAR(PST_MDFCN_DT, 'YYYY.MM.DD') AS PST_MDFCN_DT, PST_INQ_CNT, PST_FILE,FILE_GROUP_SN
+	    FROM BOARD
+	    WHERE SE_NO='3' AND PST_SN = #{pstSn}
+	</select>
+   <!-- 조회수증가 -->
+	<update id="InqCnt" parameterType="String">
+	    UPDATE BOARD
+	    SET PST_INQ_CNT = PST_INQ_CNT + 1
+	    WHERE PST_SN = #{pstSn} AND SE_NO = '3'
+	</update>	
+	
+	<resultMap id="commentResultMap" type="commentVO">
+	    <id property="cmntNo" column="CMNT_NO"/>
+	    <result property="cmntCn" column="CMNT_CN"/>
+	    <result property="cmntDelYn" column="CMNT_DEL_YN"/>
+	    <result property="cmntRegDt" column="CMNT_REG_DT"/>
+	    <result property="pstSn" column="PST_SN"/>
+	    <result property="mbrId" column="MBR_ID"/>
+	</resultMap>
+		
+	<!-- 댓글 등록 -->
+	<insert id="insertComment" parameterType="commentVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="cmntNo">
+		    SELECT  LPAD(NVL(MAX(CMNT_NO), '0') + 1, 4, '0') AS CMNT_NO
+		    FROM "COMMENT"
+		</selectKey>
+	    INSERT INTO "COMMENT" (CMNT_NO, CMNT_CN, CMNT_DEL_YN, CMNT_REG_DT, PST_SN, MBR_ID)
+	    VALUES (#{cmntNo}, #{cmntCn}, '1', SYSDATE, #{pstSn}, #{mbrId})
+	</insert>
+	
+	<select id="replyList" parameterType="String" resultMap="commentResultMap">
+   		SELECT CMNT_NO, CMNT_CN, CMNT_DEL_YN, 
+		       TO_CHAR(CMNT_REG_DT, 'YYYY.MM.DD HH24:MI:SS') AS CMNT_REG_DT, 
+		       PST_SN, MBR_ID
+		FROM "COMMENT" 
+		WHERE PST_SN = #{pstSn} AND CMNT_DEL_YN = '1'
+		ORDER BY CMNT_REG_DT
+	</select>
+	
+	<!-- 댓글 삭제 -->
+	<update id="commentDelete" parameterType="commentVO">
+	    UPDATE "COMMENT"
+	    SET CMNT_DEL_YN = '0'
+	    WHERE CMNT_NO = #{cmntNo} AND PST_SN = #{pstSn} AND MBR_ID=#{mbrId}
+	</update>
+	<!-- 댓글 삭제 -->
+	<update id="deleteCommentAdm" parameterType="commentVO">
+	    UPDATE "COMMENT"
+	    SET CMNT_DEL_YN = '0'
+	    WHERE CMNT_NO = #{cmntNo} AND PST_SN = #{pstSn}
+	</update>
+	
+	<!-- 댓글 수정 -->
+	<update id="commentEdit" parameterType="commentVO">
+	    UPDATE "COMMENT"
+	    SET CMNT_CN = #{cmntCn}
+	    WHERE CMNT_NO = #{cmntNo} AND PST_SN = #{pstSn} AND MBR_ID=#{mbrId}
+	</update>
+	
+	<!-- 게시글 삭제 -->
+	<update id="deletePost" parameterType="String">
+		UPDATE BOARD
+		SET PST_DEL_YN = '0'
+		WHERE SE_NO = '3' AND PST_SN = #{pstSn}
+	</update>
+	
+	
+	<!-- 게시글 신고 -->
+	<insert id="boardReport" parameterType="declarationVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="dclrNo">
+	        SELECT LPAD(NVL(MAX(DCLR_NO), '0') + 1, 4, '0') AS DCLR_NO
+			FROM DECLARATION
+		</selectKey>
+        INSERT INTO DECLARATION(DCLR_NO, DCLR_CN, DCLR_URL, DCLR_DT, DCLR_PRCS_STTUS, PST_SN, DCLR_TP, MBR_ID, DCLR_FIELD)
+        VALUES (#{dclrNo}, #{dclrCn}, #{dclrUrl}, SYSDATE, '0', #{pstSn}, #{dclrTp}, #{mbrId}, '게시판')
+	</insert>
+	<!-- 댓글 신고 -->
+	<insert id="replyReport" parameterType="declarationVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="dclrNo">
+	        SELECT LPAD(NVL(MAX(DCLR_NO), '0') + 1, 4, '0') AS DCLR_NO
+			FROM DECLARATION
+		</selectKey>
+        INSERT INTO DECLARATION(DCLR_NO, DCLR_CN, DCLR_URL, DCLR_DT, DCLR_PRCS_STTUS, PST_SN, DCLR_TP, MBR_ID, DCLR_FIELD)
+        VALUES (#{dclrNo}, #{dclrCn}, #{dclrUrl}, SYSDATE, '0', #{pstSn}, #{dclrTp}, #{mbrId}, '댓글')
+	</insert>
+</mapper>

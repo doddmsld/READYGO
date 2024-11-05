@@ -1,0 +1,399 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+    transition: all 0.3s ease 0s;
+}
+::placeholder {
+    color: #b4b4b4;
+    font-weight: 300;
+}
+.label{
+	font-weight : 200;
+}
+
+.edit-control {
+    font-size: 14px;
+    color: #232323;
+    padding: 5px;
+    border: 1px solid #666363;
+    border-radius: 5px;
+    box-sizing: border-box; /* padding과 border를 포함한 크기 계산 */
+}
+.edit-control2 {
+    font-size: 14px;
+    color: #232323;
+    padding: 5px;
+    border: 1px solid #666363;
+    border-radius: 5px;
+    box-sizing: border-box; /* padding과 border를 포함한 크기 계산 */
+}
+
+/* form-group의 CSS 수정 */
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px; /* 각 input 그룹 사이의 간격 */
+    margin-left : 30px;
+    
+}
+
+.form-group label {
+	font-size: 14px;
+    color: #232323;
+    margin-right: 40px;
+    width: 150px; /* label의 고정 너비 설정 */
+    text-align: left; /* label 텍스트를 오른쪽 정렬 */
+
+}
+
+.form-group input {
+    flex: 1; /* input이 남은 공간을 차지하게 설정 */
+    padding: 8px;
+    border: 1px solid #666363;
+    border-radius: 5px;
+    box-sizing: border-box;
+    position: relative;
+    bottom: 5px;
+}
+#mbrId{
+	border : none;
+	background : none;
+}
+
+.col-left{
+	margin-left : -30px;
+	margin-right : 100px;
+	
+}
+/* 비밀번호 인증 창 */
+.chkImg{
+	margin-left: 180px;
+	width: 380px;
+	height: 140px;
+	
+}
+#mbrPswd, .chkbtn {
+    border-left: 2px solid white;
+    border-right: 2px solid white;
+    border-top: 2px solid #24D59E;
+    border-bottom: 2px solid white; 
+    border-radius: 5px;
+    height: 50px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-left: 220px;
+}
+#pwalert{
+	margin-left: 240px;
+	margin-bottom: 50px;
+}
+
+#pImg{
+	width : 140px;
+	height : 140px;
+	border-radius : 999px;
+	cursor: pointer; /* 손 모양 커서 */
+	object-fit: cover;
+}
+.h4{
+	font-size : 20px;
+	font-weight : 650;
+}
+.container{
+	padding-left : 100px;	
+}
+#h3{
+	margin-left:-40px;
+	font-weight : 700;
+	font-size : 30px;
+	color : #212529;
+}
+#mbrId{
+	margin-left:48px;
+	font-size : 20px;
+	font-weight : 600;
+}
+
+#edit{
+	width : 100px;
+	height : 40px;
+    background: white;
+    color: #24D59E;
+    border: 1px solid #24D59E;
+	border-radius : 7px;
+    font-size : 16px;
+    font-weight : 400;
+	
+}
+#edit:hover{
+	width : 100px;
+	height : 40px;
+    background-color: #24D59E;
+    color: white;
+    border: 1px solid #24D59E;
+	border-radius : 7px;
+    font-size : 16px;
+    font-weight : 400;
+	
+}
+#save{
+	width : 100px;
+	height : 40px;
+    background: white;
+    color: #24D59E;
+    border: 1px solid #24D59E;
+	border-radius : 7px;
+    font-size : 16px;
+    font-weight : 400;
+}
+#save:hover{
+	width : 100px;
+	height : 40px;
+    background-color: #24D59E;
+    color: white;
+    border: 1px solid #24D59E;
+	border-radius : 7px;
+    font-size : 16px;
+    font-weight : 400;
+}
+#cancel{
+	width : 100px;
+	height : 40px;
+	border : 1px solid #A7A7A7;
+	color : #666363;
+	background:white;
+	border-radius : 7px;	
+	font-size : 16px;
+	font-weight : 400;
+}
+#cancel:hover{
+	width: 100px;
+	height: 40px;
+	background:#ECECEC;
+	border : 1px solid #A7A7A7;
+	color: #232323;
+	font-size : 16px;
+	font-weight : 400;
+	border-radius : 7px;
+}
+#btnPost {
+	width : 100px;
+	height : 39px;
+	font-size : 14px;
+	background: #24D59E;
+	border : none;
+	color : white;
+    font-weight : 400;
+    margin-left : 10px;
+	
+	
+}
+
+#editBox{
+	display: flex;
+    align-items: flex-end;
+    margin-bottom: -100px;
+    margin-left: 100px;
+}
+
+input[readonly]{
+	background : none;
+/* 	padding: 8px; 편집 가능할 때와 동일한 패딩 적용 */
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+    color: #232323;
+    position: relative;
+    bottom: 5px;
+}
+
+#btnDelete{
+	width : 100px;
+	height : 40px;
+	border : 1px solid #A7A7A7;
+	color : #666363;
+	background:white;
+	border-radius : 7px;
+    font-size : 16px;
+    font-weight : 400;
+}
+
+#editImg {
+	color : #232323;
+	font-size : 14px;
+	margin-left : 30px;
+	
+}
+#spn2{
+	margin-left: 0px;
+}
+#spn1{
+	 margin-bottom: -15px;
+}
+#detailChkBtn {
+    margin-top: 20px;
+    width: 300px;
+    height: 35px;
+    margin-left: 221px;
+    background: white;
+    border: 1px solid #24D59E;
+    color: #24D59E;
+}
+/* #mbrPswd { */
+/*     width: 300px; */
+/*     height: 35px; */
+/*     border-radius: 5px; */
+/*     font-size: 14px; */
+/*     margin-right: 10px; */
+/*     padding-left: 12px; */
+/* } */
+#mbrPswdCh {
+    width: 300px;
+    height: 35px;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-right: 10px;
+    padding-left: 12px;
+    pointer-events:none;
+}
+alert {
+    margin-left: -72px;
+    font-size: 18px;
+}
+#chkchk{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 800px;  
+	position: relative;
+    left: 300px;
+    bottom: 100px;
+}
+.close{
+
+}
+.pwlb{
+	display: inline-block;
+	 width: 130px;
+}
+.pwInp {
+    display: inline-block;
+    width: 230px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+    padding: 5px;
+    font-size: 14px;
+}
+.pwlb{
+	border:none;
+	text-align: left;
+	font-size: 14px;
+}
+.pwdBox{
+	text-align:center;
+}
+
+
+
+.modal-header {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: start;
+    -ms-flex-pack: justify;
+    justify-content: center;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+    border-top-left-radius: calc(.3rem - 1px);
+    border-top-right-radius: calc(.3rem - 1px);
+}
+#submit{
+		width: 60px;
+	height: 35px;
+	font-size: 14px;
+	background: white;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+#submit:hover{
+	width: 60px;
+	height: 35px;
+	font-size: 14px;
+	background-color: #24D59E; 
+	border: none;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 25px;
+	color: white;
+}
+
+#close{
+	width: 60px;
+	height: 35px;
+	border: 1px solid #B5B5B5;
+	color: #232323;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+#close:hover{
+	width: 60px;
+	height: 35px;
+	background:#ECECEC;
+	border:1px solid #B5B5B5;
+	color: #232323;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 10px;
+}
+#control{
+	display: flex;
+    justify-content: center;
+	margin-top: 10px;    
+}
+#EditForm{
+	height: 280px;
+}
+/* 비밀번호 수정 */
+span#title {
+    font-weight: 500;
+}
+#submitPwd{
+    width: 60px;
+    height: 35px;
+	background: white;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 3px;
+	color: #24D59E;
+	border: 1px solid #24D59E;
+}
+#submitPwd:hover{
+    width: 60px;
+    height: 35px;
+    background-color: #24D59E; 
+    color : white;
+	border: 1px solid #24D59E;
+	font-size: 14px;
+	font-weigth: 600;
+	border-radius: 5px;
+	margin-right: 3px;
+	color: white;
+}
+@media (min-width: 576px) {
+    .modal-content {
+        box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .5);
+        height: 280px;
+    }
+}
+.required{
+	color:red;
+}

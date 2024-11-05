@@ -1,0 +1,16 @@
+package kr.or.ddit.service;
+
+import kr.or.ddit.vo.MemberVO;
+
+public interface MemberService {
+	
+	// 회원 상세
+	public MemberVO detail(String mbrId);
+	
+	// 개인정보 수정
+	public int editPost(MemberVO memberVO);
+	
+	// 회원 탈퇴
+	public int deletePost(String mbrId);
+
+}

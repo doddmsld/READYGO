@@ -1,0 +1,68 @@
+package kr.or.ddit.controller;
+
+import javax.inject.Inject;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.security.CustomUser;
+import kr.or.ddit.service.MemberService;
+import kr.or.ddit.vo.MemberVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Controller
+@Slf4j
+@RequestMapping("/member")
+public class MemberController {
+    
+    @Inject
+    MemberService memberService;
+
+    // 로그인한 사용자의 mbrId를 가져오는 메서드
+    private String getLoggedInMbrId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUser userDetails = (CustomUser) authentication.getPrincipal();
+        return userDetails.getUsername(); // CustomUser에 mbrId 필드가 있다고 가정
+    }
+
+    @GetMapping("/detail")
+    public String detail(Model model) {
+        String mbrId = getLoggedInMbrId();
+        log.info("detail->mbrId : " + mbrId);
+        
+        MemberVO memberVO = this.memberService.detail(mbrId);
+        log.info("detail->memberVO : " + memberVO);
+        
+        model.addAttribute("memberVO", memberVO);
+        
+        return "member/mypage/detail";
+    }
+    
+    @PostMapping("/editPost")
+    public String editPost(@ModelAttribute MemberVO memberVO) {
+    	// 로그인된 mbrId로 설정
+        memberVO.setMbrId(getLoggedInMbrId());
+        log.info("editPost->memberVO : " + memberVO);
+        
+        int result = this.memberService.editPost(memberVO);
+        log.info("editPost->result : " + result);
+        
+        return "redirect:/member/detail?mbrId=" + memberVO.getMbrId();
+    }
+    
+    // 회원 탈퇴
+    @PostMapping("/deletePost")
+    public String deletePost() {
+        String mbrId = getLoggedInMbrId();
+        int result = this.memberService.deletePost(mbrId);
+        log.info("deletePost->result : " + result);        
+        
+        return "redirect:/";
+    }
+}

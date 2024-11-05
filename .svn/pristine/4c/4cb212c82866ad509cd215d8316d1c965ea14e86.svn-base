@@ -1,0 +1,24 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.OustouVO;
+
+public interface OustouMapper {
+
+	public List<CodeVO> cacodeSelect(String comCode);
+	//외주 등록 
+	public int registPost(OustouVO oustouVO);
+	
+	//외주 메인 최신글 출력 
+	
+	//외주 메인 BEST글 출력 
+	
+	//외주 리뷰 좋아요수 많은거 출력 
+	
+	
+
+
+	
+}

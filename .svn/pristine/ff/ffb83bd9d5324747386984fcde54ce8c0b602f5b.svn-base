@@ -1,0 +1,120 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>  
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="/resources/ckeditor5/ckeditor.js"></script>
+
+<!-- 외주 css 파일 -->
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/outsou/reviewregist.css" />
+	
+<script type="text/javascript" src="/resources/ckeditor5/ckeditor.js"></script>
+<script type="text/javascript">
+// e : onchange 이벤트
+function handleImg(e){
+    let files = e.target.files; // 선택한 파일들
+    let fileArr = Array.prototype.slice.call(files);
+    let accumStr = "";
+    fileArr.forEach(function(f){
+        if(!f.type.match("image.*")){ // MIME타입
+            alert("이미지 확장자만 가능합니다.");
+            return; // 함수 종료
+        }
+        let reader = new FileReader();
+        reader.onload = function(e){
+            accumStr += "<img src='"+e.target.result+"' style='width:20%;border:1px solid #D7DCE1;' />";
+            $("#pImg").html(accumStr);
+        }
+        reader.readAsDataURL(f);
+    });
+}
+
+$(function(){
+    $("#uploadFile").on("change",handleImg);
+    
+    $(".ck-blurred").keydown(function(){
+        $("#perDet").val(window.editor.getData());
+    });
+    
+    $(".ck-blurred").focusout(function(){
+        $("#perDet").val(window.editor.getData());
+    });
+    
+    $("#custNum").on("change",function(){
+        let custNum = $(this).val();
+        let data = { "custNum":custNum };
+        console.log("custNum : ", custNum);
+        console.log("data : ", data);
+        /* $.ajax({
+            url:"/perSer/custCarList",
+            contentType:"application/json;charset=utf-8",
+            data:JSON.stringify(data),
+            type:"post",
+            dataType:"json",
+            beforeSend:function(xhr){
+                xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+            },
+            success:function(result){
+                console.log("result : ", result);
+                let str = "";
+                $("#carNum").html("<option value='' selected disabled>선택해주세요</option>");
+                $.each(result.carVOList,function(idx,carVO){
+                    str += "<option value='"+carVO.carNum+"'>"+carVO.carNum+"</option>";
+                });
+                $("#carNum").append(str);
+            }
+        }); */
+    });
+});
+</script>
+
+<section class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2" style="margin-left: 200px;">
+            <div class="rvttit">
+				<h2>리뷰 게시판</h2>
+			</div>
+        </div>
+    </div>
+</section>
+
+<!-- 제목입력! -->
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <form class="col-12" action="simple-results.html">
+            <div class="input-group">
+                <input type="search" class="form-control form-control-lg title"
+                    placeholder="제목을 작성해주세요">
+            </div>
+                <div class="cat_main">
+                    <select class="form-control category">
+                        <option selected disabled>구입한 상품을 선택해주세요</option>
+                        <option>option 1</option>
+                        <option>option 2</option>
+                        <option>option 3</option>
+                        <option>option 4</option>
+                        <option>option 5</option>
+                    </select>
+                </div>
+            <!-- 내용입력! -->
+            <div class="form-group">
+                <div id="perDetTemp"></div>
+            </div>
+            <div class="button-container">
+                <button type="button" class="btn btn-default btn-list" onclick="location.href='/outsou/reviewList'">목록</button>
+                <button type="button" class="btn btn-default btn-regist">등록</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script type="text/javascript">
+// CKEditor5 적용 및 데이터 넣기
+ClassicEditor.create(document.querySelector('#perDetTemp'), { 
+    ckfinder: { uploadUrl: '/image/upload?${_csrf.parameterName}=${_csrf.token}'},
+    placeholder: '\n 내용을 작성해주세요 \n\n * 등록한 글은 사용자 아이디로 등록됩니다. \n * 저작권 침해, 음란, 청소년 유해물, 기타 위법 자료 등을 게시할 경우 게시글 삭제 및 작성자에게 경고 조치 됩니다.' //<-이거 추가
+})
+.then(editor => { window.editor = editor; })
+.catch(err => { console.error(err.stack); });
+</script>

@@ -1,0 +1,88 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<link rel="stylesheet" href="/resources/css/security/loginForm.css">
+<link rel="stylesheet" href="/resources/css/security/signin1212.css">
+<div id="content" class="join_cont_wrap">
+
+	<div class="join_page_wrap">
+		<div class="join_content join_input_wrap">
+			<div class="join_box login_input_wrap">
+				<ul class="tab_member_type" role="tablist">
+					<li role="none"><button type="button"
+							class="btn_tab t_per active" role="tab"
+							onclick="location.href='/security/memSignin'">개인회원</button></li>
+					<li role="none">
+						<button type="button" class="btn_tab t_com" role="tab"
+							onclick="location.href='/security/entSignin'">기업회원</button>
+					</li>
+				</ul>
+
+				<!-- join box -->
+				<div class="social_login_box">
+					<div class="social_login_tit">
+						<p class="tit">소셜 계정으로 간편 가입하기</p>
+					</div>
+					<div class="join_form">
+						<button type="button"
+							class="BtnType SizeL login_btn ga_data_layer"
+							data-ga_data_layer="ga_lead|member_join|join_pc|id_reg"
+							onclick="location.href='/zf_user/member/registration/join-detail'+location.search">사람인
+							아이디 만들기</button>
+						<div class="login_bottom">
+							<p>
+								이미 계정이 있나요?<a href="/zf_user/auth?url=%2Fzf_user%2F">로그인</a>
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		var swiper = new Swiper(".intro", {
+			spaceBetween : 30,
+			centeredSlides : true,
+			autoplay : {
+				delay : 3000,
+				disableOnInteraction : false
+			},
+			loop : true,
+			pagination : {
+				el : ".swiper-pagination",
+				clickable : true,
+			}
+		});
+
+		jQuery('.social_login')
+				.on(
+						'click',
+						'a',
+						function(e) {
+							e.preventDefault();
+							e.stopPropagation();
+
+							var link = jQuery(e.currentTarget).attr('href'), provider = jQuery(
+									e.currentTarget).data('provider');
+
+							if ((navigator.userAgent.toLowerCase().indexOf(
+									"msie") !== -1)
+									&& provider === 'apple') {
+								if (confirm('IE10이하 버전의 인터넷 익스플로러에서는 Apple 로그인이 정상 작동하지 않을 수 있습니다.\n'
+										+ '인터넷 익스플로러를 최신 버전으로 업데이트 해주세요')) {
+									window.open(link, '_blank',
+											'width=480,height=640');
+								}
+								return;
+							}
+							window.open(link, '_blank', 'width=480,height=640');
+						});
+
+		jQuery('.social_tooltip').show();
+		setTimeout(function() {
+			jQuery('.social_tooltip').fadeOut();
+		}, 5000);
+	</script>
+</div>

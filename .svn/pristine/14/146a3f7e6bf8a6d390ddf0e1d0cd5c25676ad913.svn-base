@@ -1,0 +1,12 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.ResumeVO;
+
+public interface MemResumeMapper {
+	public ResumeVO openResume(String mbrId);
+	public List<ResumeVO> resumeList(Map<String, Object> mbrId);
+	public int resumeListTotal(String mbrId);
+}

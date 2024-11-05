@@ -1,0 +1,239 @@
+@charset "UTF-8";
+
+* {
+    font-family: pretendard;
+}
+.page-link {
+	color: black;
+	border-radius: 7px;
+	margin: 5px;
+} /* 버튼클릭했을 때! */
+.page-item.active .page-link {
+	z-index: 3;
+	font-weight: 700;
+	color: #24D59E;
+	background-color: rgba(44, 207, 195, 0.11);
+	border-radius: 7px;
+}
+
+.write_date {
+	text-align: right;
+}
+
+.page-item.active .page-link {
+	border-color: #dee2e6;
+}
+
+a.page-link:hover {
+	color: #000000;
+	background-color: #dee2e6;
+} /* 페이징 css 끝*/
+
+
+#category {
+	width: 100%;
+	height: 230px;
+	border: 1px solid #D6D6D6;
+}
+
+#categoryTap {
+	display: flex;
+	align-items: center;
+}
+
+#region, #job, #keyword {
+	width: 100%;
+	height: 50px;
+	border: 1px solid #D6D6D6;
+	background: #FFFFFF;
+}
+
+#selectReg {
+	overflow-y: auto;
+	height: 150px;
+	margin: 15px 15px 15px 15px;
+}
+
+#selectCity {
+	overflow-y: auto;
+	height: 150px;
+	margin: 15px 0px 15px 0px;
+}
+
+.regText {
+/*  	border: 1.5px solid #24D59E;  */
+	border: none;
+	background : white;
+	color: #666;
+	border-radius: 5px;
+	margin: 10px 5px 10px 5px;
+	display: inline-block; /* 블록 형식으로 처리 */
+	width: 90px; /* 원하는 고정 너비 설정 */
+	text-align: center; /* 텍스트 중앙 정렬 */
+	cursor: pointer;
+	transition: background-color 0.3s;
+}
+.regText:hover {
+	background-color: #24D59E;
+	color: white;
+	font-weight: bold;
+}
+.colorActive{
+	background-color: rgba(44, 207, 195, 0.11) !important;
+}
+
+.cityText {
+	margin: 20px 10px 20px 10px;
+	display: inline-block; /* 블록 형식으로 처리 */
+	width: 130px; /* 원하는 고정 너비 설정 */
+	text-align: center; /* 텍스트 중앙 정렬 */
+}
+.cityText input[type="checkbox"] {
+    margin-right: 5px; /* 체크박스 오른쪽에 5px의 여백 추가 */
+}
+
+#regSearch {
+	display: flex;
+	width: 100%;
+}
+
+#jobDiv {
+	overflow-y: auto;
+	height: 130px;
+	margin: 15px 0px 15px 0px;
+}
+
+.jobText {
+	margin: 20px 20px 20px 20px;
+	display: inline-block; /* 블록 형식으로 처리 */
+	width: 170px; /* 원하는 고정 너비 설정 */
+	text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.row {
+	margin: 0px 20% 0px 20%;
+	min-height : 1170px;
+}
+
+#selCategory {
+	float: right;
+	margin: 20px 0 5px 0;
+	border-radius: 5px;
+    font-size: 14px;
+    height: 40px;
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size: 16px;
+
+}
+
+#selCheck {
+	background-color: #EBEBEB;
+	border-radius: 10px;
+	height: 60px;
+	padding: 20px 20px 0px 20px;
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+#sendBtn {
+	width : 10%;
+	background-color: #24D59E;
+	padding: 10px 15px 10px 15px;
+	border: 1px solid #EBEBEB;
+	border-radius: 10px;
+	color: white;
+	margin: 10px 0px 0px 10px;
+	transition: all 0.3s ease 0s;
+}
+#resetBtn {
+	width : 8%;
+	background-color: #EBEBEB;
+	padding: 10px 15px 10px 15px;
+	border: 1px solid #EBEBEB;
+	border-radius: 10px;
+	margin: 10px 0px 0px 10px;
+	transition: all 0.3s ease 0s;
+}
+
+.search-input{
+	
+	display : flex;
+	align-items: center;
+/* 	gap: 5px; */
+}
+#keywordDiv{
+	margin-left: 66.5%;
+	height: 180px;
+	border: 1px solid #EBEBEB;
+}
+#keywordInput {
+width : 80%;
+}
+
+h3 {
+margin : 30px 0px 15px 24%;
+}
+
+.DetailGo {
+float: right; 
+padding: 5px 15px;
+background: white;
+color: #232323;
+border: 1px solid #B5B5B5;
+border-radius: 5px;
+font-weight: 500;
+transition: all 0.3s ease 0s;
+}
+
+.DetailGo:hover {
+background: #ECECEC;
+border: 1px solid #B5B5B5;
+color: #232323;
+}
+.smallDetail {
+	font-size: 0.8em;
+	color : #666363;
+}
+.custom-table {
+    border-collapse: collapse; /* 테두리 겹침 방지 */
+}
+
+.custom-table td {
+	padding : 10px 20px 10px 20px;
+    border-left: none; /* 세로선 제거 */
+    border-right: none !important;/* 세로선 제거 */
+}
+
+/* .custom-table tr td:first-child { */
+/*     border-left: 1px solid black; 왼쪽 가장자리 테두리 유지 (선택 사항) */
+/* } */
+
+/* .custom-table tr td:last-child { */
+/*     border-right: 1px solid black; 오른쪽 가장자리 테두리 유지 (선택 사항) */
+/* } */
+.total{
+	font-size: 16px;
+}
+#totalBold{
+	font-weight: bold;
+	font-size: 18px;
+}
+.btn-close{
+	border: 0.5px solid black;
+	border-left : none;
+	padding : 9px;
+	border-radius:  0;
+	margin-right : 15px;
+} 
+.entNm{
+	padding-right : 0px !important;
+/* 	padding-left : 0px !important; */
+}
+.pbancContent{
+	border-left : 1px solid #B5B5B5 !important;
+	padding-left : 30px;
+}
+.custom-table tr td:nth-child(2) {
+    width : 100px;
+}

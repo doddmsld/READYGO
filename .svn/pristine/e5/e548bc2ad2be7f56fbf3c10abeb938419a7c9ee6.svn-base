@@ -1,0 +1,656 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="sec"
+	uri="http://www.springframework.org/security/tags"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+	
+	// hidden input에서 ROLE_ENTER 권한 여부 값을 가져옴
+    let hasRoleEnter = $('#hasRoleEnter').val();
+	console.log("hasRoleEnter", hasRoleEnter);
+    // 문자열 "true" 또는 "false"로 넘어오는지 확인
+    if (hasRoleEnter == "[ROLE_ENTER]") {
+        $("#scrapBtn").prop('disabled', true);
+        $("#applyBtn").prop('disabled', true);
+    }
+    // 모집인원 입력란에서 숫자만 입력 가능하도록 처리
+    $('input[name="rcritCnt"]').on('keyup', function() {
+        var inputVal = $(this).val();
+        if (!/^\d*$/.test(inputVal)) { // 숫자가 아닐 경우
+            alert('모집인원에는 숫자만 입력할 수 있습니다.');
+            $(this).val(''); // 숫자가 아닌 값을 입력한 경우 입력란을 비움
+        }
+    });	
+// 기본 모드에서 셀렉트 박스와 인풋 박스 비활성화, 배경색 및 글씨 색상 변경
+$('.input-detail').css({
+    'background-color': 'white', // 배경색 흰색으로 설정
+    'color': '#232323', // 글씨 색상 #232323으로 설정
+    'pointer-events': 'none', // 클릭 이벤트 방지
+    'appearance': 'none', // 셀렉트 박스 화살표 숨기기
+    '-webkit-appearance': 'none',
+    '-moz-appearance': 'none'
+}).attr('readonly', true); // readonly 속성 추가 (disabled 대신)
+
+$('.detail-ta').css({
+    'background-color': 'white', // 배경색 흰색으로 설정
+    'color': '#232323', // 글씨 색상 #232323으로 설정
+    'pointer-events': 'none', // 클릭 이벤트 방지
+    'user-select': 'none' // 텍스트 선택 방지
+});
+
+// 수정 버튼 클릭 시 수정 모드로 전환
+$('.btnUp').click(function() {
+    // 셀렉트 박스와 인풋 박스 활성화 및 배경색, 글씨 색상 복원
+    $('.input-detail').css({
+        'background-color': '', // 기본 배경색으로 복원
+        'color': '#232323', // 글씨 색상 유지
+        'pointer-events': 'auto', // 클릭 이벤트 가능
+        'appearance': 'auto', // 셀렉트 박스 화살표 다시 보이기
+        '-webkit-appearance': 'auto', // Webkit 브라우저에서 화살표 복원
+        '-moz-appearance': 'auto' // Mozilla 브라우저에서 화살표 복원
+    }).attr('readonly', false); // readonly 해제
+
+    $('.detail-ta').css({
+        'background-color': '', // 기본 배경색으로 복원
+        'color': '#232323', // 글씨 색상 유지
+        'pointer-events': 'auto',
+        'user-select': 'auto'
+    });
+
+    // 수정 모드로 UI 전환
+    $('.input-detail').addClass('input-active');
+    $('.detail-ta').addClass('textarea-active');
+    $('.up-del-btn').css('display', 'none');
+    $('.can-sub-btn').css('display', 'block');
+    $('.job-summary').addClass('hidden');
+    $('.action-buttons').addClass('hidden');
+    document.querySelector('.contentr').style.cssText += 'min-height: 2600px !important;';
+    $('.file-upload-section').css('display', 'block');
+});
+
+// 취소 버튼 클릭 시 기본 모드로 전환
+$('.btncan').click(function() {
+    // 셀렉트 박스와 인풋 박스 비활성화 및 배경색, 글씨 색상 흰색으로 변경
+    $('.input-detail').css({
+        'background-color': 'white', // 배경색 흰색으로 설정
+        'color': '#232323', // 글씨 색상 유지
+        'pointer-events': 'none', // 클릭 이벤트 방지
+        'appearance': 'none', // 화살표 숨기기
+        '-webkit-appearance': 'none',
+        '-moz-appearance': 'none'
+    }).attr('readonly', true); // readonly 다시 추가
+
+    $('.detail-ta').css({
+        'background-color': 'white', // 배경색 흰색으로 설정
+        'color': '#232323', // 글씨 색상 유지
+        'pointer-events': 'none',
+        'user-select': 'none'
+    });
+
+    // 기본 모드로 UI 전환
+    $('.input-detail').removeClass('input-active');
+    $('.detail-ta').removeClass('textarea-active');
+    $('.up-del-btn').css('display', 'block');
+    $('.can-sub-btn').css('display', 'none');
+    $('.job-summary').removeClass('hidden');
+    $('.action-buttons').removeClass('hidden');
+    document.querySelector('.contentr').style.removeProperty('min-height');
+    $('.file-upload-section').css('display', 'none'); // 파일 선택 버튼 숨기기
+});
+// 상세 정보 버튼 클릭 시 공고 이미지로 이동
+$('.tab-btn').eq(0).click(
+		function() {
+			document.querySelector('.company-img-header')
+					.scrollIntoView({
+						behavior : 'smooth'
+					});
+		});
+
+// 접수기간 버튼 클릭 시 지원 접수 기간으로 이동
+$('.tab-btn').eq(1).click(
+		function() {
+			document.getElementById('reception-period')
+					.scrollIntoView({
+						behavior : 'smooth'
+					});
+		});
+
+// 기업정보 버튼 클릭 시 기업정보로 이동
+$('.tab-btn').eq(2).click(function() {
+	document.getElementById('company-info').scrollIntoView({
+		behavior : 'smooth'
+	});
+});
+
+// 스크롤 이벤트 감지하여 일정 높이 이상 스크롤되면 Top 버튼 표시
+$(window).scroll(function() {
+	if ($(this).scrollTop() > 200) {
+		$('#topBtn').fadeIn();
+	} else {
+		$('#topBtn').fadeOut();
+	}
+});
+
+// Top 버튼 클릭 시 페이지 상단으로 부드럽게 이동
+$('#topBtn').click(function() {
+	$('html, body').animate({
+		scrollTop : 0
+	}, 'slow');
+	return false;
+});
+
+// 스크랩 버튼 클릭 시 처리
+$('.bookmark-btn').click(
+		function() {
+			var pbancNo = ${param.pbancNo};
+			let scrapped = $('#scrapped').val();
+			var mbrId = $("#mbrId").val();
+			console.log(scrapped);
+			console.log(pbancNo);
+			console.log(mbrId);
+			$.ajax({
+				type : 'POST',
+				url : '/enter/scrapPost',
+				data : {
+					pbancNo : pbancNo,
+					scrapped : scrapped,
+					mbrId : mbrId
+				},
+				beforeSend : function(xhr) {
+					xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+				},
+				success : function(response) {
+					console.log("response", response);
+					console.log("response.scrapCount", response.scrapCount);
+					$("#scrapped").val(response.scrapped);
+					$("#scrapCount").text(response.scrapCount);
+				},
+				error : function(error) {
+					console.log('Error:', error);
+				}
+			});
+		});
+
+// 입사지원 버튼 클릭 시 폼 제출
+$('#applyBtn').click(function() {
+	$('form').submit();
+});
+
+
+// 파일 선택 시 미리보기 기능
+$('#imageUpload').change(function(event) {
+    var input = event.target;
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function(e) {
+            $('#companyImg').attr('src', e.target.result); // 선택한 이미지로 미리보기 업데이트
+        }
+
+        reader.readAsDataURL(input.files[0]); // 파일을 읽어 미리보기로 설정
+    }
+});
+
+//공고 삭제 함수
+function deletePbanc(pbancNo, entId) {
+	obj = { entId: entId, pbancNo: pbancNo };
+	jsonObj = JSON.stringify(obj);
+	let enterId = $("#mbrId").val();
+    if (confirm("공고를 삭제하시겠습니까?")) {
+        $.ajax({
+            type: 'POST',
+            url: '/enter/pbancDelete',
+            data: obj,
+            contentType : "application/json;charset=UTF-8",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(response) {
+            	console.log(response)
+            	if(response>0){
+                    alert("공고가 삭제되었습니다.");
+                    location.href="/enter/pbanc?entId="+enterId;
+            	}else{
+            		alert("공고 삭제 실패");
+            	}
+            },
+            error: function(error) {
+                console.log('Error:', error);
+                
+            }
+        });
+    }
+}
+// 버튼 클릭 시 공고 삭제
+$('#btnDel').on('click', function() {
+    var pbancNo = $('#pbancNo').val(); 
+    var entId = $('#entId').val();
+    console.log(pbancNo+" "+pbancNo);
+    deletePbanc(pbancNo, entId);  
+});
+
+});
+</script>
+</head>
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/enter/pbancDetail.css" />
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<body>
+	<sec:authentication property="principal" var="prc" />
+	<c:if test="${prc ne 'anonymousUser'}">
+		<input type="hidden" id="hasRoleEnter" value="${prc.authorities}" />
+	</c:if>
+	<div class="pbancDetailContainer">
+		<!-- 채용 정보 헤더 -->
+		<header class="job-header">
+			<h2>채용정보</h2>
+			<c:if test="${prc ne 'anonymousUser'}">
+				<c:if test="${prc.authorities eq '[ROLE_ENTER]'}">
+					<div class="up-del-btn">
+						<button type="button" class="btnDel" id="btnDel">공고 삭제</button>
+						<button type="button" class="btnUp">공고 수정</button>
+					</div>
+				</c:if>
+			</c:if>
+		</header>
+		<!-- 채용 정보 요약 -->
+		<section class="job-summary">
+			<hr class="hr">
+			<input type="hidden" id="pbancNo" value="${pbancDetailList.pbancNo}" />
+			<input type="hidden" id="entId" value="${pbancDetailList.entId}" />
+			<h5>${pbancDetailList.entNm}</h5>
+			<h4>${pbancDetailList.pbancTtl}</h4>
+			<hr class="hrhr">
+			<div class="summary">
+				<div class="form-group">
+					<div class="left-1">
+						<p class="left">지원자격</p>
+					</div>
+					<div class="left-2">
+						<p class="p-size-left">경력</p>
+						<p class="p-size-right">${pbancDetailList.pbancCareerCdNm}</p>
+					</div>
+					<div class="left-2">
+						<p class="p-size-left">학력</p>
+						<p class="p-size-right">${pbancDetailList.pbancAplctEduCdNm}</p>
+					</div>
+					<div class="left-2">
+						<p class="p-size-left">성별</p>
+						<p class="p-size-right">${pbancDetailList.pbancGenCdNm}</p>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="left-1">
+						<p class="left">근무조건</p>
+					</div>
+					<div class="left-2">
+						<p class="p-size-left">지역</p>
+						<p class="p-size-right">${pbancDetailList.powkNm}</p>
+					</div>
+					<div class="left-2">
+						<p class="p-size-left">급여</p>
+						<p class="p-size-right">${pbancDetailList.pbancSalaryNm}</p>
+					</div>
+					<div class="left-2">
+						<p class="p-size-left">근무형태</p>
+						<p class="p-size-right">${pbancDetailList.pbancWorkstleCdNm}</p>
+					</div>
+					<div class="left-2">
+						<p class="p-size-left">근무시간</p>
+						<p class="p-size-right">${pbancDetailList.pbancWorkHrCdNm}</p>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="left-1">
+						<p class="left">채용 절차</p>
+					</div>
+					<div class="left-2">
+						<p class="p-size-left">전형절차</p>
+						<p class="p-size-right">${pbancDetailList.procssCdNm}</p>
+					</div>
+					<div class="left-2">
+						<p class="p-size-left">지원서 양식</p>
+						<p class="p-size-right">${pbancDetailList.pbancAppofeFormCdNm}</p>
+					</div>
+					<div class="left-2">
+						<p class="p-size-left">지원 접수 방법</p>
+						<p class="p-size-right">${pbancDetailList.pbancRcptMthdCdNm}</p>
+					</div>
+					<div class="left-2">
+						<p class="p-size-left">지원 접수 기간</p>
+						<p class="p-size-right">${pbancDetailList.pbancBgngDts} ~
+							${pbancDetailList.pbancDdlnDts}</p>
+					</div>
+				</div>
+			</div>
+			<hr class="hr">
+		</section>
+
+		<!-- 지원 버튼 -->
+		<div class="action-buttons">
+			<c:if test="${prc ne 'anonymousUser'}">
+				<input type="hidden" id="mbrId" name="mbrId" value="${prc.username}">
+			</c:if>
+
+			<!-- 스크랩 버튼 -->
+			<input type="hidden" name="scrapped" id="scrapped"
+				value="${scrapped}" />
+			<button type="button" class="btn bookmark-btn" id="scrapBtn">
+				<div>스크랩</div>
+				<div id="scrapCount" style="text-align: center; font-size: 12px;">${scrapCount}</div>
+			</button>
+			<!-- 입사지원 버튼 -->
+			<button type="button" class="btn apply-btn" id="applyBtn">입사지원</button>
+		</div>
+		<button id="topBtn" class="top-btn"
+			style="display: none; position: fixed; bottom: 20px; right: 30px;">top</button>
+		<!-- 탭 메뉴 -->
+		<nav class="tab-menu">
+			<button type="button" class="tab-btn">상세정보</button>
+			<button type="button" class="tab-btn">접수기간</button>
+			<button type="button" class="tab-btn">기업정보</button>
+		</nav>
+		
+		<form name="pbancUpdate" id="pbancUpdate" method="post" action="/enter/pbancUpdate?${_csrf.parameterName}=${_csrf.token}" enctype="multipart/form-data">
+		
+		 <input type="hidden" name="pbancNo" value="${pbancDetailList.pbancNo}">
+		<!-- 상세 정보 섹션 -->
+		<section class="job-details">
+			<!-- 이미지 미리보기 -->
+			<img id="companyImg" class="company-img-header"
+				src="../resources/images/enter/공고이미지2.jpg" />
+
+			<!-- 파일 업로드 요소 -->
+			<div class="upload">
+				<div class="file-upload-section" style="display: none;">
+					<input type="file" id="imageUpload" accept="image/*" />
+				</div>
+			</div>
+			<div class="detail-content">
+				<h6 class="job-det-h7">
+					<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;공고 제목
+				</h6>
+				<input type="text" value="${pbancDetailList.pbancTtl}"
+								class="detail-ta" name="pbancTtl" id="pbancTtl"/>
+				<h6 class="job-det-h7">
+					<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;공고
+					내용
+				</h6>
+				<textarea name="pbancCn" rows="auto" cols="110" class="detail-ta" id="pbancCn">${pbancDetailList.pbancCn}</textarea>
+
+				<h6 class="job-det-h7">
+					<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;모집
+					분야 및 담당 업무
+				</h6>
+				<div class="con-flex">
+					<div class="con-left1">
+						<div class="det-content">
+							<p class="detail-p">ㆍ 모집분야명</p>
+							<input type="text" value="${pbancDetailList.rcritNm}"
+								class="input-detail" name="rcritNm"/>
+						</div>
+						<div class="det-content">
+							<p class="detail-p">ㆍ 모집인원</p>
+							<input type="text" value="${pbancDetailList.rcritCnt}"
+								class="input-detail" name="rcritCnt"/>
+						</div>
+						<div class="det-content">
+							<p class="detail-p">ㆍ 경력여부</p>
+								<select class="input-detail" name="pbancCareerCd">
+									<c:forEach var="pbancVO" items="${getRecruitmentCD}" varStatus="status">
+										<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+									</c:forEach>
+								</select>	
+						</div>
+					</div>
+					<div class="con-right1">
+						<div class="det-content">
+							<p class="detail-p">ㆍ 담당업무</p>
+							<input type="text" value="${pbancDetailList.rcritTask}"
+								class="input-detail" name="rcritTask"/>
+						</div>
+						<div class="det-content">
+							<p class="detail-p">ㆍ 근무부서</p>
+							<input type="text" value="${pbancDetailList.rcritDept}"
+								class="input-detail" name="rcritDept"/>
+						</div>
+						<div class="det-content">
+							<p class="detail-p">ㆍ 직급/직책</p>
+							<select class="input-detail" name="rcritJbttlCd">
+								<c:forEach var="pbancVO" items="${getRcritJbttlCD}" varStatus="status">
+									<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+								</c:forEach>
+							</select>								
+						</div>
+					</div>
+				</div>
+
+				<h6 class="job-det-h7">
+					<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;자격/조건
+				</h6>
+				<div class="con-flex">
+					<div class="con-left1">
+						<div class="det-content">
+							<p class="detail-p">ㆍ 지원자 학력</p>
+							<select class="input-detail" name="pbancAplctEduCd">
+								<c:forEach var="pbancVO" items="${getPbancEduCD}" varStatus="status">
+									<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+								</c:forEach>
+							</select>									
+						</div>
+						<div class="det-content">
+							<p class="detail-p">ㆍ 지원자 성별</p>
+							<select class="input-detail" name="pbancGenCd">
+								<c:forEach var="pbancVO" items="${getPbancGenCD}" varStatus="status">
+									<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+								</c:forEach>
+							</select>						
+						</div>
+						<div class="det-content">
+							<p class="detail-p">ㆍ 지원자 연령</p>
+							<select class="input-detail" name="pbancAgeCd">
+								<c:forEach var="pbancVO" items="${getPbancAgeCD}" varStatus="status">
+									<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+								</c:forEach>
+							</select>						
+						</div>
+					</div>
+					<div class="con-right1">
+						<div class="det-content">
+							<p class="detail-p">ㆍ 연봉/급여</p>
+							<select class="input-detail" name="pbancSalary">
+								<c:forEach var="pbancVO" items="${getPbancSalaryCD}" varStatus="status">
+									<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+								</c:forEach>
+							</select>						
+						</div>
+						<div class="det-content">
+							<p class="detail-p">ㆍ 근무형태</p>
+							<select class="input-detail" name="pbancWorkstleCd">
+								<c:forEach var="pbancVO" items="${getPbancWorkstleCD}" varStatus="status">
+									<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+								</c:forEach>
+							</select>								
+						</div>
+						<div class="det-content">
+							<p class="detail-p">ㆍ 근무요일</p>
+							<select class="input-detail" name="pbancWorkDayCd">
+								<c:forEach var="pbancVO" items="${getPbancWorkDayCD}" varStatus="status">
+									<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+								</c:forEach>
+							</select>							
+						</div>
+						<div class="det-content">
+							<p class="detail-p">ㆍ 근무시간</p>
+							<select class="input-detail" name="pbancWorkHrCd">
+								<c:forEach var="pbancVO" items="${getPbancWorkHrCD}" varStatus="status">
+									<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+								</c:forEach>
+							</select>									
+						</div>
+					</div>
+				</div>
+
+				<h6 class="job-det-h7">
+					<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;채용절차
+				</h6>
+
+				<div class="con-flex">
+					<div class="con-left1">
+						<div class="det-content">
+							<p class="detail-p">ㆍ 공고 대표 직무</p>
+							<select class="input-detail" name="pbancRprsDty">
+								<c:forEach var="pbancVO" items="${getPbancRprsDtyCD}" varStatus="status">
+									<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+								</c:forEach>
+							</select>						
+						</div>
+						<div id="reception-period" class="det-content">
+							<p class="detail-p">ㆍ 지원 접수 기간</p>
+							<input type="text"
+								value="${pbancDetailList.pbancBgngDts} ~ ${pbancDetailList.pbancDdlnDts}"
+								class="input-detail"/>
+						</div>
+						<div class="det-content">
+							<p class="detail-p">ㆍ 지원 접수 방법</p>
+							<select class="input-detail" name="pbancRcptMthdCd">
+								<c:forEach var="pbancVO" items="${getPbancRcptMthdCD}" varStatus="status">
+									<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+								</c:forEach>
+							</select>								
+						</div>
+					</div>
+					<div class="con-right1">
+						<div class="det-content">
+							<p class="detail-p">ㆍ 지원서 양식</p>
+							<select class="input-detail" name="pbancAppofeFormCd">
+								<c:forEach var="pbancVO" items="${getPbancAppofeFormCD}" varStatus="status">
+									<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+								</c:forEach>
+							</select>								
+						</div>
+						<div class="det-content">
+							<p class="detail-p">ㆍ 전형절차</p>
+							<select class="input-detail" name="procssCd">
+								<c:forEach var="pbancVO" items="${getProcssCD}" varStatus="status">
+									<option value="${pbancVO.comCode}">${pbancVO.comCodeNm}</option>
+								</c:forEach>
+							</select>								
+						</div>
+						<p class="detail-content"
+							style="margin-left: 55px; margin-top: 30px; font-size: 16px;">
+							* &nbsp;면접일정은 추후 통보됩니다.</p>
+					</div>
+				</div>
+
+				<div class="con-flex">
+					<div class="con-left2">
+						<h6 class="job-det-h7">
+							<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;복지
+							및 혜택
+						</h6>
+						<div class="column1">
+							<input type="text" value="${pbancDetailList.favorCn}"
+								class="input-detail" name="favorCn"/>
+						</div>
+					</div>
+					<div class="con-right2">
+						<h6 class="job-det-h7">
+							<img class="check-img" src="../resources/icon/check_circle.png">&nbsp;유의사항
+						</h6>
+						<p class="detail-content" style="font-size: 16px;">* 허위 사실이
+							발견될 경우 채용이 취소될 수 있습니다.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+		<!-- 기업 정보 요약 -->
+		<section class="job-summary">
+			<hr class="hr">
+			<div class="summary">
+				<div class="form-group2">
+					<div class="sum-flex">
+						<div>
+							<div class="left-1">
+								<p class="left">${pbancDetailList.entNm}</p>
+							</div>
+							<div class="left-2">
+								<img class="sum-img" src="../resources/images/enter/db그룹.jpg" />
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="form-group3">
+					<div id="company-info" class="left-1">
+						<p class="left">기업정보</p>
+					</div>
+					<div class="all-all">
+						<div class="all">
+							<div class="left-com">
+								<div class="left-2">
+									<p class="p-size-left">업종</p>
+									<p class="p-size-right">${pbancDetailList.tpbizSeCd}</p>
+								</div>
+								<div class="left-2">
+									<p class="p-size-left">사원 수</p>
+									<p class="p-size-right">${pbancDetailList.entEmpCnt}명</p>
+								</div>
+								<div class="left-2">
+									<p class="p-size-left">기업형태</p>
+									<p class="p-size-right">${pbancDetailList.entStleCd}</p>
+								</div>
+								<div class="left-2">
+									<p class="p-size-left">설립일자</p>
+									<p class="p-size-right">${pbancDetailList.entFndnYmd}</p>
+								</div>
+							</div>
+							<div class="right-com">
+								<div class="left-2">
+									<p class="p-size-left">홈페이지</p>
+									<p class="p-size-right">${pbancDetailList.entHmpgUrl}</p>
+								</div>
+								<div class="left-2">
+									<p class="p-size-left">대표자명</p>
+									<p class="p-size-right">${pbancDetailList.entRprsntvNm}</p>
+								</div>
+								<div class="left-2">
+									<p class="p-size-left">팩스번호</p>
+									<p class="p-size-right">${pbancDetailList.entFxnum}</p>
+								</div>
+							</div>
+						</div>
+						<div class="form-group4">
+							<a href="#" class="pro-btn"><img class="company-img"
+								src="../resources/icon/profile.png">profile</a> <a href="#"
+								class="pro-btn1"><img class="company-img"
+								src="../resources/icon/homepage.png">homepage</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<hr class="hr">
+		</section>
+		<div style="display: flex; justify-content: flex-end;">
+			<div class="can-sub-btn" style="display: none;">
+				<button type="button" class="btncan">취소</button>
+				<button type="submit" class="btnsub" id="btnsub">저장</button>
+			</div>
+		</div>
+		<sec:csrfInput />
+	</form>
+	</div>
+</body>
+</html>

@@ -1,0 +1,25 @@
+package kr.or.ddit.service_DO;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.BoardVO;
+
+public interface InquiryBoardService {
+	public List<BoardVO> list(Map<String, Object> map);
+
+	public String regist();
+	
+	public int registPost(BoardVO boardVO);
+	
+	public BoardVO detail(String pstSn);
+
+	public String update(String pstSn);
+
+	public BoardVO getPostDetails(String pstSn);
+
+	public int updatePost(BoardVO boardVO);
+
+	public int getTotal();
+	
+}

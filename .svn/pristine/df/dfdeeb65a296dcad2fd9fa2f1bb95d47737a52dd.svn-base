@@ -1,0 +1,23 @@
+package kr.or.ddit.oustou.service;
+
+import java.util.List;
+
+import kr.or.ddit.vo.OutsouVO;
+
+
+
+public interface OutsouMainService {
+	
+	//조회수가 많은 카테고리 5개 
+	public List<OutsouVO> getCategory();
+	
+	//메인 새로운 게시글 5개 
+	public List<OutsouVO> getnewList();
+	
+	
+	//메인 조회수 높은글  게시글 5개 
+	public List<OutsouVO> getBestList();
+	
+	//대분류 -> 중분류에 따라서 보여주기   -->
+	public List<OutsouVO> getDetailList(OutsouVO outsouVO);
+}

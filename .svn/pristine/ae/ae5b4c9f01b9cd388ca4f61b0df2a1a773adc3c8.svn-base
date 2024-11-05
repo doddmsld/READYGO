@@ -1,0 +1,252 @@
+package kr.or.ddit.enter.entservice.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.ddit.mapper.EnterMapper;
+import kr.or.ddit.security.CustomUser;
+import kr.or.ddit.util.UploadController;
+import kr.or.ddit.enter.entservice.*;
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.EnterEmpYcntVO;
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PbancVO;
+import kr.or.ddit.vo.ProposalVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class EnterServiceImpl implements EnterService {
+    
+    @Inject //파일 처리
+    private UploadController uploadController;
+   
+	@Inject 
+	private EnterMapper enterMapper;
+	
+	/*기업 프로필 시작*/
+	@Override
+	public EnterVO profile(String entId) { //기업프로필
+		return this.enterMapper.profile(entId);
+	}
+	@Override
+	public List<EnterEmpYcntVO> empYcnt(String entId) { // 기업 프로필 연도별 입사자수
+		return this.enterMapper.empYcnt(entId);
+	}
+	@Override
+	public List<CodeVO> getIndutyList() { // 기업프로필- 업종리스트
+		return this.enterMapper.getIndutyList();
+	}
+	/*기업 프로필 끝*/
+	
+	
+	/*기업정보수정 시작*/
+	@Override
+	public EnterVO edit(String entId) { // 기업정보수정폼
+		return this.enterMapper.edit(entId);
+	}
+	@Override
+	public List<CodeVO> getEntStleCdList() { // 기업정보수정 - 기업형태리스트
+		return this.enterMapper.getEntStleCdList();
+	}
+	@Override
+	public int editPost(EnterVO enterVO) { // 기업정보수정실행 합친거
+		log.info("EnterServiceImpl->editPost->enterVO : " + enterVO);
+		
+		int result = 0;
+		EnterVO enterVO2 = enterMapper.selectOne(enterVO.getEntId());
+		// 0) 파일 업로드 처리
+		MultipartFile[] uploadFile1 = enterVO.getEntBrFileFile();
+		MultipartFile[] uploadFile2 = enterVO.getEntLogoFile();
+		  
+	   //공통 멀티이미지업로드 메소드 호출
+       //return값 : FILE_GROUP.FILE_GROUP_NO의 값
+	   //사업자 등록증 파일처리
+		if (uploadFile1 == null || uploadFile1.length == 0 || uploadFile1[0].isEmpty()) {
+			log.info("새로운 파일이 업로드되지 않았습니다. 세팅 안해");
+			enterVO.setEntBrFile(enterVO2.getEntBrno());
+			
+		} else {
+			String fileGroupNo = this.uploadController.multiImageUpload(uploadFile1, "/enter/brFile");
+			// 새로운 파일 업로드 처리
+			log.info("editPost->fileGroupSn : " + fileGroupNo);
+			
+			// 새로운 파일 그룹 번호 설정
+			enterVO.setEntBrFile(fileGroupNo);
+		}
+		//로고 파일처리
+		if (uploadFile2 == null || uploadFile2.length == 0 || uploadFile2[0].isEmpty()) {
+			log.info("새로운 파일이 업로드되지 않았습니다. 세팅 안해");
+			enterVO.setEntLogo(enterVO2.getEntLogo());
+			
+		} else {
+			// 새로운 파일 업로드 처리
+			String fileGroupNo2 = this.uploadController.multiImageUpload(uploadFile2, "/enter/logoFile");
+			log.info("editPost->fileGroupSn : " + fileGroupNo2);
+			
+			// 새로운 파일 그룹 번호 설정
+			enterVO.setEntLogo(fileGroupNo2);
+		}
+	  //perSerVO의 fileGroupNo의 값을 세팅
+	  
+	  result += this.enterMapper.editPost1(enterVO);
+	  // 1) 수리 서비스 등록
+	  Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      CustomUser customUser = (CustomUser) authentication.getPrincipal();
+      customUser.setEntVO(enterMapper.selectOne(enterVO.getEntId()));
+		
+		return result;
+	}
+	/*기업정보수정 끝*/
+	
+	
+	/*기업탈퇴시작*/ 
+	@Override
+	public int deleteAjax(String entId) {
+		return this.enterMapper.deleteAjax(entId);
+	}
+	/*기업탈퇴끝*/
+	
+	
+	/*인재 시작*/
+	@Override
+	public List<CodeVO> getSkillList() { //인재-스킬
+		return this.enterMapper.getSkillList();
+	}
+	@Override
+	public List<MemberVO> getInjaeList(Map<String, Object> map) {// 인재 리스트
+		return this.enterMapper.getInjaeList(map);
+	}
+	@Override
+	public int getTotalInjae(Map<String, Object> map) {//인재 페이지네이션
+		return this.enterMapper.getTotalInjae(map);
+	}
+	@Override
+	public List<MemberVO> getRecommendList(Map<String, Object> map) { // 기업추천인재
+		return this.enterMapper.getRecommendList(map);
+	}
+	/*인재 끝*/
+	
+	
+	/*공고관리 시작*/
+	@Override
+	public List<PbancVO> getPbancList(Map<String, Object> map) {// 기업공고관리
+		return this.enterMapper.getPbancList(map);
+	}
+	@Override
+	public int getTotal(Map<String, Object> map) {//공고관리 페이지네이션
+	    return enterMapper.getTotal(map);
+	}
+	@Override
+	public PbancVO pbancDetailList(Map<String, Object> map) {//공고상세
+		return enterMapper.pbancDetailList(map);
+	}
+	@Override
+	public int pbancDelete(Map<String, Object> map) {//공고삭제
+		return this.enterMapper.pbancDelete(map);
+	}	
+	/*공고관리 끝*/
+	
+	/*공고 스크랩 시작*/
+	@Override
+	public int cancelScrap(Map<String, Object> map) {//스크랩취소
+		return enterMapper.cancelScrap(map);
+	}
+	@Override
+	public int addScrap(Map<String, Object> map) {
+		return enterMapper.addScrap(map);
+	}
+	@Override
+	public int getScrapCount(String pbancNo) {
+		return enterMapper.getScrapCount(pbancNo);
+	}
+	/*공고 스크랩 끝*/
+	
+	
+	/*공고 수정 1~4 시작*/
+	@Override
+	public int pbancUpdate(PbancVO pbancVO) {
+		return this.enterMapper.pbancUpdate(pbancVO);
+	}
+	@Override
+	public int favorUpdate(PbancVO pbancVO) {
+		return this.enterMapper.favorUpdate(pbancVO);
+	}
+	@Override
+	public int recruitmentUpdate(PbancVO pbancVO) {
+		return this.enterMapper.recruitmentUpdate(pbancVO);
+	}
+	@Override
+	public int procssUpdate(PbancVO pbancVO) {
+		return this.enterMapper.procssUpdate(pbancVO);
+	}
+	/*공고 수정 1~4 끝*/	
+	
+	
+	/*스카우트 제안 시작*/
+	@Override
+	public List<ProposalVO> scoutList(Map<String, Object> map) { // 스카우트 제안 리스트
+	    // currentPage가 null이거나 비어있다면 기본값 설정
+	    if (map.get("currentPage") == null) {
+	    	map.put("currentPage", 1);
+	    }
+		return this.enterMapper.scoutList(map);
+	}
+	//스카우트 리스트 엑셀
+	@Override
+	public List<ProposalVO> scoutListExcel(Map<String, Object> map) {
+		return this.enterMapper.scoutListExcel(map);
+	}
+	@Override
+	public int getTotalPbanc(Map<String, Object> map) {//스카우트제안 페이지네이션
+		return this.enterMapper.getTotalPbanc(map);
+	}
+	@Override
+	public List<PbancVO> pbancList(String entId) {//스카우트 제안 - 공고
+		return this.enterMapper.pbancList(entId);
+	}
+	/*스카우트 제안 끝*/
+	
+	
+	/*지원자 리스트 시작*/
+	@Override
+	public int updateAplctSt(Map<String, Object> map) { // 지원자상태저장
+		return this.enterMapper.updateAplctSt(map);
+	}
+	@Override
+	public List<ApplicantVO> AplctListExcel(Map<String, Object> map) { //지원자리스트엑셀
+		return this.enterMapper.AplctListExcel(map);
+	}
+	@Override
+	public List<ApplicantVO> aplctList(Map<String, Object> map) {// 지원자리스트
+		return this.enterMapper.aplctList(map);
+	}
+	@Override
+	public int getTotalListAplct(Map<String, Object> map) {//지원자리스트 페이지네이션
+		return this.enterMapper.getTotalListAplct(map);
+	}
+	@Override
+	public List<PbancVO> entPbancList(Map<String, Object> map) { //공고꺼내기
+		return this.enterMapper.entPbancList(map);
+	}
+	/*지원자 리스트 끝*/
+
+	
+	
+
+	
+
+
+	
+
+}

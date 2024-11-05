@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.CalendarMapper">
+
+<!-- PBANC : SCRAP = 1 : N -->
+<!-- PBANC : TBC_ADDR = 1 : N -->
+<resultMap type="pbancVO" id="pbancMap">
+	<result property="rnum" column="RNUM"/>
+	<result property="pbancNo" column="PBANC_NO"/>
+	<result property="pbancSttus" column="PBANC_STTUS"/>
+	<result property="pbancIntrvwTyCd" column="PBANC_INTRVW_TY_CD"/>
+	<result property="pbancCareerCd" column="PBANC_CAREER_CD"/>
+	<result property="pbancCareerCdNm" column="PBANC_CAREER_CD_NM"/>
+	<result property="pbancCn" column="PBANC_CN"/>
+	<result property="powkNm" column="POWR_NM"/>
+	<result property="pbancGenCd" column="PBANC_GEN_CD"/>
+	<result property="pbancAppofeFormCd" column="PBANC_APPOFE_FORM_CD"/>
+	<result property="pbancImgFile" column="PBANC_IMG_FILE"/>
+	<result property="pbancAgeCd" column="PBANC_AGE_CD"/>
+	<result property="entId" column="ENT_ID"/>
+	<result property="pbancPicNm" column="PBANC_PIC_NM"/>
+	<result property="pbancPicTelno" column="PBANC_PIC_TELNO"/>
+	<result property="pbancPicEml" column="PBANC_PIC_EML"/>
+	<result property="pbancAplctEduCd" column="PBANC_APLCT_EDU_CD"/>
+	<result property="pbancAplctEduCdNm" column="PBANC_APLCT_EDU_CD_NM"/>
+	<result property="pbancRprsrgn" column="PBANC_RPRSRGN"/>
+	<result property="pbancRprsrgnNm" column="PBANC_RPRSRGN_NM"/>
+	<result property="pbancTtl" column="PBANC_TTL"/>
+	<result property="pbancWorkstleCd" column="PBANC_WORKSTLE_CD"/>
+	<result property="pbancWorkstleNm" column="PBANC_WRKSTLE_CD_NM"/>
+	<result property="pbancApntcpd" column="PBANC_APNTCPD"/>
+	<result property="pbancSalary" column="PBANC_SALARY"/>
+	<result property="pbancWorkHrCd" column="PBANC_WORK_HR_CD"/>
+	<result property="pbancWorkDayCd" column="PBANC_WORK_DAY_CD"/>
+	<result property="pbancRcptMthdCd" column="PBANC_RCPT_MTHD_CD"/>
+	<result property="pbancRprsDty" column="PBANC_RPRS_DTY"/>
+	<result property="pbancRprsDtyNm" column="PBANC_RPRS_DTY_NM"/>
+	<result property="pbancRcptPd" column="PBANC_RCPT_PD"/>
+	<result property="pbancBgngDt" column="PBANC_BGNG_DT"/>
+	<result property="pbancDdlnDt" column="PBANC_DDLN_DT"/>
+	<result property="pbancDlnDt" column="PBANC_DLN_DT"/>
+	<result property="pbancWrtDt" column="PBANC_WRT_DT"/>
+	<result property="pbancMdfcnDt" column="PBANC_MDFCN_DT"/>
+	<result property="pbancDelDt" column="PBANC_DEL_DT"/>
+	<result property="pbancScrapCo" column="PBANC_SCRAP_CO"/>
+	<result property="pbancDelYn" column="PBANC_DEL_YN"/>
+	<result property="entNm" column="ENT_NM"/>
+	<result property="entLogo" column="ENT_LOGO"/>
+	
+	<collection property="scrapVOList" resultMap="scrapMap"></collection>
+	<collection property="tbcAddrVOList" resultMap="tbcAddrMap"></collection>
+</resultMap>
+
+<resultMap type="scrapVO" id="scrapMap">
+	<result property="rnum" column="RNUM"/>
+	<result property="pbancNo" column="PBANC_NO"/>
+	<result property="mbrId" column="MBR_ID"/>
+</resultMap>
+
+<resultMap type="tbcAddrVO" id="tbcAddrMap">
+	<result property="powkCd" column="POWK_CD"/>
+	<result property="pbancNo" column="PBANC_NO"/>
+</resultMap>
+
+<!-- 스크랩한 공고 조회 -->
+<select id="scrapList" parameterType="hashMap" resultMap="pbancMap">
+
+    SELECT 	 S.MBR_ID
+           , P.ENT_ID
+           <![CDATA[
+           , P.PBANC_NO
+           , E.ENT_LOGO, E.ENT_NM
+           , P.PBANC_TTL
+           , get_common_code_name(P.PBANC_CAREER_CD)PBANC_CAREER_CD_NM
+           , get_common_code_name(P.PBANC_APLCT_EDU_CD) PBANC_APLCT_EDU_CD_NM
+           , get_common_code_name(P.PBANC_RPRSRGN)PBANC_RPRSRGN_NM 
+           , get_common_code_name(P.PBANC_WORKSTLE_CD)PBANC_WRKSTLE_CD_NM
+           , get_common_code_name(P.PBANC_RPRS_DTY)PBANC_RPRS_DTY_NM
+           , TO_CHAR(P.PBANC_DDLN_DT,'MM.DD(DY)') as PBANC_DLN_DT
+           ,TRUNC(SYSDATE-P.PBANC_WRT_DT)as PBANC_BEFORE_WRT
+           , P.PBANC_DDLN_DT, P.PBANC_DEL_DT, P.PBANC_DEL_YN
+      FROM SCRAP S
+ 	  LEFT JOIN PBANC P ON P.PBANC_NO = S.PBANC_NO
+      LEFT JOIN ENTER E ON E.ENT_ID = P.ENT_ID
+     WHERE 1 = 1
+     		AND (S.MBR_ID = #{mbrId})
+       		AND (P.PBANC_DEL_YN= '1')
+       		AND (P.PBANC_DDLN_DT  > ]]> SYSDATE-1)
+        	AND (P.PBANC_STTUS = '1')
+	ORDER BY P.PBANC_WRT_DT DESC
+
+</select>
+
+<!-- 캘린더 표시정보(스크랩, 일정) -->
+	<select id="calendarList" parameterType="String" resultType="pbancVO">
+	SELECT 	 S.MBR_ID
+           , P.ENT_ID
+           <![CDATA[
+           , P.PBANC_NO
+           , E.ENT_LOGO, E.ENT_NM
+           , P.PBANC_TTL AS TITLE
+           , get_common_code_name(P.PBANC_CAREER_CD)PBANC_CAREER_CD_NM       
+           , get_common_code_name(P.PBANC_APLCT_EDU_CD) PBANC_APLCT_EDU_CD_NM
+           , get_common_code_name(P.PBANC_RPRSRGN)PBANC_RPRSRGN_NM 
+           , get_common_code_name(P.PBANC_WORKSTLE_CD)PBANC_WRKSTLE_CD_NM
+           , get_common_code_name(P.PBANC_RPRS_DTY)PBANC_RPRS_DTY_NM
+           , TO_CHAR(P.PBANC_DDLN_DT,'MM.DD(DY)') as PBANC_DLN_DT
+           ,TRUNC(SYSDATE-P.PBANC_WRT_DT)as PBANC_BEFORE_WRT
+           , P.PBANC_DDLN_DT, P.PBANC_DEL_DT
+           , P.PBANC_DEL_YN
+      FROM SCRAP S, SCHEDULE D
+ 	  LEFT JOIN PBANC P ON P.PBANC_NO = S.PBANC_NO
+      LEFT JOIN ENTER E ON E.ENT_ID = P.ENT_ID
+     WHERE 1 = 1
+     		AND (S.MBR_ID = #{mbrId})
+       		AND (P.PBANC_DEL_YN= '1')
+       		AND (P.PBANC_DDLN_DT  > ]]> SYSDATE-1)
+        	AND (P.PBANC_STTUS = '1')
+	</select>
+</mapper>

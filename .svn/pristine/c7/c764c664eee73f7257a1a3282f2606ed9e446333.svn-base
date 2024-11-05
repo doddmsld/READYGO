@@ -1,0 +1,9 @@
+package kr.or.ddit.oustou.kakaoPayApi;
+
+public interface KakaoPayService {
+
+	public ReadyResponse payReady(String name, int totalPrice);
+	
+	public AproveResponse payApprove(String tid, String pgToken);
+
+}

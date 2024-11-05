@@ -1,0 +1,2139 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="sec"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/member/aplctList.css" />
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/security/loginForm.css" />
+<script
+	src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="/resources/js/jquery.min.js"></script>
+<script src="/resources/js/sweetalert2.js"></script>
+<script>
+function convertToDateFormat(yyyymm) {
+    if (!yyyymm) return '';  // 값이 없으면 빈 문자열 반환
+    let year = yyyymm.toString().substring(0, 4);  // yyyy 추출
+    let month = yyyymm.toString().substring(4, 6); // MM 추출
+    return year+`-`+month+`-01`; // yyyy-MM 형식으로 변환
+}
+function convertToDateFormat2(yyyymm) {
+    if (!yyyymm) return '';  // 값이 없으면 빈 문자열 반환
+    let year = yyyymm.toString().substring(0, 4);  // yyyy 추출
+    let month = yyyymm.toString().substring(4, 6); // MM 추출
+    let day = yyyymm.toString().substring(6, 8); // MM 추출
+    return year+`-`+month+`-`+day; // yyyy-MM 형식으로 변환
+}
+
+function acbgTransForm(value){
+	if(value===""){
+		$('#acbgRcognacbgCd').parents(".form-group").attr("hidden", true);
+		$('#acbgSchlNm').parents(".form-group").attr("hidden", true);
+		$('#acbgMjrNm').parents(".form-group").attr("hidden", true);
+		$('#acdmcrGrdtnSeCd').parents(".form-group").attr("hidden", true);
+		$('#acbgMtcltnym').parents(".form-group").attr("hidden", true);
+		$('#acbgGrdtnym').parents(".form-group").attr("hidden", true);
+		$('#acbgPntCd').parents(".form-group").attr("hidden", true);
+		$('#acbgPnt').parents(".form-group").attr("hidden", true);
+		$('#acbgSeCd').val(null);
+	}
+	if(value==="ACSE001"){
+		$('#acbgRcognacbgCd').parents(".form-group").attr("hidden", true);
+		$('#acbgSchlNm').parents(".form-group").attr("hidden", false);
+		$('#acbgMjrNm').parents(".form-group").attr("hidden", false);
+		$('#acdmcrGrdtnSeCd').parents(".form-group").attr("hidden", false);
+		$('#acbgMtcltnym').parents(".form-group").attr("hidden", false);
+		$('#acbgGrdtnym').parents(".form-group").attr("hidden", false);
+		$('#acbgPntCd').parents(".form-group").attr("hidden", true);
+		$('#acbgPnt').parents(".form-group").attr("hidden", true);
+		$('#acbgRcognacbgCd').val(null);
+		$('#acbgSchlNm').val(null);
+		$('#acbgMjrNm').val(null);
+		$('#acdmcrGrdtnSeCd').val(null);
+		$('#acbgMtcltnym').val(null);
+		$('#acbgGrdtnym').val(null);
+		$('#acbgPntCd').val(null);
+		$('#acbgPnt').val(null);
+	}
+	if(value==="ACSE002"){
+		$('#acbgRcognacbgCd').parents(".form-group").attr("hidden", false);
+		$('#acbgSchlNm').parents(".form-group").attr("hidden", false);
+		$('#acbgMjrNm').parents(".form-group").attr("hidden", false);
+		$('#acdmcrGrdtnSeCd').parents(".form-group").attr("hidden", false);
+		$('#acbgMtcltnym').parents(".form-group").attr("hidden", false);
+		$('#acbgGrdtnym').parents(".form-group").attr("hidden", false);
+		$('#acbgPntCd').parents(".form-group").attr("hidden", false);
+		$('#acbgPnt').parents(".form-group").attr("hidden", false);
+		$('#acbgRcognacbgCd').val(null);
+		$('#acbgSchlNm').val(null);
+		$('#acbgMjrNm').val(null);
+		$('#acdmcrGrdtnSeCd').val(null);
+		$('#acbgMtcltnym').val(null);
+		$('#acbgGrdtnym').val(null);
+		$('#acbgPntCd').val(null);
+		$('#acbgPnt').val(null);
+	}
+	if(value==="ACSE003"){
+		$('#acbgRcognacbgCd').parents(".form-group").attr("hidden", false);
+		$('#acbgSchlNm').parents(".form-group").attr("hidden", false);
+		$('#acbgMjrNm').parents(".form-group").attr("hidden", false);
+		$('#acdmcrGrdtnSeCd').parents(".form-group").attr("hidden", false);
+		$('#acbgMtcltnym').parents(".form-group").attr("hidden", false);
+		$('#acbgGrdtnym').parents(".form-group").attr("hidden", false);
+		$('#acbgPntCd').parents(".form-group").attr("hidden", true);
+		$('#acbgPnt').parents(".form-group").attr("hidden", true);
+		$('#acbgRcognacbgCd').val(null);
+		$('#acbgSchlNm').val(null);
+		$('#acbgMjrNm').val(null);
+		$('#acdmcrGrdtnSeCd').val(null);
+		$('#acbgMtcltnym').val(null);
+		$('#acbgGrdtnym').val(null);
+		$('#acbgPntCd').val(null);
+		$('#acbgPnt').val(null);
+	}
+}
+
+var Toast = Swal.mixin({
+	toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+});
+function execDaumPostcode() {
+	new daum.Postcode(
+			{
+				oncomplete : function(data) {
+					var fullAddr = data.address;
+					var extraAddr = '';
+
+					if (data.addressType === 'R') {
+						if (data.bname !== '') {
+							extraAddr += data.bname;
+						}
+						if (data.buildingName !== '') {
+							extraAddr += (extraAddr !== '' ? ', '
+									+ data.buildingName : data.buildingName);
+						}
+						fullAddr += (extraAddr !== '' ? ' (' + extraAddr
+								+ ')' : '');
+					}
+
+					$('#mbrZip').val(data.zonecode);
+					$('#mbrAddr').val(fullAddr);
+					$('#mbrAddrDtl').focus();
+				}
+			}).open();
+}
+function handleImg(e) {
+	let files = e.target.files; // 선택한 파일들
+	let fileArr = Array.prototype.slice.call(files);
+	let accumStr = "";
+	fileArr.forEach(function(f) {
+		if (!f.type.match("image.*")) {
+			alert("이미지 확장자만 가능합니다");
+			return; // 함수 자체가 종료됨
+		}
+		let reader = new FileReader();
+		reader.onload = function(e) {// "+e.target+result+" - 이미지를 다 읽었으면 결과를 가져와라 -> 그것을 누적
+			accumStr += "<img src='"+e.target.result+"'/>"; // 누적 String
+			$(".pImg").html(accumStr);
+		}
+		reader.readAsDataURL(f);
+
+	});
+}
+$(function() {
+	$(".warning").hide();
+	 // 글자 수 실시간 업데이트
+    $(".modalCont").on("input", function() {
+        let currentLength = $(this).val().length;
+        $(this).parent().find(".charCount").text(currentLength);
+        if (currentLength > 2000) {
+            $(this).parent().find(".warning").show();  // 경고 메시지 표시
+            $(this).val($(this).val().substring(0, 2000));  // 글자 수 제한
+            $(this).parent().find(".charCount").text(2000);  // 2000자까지만 표시
+        } else {
+        	 $(this).parent().find(".warning").hide();  // 경고 메시지 숨김
+        }
+
+    });
+
+		
+	$("#mbrAddr").on("click", function() {
+		execDaumPostcode();
+	})
+
+	$(".pImg").on("click", function(e) {
+		$("#uploadFile").click();
+	})
+	$("#uploadFile").on("change", function(e) {
+		let file = e.target.files[0];
+		if (!file) {
+			return;
+		}
+
+		if (!file.type.match("image.*")) {
+			alert("이미지 파일만 업로드 가능합니다.");
+			return;
+		}
+
+		let reader = new FileReader();
+		reader.onload = function(e) {
+			$(".pImg").attr("src", e.target.result);
+		}
+		reader.readAsDataURL(file);
+	});
+	
+	let skillListRaw = "${codeGrpVOMap.get('SK')}";
+    let skillList = [];
+	    
+    function parseJavaObject(str) {
+        let codeVORegex = /CodeVO\(([^)]+)\)/g;
+        let codeVOMatches = str.match(codeVORegex);
+        
+        if (codeVOMatches) {
+            skillList = codeVOMatches.map(function (match){
+                try {
+                    let props = match.slice(7, -1).split(', ');
+                    let obj = {};
+                    props.forEach(prop => {
+                        let [key, value] = prop.split('=');
+                        obj[key.trim()] = value.trim(); // 공백 제거
+                    });
+                    return {
+                        codeNm: obj.comCodeNm || "",  // 값이 없을 경우 빈 문자열 처리
+                        codeNo: obj.comCode || ""     // 값이 없을 경우 빈 문자열 처리
+                    };
+                } catch (e) {
+                    console.error("Error parsing CodeVO object:", e);
+                    return null;  // 파싱 실패 시 null 리턴
+                }
+            }).filter(item => item !== null); // null 값 제거
+        }
+    }
+
+    try {
+        parseJavaObject(skillListRaw);
+    } catch (e) {
+        console.error("Error parsing skill data:", e);
+    }
+	
+	$("#skillSearch").on("input", function() {
+        let searchStr = $("#skillSearch").val().toLowerCase();
+        console.log(searchStr);
+        if(searchStr==""){
+        	$(".search-results").html("");
+        	return;
+        }
+       	$(".search-results").html("");
+        let filteredSkills = skillList.filter(skill => 
+            skill.codeNm.toLowerCase().includes(searchStr)
+        );
+
+        updateSearchResults(filteredSkills, searchStr);
+    });
+
+	function updateSearchResults(skills, searchStr) {
+	    let searchResults = $(".search-results");
+	    searchResults.empty();
+	    let skillItem = "";
+
+	    skills.forEach(skill => {
+	    	 skillItem += '<a class="list-group-item" data-code-no="'
+                    + skill.codeNo 
+                    + '" data-code-nm="'
+                    + skill.codeNm
+                    + '"><div class="search-title">'
+                    + skill.codeNm 
+                    + '</div></a>';
+	    });
+
+	    // 검색 결과를 추가하고 나서 클릭 이벤트를 함께 바인딩
+	    searchResults.html(skillItem);
+
+	    // 리스트 아이템에 클릭 이벤트 핸들러 추가
+	    $(".list-group-item").on("click", function() {
+	        let codeNm = $(this).data("code-nm");
+	        let codeNo = $(this).data("code-no");
+
+	        console.log(codeNm);
+	        console.log(codeNo);
+
+	        addSelectedSkill({ codeNm: codeNm, codeNo: codeNo });
+	    });
+	}
+	    
+	    
+	function addSelectedSkill(skill) {
+    	let selectedSkills = $("#selectedSkills"); // 선택된 스킬을 표시할 컨테이너
+
+	    // 이미 선택된 스킬이 아닌 경우에만 추가
+	   if ($("#skill-select-box").find('[data-code-no="' + skill.codeNo + '"]').length === 0) {
+		    let skillTag = '<span class="selected-skill" data-code-no="'
+		                 + skill.codeNo 
+		                 + '">'
+		                 + skill.codeNm 
+		                 + ' x </span>';
+		
+		    let save = $("#skill-select-box").html();
+		    save += skillTag;
+		    $("#skill-select-box").html(save);
+		}
+
+    	// 입력 필드와 검색 결과 초기화
+	    $("#skillSearch").val("").focus();  // 입력 필드 초기화 후 포커스
+	    $(".search-results").empty();
+	}
+	$("#skill-select-box").on('click', '.selected-skill', function() {
+	    $(this).remove(); // 선택된 스킬 삭제
+	});
+	
+	
+	$("#basInfoBtn").on("click", function(){
+	    if ($('#mbrNm').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'이름을 입력해 주세요.'
+			});
+	        $('#mbrNm').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrSexdstncd').val() == null) {
+	    	Toast.fire({
+				icon:'warning',
+				title:'성별을 입력해 주세요.'
+			});
+	        $('#mbrSexdstncd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrBrdt').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'생년월일을 입력해 주세요.'
+			});
+	    	$('#mbrBrdt').focus();
+	    	event.preventDefault();
+	    	return false;
+	    }
+	    if ($('#mbrPhone').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'휴대폰번호를 입력해 주세요.'
+			});
+	        $('#mbrPhone').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrEml').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'이메일을 입력해 주세요.'
+			});
+	        $('#mbrEml').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#rsmCareerCd').val() == null) {
+	    	Toast.fire({
+				icon:'warning',
+				title:'직무능력을 입력해 주세요.'
+			});
+	        $('#rsmCareerCd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrAddr').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+
+				title:'주소를 입력해 주세요.'
+			});
+	        $('#mbrAddr').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#mbrAddrDtl').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'상세 주소를 입력해 주세요.'
+			});
+	        $('#mbrAddrDtl').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    
+	    let mbrNm = $("#mbrNm").val();
+		let mbrSexdstncd = $("#mbrSexdstncd").val();
+		let mbrBrdt = $("#mbrBrdt").val();
+		let mbrPhone = $("#mbrPhone").val();
+		let mbrTelno = $("#mbrTelno").val();
+		let mbrEml = $("#mbrEml").val();
+		let rsmCareerCd = $("#rsmCareerCd").val();
+		let mbrAddr = $("#mbrAddr").val();
+		let mbrZip = $("#mbrZip").val();
+		let mbrAddrDtl = $("#mbrAddrDtl").val();
+		let rsmTtl = $("#rsmTtl").val();
+		let rsmNo = $("#rsmNo").val();
+		var uploadFile = $("#uploadFile")[0].files[0];
+		// FormData 객체 생성 (필요한 경우)
+		let formData = new FormData();
+
+		console.log(mbrNm);
+		console.log(mbrSexdstncd);
+		console.log(mbrBrdt);
+		console.log(mbrPhone);
+		console.log(mbrTelno);
+		console.log(mbrEml);
+		console.log(rsmCareerCd);
+		console.log(mbrAddr);
+		console.log(mbrZip);
+		console.log(mbrAddrDtl);
+		console.log(rsmTtl);
+		console.log(rsmNo);
+		console.log(uploadFile);
+		// FormData에 값 추가
+		formData.append("mbrNm", mbrNm);
+		formData.append("mbrSexdstncd", mbrSexdstncd);
+		formData.append("mbrBrdt", mbrBrdt);
+		formData.append("mbrPhone", mbrPhone);
+		if(mbrTelno !== null||$('#mbrTelno').val().trim() !== ""){
+			formData.append("mbrTelno", mbrTelno);
+		}
+		formData.append("mbrEml", mbrEml);
+		formData.append("rsmCareerCd", rsmCareerCd);
+		formData.append("mbrAddr", mbrAddr);
+		formData.append("mbrZip", mbrZip);
+		formData.append("mbrAddrDtl", mbrAddrDtl);
+		if(rsmTtl != null||$('#rsmTtl').val().trim() !== ""){
+			formData.append("rsmTtl", rsmTtl);
+		}
+		if(rsmNo != null||$('#rsmNo').val().trim() !== ""){
+			formData.append("rsmNo", rsmNo);
+		}
+		if(uploadFile != null){
+			formData.append("uploadFile", uploadFile);
+		}
+		$.ajax({
+			url : "/member/resumebasInfoPost",
+			processData : false,
+			contentType : false,
+			enctype: 'multipart/form-data',
+			data : formData,
+			type : "post",
+			dataType: "json",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+			},
+			success : function(result) {
+				console.log("result : " + result);
+				// success, error, warning, info, question
+				if (result == null) {
+					Toast.fire({
+						icon : 'error',
+						title : '저장 실패'
+					});
+					return;
+				}
+				Toast.fire({
+					icon : 'success',
+					title : '저장 성공'
+				});
+				let rsmNo = result.rsmNo;
+				let mbrId = result.mbrId;
+				$("#rsmNo").val(rsmNo);
+				$("#mbrId").val(mbrId);
+			}
+		})
+	})
+	$("#hopeBtn").on("click",function(){
+		if ($('#rsmNo').val().trim()==="") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'기본정보를 먼저 저장해 주세요.'
+			});
+	        $('#rsmNo').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+		if ($('#rsmCrdtCd').val() == null) {
+	    	Toast.fire({
+				icon:'warning',
+				title:'희망·직무·직업을 선택해 주세요.'
+			});
+	        $('#rsmCrdtCd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#rsmSalCd').val() == null) {
+	    	Toast.fire({
+				icon:'warning',
+				title:'희망 연봉을 선택해 주세요.'
+			});
+	        $('#rsmSalCd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    
+	    
+	    let rsmCrdtCd = $("#rsmCrdtCd").val();
+		let rsmSalCd = $("#rsmSalCd").val();
+		let rsmMemo = $("#rsmMemo").val();
+		let rsmNo = $("#rsmNo").val();
+		let mbrId = $("#mbrId").val();
+		
+		// FormData 객체 생성 (필요한 경우)
+		let formData = new FormData();
+		
+		// FormData에 값 추가
+		formData.append("rsmCrdtCd", rsmCrdtCd);
+		formData.append("rsmSalCd", rsmSalCd);
+		formData.append("rsmMemo", rsmMemo);
+		formData.append("rsmNo", rsmNo);
+		formData.append("mbrId", mbrId);
+		
+		$.ajax({
+			url : "/member/hopePost",
+			processData : false,
+			contentType : false,
+			data : formData,
+			type : "post",
+			dataType : "json",
+			beforeSend : function(xhr) {
+				xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+			},
+			success : function(result) {
+				console.log("result : " + result);
+				// success, error, warning, info, question
+				if (result == null) {
+					Toast.fire({
+						icon : 'error',
+						title : '저장 실패'
+					});
+					return;
+				}
+				Toast.fire({
+					icon : 'success',
+					title : '저장 성공'
+				});
+			}
+		})
+	})
+// 	추가버튼 기능
+	$(".addBtn").on("click",function(){
+		$(this).parent().find(".conBox").attr("hidden", false);
+	})
+	//취소 버튼
+	$(".resetBtn").on("click", function(){
+		
+		$(this).parents(".conBox").find('input[type="text"],input[type="number"], input[type="date"], select, textarea').val('');
+		$(this).parents(".conBox").find('input[type="text"], input[type="number"], input[type="date"],  select, textarea').prop('selectedIndex', 0);
+        acbgTransForm("")        
+		$(this).parents(".conBox").attr("hidden", true);
+		
+	})
+	//학력폼 변경 시작
+	$("#acbgSeCd").on("change", function(){
+		let val = $(this).val();
+		acbgTransForm(val);
+	})
+	//학력폼 변경 끝
+	//학력인서트 시작
+	$("#acbgSaveBtn").on("click", function(){
+		if ($('#rsmNo').val().trim()==="") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'기본정보를 먼저 저장해 주세요.'
+			});
+	        $('#rsmNo').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+		if ($('#acbgSeCd').val() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'학력 구분을 선택해 주세요.'
+			});
+	        $('#acbgSeCd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+		if ($('#acbgSeCd').val() == "ACSE002" ||$('#acbgSeCd').val() == "ACSE003") {
+			if($('#acbgRcognacbgCd').val() == null){
+		    	Toast.fire({
+					icon:'warning',
+					title:'인정 학력을 선택해 주세요.'
+				});
+		        $('#acbgSeCd').focus();
+		        event.preventDefault();
+		        return false;
+			}
+	    }
+	    if ($('#acbgSchlNm').val().trim() ===	 "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'학교명을 입력해 주세요.'
+			});
+	        $('#acbgSchlNm').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#acbgMjrNm').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'전공명을 입력해 주세요.'
+			});
+	        $('#acbgMjrNm').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#acdmcrGrdtnSeCd').val() == null) {
+	    	Toast.fire({
+				icon:'warning',
+				title:'졸업 여부를 선택해 주세요.'
+			});
+	        $('#acdmcrGrdtnSeCd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+        // 학력 정보 추출
+        let acbgNo = $("#acbgNo").val();
+        let rsmNo = $("#rsmNo").val();
+        let acbgSeCd = $("#acbgSeCd").val();
+        let acbgRcognacbgCd = $("#acbgRcognacbgCd").val();
+        let acbgSchlNm = $("#acbgSchlNm").val();
+        let acbgMjrNm = $("#acbgMjrNm").val();
+        let acdmcrGrdtnSeCd = $("#acdmcrGrdtnSeCd").val();
+        let acbgMtcltnym = $("#acbgMtcltnym").val();
+        let acbgGrdtnym = $("#acbgGrdtnym").val();
+        let acbgPnt = $("#acbgPnt").val();
+        let acbgPntCd = $("#acbgPntCd").val();
+        // FormData 객체 생성
+        let formData = new FormData();
+
+        // 학력 정보 추가
+        if($('#acbgNo').val().trim() !== ""||$('#acbgNo').val()!==null){
+	        formData.append("acbgNo", acbgNo);
+        }
+        formData.append("rsmNo", rsmNo);
+        formData.append("acbgSeCd", acbgSeCd);
+        formData.append("acbgRcognacbgCd", acbgRcognacbgCd);
+        formData.append("acbgSchlNm", acbgSchlNm);
+        formData.append("acbgMjrNm", acbgMjrNm);
+        formData.append("acdmcrGrdtnSeCd", acdmcrGrdtnSeCd);
+        formData.append("acbgMtcltnym", acbgMtcltnym);
+        formData.append("acbgGrdtnym", acbgGrdtnym);
+        formData.append("acbgPntCd", acbgPntCd);
+        formData.append("acbgPnt", acbgPnt);
+
+        $.ajax({
+            url: "/member/acbgRegistPost",
+            processData: false,
+            contentType: false,
+            data: formData,
+            type: "post",
+            dataType: "json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(result) {
+                Toast.fire({
+                    icon: 'success',
+                    title: '학력 저장 완료'
+                });
+                let code = "";
+                result.rsmAcademicVOList.forEach(function(item, index) {
+                    
+                    code += `<tr>
+                        <td class="aplct">`+item.acbgSchlNm+`<br>`;
+                    if(item.acbgRcognacbgCdNm!=null){
+                    	code +=`<span class="aplcont">`+item.acbgRcognacbgCdNm+`</span>`;
+                    }
+                    code +=`</td>
+                        <td class="aplct">`+item.acbgMjrNm+`<br>`;
+                    if(item.acbgPnt!=null){
+                    	code += `<span class="aplcont">인정 학점 :`+item.acbgPnt+`</span>&nbsp;&nbsp;&nbsp;`;
+                    }
+                    if(item.acbgPntCdNm!=null){
+                    	code += `<span class="aplcont">기준 학점 : `+item.acbgPntCdNm+`</span>`;
+                    }
+                    code += `</td>
+                        <td class="aplct">`+item.acdmcrGrdtnSeCdNm+`<br>`;
+                    if(item.acbgMtcltnym!=null){
+                    	code += `<span class="aplcont">입학년도 : `+item.acbgMtcltnym.substring(0,4)+`년 `+ item.acbgMtcltnym.substring(4,6)+`월</span>&nbsp;&nbsp;&nbsp;`;                    	
+                    }    
+                    if(item.acbgGrdtnym!=null){
+	                    code += `<span class="aplcont">졸업년도 : `+item.acbgGrdtnym.substring(0,4)+`년 `+ item.acbgGrdtnym.substring(4,6)+`월</span>`;
+                    }    
+                    code += `</td>
+                        <td>
+                        	<button type="button" class="btn btn-default aplctCancel acbgDeleteBtn"
+                        		data-acbg-no="`+item.acbgNo+`">삭제</button>
+                            <button type="button" class="btn btn-default aplctCancel acbgEditBtn"
+                               data-acbg-no="`+item.acbgNo+`"
+                               data-acbg-se-cd="`+item.acbgSeCd+`" 
+                               data-acbg-rcognacbg-cd="`+item.acbgRcognacbgCd+`" 
+                               data-acbg-schl-nm="`+item.acbgSchlNm+`" 
+                               data-acbg-mjr-nm="`+item.acbgMjrNm+`" 
+                               data-acdmcr-grdtn-se-cd="`+item.acdmcrGrdtnSeCd+`" 
+                               data-acbg-mtcltnym="`+item.acbgMtcltnym+`" 
+                               data-acbg-grdtnym="`+item.acbgGrdtnym+`" 
+                               data-acbg-pnt-cd="`+item.acbgPntCd+`" 
+                               data-acbg-pnt="`+item.acbgPnt+`">수정</button>
+                        </td>
+                     </tr>`;
+                });
+                
+                $('#acbgTbody').html(code);
+                // hidden 속성을 가진 요소의 초기화
+                $('.acbg input[type="text"], .acbg input[type="number"], .acbg input[type="date"], .acbg select').val('');
+                
+                $('.acbg input[type="text"], .acbg input[type="number"], .acbg input[type="date"], .acbg select').prop('selectedIndex', 0);
+                $('.acbg .form-group').attr("hidden", true);
+                $('.acbg .nohide').attr("hidden", false); 
+                $(".acbg .conBox").attr("hidden", true);
+            },
+            error: function(xhr, status, error) {
+                console.error("Ajax 요청 실패:", status, error);
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Ajax 요청 실패'
+                });
+            }
+        });
+	})
+// 	학력 인서트 끝
+// 학력 삭제
+	$(document).on("click", ".acbgDeleteBtn", function() {
+	    let acbgNo = $(this).data("acbgNo");
+	    let rsmNo = $("#rsmNo").val();
+	    let tr = $(this).closest("tr");
+	    let formData = new FormData();
+	    formData.append("acbgNo", acbgNo);
+	    formData.append("rsmNo", rsmNo);
+	    
+	    console.log("딸깍!")
+	    $.ajax({
+            url: "/member/acbgDeletePost",
+            processData: false,
+            contentType: false,
+            data: formData,
+            type: "post",
+            dataType: "json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(result) {
+                Toast.fire({
+                    icon: 'success',
+                    title: '학력 삭제 완료'
+                });
+                tr.remove();
+            },
+            error: function(xhr, status, error) {
+                console.error("Ajax 요청 실패:", status, error);
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Ajax 요청 실패'
+                });
+            }
+        });
+	    
+	});
+// 	학력 수정
+	$(document).on("click", ".acbgEditBtn", function(){
+		let acbgSeCd = $(this).data("acbgSeCd");
+		acbgTransForm(acbgSeCd);
+		let acbgNo = $(this).data("acbgNo");
+		let acbgRcognacbgCd = $(this).data("acbgRcognacbgCd");
+		let acbgSchlNm = $(this).data("acbgSchlNm");
+		let acbgMjrNm = $(this).data("acbgMjrNm");
+		let acdmcrGrdtnSeCd = $(this).data("acdmcrGrdtnSeCd");
+		let acbgMtcltnym = $(this).data("acbgMtcltnym");
+		let acbgGrdtnym = $(this).data("acbgGrdtnym");
+		let acbgPntCd = $(this).data("acbgPntCd");
+		let acbgPnt = $(this).data("acbgPnt");
+		console.log(convertToDateFormat(acbgMtcltnym));
+		$("#acbgNo").val(acbgNo);
+		$("#acbgSchlNm").val(acbgSchlNm);
+		$("#acbgMjrNm").val(acbgMjrNm);
+		$("#acbgMtcltnym").val(convertToDateFormat(acbgMtcltnym));
+		$("#acbgGrdtnym").val(convertToDateFormat(acbgGrdtnym));
+		$("#acbgPnt").val(acbgPnt);
+
+		$("#acbgSeCd").val(acbgSeCd).attr('selected', true);
+		$("#acbgRcognacbgCd").val(acbgRcognacbgCd).attr('selected', true);
+		$("#acdmcrGrdtnSeCd").val(acdmcrGrdtnSeCd).attr('selected', true);
+		$("#acbgPntCd").val(acbgPntCd).attr('selected', true);
+		$(".acbg .conBox").attr("hidden", false);
+	})
+	
+// 	경력 인서트 시작
+	$("#careerSaveBtn").on("click", function(){
+		if ($('#rsmNo').val().trim()==="") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'기본정보를 먼저 저장해 주세요.'
+			});
+	        $('#rsmNo').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+		if ($('#careerEntNm').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'기업명을 입력해 주세요.'
+			});
+	        $('#careerEntNm').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+		if ($('#careerJncmpYmd').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'입사일자를 입력해 주세요.'
+			});
+	        $('#careerJncmpYmd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#careerDtyCd').val() === null) {
+	    	Toast.fire({
+				icon:'warning',
+				title:'직무를 선택해 주세요.'
+			});
+	        $('#careerDtyCd').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	    if ($('#careerTask').val().trim() === "") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'담당업무 내용을 입력해 주세요.'
+			});
+	        $('#careerTask').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+	   
+        // 경력 정보 추출
+        let careerNo = $("#careerNo").val();
+        let rsmNo = $("#rsmNo").val();
+        let careerEntNm = $("#careerEntNm").val();
+        let careerJncmpYmd = $("#careerJncmpYmd").val();
+        let careerRetireYmd = $("#careerRetireYmd").val();
+        let careerDtyCd = $("#careerDtyCd").val();
+        let careerDept = $("#careerDept").val();
+        let careerJbgdCd = $("#careerJbgdCd").val();
+        let careerTask = $("#careerTask").val();
+        let careerAnslry = $("#careerAnslry").val();
+        let careerWorkRgnCd = $("#careerWorkRgnCd").val();
+        // FormData 객체 생성
+        let formData = new FormData();
+
+        if(careerAnslry.trim() === "" || careerAnslry.trim() === null){
+        	careerAnslry = 0;
+        }
+        // 경력 정보 추가
+        if($('#careerNo').val().trim() !== ""||$('#careerNo').val()!==null){
+	        formData.append("careerNo", careerNo);
+        }
+        formData.append("rsmNo", rsmNo);
+        formData.append("careerEntNm", careerEntNm);
+        formData.append("careerJncmpYmd", careerJncmpYmd);
+        formData.append("careerRetireYmd", careerRetireYmd);
+        formData.append("careerDtyCd", careerDtyCd);
+        formData.append("careerDept", careerDept);
+        formData.append("careerJbgdCd", careerJbgdCd);
+        formData.append("careerTask", careerTask);
+        formData.append("careerAnslry", careerAnslry);
+        formData.append("careerWorkRgnCd", careerWorkRgnCd);
+		
+        let pat = $(this).parents(".conBox");
+        
+        $.ajax({
+            url: "/member/careerRegistPost",
+            processData: false,
+            contentType: false,
+            data: formData,
+            type: "post",
+            dataType: "json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(result) {
+                Toast.fire({
+                    icon: 'success',
+                    title: '경력 저장 완료'
+                });
+                let code = "";
+                result.rsmCareerVOList.forEach(function(item, index) {
+                    code += `<tr>
+                        <td class="aplct">`;
+                    if(item.careerEntNm.length > 10){
+                    	code += item.careerEntNm.substring(0,10)+`...`;
+                    }else{
+                    	code += item.careerEntNm;
+                    } 
+                    code += `<br>`;
+                    if(item.acbgRcognacbgCdNm!=null){
+                    	code +=`<span class="aplcont">`+item.acbgRcognacbgCdNm+`</span>`;
+                    }
+                    code +=`</td>
+                        <td class="aplct">입사일자 : `+item.careerJncmpYmd.substring(0,4)+`-`+ item.careerJncmpYmd.substring(4,6)+`-`+ item.careerJncmpYmd.substring(6,8);
+                    if(item.careerRetireYmd!=null){
+                    	code += `<br />퇴사일자 : `+item.careerRetireYmd.substring(0,4)+`-`+ item.careerRetireYmd.substring(4,6)+`-`+ item.careerRetireYmd.substring(6,8);
+                    }
+                    code += `</td>
+                        <td class="aplct">`+item.careerDtyCdNm+`<br>`;
+                    if(item.careerDept!=null){
+                    	code += `<span class="aplcont">부서 : `+item.careerDept+`</span>&nbsp;&nbsp;&nbsp;`;                    	
+                    }    
+                    if(item.careerJbgdCdNm!=null){
+	                    code += `<span class="aplcont">직급 : `+item.careerJbgdCdNm+`</span>`;
+                    }    
+                    code += `</td>
+                        <td>
+                        	<button type="button" class="btn btn-default aplctCancel careerDeleteBtn"
+                        		data-career-no="`+item.careerNo+`">삭제</button>
+                            <button type="button" class="btn btn-default aplctCancel careerEditBtn"
+                               data-career-no="`+item.careerNo+`"
+                               data-career-ent-nm="`+item.careerEntNm+`" 
+                               data-career-jncmp-ymd="`+item.careerJncmpYmd+`" 
+                               data-career-retire-ymd="`+item.careerRetireYmd+`" 
+                               data-career-dty-cd="`+item.careerDtyCd+`" 
+                               data-career-dept="`+item.careerDept+`" 
+                               data-career-jbgd-cd="`+item.careerJbgdCd+`" 
+                               data-career-task="`+item.careerTask+`" 
+                               data-career-anslry="`+item.careerAnslry+`" 
+                               data-career-work-rgn-cd="`+item.careerWorkRgnCd+`">수정</button>
+                        </td>
+                     </tr>`;
+                });
+                
+                $('#careerTbody').html(code);
+                // hidden 속성을 가진 요소의 초기화
+                pat.find('input[type="text"],input[type="number"], input[type="date"], select, textarea').val('');
+                pat.find('input[type="text"], input[type="number"], input[type="date"],  select, textarea').prop('selectedIndex', 0);
+                $(".career .conBox").attr("hidden", true);
+            },
+            error: function(xhr, status, error) {
+                console.error("Ajax 요청 실패:", status, error);
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Ajax 요청 실패'
+                });
+            }
+        });
+	})
+	// 경력 인서트 끝
+	
+	// 경력 삭제
+	$(document).on("click", ".careerDeleteBtn", function() {
+	    let careerNo = $(this).data("careerNo");
+	    let rsmNo = $("#rsmNo").val();
+	    let tr = $(this).closest("tr");
+	    let formData = new FormData();
+	    console.log(careerNo)
+	    console.log(rsmNo)
+	    formData.append("careerNo", careerNo);
+	    formData.append("rsmNo", rsmNo);
+	    $.ajax({
+            url: "/member/careerDeletePost",
+            processData: false,
+            contentType: false,
+            data: formData,
+            type: "post",
+            dataType: "json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(result) {
+                Toast.fire({
+                    icon: 'success',
+                    title: '경력 삭제 완료'
+                });
+                tr.remove();
+                
+            },
+            error: function(xhr, status, error) {
+                console.error("Ajax 요청 실패:", status, error);
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Ajax 요청 실패'
+                });
+            }
+        });
+	    
+	});
+	//경력 삭제 끝
+// 	경력 수정
+	$(document).on("click", ".careerEditBtn", function(){
+		let careerNo = $(this).data("careerNo");
+		let careerEntNm = $(this).data("careerEntNm");
+		let careerJncmpYmd = $(this).data("careerJncmpYmd");
+		let careerRetireYmd = $(this).data("careerRetireYmd");
+		let careerDtyCd = $(this).data("careerDtyCd");
+		let careerDept = $(this).data("careerDept");
+		let careerJbgdCd = $(this).data("careerJbgdCd");
+		let careerTask = $(this).data("careerTask");
+		let careerAnslry = $(this).data("careerAnslry");
+		let careerWorkRgnCd = $(this).data("careerWorkRgnCd");
+		$("#careerNo").val(careerNo);
+		$("#careerEntNm").val(careerEntNm);
+		$("#careerJncmpYmd").val(convertToDateFormat2(careerJncmpYmd));
+		$("#careerRetireYmd").val(convertToDateFormat2(careerRetireYmd));
+		$("#careerDept").val(careerDept);
+		$("#careerTask").val(careerTask);
+		$("#careerAnslry").val(careerAnslry);
+
+		$("#careerDtyCd").val(careerDtyCd).attr('selected', true);
+		$("#careerJbgdCd").val(careerJbgdCd).attr('selected', true);
+		$("#careerWorkRgnCd").val(careerWorkRgnCd).attr('selected', true);
+		$(".career .conBox").attr("hidden", false);
+	})
+	
+// 	스킬 인서트 시작
+	$("#skillSaveBtn").on("click", function(){
+		if ($('#rsmNo').val().trim()==="") {
+	    	Toast.fire({
+				icon:'warning',
+				title:'기본정보를 먼저 저장해 주세요.'
+			});
+	        $('#rsmNo').focus();
+	        event.preventDefault();
+	        return false;
+	    }
+        // 스킬 정보 추출
+        let skillCodes = Array.from(document.querySelectorAll('.selected-skill'))
+		    .map(span => span.getAttribute('data-code-no'));
+		
+		// 추출된 코드들을 쉼표로 구분된 문자열로 변환
+		let skCd = skillCodes.join(',');
+		
+		// rsmNo 값 설정 (고정 값)
+		let rsmNo = $("#rsmNo").val();
+		
+		// FormData 객체 생성
+		let formData = new FormData();
+		
+		// FormData에 값 추가
+		formData.append("skCd", skCd);
+		formData.append("rsmNo", rsmNo);
+		
+		// FormData 내용 확인 (선택적)
+        let pat = $(this).parents(".conBox");
+        
+        $.ajax({
+            url: "/member/skillRegistPost",
+            processData: false,
+            contentType: false,
+            data: formData,
+            type: "post",
+            dataType: "json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(result) {
+                Toast.fire({
+                    icon: 'success',
+                    title: '스킬 저장 완료'
+                });
+                let code = "";
+                result.rsmSkillVOList.forEach(function(item, index) {
+                    code += `<span class="selected-skill" data-sk-cd="`+item.skCd+`">`+item.skCdNm+`</span>`;
+                });
+                
+                $('#skill-show-box').html(code);
+                // hidden 속성을 가진 요소의 초기화
+                pat.find('input[type="text"],input[type="number"], input[type="date"], select, textarea').val('');
+                pat.find('input[type="text"], input[type="number"], input[type="date"],  select, textarea').prop('selectedIndex', 0);
+                $(".skill .conBox").attr("hidden", true);
+            },
+            error: function(xhr, status, error) {
+                console.error("Ajax 요청 실패:", status, error);
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Ajax 요청 실패'
+                });
+            }
+        });
+	})
+	// 스킬 인서트 끝
+	
+	// 스킬 삭제
+	$(document).on("click", ".careerDeleteBtn", function() {
+	    let careerNo = $(this).data("careerNo");
+	    let rsmNo = $("#rsmNo").val();
+	    let tr = $(this).closest("tr");
+	    let formData = new FormData();
+	    console.log(careerNo)
+	    console.log(rsmNo)
+	    formData.append("careerNo", careerNo);
+	    formData.append("rsmNo", rsmNo);
+	    $.ajax({
+            url: "/member/careerDeletePost",
+            processData: false,
+            contentType: false,
+            data: formData,
+            type: "post",
+            dataType: "json",
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+            },
+            success: function(result) {
+                Toast.fire({
+                    icon: 'success',
+                    title: '경력 삭제 완료'
+                });
+                tr.remove();
+                
+            },
+            error: function(xhr, status, error) {
+                console.error("Ajax 요청 실패:", status, error);
+                Toast.fire({
+                    icon: 'error',
+                    title: 'Ajax 요청 실패'
+                });
+            }
+        });
+	    
+	});
+	//스킬 삭제 끝
+// 	스킬 수정
+	$(document).on("click", ".careerEditBtn", function(){
+		let careerNo = $(this).data("careerNo");
+		let careerEntNm = $(this).data("careerEntNm");
+		let careerJncmpYmd = $(this).data("careerJncmpYmd");
+		let careerRetireYmd = $(this).data("careerRetireYmd");
+		let careerDtyCd = $(this).data("careerDtyCd");
+		let careerDept = $(this).data("careerDept");
+		let careerJbgdCd = $(this).data("careerJbgdCd");
+		let careerTask = $(this).data("careerTask");
+		let careerAnslry = $(this).data("careerAnslry");
+		let careerWorkRgnCd = $(this).data("careerWorkRgnCd");
+		$("#careerNo").val(careerNo);
+		$("#careerEntNm").val(careerEntNm);
+		$("#careerJncmpYmd").val(convertToDateFormat2(careerJncmpYmd));
+		$("#careerRetireYmd").val(convertToDateFormat2(careerRetireYmd));
+		$("#careerDept").val(careerDept);
+		$("#careerTask").val(careerTask);
+		$("#careerAnslry").val(careerAnslry);
+
+		$("#careerDtyCd").val(careerDtyCd).attr('selected', true);
+		$("#careerJbgdCd").val(careerJbgdCd).attr('selected', true);
+		$("#careerWorkRgnCd").val(careerWorkRgnCd).attr('selected', true);
+		$(".career .conBox").attr("hidden", false);
+	})
+// 	스킬 수정 끝
+	
+})
+</script>
+
+<div style="zoom: 0.90;">
+	<div id="registMain">
+		<!-- 	정렬순서 및 선택 사항 추가 창 -->
+		<div class="registForm-sub"></div>
+		<!-- 		이력서 제목및 저장 탭 -->
+		<div class="registForm-bottom row">
+			<div>
+				<div class="form-group width-xl">
+					<label for="rsmTtl" id="reg1label">제목*</label> <input type="text"
+						class="form-control" placeholder="이력서 제목을 입력해주세요." name="rsmTtl"
+						id="rsmTtl" value="${memVO.mbrNm }의 이력서" required />
+				</div>
+			</div>
+			<div>
+				<button class="submitBtn" style="margin: 35px 0px 0px 20px">저장</button>
+			</div>
+		</div>
+		<!-- 	기본정보 입력창 -->
+		<div class="registForm">
+			<div>
+				<p id="h3">
+					기본정보 <span class="reqHint">필수*</span>
+				</p>
+
+			</div>
+			<br />
+			<div class="listBox"></div>
+			<div class="conBox">
+				<div class="inputForm">
+					<input type="text" class="form-control" name="rsmNo" id="rsmNo"
+						required /> <input type="text" class="form-control" name="mbrId"
+						id="mbrId" value="${memVO.mbrId }" required />
+					<div class="row idForm">
+						<div class="form-group width-l">
+							<label for="mbrNm" id="reg1label">이름*</label> <input type="text"
+								class="form-control" placeholder="이름을 입력하세요" name="mbrNm"
+								id="mbrNm" value="${memVO.mbrNm }" required />
+						</div>
+						<div class="form-group width-s">
+							<label for="mbrSexdstncd" id="reg1label">성별*</label> <select
+								class="form-control" name="mbrSexdstncd" id="mbrSexdstncd">
+								<option value="" disabled selected>성별선택*</option>
+								<c:forEach var="codeVO"
+									items="${codeGrpVOMap.get('GEND').codeVOList }"
+									varStatus="stus">
+									<option value="${codeVO.comCode}"
+										<c:if test="${memVO.mbrSexdstnCd==codeVO.comCode}"> selected</c:if>>${codeVO.comCodeNm}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group width-s">
+							<label for="mbrBrdt" id="reg1label">생년월일*</label> <input
+								type="text" class="form-control" placeholder="ex)19990518"
+								name="mbrBrdt" id="mbrBrdt" value="${memVO.mbrBrdt }" required />
+						</div>
+					</div>
+					<div class="row imgForm">
+						<!-- 					이력서 이미지 -->
+						<input type="file" class="form-control" name="uploadFile"
+							id="uploadFile" hidden="hidden" />
+						<div class="form-group">
+							<div class="imgCover" id="ivImg">
+								<img src="/resources/images/rsmImg.png" id="pImg" class="pImg"
+									style="cursor: pointer;">
+							</div>
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-l">
+							<label for="mbrPhone" id="reg1label">휴대폰번호*</label> <input
+								type="text" class="form-control"
+								placeholder="-를 제외한 번호만 입력해주세요." name="mbrPhone" id="mbrPhone"
+								value="${memVO.mbrTelno }" required />
+						</div>
+						<div class="form-group width-l">
+							<label for="mbrTelno" id="reg1label">전화번호</label> <input
+								type="text" class="form-control"
+								placeholder="-를 제외한 번호만 입력해주세요." name="mbrTelno" id="mbrTelno" />
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-l">
+							<label for="mbrEml" id="reg1label">이메일*</label> <input
+								type="text" class="form-control" placeholder="이메일을 입력해주세요."
+								name="mbrEml" id="mbrEml" value="${memVO.mbrEml }" required />
+						</div>
+						<div class="form-group width-s">
+							<label for="rsmCareerCd" id="reg1label">직무능력*</label> <select
+								class="form-control" name="rsmCareerCd" id="rsmCareerCd">
+								<option value="" disabled selected>직무능력 선택*</option>
+								<c:forEach var="codeVO"
+									items="${codeGrpVOMap.get('RSCA').codeVOList }"
+									varStatus="stus">
+									<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-l">
+							<label for="mbrAddr" id="reg1label">주소*</label> <input
+								type="text" class="form-control" placeholder="주소를 입력해주세요."
+								name="mbrAddr" id="mbrAddr" readonly="readonly"
+								value="${memVO.mbrAddr }" required /> <input type="text"
+								class="form-control" placeholder="주소를 입력해주세요." name="mbrZip"
+								id="mbrZip" readonly="readonly" value="${memVO.mbrZip }"
+								hidden="hidden" required />
+						</div>
+						<div class="form-group width-l">
+							<label for="mbrAddrDtl" id="reg1label">상세주소*</label> <input
+								type="text" class="form-control" placeholder="상세주소를 입력해주세요."
+								name="mbrAddrDtl" id="mbrAddrDtl" value="${memVO.mbrAddrDtl }"
+								required />
+						</div>
+					</div>
+				</div>
+				<div class="row idForm btnForm">
+					<button class="resetBtn">취소</button>
+					<button class="submitBtn" id="basInfoBtn">저장</button>
+				</div>
+			</div>
+		</div>
+		<!-- 	희망 사항 입력창 -->
+		<div class="registForm">
+			<div>
+				<p id="h3">
+					희망 조건 <span class="reqHint">필수*</span>
+				</p>
+
+			</div>
+			<br />
+			<div class="conBox">
+				<div class="inputForm">
+					<div class="row idForm">
+						<div class="form-group width-l">
+							<label for="rsmCrdtCd" id="reg1label">희망·직무·직업*</label> <select
+								class="form-control" name="rsmCrdtCd" id="rsmCrdtCd">
+								<option value="" disabled selected>희망 직무·직업선택*</option>
+								<c:forEach var="codeVO"
+									items="${codeGrpVOMap.get('CRDT').codeVOList }"
+									varStatus="stus">
+									<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group width-l">
+							<label for="rsmSalCd" id="reg1label">희망 연봉*</label> <select
+								class="form-control" name="rsmSalCd" id="rsmSalCd">
+								<option value="" disabled selected>희망 연봉선택*</option>
+								<c:forEach var="codeVO"
+									items="${codeGrpVOMap.get('SAL').codeVOList }" varStatus="stus">
+									<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-xl">
+							<label for="rsmMemo" id="reg1label">메모</label> <input type="text"
+								class="form-control" placeholder="메모 내용을 입력해주세요." name="rsmMemo"
+								id="rsmMemo" />
+						</div>
+					</div>
+
+				</div>
+				<div class="row idForm btnForm">
+					<button class="resetBtn">취소</button>
+					<button class="submitBtn" id="hopeBtn">저장</button>
+				</div>
+			</div>
+		</div>
+
+		<!-- 	이력서 불러오기 버튼 -->
+		<img src="/resources/images/rsmCopyBtn.png" id="CopyBtn"
+			class="CopyBtn"
+			style="cursor: pointer; width: 1030px; margin: 10px 0px 30px 0px;">
+
+		<!-- 	학력 입력 창 -->
+		<div class="registForm acbg">
+			<div class="registForm" id="basInfo">
+				<p id="h3">
+					학력 <span class="reqHint">필수*</span>
+				</p>
+				<img src="/resources/images/addBtn.png" class="addBtn"
+					style="width: 58px;"> <br />
+				<div class="showBox">
+					<table class="table table-hover text-nowrap">
+						<thead>
+							<tr>
+								<th class="aplct">학교명</th>
+								<th class="aplct">학과</th>
+								<th class="aplct">재학상태</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody id="acbgTbody">
+							<c:forEach var="rsmAcademicVO"
+								items="${resumeVO.rsmAcademicVOList}" varStatus="stat">
+								<tr>
+									<td class="aplct">${rsmAcademicVO.acbgSchlNm}<br> <span
+										class="aplcont">${rsmAcademicVO.acbgRcognacbgCdNm}</span>
+									</td>
+									<td class="aplct">${rsmAcademicVO.acbgMjrNm}<br> <span
+										class="aplcont">인정 학점 : ${rsmAcademicVO.acbgPnt}</span>&nbsp;&nbsp;&nbsp;
+										<span class="aplcont">기준 학점 : ${rsmAcademicVO.acbgPntCdNm}</span>
+									</td>
+									<td class="aplct">${rsmAcademicVO.acdmcrGrdtnSeCdNm}<br> <span
+										class="aplcont">입학년도 :
+											${rsmAcademicVO.acbgMtcltnym.substring(0,4)}년
+											${rsmAcademicVO.acbgMtcltnym.substring(4,6)}월</span>&nbsp;&nbsp;&nbsp; <span
+										class="aplcont">졸업년도 :
+											${rsmAcademicVO.acbgGrdtnym.substring(0,4)}년
+											${rsmAcademicVO.acbgGrdtnym.substring(4,6)}월</span>
+									</td>
+									<td>
+										<button type="button"
+											class="btn btn-default aplctCancel acbgDeleteBtn"
+											data-acbg-no="${rsmAcademicVO.acbgNo}">삭제</button>
+										<button type="button"
+											class="btn btn-default aplctCancel acbgEditBtn"
+											data-acbg-no="${rsmAcademicVO.acbgNo}"
+											data-acbg-se-cd="${rsmAcademicVO.acbgSeCd}"
+											data-acbg-rcognacbg-cd="${rsmAcademicVO.acbgRcognacbgCd}"
+											data-acbg-schl-nm="${rsmAcademicVO.acbgSchlNm}"
+											data-acbg-mjr-nm="${rsmAcademicVO.acbgMjrNm}"
+											data-acdmcr-grdtn-se-cd="${rsmAcademicVO.acdmcrGrdtnSeCd}"
+											data-acbg-mtcltnym="${rsmAcademicVO.acbgMtcltnym}"
+											data-acbg-grdtnym="${rsmAcademicVO.acbgGrdtnym}"
+											data-acbg-pnt-cd="${rsmAcademicVO.acbgPntCd}"
+											data-acbg-pnt="${rsmAcademicVO.acbgPnt}">수정</button>
+									</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</div>
+				<div class="conBox" hidden="hidden">
+					<div class="inputForm">
+						<div class="row idForm">
+							<input type="text" class="form-control" name="acbgNo" id="acbgNo"
+								hidden="hidden" />
+							<div class="form-group width-l nohide">
+								<label for="acbgSeCd" id="reg1label">학력 구분*</label> <select
+									class="form-control" name="acbgSeCd" id="acbgSeCd">
+									<option value="" selected>학력 구분 선택*</option>
+									<c:forEach var="codeVO"
+										items="${codeGrpVOMap.get('ACSE').codeVOList }"
+										varStatus="stus">
+										<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+									</c:forEach>
+								</select>
+							</div>
+							<div class="form-group width-s" hidden="hidden">
+								<label for="acbgRcognacbgCd" id="reg1label">인정학력*</label> <select
+									class="form-control" name="acbgRcognacbgCd"
+									id="acbgRcognacbgCd">
+									<option value="" disabled selected>인정학력선택*</option>
+									<c:forEach var="codeVO"
+										items="${codeGrpVOMap.get('ACRC').codeVOList}"
+										varStatus="stus">
+										<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+									</c:forEach>
+								</select>
+							</div>
+							<div class="form-group width-l" hidden="hidden">
+								<label for="acbgSchlNm" id="reg1label">학교명*</label> <input
+									type="text" class="form-control" placeholder="학교명*"
+									name="acbgSchlNm" id="acbgSchlNm" required />
+							</div>
+						</div>
+						<div class="row idForm">
+							<div class="form-group width-l" hidden="hidden">
+								<label for="acbgMjrNm" id="reg1label">전공*</label> <input
+									type="text" class="form-control" placeholder="전공*"
+									name="acbgMjrNm" id="acbgMjrNm" required />
+							</div>
+							<div class="form-group width-s" hidden="hidden">
+								<label for="acdmcrGrdtnSeCd" id="reg1label">졸업여부*</label> <select
+									class="form-control" name="acdmcrGrdtnSeCd"
+									id="acdmcrGrdtnSeCd">
+									<option value="" disabled selected>졸업여부선택*</option>
+									<c:forEach var="codeVO"
+										items="${codeGrpVOMap.get('ACGD').codeVOList}"
+										varStatus="stus">
+										<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+									</c:forEach>
+								</select>
+							</div>
+							<div class="form-group width-s" hidden="hidden">
+								<label for="acbgMtcltnym" id="reg1label">입학년월</label> <input
+									type="date" class="form-control" placeholder="입학년월"
+									name="acbgMtcltnym" id="acbgMtcltnym" />
+							</div>
+							<div class="form-group width-s" hidden="hidden">
+								<label for="acbgGrdtnym" id="reg1label">졸업년월</label> <input
+									type="date" class="form-control" placeholder="입학년월"
+									name="acbgGrdtnym" id="acbgGrdtnym" />
+							</div>
+						</div>
+						<div class="row idForm">
+							<div class="row idForm sub">
+								<div class="form-group width-s" hidden="hidden">
+									<label for="acbgPnt" id="reg1label">학점</label> <input
+										type="number" class="form-control" placeholder="학점"
+										name="acbgPnt" id="acbgPnt" />
+								</div>
+								<div class="form-group width-s" hidden="hidden">
+									<label for="acbgPntCd" id="reg1label">기준학점</label> <select
+										class="form-control" name="acbgPntCd" id="acbgPntCd">
+										<option value="" disabled selected>기준학점선택*</option>
+										<c:forEach var="codeVO"
+											items="${codeGrpVOMap.get('AGPN').codeVOList}"
+											varStatus="stus">
+											<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+										</c:forEach>
+									</select>
+								</div>
+							</div>
+						</div>
+						<div class="row idForm btnForm">
+							<button class="resetBtn">취소</button>
+							<button class="submitBtn" id="acbgSaveBtn">저장</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 	경력 입력 창 -->
+		<div class="registForm career">
+			<p id="h3">경력</p>
+			<img src="/resources/images/addBtn.png" class="addBtn"
+				style="width: 58px;"> <br />
+			<div class="showBox">
+				<table class="table table-hover text-nowrap">
+					<thead>
+						<tr>
+							<th class="aplct">회사명</th>
+							<th class="aplct">입/퇴사 일자</th>
+							<th class="aplct">직무</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody id="careerTbody">
+						<c:forEach var="rsmCareerVO"
+							items="${resumeVO.rsmAcademicVOList}" varStatus="stat">
+							<tr>
+								<td class="aplct">${rsmCareerVO.acbgSchlNm}
+								</td>
+								<td class="aplct">${rsmCareerVO.acbgMtcltnym.substring(0,4)}년
+										${rsmCareerVO.acbgMtcltnym.substring(4,6)}월 ~ ${rsmCareerVO.acbgGrdtnym.substring(0,4)}년
+								</td>
+								<td class="aplct">${rsmCareerVO.acdmcrGrdtnSeCdNm}<br>
+									<span class="aplcont">입학년도 : ${rsmCareerVO.acbgMtcltnym}</span>&nbsp;&nbsp;&nbsp;
+									<span class="aplcont">졸업년도 : ${rsmCareerVO.acbgGrdtnym}</span>
+								</td>
+								<td>
+									<button type="button"
+										class="btn btn-default aplctCancel acbgDeleteBtn"
+										data-acbg-no="${rsmCareerVO.acbgNo}">삭제</button>
+									<button type="button"
+										class="btn btn-default aplctCancel acbgEditBtn"
+										data-acbg-no="${rsmAcademicVO.acbgNo}"
+										data-acbg-se-cd="${rsmAcademicVO.acbgSeCd}"
+										data-acbg-rcognacbg-cd="${rsmAcademicVO.acbgRcognacbgCd}"
+										data-acbg-schl-nm="${rsmAcademicVO.acbgSchlNm}"
+										data-acbg-mjr-nm="${rsmAcademicVO.acbgMjrNm}"
+										data-acdmcr-grdtn-se-cd="${rsmAcademicVO.acdmcrGrdtnSeCd}"
+										data-acbg-mtcltnym="${rsmAcademicVO.acbgMtcltnym}"
+										data-acbg-grdtnym="${rsmAcademicVO.acbgGrdtnym}"
+										data-acbg-pnt-cd="${rsmAcademicVO.acbgPntCd}"
+										data-acbg-pnt="${rsmAcademicVO.acbgPnt}">수정</button>
+								</td>
+							</tr>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
+			<div class="conBox" hidden="hidden">
+				<div class="inputForm">
+					<div class="row idForm">
+						<input type="text" class="form-control"
+								name="careerNo" id="careerNo" hidden="hidden" />
+						<div class="form-group width-l">
+							<label for="careerEntNm" id="reg1label">회사명*</label> <input
+								type="text" class="form-control" placeholder="회사명을 입력해주세요."
+								name="careerEntNm" id="careerEntNm" required />
+						</div>
+						<div class="form-group width-s">
+							<label for="careerJncmpYmd" id="reg1label">입사년월*</label> <input
+								type="date" class="form-control" name="careerJncmpYmd"
+								id="careerJncmpYmd" required />
+						</div>
+						<div class="form-group width-s">
+							<label for="careerRetireYmd" id="reg1label">퇴사년월</label> <input
+								type="date" class="form-control" name="careerRetireYmd"
+								id="careerRetireYmd" />
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-l">
+							<label for="careerdtyCd" id="reg1label">직무*</label> <select
+								class="form-control" name="careerDtyCd" id="careerDtyCd"
+								required="required">
+								<option value="" disabled selected>직무선택*</option>
+								<c:forEach var="codeVO"
+									items="${codeGrpVOMap.get('CRDT').codeVOList}" varStatus="stus">
+									<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group width-l">
+							<label for="careerDept" id="reg1label">근무부서</label> <input
+								type="text" class="form-control" placeholder="근무부서를 입력하세요."
+								name="careerDept" id="careerDept" />
+						</div>
+						<div class="form-group width-l">
+							<label for="careerjbgdCd" id="reg1label">직급/직책</label> <select
+								class="form-control" name="careerJbgdCd" id="careerJbgdCd">
+								<option value="" disabled selected>직급/직책선택</option>
+								<c:forEach var="codeVO"
+									items="${codeGrpVOMap.get('CRBG').codeVOList}" varStatus="stus">
+									<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-xl">
+							<label for="careerTask" id="reg1label">담당업무*</label>
+							<textarea class="form-control modalCont"
+								placeholder="
+	담당업무를 입력해주세요.
+
+		- 진행한 업무를 다 적기 보다는 경력사항 별로 주요한 내용만 엄선해서 작성하는 것이 중요합니다!
+		- 담당한 업무 내용을 요약해서 작성해보세요!
+		- 경력별 프로젝트 내용을 적을 경우, 역할/팀구성/기여도/성과를 기죽으로 요약해서 작성해보세요!"
+								name="careerTask" id="careerTask" style="height: 300px;"
+								required></textarea>
+							<div style="display: flex;">
+								<p id="countp" class="countp">
+									글자 수&nbsp;(&nbsp;<span id="charCount" class="charCount">0</span>&nbsp;/&nbsp;2000&nbsp;)
+								</p>
+								<p id="warning" class="warning">글자 수가 2000자를 넘었습니다!</p>
+							</div>
+
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-s">
+							<label for="careerAnslry" id="reg1label">연봉</label> <input
+								type="number" class="form-control" placeholder="연봉을 입력하세요."
+								name="careerAnslry" id="careerAnslry" />
+						</div>
+						<p
+							style="font-size: 19px; font-weight: bold; padding: 39px 23px 0px 2px;">만원</p>
+						<div class="form-group width-s">
+							<label for="careerWorkRgnCd" id="reg1label">근무지역</label> <select
+								class="form-control" name="careerWorkRgnCd" id="careerWorkRgnCd">
+								<option value="" disabled selected>근무지역선택*</option>
+								<c:forEach var="codeVO"
+									items="${codeGrpVOMap.get('WRGN').codeVOList}" varStatus="stus">
+									<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+								</c:forEach>
+							</select>
+						</div>
+					</div>
+					<div class="row idForm btnForm">
+						<button class="resetBtn">취소</button>
+						<button class="submitBtn" id="careerSaveBtn">저장</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 	스킬 입력 창 -->
+		<div class="registForm skill">
+			<p id="h3">스킬</p>
+			<img src="/resources/images/addBtn.png" class="addBtn"
+				style="width: 58px;"> <br />
+			<div class="showBox skillBox">
+				<div class="inputForm">
+					<div class="row idForm">
+						<div class="form-group width-xl ">
+							<label for="" id="reg1label">스킬</label>
+							<div class="selectedSkills" id="skill-show-box"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="conBox">
+				<div class="inputForm">
+					<div class="row idForm">
+						<div class="form-group width-xl">
+							<label for="skillSearch" id="reg1label">스킬 검색</label> <input
+								type="text" class="form-control"
+								placeholder="툴/직무역량/소프트스킬을 입력해주세요." name="skillSearch"
+								id="skillSearch" value="" />
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-xl search-results"
+							style="height: 100xp; overflow: scroll;"></div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-xl ">
+							<label for="" id="reg1label">스킬</label>
+							<div class="selectedSkills" id="skill-select-box"></div>
+						</div>
+					</div>
+					<div class="row idForm btnForm">
+						<button class="resetBtn">취소</button>
+						<button class="submitBtn" id="skillSaveBtn">저장</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 	경험/활동/교육 입력 창 -->
+		<div class="registForm" id="basInfo">
+			<p id="h3">경험/활동/교육</p>
+			<img src="/resources/images/addBtn.png" class="addBtn"
+				style="width: 58px;"> <br />
+			<div class="conBox">
+				<div class="inputForm">
+					<div class="row idForm">
+						<div class="form-group width-l">
+							<label for="actSeCd" id="reg1label">활동구분*</label> <select
+								class="form-control" name="actSeCd" id="actSeCd">
+								<option value="" disabled selected>활동구분선택*</option>
+								<c:forEach var="codeVO"
+									items="${codeGrpVOMap.get('ACTS').codeVOList}" varStatus="stus">
+									<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group width-l">
+							<label for="actEngn" id="reg1label">기관/장소명*</label> <input
+								type="text" class="form-control" placeholder="기관/장소명을 입력해주세요."
+								name="actEngn" id="actEngn" required />
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-l">
+							<label for="actNm" id="reg1label">활동명*</label> <input type="text"
+								class="form-control" placeholder="활동명을 입력해주세요." name="actNm"
+								id="actNm" required />
+						</div>
+						<div class="form-group width-s">
+							<label for="actBeginYmd" id="reg1label">시작년월*</label> <input
+								type="date" class="form-control" placeholder="기관/장소명을 입력해주세요."
+								name="actBeginYmd" id="actBeginYmd" required />
+						</div>
+						<div class="form-group width-s">
+							<label for="actEndYmd" id="reg1label">종료년월*</label> <input
+								type="date" class="form-control" placeholder="기관/장소명을 입력해주세요."
+								name="actEndYmd" id="actEndYmd" required />
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-xl">
+							<label for="actCn" id="reg1label">담당업무</label>
+							<textarea class="form-control modalCont"
+								placeholder="
+	경험/활동 상세내용 입력" name="actCn" id="actCn"
+								style="height: 300px;" required></textarea>
+							<div style="display: flex;">
+								<p id="countp" class="countp">
+									글자 수&nbsp;(&nbsp;<span id="charCount" class="charCount">0</span>&nbsp;/&nbsp;2000&nbsp;)
+								</p>
+								<p id="warning" class="warning">글자 수가 2000자를 넘었습니다!</p>
+							</div>
+						</div>
+					</div>
+					<div class="row idForm btnForm">
+						<button class="resetBtn">취소</button>
+						<button class="submitBtn">저장</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 	자격/어학/수상 입력 창 -->
+		<div class="registForm" id="basInfo">
+			<p id="h3">자격/어학/수상</p>
+			<img src="/resources/images/addBtn.png" class="addBtn"
+				style="width: 58px;"> <br />
+			<div class="conBox">
+				<div class="inputForm">
+					<div class="row idForm">
+						<div class="form-group width-l">
+							<label for="actSeCd" id="reg1label">자격증·면허증*</label> <select
+								class="form-control" name="actSeCd" id="actSeCd">
+								<option value="" disabled selected>활동구분선택*</option>
+								<c:forEach var="codeVO"
+									items="${codeGrpVOMap.get('CLW').codeVOList}" varStatus="stus">
+									<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group width-l">
+							<label for="crtfctNm" id="reg1label">자격증명*</label> <input
+								type="text" class="form-control" placeholder="자격증명을 입력해주세요."
+								name="crtfctNm" id="crtfctNm" required />
+						</div>
+						<div class="form-group width-l">
+							<label for="crtfctPblcnoffic" id="reg1label">발행처/기관</label> <input
+								type="text" class="form-control" placeholder="발행처/기관을 입력해주세요."
+								name="crtfctPblcnoffic" id="crtfctPblcnoffic" required />
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-s">
+							<label for="crtfctAcqsSe" id="reg1label">합격구분*</label> <select
+								class="form-control" name="crtfctAcqsSe" id="crtfctAcqsSe">
+								<option value="" disabled selected>합격구분선택*</option>
+								<c:forEach var="codeVO"
+									items="${codeGrpVOMap.get('ACQS').codeVOList}" varStatus="stus">
+									<option value="${codeVO.comCode}">${codeVO.comCodeNm}</option>
+								</c:forEach>
+							</select>
+						</div>
+						<div class="form-group width-s">
+							<label for="crtfctAcqsYm" id="reg1label">합격년월</label> <input
+								type="date" class="form-control" name="crtfctAcqsYm"
+								id="crtfctAcqsYm" />
+						</div>
+					</div>
+					<div class="row idForm btnForm">
+						<button class="resetBtn">취소</button>
+						<button class="submitBtn">저장</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 	포트폴리오 및 기타문서 입력 창 -->
+		<div class="registForm" id="basInfo">
+			<p id="h3">포트폴리오 및 기타문서</p>
+			<img src="/resources/images/addBtn.png" class="addBtn"
+				style="width: 58px;"> <br />
+			<div class="conBox">
+				<div class="inputForm">
+					<div>
+						<p style="padding-top: 10px; font-size: 16px;">
+							포트폴리오 및 기타문서 <span style="font-size: 14px">내 포트폴리오 및 추가로
+								제출할 문서를 첨부해보세요.</span>
+						</p>
+					</div>
+					<div class="row idForm">
+						<div>
+							<img src="/resources/images/potadd.png" id="CopyBtn"
+								class="CopyBtn"
+								style="cursor: pointer; width: 920px; padding: 10px 0px 0px 0px;">
+						</div>
+					</div>
+					<div class="row idForm btnForm">
+						<button class="resetBtn">취소</button>
+						<button class="submitBtn">저장</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 	자기소개서 입력 창 -->
+		<div class="registForm" id="basInfo">
+			<p id="h3">자기소개서</p>
+			<img src="/resources/images/addBtn.png" class="addBtn"
+				style="width: 58px;"> <br />
+			<div class="conBox">
+				<div class="inputForm">
+					<div class="row idForm">
+						<div class="form-group width-xl" style="margin-right: 10px;">
+							<label for="clTtl" id="reg1label">제목*</label> <input type="text"
+								class="form-control" placeholder="특별한 제목으로 자신을 어필해보세요."
+								name="clTtl" id="clTtl" required />
+						</div>
+					</div>
+					<div class="row idForm">
+						<div class="form-group width-xl">
+							<label for="clCn" id="reg1label">내용*</label>
+							<textarea class="form-control modalCont"
+								placeholder="
+	자신을 소개해 주세요." name="clCn" id="clCn"
+								style="height: 300px;" required></textarea>
+							<div style="display: flex;">
+								<p id="countp" class="countp">
+									글자 수&nbsp;(&nbsp;<span id="charCount" class="charCount">0</span>&nbsp;/&nbsp;2000&nbsp;)
+								</p>
+								<p id="warning" class="warning">글자 수가 2000자를 넘었습니다!</p>
+							</div>
+						</div>
+					</div>
+					<div class="row idForm btnForm">
+						<button class="resetBtn">취소</button>
+						<button class="submitBtn">저장</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<style>
+::placeholder {
+	color: #b4b4b4;
+	font-weight: 300;
+}
+
+#registMain {
+	padding: 30px 198px 30px 400px;
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	max-width: 100%;
+	min-width: 100%;
+	scrollbar-width: none;
+	overflow: auto;
+}
+
+.registForm {
+	max-width: 1030px;
+	min-width: 1030px;
+	height: auto;
+}
+
+.registForm-sub {
+	width: 340px;
+	height: 600px;
+	position: fixed;
+	left: 1468px;
+	top: 135px;
+	background-color: white;
+	border-radius: 0px 0px 12px 12px;
+	border: solid 1px #efefef;
+	border-top: solid 4px #24D59E;
+	box-shadow: 0px 12px 10px -3px rgba(0, 0, 0, .05), 11px 9px 10px -1px
+		rgba(0, 0, 0, .05);
+}
+
+.registForm-bottom {
+	width: 100%;
+	height: 107px;
+	position: fixed;
+	left: 0px;
+	bottom: 0px;
+	background-color: #e1ffe5;
+	z-index: 1;
+	border-top: solid 2px #24D59E;
+	justify-content: center;
+	min-width: 1200px;
+}
+
+#h3 {
+	font-size: 22px;
+	padding: 0px 0px 0px 40px;
+	position: absolute;
+}
+
+.registForm-sub .reqHint, .registForm .reqHint {
+	color: red;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.registForm .conBox {
+	border: solid 1px #efefef;
+	box-shadow: 0px 12px 10px -3px rgba(0, 0, 0, .05), 11px 9px 10px -1px
+		rgba(0, 0, 0, .05);
+	border-top: solid 3px #24D59E;
+	border-radius: 0px 0px 12px 12px;
+	height: auto;
+	max-width: 1030px;
+	min-width: 1030px;
+	width: 100%;
+	padding: 0px 42px 100px 55px;
+	margin: 20px 0px 30px 0px;
+}
+
+.form-control {
+	border-color: #24D59E;
+	height: calc(2rem + 14px);
+}
+
+label {
+	position: relative;
+	top: 20px;
+	left: 13px;
+	background-color: white;
+	padding: 0px 6px 0px 6px;
+	font-size: 14px;
+}
+
+.form-group {
+	margin-bottom: auto;
+}
+
+.sub {
+	margin-left: 0px;
+	width: 308.5px;
+}
+
+.imgForm {
+	margin-top: -129px;
+	position: relative;
+	right: -827px;
+	top: 85px;
+}
+
+.imgCover {
+	border: none;
+	height: 130px;
+	width: 100px;
+	border-radius: 8px;
+}
+
+#selIvImg {
+	height: 130px;
+	width: 100px;
+	border: none;
+	background-color: transparent;
+}
+
+#pImg {
+	height: 130px;
+	width: 100px;
+	border-radius: 8px;
+	border: solid 1px #24D59E;
+	object-fit: cover;
+}
+
+.btnForm {
+	float: right;
+	margin: 30px 0px 0px 0px;
+}
+
+.width-l {
+	width: 300px;
+	margin-right: 10px;
+}
+
+.width-s {
+	width: 145px;
+	margin-right: 10px;
+}
+
+.width-xl {
+	width: 920px;
+}
+
+.addBtn {
+	cursor: pointer;
+	float: right;
+}
+
+.inputForm .row {
+	margin-right: 0px;
+	margin-left: 0px;
+}
+
+.resetBtn, .submitBtn {
+	margin-right: 10px;
+}
+
+.search-results {
+	overflow: auto; /* 또는 scroll */
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none;
+	height: auto;
+	max-height: 250px;
+	border-bottom: 1px solid rgba(0, 0, 0, .125);
+}
+
+.search-results::-webkit-scrollbar {
+	display: none; /* Chrome, Safari, Opera */
+}
+
+.selected-skill {
+	float: left;
+	padding: 2px 10px 2px 10px;
+	background-color: rgba(44, 207, 195, 0.11);
+	border: solid 1px #0080003d;
+	width: auto;
+	height: 32px;
+	border-radius: 40px;
+	margin: 0px 10px 10px 0px;
+	cursor: pointer;
+}
+
+.selectedSkills {
+	border: solid 1px #24D59E;
+	border-radius: 8px;
+	height: 250px;
+	overflow: auto; /* 또는 scroll */
+	-ms-overflow-style: none; /* IE and Edge */
+	scrollbar-width: none;
+	padding: 10px 0px 10px 10px;
+}
+
+.charCount {
+	color: #24D59E;
+}
+
+.countp {
+	color: #232323;
+	font-size: 14px;
+}
+
+.warning {
+	color: red;
+	display: none;
+	margin-left: 20px;
+}
+
+table {
+	box-shadow: 0px 12px 10px -3px rgba(0, 0, 0, .05), 11px 9px 10px -1px
+		rgba(0, 0, 0, .05);
+	border : none;
+	border-top: solid 3px #24D59E;
+	border-radius: 0px 0px 12px 12px;
+	height: auto;
+	max-width: 1030px;
+	min-width: 1030px;
+	width: 100%;
+	padding: 0px 42px 100px 55px;
+	margin: 20px 0px 30px 0px;
+}
+.skillBox{
+	box-shadow: 0px 12px 10px -3px rgba(0, 0, 0, .05), 11px 9px 10px -1px
+		rgba(0, 0, 0, .05);
+	border : none;
+	border-top: solid 3px #24D59E;
+	border-radius: 0px 0px 12px 12px;
+	height: auto;
+	max-width: 1030px;
+	min-width: 1030px;
+	width: 100%;
+	padding: 0px 42px 100px 55px;
+	margin: 20px 0px 30px 0px;
+}
+
+.table th {
+	padding: 15px;
+}
+
+th {
+	text-align: center;
+	font-size: 16px;
+	width: 150px;
+}
+
+thead {
+	border-top: none;
+	border-bottom: none;
+}
+
+.table thead th {
+	vertical-align: bottom;
+	border-bottom: none;
+}
+
+.card-body.table-responsive.p-0 {
+	margin-left: 61px;
+	width: 1230px;
+}
+
+tbody {
+	text-align: center;
+	font-size: 14px;
+	color: #232323;
+}
+
+th.aplct {
+	text-align: left;
+	padding-left: 80px;
+}
+
+td.aplct {
+	text-align: left;
+	padding-left: 80px;
+	font-size: 14px;
+	font-weight: 700;
+}
+
+th.entNm {
+	text-align: left;
+	padding-left: 137px;
+}
+
+td.entNm {
+	text-align: left;
+	padding-left: 137px;
+	font-size: 14px;
+	font-weight: 550;
+	padding-top: 23px;
+}
+
+td.appymd {
+	font-size: 14px;
+	font-weight: 500;
+	padding-top: 23px;
+}
+/* table hover */
+.table-hover tbody tr:hover {
+	color: #212529;
+	background: none;
+}
+
+</style>
+

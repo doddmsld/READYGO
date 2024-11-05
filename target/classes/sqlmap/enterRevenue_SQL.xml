@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.EnterRevenueMapper">
+
+	<!-- 매출액 -->
+    <select id="revenue" parameterType="String" resultType="kr.or.ddit.vo.EnterRevenueVO">
+        SELECT *
+        FROM ENTER_REVENUE
+        WHERE ENT_ID = #{entId}
+        AND TO_DATE(REVENUE_YEAR, 'YYYY') >= ADD_MONTHS(ADD_MONTHS(SYSDATE, -12),-72)
+        ORDER BY REVENUE_YEAR ASC
+    </select>
+	
+	<insert id="insertRevenues" parameterType="enterRevenueVO">
+		<selectKey keyProperty="revenueNo" order="BEFORE" resultType="int">
+			(select MAX(REVENUE_NO)+1 FROM ENTER_REVENUE)
+		</selectKey>
+		INSERT INTO ENTER_REVENUE(REVENUE_NO, ENT_ID, REVENUE_YEAR, REVENUE_AMOUNT)
+		VALUES(#{revenueNo},#{entId},#{revenueYear},#{revenueAmount})
+	</insert>
+	
+	<update id="updateRevenues" parameterType="enterRevenueVO">
+		UPDATE ENTER_REVENUE SET REVENUE_AMOUNT=#{revenueAmount}
+		WHERE REVENUE_NO = #{revenueNo}
+		AND REVENUE_YEAR = #{revenueYear}
+	</update>
+	
+	<update id="updateYcnt" parameterType="enterEmpYcntVO">
+		UPDATE ENT_EMP_YCNT 
+		SET ENT_EMP_YCNT = #{entEmpYcnt}, ENT_NEWEMP = #{entNewemp} , ENT_OUTEMP = #{entOutemp}
+		WHERE ENT_EMP_YCNT_NO =#{entEmpYcntNo} AND ENT_ID=#{entId} AND ENT_YM = #{entYm}
+	</update>
+	
+	<insert id="insertYcnt" parameterType="enterEmpYcntVO">
+		<selectKey keyProperty="entEmpYcntNo" order="BEFORE" resultType="int">
+			(select MAX(ENT_EMP_YCNT_NO)+1 FROM ENT_EMP_YCNT)
+		</selectKey>
+		INSERT INTO ENT_EMP_YCNT(ENT_EMP_YCNT_NO, ENT_ID, ENT_YM, ENT_EMP_YCNT, ENT_NEWEMP, ENT_OUTEMP)
+		VALUES(#{entEmpYcntNo},#{entId},#{entYm},#{entEmpYcnt},#{entNewemp},#{entOutemp})
+	</insert>
+	
+</mapper>

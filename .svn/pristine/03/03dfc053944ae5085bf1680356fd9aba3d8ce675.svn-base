@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MemProfileMapper">
+
+	
+<!-- PRF : PRF_CAREER = 1 : N -->
+<resultMap type="prfVO" id="prfMap">
+    <result property="mbrId" column="MBR_ID"/>
+    <result property="mbrNm" column="MBR_NM"/>
+    <result property="careerNm" column="CAREER_NM"/> <!-- 단일 경력명 매핑 -->
+    <result property="proflContent" column="PROFL_CONTENT"/>
+    <result property="mbrEml" column="MBR_EML"/>
+    <result property="prtfolioAddr" column="PRTFOLIO_ADDR"/>
+    <collection property="prfCareerVOList" resultMap="prfCareerMap"></collection>
+</resultMap>
+
+<resultMap type="prfCareerVO" id="prfCareerMap">
+	<result property="careerNo" column="CAREER_NO"/>
+	<result property="mbrId" column="MBR_ID"/>
+	<result property="careerNm" column="CAREER_NM"/>
+	<result property="careerEnt" column="CAREER_ENT"/>
+	<result property="careerBegYm" column="CAREER_BEG_YM"/>
+	<result property="careerEndYm" column="CAREER_END_YM"/>
+</resultMap>
+
+
+<!-- 프로필 -->
+<select id="profile" parameterType="String" resultMap="prfMap">
+    SELECT P.MBR_ID, P.MBR_NM, MIN(C.CAREER_NM) AS CAREER_NM, P.PROFL_CONTENT
+      FROM PRF P
+      JOIN PRF_CAREER C ON P.MBR_ID = C.MBR_ID
+     WHERE P.MBR_ID = #{mbrId}
+     GROUP BY P.MBR_ID, P.MBR_NM, P.PROFL_CONTENT
+</select>
+
+<!-- 경력 조회 -->
+<select id="careerList" parameterType="String" resultType="prfCareerVO">
+	SELECT CAREER_NO, MBR_ID, CAREER_NM, CAREER_ENT, CAREER_BEG_YM, CAREER_END_YM
+	  FROM PRF_CAREER
+	 WHERE MBR_ID =#{mbrId}
+</select>
+
+<!-- 경력 추가 -->
+<insert id="careerAddAjax" parameterType="PrfCareerVO">
+    <selectKey resultType="String" order="BEFORE" keyProperty="careerNo">
+        SELECT 'CAR' || LPAD(NVL(MAX(TO_NUMBER(SUBSTR(CAREER_NO, 4))), 0) + 1, 3, '0')
+        FROM PRF_CAREER
+    </selectKey>
+    INSERT INTO PRF_CAREER (CAREER_NO, MBR_ID, CAREER_NM, CAREER_ENT, CAREER_BEG_YM, CAREER_END_YM)
+    VALUES (#{careerNo}, #{mbrId}, #{careerNm}, #{careerEnt}, #{careerBegYm}, #{careerEndYm})
+</insert>
+
+<!-- 경력 수정 -->
+
+<!-- 경력 삭제 -->
+<delete id="careerDelAjax" parameterType="map">
+	DELETE 
+	  FROM PRF_CAREER
+	 WHERE CAREER_NO = #{careerNo}
+	   AND MBR_ID=#{mbrId}
+</delete>
+
+
+
+
+
+<!-- 학력 조회 -->
+<select id="acbgList" parameterType="String" resultType="prfAcbgVO">
+	SELECT MBR_ID, ACBG_SE_CD, ACBG_SCHL_NM, ACBG_MJR_NM, ACBG_MTCLTNYM, ACBG_GRDTNYM
+	  FROM PRF_ACBG
+	 WHERE MBR_ID =#{mbrId}
+</select>
+
+<!-- 자격증 조회 -->
+<select id="crtfctList" parameterType="String" resultType="prfCrtfctVO">
+	SELECT CRTFCT_NO, MBR_ID, CRTFCT_NM, CRTFCT_PBLCNOFFIC, CRTFCT_ACQS_DATE
+	  FROM PRF_CRTFCT
+	 WHERE MBR_ID = #{mbrId}
+</select>
+
+<!-- 수상 조회 -->
+<select id="WnpzList" parameterType="String" resultType="prfWnpzVO">
+	SELECT WNPZ_NO, MBR_ID, WNPZ_CNTST_NM, WNPZ_AUSPCENGN, WNPZ_PSSRP_YM
+	  FROM PRF_WNPZ
+	 WHERE MBR_ID = #{mbrId}
+</select>
+
+<!-- 활동 조회 -->
+<select id="ActList" parameterType="String" resultType="prfActVO">
+	SELECT ACT_NO, MBR_ID, ACT_NM, ACT_AUSPCENGN, ACT_BEGIN_YM, ACT_END_YM, ACT_NC
+	  FROM PRF_ACT
+	 WHERE MBR_ID = #{mbrId}
+</select>
+
+<!-- 업종 조회 -->
+<select id="BusinessList" parameterType="String" resultType="prfBusinessVO">
+	SELECT TPBIZ_SE_CD, MBR_ID, TPBIZ_NM
+	  FROM PRF_BUSINESS
+	 WHERE MBR_ID = #{mbrId}
+</select>
+
+</mapper>

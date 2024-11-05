@@ -1,0 +1,91 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+ pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>   
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>   
+<meta charset="UTF-8">
+<!-- 회원프로필css -->
+<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/member/profile.css" />
+
+<!-- 구글 아이콘 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<style>
+.material-symbols-outlined {
+	font-size: 48px;
+	color: #5F6368;
+  	font-variation-settings:
+  	'FILL' 0,
+  	'wght' 300,
+  	'GRAD' 0,
+ 	'opsz' 48
+}
+</style>
+<div class="content-wrapper">
+	<div id="topPro">
+		<br>
+		<div id="nav">
+			<img alt="" src="../resources/images/member/토끼.jpg" class="img">
+		</div>
+		<br>
+		<p id="mbrNm">${prfVO.mbrNm}</p>
+		<div id="introduce">
+			<p>아르르르르릉ㄹ아르을으랑랑라알아라아아아아아아아아 자자잠잠자자자졸려
+			<br>가나가나가나가나다라마바사</p>
+		</div>
+		<hr>
+		<div id="introduce2">
+			<p style="margin-top:25px;">주요 경력: ${prfVO.careerNm}</p>
+			<p>${prfVO.proflContent}</p>
+		</div>
+	</div>	
+	
+	<div class="container">
+		<div class="row">
+			<div class="col-left">
+			<div id="careerBox">
+			    <h5>경력</h5>
+		    	<div id="career">
+				    <c:if test="${not empty prfCareerVOList}">
+				        <c:set var="careerBegYm" value="${prfCareerVOList[0].careerBegYm}" />
+					       <input type="text" class="title" value="${prfCareerVOList[0].careerNm}" readonly><br>
+					        <input type="text" class="careerEnt" value="${prfCareerVOList[0].careerEnt}" readonly><br>
+					        <input type="text" class="careerBegYm" value=" ${careerBegYm.substring(0, 4)}-${careerBegYm.substring(4, 6)}" readonly>
+				    </c:if>
+				    <hr id="boxhr">
+			    	<c:if test="${not empty prfCareerVOList}">
+				        <c:set var="careerBegYm" value="${prfCareerVOList[1].careerBegYm}" />
+					        <input type="text" class="title" value="${prfCareerVOList[1].careerNm}" readonly><br>
+					        <input type="text" class="careerEnt" value="${prfCareerVOList[1].careerEnt}" readonly><br>
+					        <input type="text" class="careerBegYm" value=" ${careerBegYm.substring(0, 4)}-${careerBegYm.substring(4, 6)}" readonly>
+				    </c:if>
+		    	</div>
+			</div>
+
+				<div id="acbg">
+					<p>${prfAcbgVOList}</p>
+				</div>
+				<div id="act">
+					<p>${prfActVOList}</p>
+				</div>
+				<div id="win">
+					<p>${prfWnpzVOList}</p>
+				</div>
+			</div>
+			<div class="col-right">
+					<div id="businessBox">
+						<h5>활동분야</h5>
+						<div id="business">
+							<p>${prfBusinessVOList}</p>
+						</div>
+					</div>
+					<div id="crtfctBox">
+						<div id="crtfct">
+							<p>${prfCrtfctVOList}</p>
+						</div>
+					</div>
+			</div>
+	</div>
+</div>	
+</div>
+
+</body>

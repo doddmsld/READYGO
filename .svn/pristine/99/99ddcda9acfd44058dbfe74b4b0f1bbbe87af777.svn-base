@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+<
+style
+>
+ @charset "UTF-8";
+
+* {
+    font-family: pretendard;
+}
+
+/*전체적인 위치*/
+.layout {
+	 display: flex;
+    flex-direction: column; /* 세로 방향 설정 */
+    width: 1000px;
+    justify-content: center; /* 가로 가운데 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
+    margin: 0 auto;
+    padding: 20px;
+}

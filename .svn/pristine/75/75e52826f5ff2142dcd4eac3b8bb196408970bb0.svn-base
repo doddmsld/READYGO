@@ -1,0 +1,119 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>인재 검색</title>
+	<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/enter/injae.css" />
+</head>
+<body>
+
+<div class="box">
+    <div class="search">
+        <input type="text" placeholder="하나 이상의 자격조건 키워드를 포함">
+        <button type="button">검색</button>
+    </div>
+
+    <div class="result">
+        <!-- 검색 결과 카드 -->
+        <div class="resultCard">
+            <div class="profile">
+                <img src="../resources/images/enter/서성배.jpg" alt="프로필 사진">
+                <div class="profile-info">
+                    <div class="name">서성배</div>
+                    <div class="details">20대 중반 · 경력 1년</div>
+                    <div class="details">대기업 - 대전 소재 4년제 대학(졸업)</div>
+                    <div class="skills">
+                        <span class="skill-badge">JAVA</span>
+                        <span class="skill-badge">Jenkins</span>
+                        <span class="skill-badge">Spring Boot</span>
+                        <span class="skill-badge">+5</span>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="profileGo">프로필로 가기</button>
+                <button class="scout-button">스카우트 제안하기</button>
+            </div>
+        </div>
+
+        <div class="resultCard">
+            <div class="profile">
+                <img src="../resources/images/enter/방민주.jpg" alt="프로필 사진">
+                <div class="profile-info">
+                    <div class="name">방민주</div>
+                    <div class="details">20대 중반 · 신입</div>
+                    <div class="details">대기업 - 서울 소재 4년제 대학(졸업)</div>
+                    <div class="skills">
+                        <span class="skill-badge">JAVA</span>
+                        <span class="skill-badge">MariaDB</span>
+                        <span class="skill-badge">Spring Boot</span>
+                        <span class="skill-badge">+3</span>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="profileGo">프로필로 가기</button>
+                <button class="scout-button">스카우트 제안하기</button>
+            </div>
+        </div>
+        
+        <div class="resultCard">
+            <div class="profile">
+                <img src="../resources/images/enter/방민주.jpg" alt="프로필 사진">
+                <div class="profile-info">
+                    <div class="name">방민주</div>
+                    <div class="details">20대 중반 · 신입</div>
+                    <div class="details">대기업 - 서울 소재 4년제 대학(졸업)</div>
+                    <div class="skills">
+                        <span class="skill-badge">JAVA</span>
+                        <span class="skill-badge">MariaDB</span>
+                        <span class="skill-badge">Spring Boot</span>
+                        <span class="skill-badge">+3</span>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="profileGo">프로필로 가기</button>
+                <button class="scout-button">스카우트 제안하기</button>
+            </div>
+        </div>
+
+        <div class="resultCard">
+            <div class="profile">
+                <img src="../resources/images/enter/강민구.jpg" alt="프로필 사진">
+                <div class="profile-info">
+                    <div class="name">강민구</div>
+                    <div class="details">20대 후반 · 경력 1년</div>
+                    <div class="details">대기업 - 대전 소재 4년제 대학(졸업)</div>
+                    <div class="skills">
+                        <span class="skill-badge">JAVA</span>
+                        <span class="skill-badge">PYTHON</span>
+                        <span class="skill-badge">Spring Boot</span>
+                        <span class="skill-badge">+2</span>
+                    </div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="profileGo">프로필로 가기</button>
+                <button class="scout-button">스카우트 제안하기</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+        <button>&laquo;</button>
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+        <button>5</button>
+        <button>&raquo;</button>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.OustouMapper">
+
+	<insert id="registPost" parameterType="oustouVO">
+		<selectKey resultType="int" order="BEFORE" keyProperty="outordNo">
+ 			SELECT NVL(MAX(OUTORD_NO),0)+1 FROM OUTSOU
+ 		</selectKey>
+		INSERT INTO OUTSOU(OUTORD_NO, OUTORD_LCLSF, OUTORD_MLSFC, OUTORD_TTL
+		                 , OUTORD_EXPLN, OUTORD_AMT, OUTORD_AMT_EXPLN, OUTORD_MAIN_FILE
+		                 , OUTORD_DETAIL_FILE, OUTORD_DMNDMATTER, OUTORD_PROVDPROCSS, OUTORD_REFNDREGLTN
+		                 , OUTORD_WRTDE, MBR_ID)
+		VALUES(#{outordNo}, #{outordLclsf}, #{outordMlsfc}, #{outordTtl}
+				, #{outordExpln},#{outordAmt},#{outordAmtExpln},#{outordMainFile}
+				,#{outordDetailFile},#{outordDmndmatter},#{outordProvdprocss},#{outordRefndregltn}
+				,#{outordWrtde},#{mbrId});
+	</insert>
+	
+	<!-- 공통 코드 중 대분류, 중뷴류를 나눠서 가져오기 위함 -->
+	<select id="cacodeSelect" resultType="codeVO" parameterType="String">
+		SELECT A.COM_CODE, A.COM_CODE_GRP, A.COM_CODE_NM, 
+		       A.COM_CODE_DESC, A.USE_YN, A.UPPER_COM_CODE, 
+		       A.UPPER_COM_CODE_GRP
+		FROM CODE A, CODE_GRP B
+		WHERE A.COM_CODE_GRP = B.COM_CODE_GRP
+		  AND B.USE_YN = 1
+		  AND A.COM_CODE_GRP = 'OUML'
+		  AND A.COM_CODE LIKE #{comCode}||'%'
+	</select>
+</mapper>

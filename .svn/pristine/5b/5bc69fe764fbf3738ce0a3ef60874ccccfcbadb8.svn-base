@@ -1,0 +1,230 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+h3 {
+	color: black;
+}
+h2{
+	color:black;
+}
+#fmenu{
+	margin-bottom: 10px;
+}
+
+#maintop {
+	display: flex;
+	justify-content: space-between;
+}
+
+#mainright {
+	height: 750px;
+	display: flex;
+	flex-direction: column;
+}
+#mainleft{
+	height: 750px;
+}
+
+/*왼쪽 스타일*/
+.header-area.header-sticky {
+	min-height: 0px;
+}
+
+#calendar {
+	width: 750px;
+	height: auto;
+}
+
+#yrModal {
+	position: fixed;
+	width: 75%;
+	height: 100%;
+	background-color: rgba(41, 41, 41, 0.67);
+	display: none;
+	z-index: 1000;
+}
+
+#cont {
+	margin: 50px auto;
+	width: 50%;
+	height: 70%;
+	background-color: white;
+	color: rgba(35, 35, 35, 1);
+	border-radius: 15px;
+}
+
+#closeModal {
+	text-align: right;
+	margin-right: 50px;
+	margin-top: 30px;
+}
+
+.close {
+	border: 1px solid rgba(167, 167, 167, 1);
+	color: rgba(35, 35, 35, 1);
+	background: white;
+	border-radius: 3px;
+}
+
+.close:hover {
+	background: rgba(236, 236, 236, 1);
+}
+
+#schFColor {
+	margin-bottom: 70px;
+}
+
+#ModalContent {
+	text-align: justify;
+	padding-left: 20%;
+	line-height: 50px;
+}
+
+#add {
+	border: 1px solid #24D59E;
+	border-radius: 5px;
+	height: 34px;
+	background: white;
+	color: #24D59E;
+}
+
+#add:hover {
+	background: #24D59E;
+	color: white;
+}
+
+label {
+	display: inline-block;
+	width: 80px;
+	height: 30px;
+}
+
+.fc-h-event {
+	border: none;
+}
+
+/*오른쪽 스타일*/
+#fast {
+	width: 600px;
+	height: 130px;
+	border: 1px solid #B6B6B6;
+	border-radius: 20px;
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
+#pbanc, #prf, #proposal, #applicant {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.fmtitle {
+	font-size: 14px;
+}
+
+.v-line {
+	border-left: 1px solid #B6B6B6;
+	height: 50px;
+}
+
+#fastmenu {
+	width: 600px;
+	height: 130px;
+	margin-top: 40px;
+}
+
+#fastmenubtn {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	
+}
+
+#pr, #pb, #ap, #pro {
+	width: 150px;
+	height: 100px;
+	border: 1px solid #B6B6B6;
+	border-radius: 15px;
+	background: #FFFFFF;
+}
+
+#pbancmenu {
+	width: 600px;
+	height: 130px;
+}
+
+#pbanctitle {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 40px;
+	margin-bottom: 10px;
+}
+
+#pbancex {
+	width: 600px;
+	height: 280px;
+	border: 1px solid #B6B6B6;
+	border-radius: 20px;
+}
+
+#pbanclist {
+	margin: 20px auto;
+	width: 500px;
+	height: 230px;
+	border-top: 1px solid #666363;
+	border-bottom: 1px solid #666363;
+	overflow-y: auto;
+}
+
+/* 인재 추천*/
+#mainbtm {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.prfmenu {
+	flex: 0 0 auto;
+	width: 250px;
+	height: 150px;
+	border: 1px solid #E5F8ED;
+	padding: 10px;
+	border-radius: 10px;
+	background-color: #E5F8ED;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+.circle {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+}
+
+.info {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	margin: 10px;
+}
+
+.skill {
+	text-align: center;
+}
+
+.p-line {
+	border-left: 1px solid #B6B6B6;
+	height: 150px;
+}
+
+#newbie, #personal {
+	display: flex;
+	width: 600px;
+	justify-content: space-between;
+}

@@ -1,0 +1,86 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+<
+style
+>
+ @charset "UTF-8";
+
+* {
+    font-family: pretendard;
+}
+
+<style>
+/*전체 div*/
+.rvRegistMa{
+	display:flex;
+	flex-direction:column;
+	width: 1200px;
+	justify-content: center;
+}
+/*내용 입력 div*/
+.rvRegistcont{
+	width: 1200px;
+}
+
+/*ck에디터 css*/
+/* .content-wrapper { */
+/*     background-color: white; */
+/*     font-family: pretendard; */
+/* } */
+/* .ck-editor__main .ck-content { */
+/*     height: 400px; */
+/*     border: 1px solid #black; */
+/* } */
+
+
+/* .faq-btn { */
+/* 	background: white; */
+/* 	color: #24D59E; */
+/* 	border: 1px solid #24D59E; */
+/* 	width: 170px; */
+/* 	transition: all 0.3s ease 0s; */
+/*     text-align: center; */
+/*     padding: 8px 15px; */
+/*     border-radius: 5px;     */
+/* } */
+/* label:not(.form-check-label):not(.custom-file-label) { */
+/*     font-weight: normal; */
+/* } */
+/* .faq-btn:hover { */
+/* 	background-color: #24D59E; */
+/* 	color: white; */
+/* } */
+
+/* .button-container { */
+/*     display: flex; */
+/*     justify-content: space-between; */
+/*     margin-top: 20px; */
+/* } */
+
+/* .content-group { */
+/*     margin-top: 20px; */
+/* } */
+
+/* #file-list button { */
+/* 	background: white; */
+/* 	color: #232323; */
+/* 	border: 1px solid #B5B5B5; */
+/* 	transition: all 0.3s ease 0s; */
+/* 	height: 25px; */
+/* 	width:25px; */
+/* 	text-align: center; */
+/* } */
+/* #file-list button:hover { */
+/* 	background: #ECECEC; */
+/* 	border: 1px solid #B5B5B5; */
+/* } */
+/* #file-list { */
+/*     display: flex; */
+/* } */
+/* label[for="pstFileFile"] { */
+/*     font-weight: normal; */
+/* } */

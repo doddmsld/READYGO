@@ -1,0 +1,388 @@
+<%@ page language="java" contentType="text/html;charset=UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard.css">
+
+    <title>기업 헤더</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="resources/css/bootstrap.min.css" rel="stylesheet">
+<!-- Additional CSS Files -->
+    <link rel="stylesheet" href="../resources/assets/css/fontawesome.css">
+    <link rel="stylesheet" href="../resources/assets/css/templatemo-cyborg-gaming.css">
+    <link rel="stylesheet" href="../resources/assets/css/owl.css">
+    <link rel="stylesheet" href="../resources/assets/css/animate.css">
+    <link rel="stylesheet"href="https://unpkg.com/swiper@7/swiper-bundle.min.css"/>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var currentPath = window.location.pathname;
+    console.log(currentPath); // 경로 출력 확인
+//     $('.alink').each(function() {
+//         // 각 링크의 href 속성에서 경로만 가져오기
+//         var linkPath = $(this).attr('href').split('?')[0]; // 쿼리 스트링을 제거하고 경로만 추출
+//         var alinkElement = $(this); // 현재 alink 요소 저장
+//         console.log(alinkElement);
+//         alinkElement.find('.menuDetaild a').each(function() {
+//             var hrefValue = $(this).attr('href').split('?')[0]; // 각 a 요소의 href 속성값을 가져옴
+            
+//             // 현재 경로와 비교하여 일치할 경우 alink 요소에 active 클래스 추가
+//             if (currentPath === hrefValue) {
+//                 alinkElement.addClass('active');
+//             }
+//         });
+//         // 현재 경로와 링크 경로를 비교
+//         if (currentPath === linkPath) {
+//             $(this).addClass('active'); // 일치하는 경우 active 클래스 추가
+//         }
+//     });
+    $('.alink').each(function() {
+        var alinkElement = $(this); // 현재 alink 요소를 저장
+        var linkPath = alinkElement.attr('href').split('?')[0]; // alink의 href에서 경로만 추출
+        
+        // alink의 href가 현재 경로와 일치하는지 비교
+        if (currentPath === linkPath) {
+            alinkElement.addClass('active'); // 경로가 일치하면 alink에 active 클래스 추가
+        }
+
+        // alink 내부의 menuDetaild 요소의 링크를 순회하여 href 값을 비교
+        alinkElement.closest('li').find('.menuDetaild a').each(function() {
+            var hrefValue = $(this).attr('href').split('?')[0]; // menuDetaild의 a 태그 href 값에서 경로만 추출
+
+            // 현재 경로와 비교하여 일치하면 상위 alink에 active 클래스 추가
+            if (currentPath === hrefValue) {
+                alinkElement.addClass('active'); // 경로가 일치하면 alink에 active 클래스 추가
+            }
+        });
+    });
+    
+});
+$(function(){
+	$(".nav-link").on('click',function(){
+		$('.alerts').text("");
+		const entIds = $('.loginval').data('value');
+	       if(entIds !=null){
+	    	   $.ajax({
+		           url:"/enter/alarmList",
+		           contentType:"application/json;charset=utf-8",
+		           data:entIds,
+		           type:"post",
+		           dataType:"json",
+		           beforeSend:function(xhr){
+		              xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+		           },
+		           success:function(result){
+		              console.log("result : ", result);
+		              var apd = "";
+		              $.each(result,function(idx,item){
+		            	  
+		            	  apd += "<a class='dropdown-item d-flex align-items-center mess' href='#'>";
+						    apd += "<div class='mr-3'>";
+							apd += "<div class='icon-circle bg-warning'>";
+						    apd += "<i class='fas fa-exclamation-triangle text-white'></i></div></div><div>";
+						    apd += "<div class='small text-gray-500'>"+item.ntcnYmd+"</div>";/* 시간이 들어가는 부분  */
+						    apd += item.ntcnCn;/* 메시지가 들어가는 부분 */
+						    apd += "</div></a>";
+		              })
+		             
+		    		$(".alerts").prepend(apd);
+		           }
+		        });  
+	       }else{
+	    	   alert("로그인후 이용가능합니다.")
+	           location.href="/security/login"
+	       }	
+	})
+})
+function alerttext(){
+    	alert("로그인 후 이용하세요.");
+    	location.href="/security/login";
+    }
+</script>
+<!-- ***** Header Area Start ***** -->
+  <header class="header-area header-sticky" >
+    <div class="container">
+    	<sec:authorize access="isAuthenticated()">
+		                <p style="color: white; overflow: auto;">
+					    	<sec:authentication property="principal.entVO" var="entVO"/>
+					    </p>
+					    <p style="color: white; overflow: auto;">
+					    	<sec:authentication property="principal.memVO" var="memVO"/>
+					    </p>
+		</sec:authorize>
+        <div class="row">
+            <div class="col-9" style="height: 70px;">
+                <nav class="main-nav" style="z-index:999;position:relative;">
+                    <!-- ***** Logo Start ***** -->
+                    <a href="/enter/main" class="logo">
+                        <img src="/resources/icon/ReadyGo-로고(초록).png" alt="">
+                    </a>
+                    <div class="search-input">
+				         <nav class="top-bar__menu-box-1">
+							<ul id="enterMenu" style="font-size:20px;text-align: center;">
+								<c:if test="${entVO.entId ne null}">
+								<li class="menuDetail"><a class="alink" href="/enter/pbanc?entId=${entVO.entId}">공고관리</a>
+									<ul class="submenu">
+							          <li class="menuDetaild"><a href="/enter/pbanc?entId=${entVO.entId}">공고관리</a></li>
+							          <li class="menuDetaild"><a href="#">공고 임시저장</a></li>
+							        </ul>
+						        </li>
+								</c:if>
+								<c:if test="${entVO.entId eq null}">
+								<li class="menuDetail"><a class="alink" href="#" onClick="alerttext()">공고관리</a>
+									<ul class="submenu">
+							          <li ><a href="/enter/pbanc?entId=${entVO.entId}" onClick="alerttext()">공고관리</a></li>
+							          <li><a href="/enter/tempPbanc?entId=${entVO.entId}" onClick="alerttext()">공고 임시저장</a></li>
+							        </ul>
+						        </li>
+								</c:if>
+								
+						        <c:if test="${entVO.entId ne null}">
+								<li class="menuDetail"><a class="alink" href="/enter/listAplct?entId=${entVO.entId}">지원자관리</a>
+									<ul class="submenu">
+							          <li class="menuDetaild"><a href="/enter/listAplct?entId=${entVO.entId}">지원자 리스트</a></li>
+							          <li class="menuDetaild"><a href="/enter/intrvw?entId=${entVO.entId}">면접 관리</a></li>
+							          <li class="menuDetaild"><a href="/enter/videointrvw?entId=${entVO.entId}">화상면접방 관리</a></li>
+							        </ul>
+								</li>
+								</c:if>
+								<c:if test="${entVO.entId eq null}">
+								<li class="menuDetail"><a class="alink"  href="#" onClick="alerttext()">지원자관리</a>
+									<ul class="submenu">
+							          <li><a href="#" onClick="alerttext()">지원자 리스트</a></li>
+							          <li><a href="#" onClick="alerttext()">면접 관리</a></li>
+							        </ul>
+						        </li>
+								</c:if>
+						        <c:if test="${entVO.entId ne null}">
+									<li class="menuDetail"><a class="alink" href="/enter/scout?entId=${entVO.entId}">스카우트제안</a></li>
+								</c:if>
+								<c:if test="${entVO.entId eq null}">
+									<li class="menuDetail"><a class="alink" href="#" onClick="alerttext()">스카우트제안</a></li>
+						        </c:if>
+									<li class="menuDetail"><a class="alink" href="/enter/injae?entId=${entVO.entId}">인재</a>
+						        </li>
+							</ul>
+						</nav>
+                    </div>
+
+                    <!-- ***** Menu Start ***** -->
+                    <ul class="navGen">
+                    <sec:authorize access="isAnonymous()">         
+				        <li class="nav-items dropdown no-arrow mx-1">
+				            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+				                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				 				<img class="fa-bells"src="../resources/images/inform.png" alt="알림 아이콘" />
+				                <!-- Counter - Alerts -->
+				                <span class="badge badge-danger badge-counter badgent"></span>
+				            </a>
+				            <!-- Dropdown - Alerts -->
+				            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+				                aria-labelledby="alertsDropdown">
+				                <h6 class="dropdown-header">
+				                    Alerts Center
+				                </h6>
+					            <div class="alerts">
+					            </div>
+				            </div>
+				        </li>
+		        		<li><a class="headera" href="/security/login">로그인</a></li>
+				            <p class="headera">|</p>
+				            <li><a class="headera" href="/security/signin">회원가입</a></li>
+		        </sec:authorize>       
+		        <sec:authorize access="isAuthenticated()">
+					    <c:if test="${entVO!=null }">
+				            <li class="nav-items dropdown no-arrow mx-1">
+				            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+				                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				 				<img class="fa-bells"src="../resources/images/inform.png" alt="알림 아이콘" />
+				                <!-- Counter - Alerts -->
+				                <span class="badge badge-danger badge-counter badgent"></span>
+				            </a>
+				            <!-- Dropdown - Alerts -->
+				            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+				                aria-labelledby="alertsDropdown">
+				                <h6 class="dropdown-header">
+				                    Alerts Center
+				                </h6>
+					            <div class="alerts">
+					            </div>
+				            </div>
+				        </li>
+				            <form action="/logout" method="post">
+				            	<button  type="submit">로그아웃</button>
+					            <sec:csrfInput />
+				            </form>
+					        <li id="headerUser"><a class="loginval" href="/enter/profile?entId=${entVO.entId}" data-value="${entVO.entId}">${entVO.entNm} 
+					        		<c:if test="${entVO.entLogo==null}">
+	                        			<img src="/resources/images/member/기본프로필.png" alt="기본프로필.png" id="pImg" />
+			                    	</c:if>
+			                    	<c:if test="${entVO.entLogo!=null}">
+				                        <img src="${entVO.entLogo}" alt="${entVO.fileDetailVOList[0].orgnlFileNm}" id="pImg" />
+			                    	</c:if></a></li>
+					    </c:if>
+					    <c:if test="${memVO!=null }">
+				            <li class="iconSize">
+				                <button type="button" id="alarmbtn">
+				                    <img src="../resources/images/inform.png" alt="알림 아이콘" />
+				                </button>
+				            </li>
+				            <form action="/logout" method="post">
+				            	<button type="submit">로그아웃</button>
+					            <sec:csrfInput />
+				            </form>
+					        <li id="headerUser"><a class="loginval" href="/enter/profile?entId=${memVO.mbrId}" data-value="${memVO.mbrId}">${memVO.mbrNm} 
+				            	<img src="${memVO.fileDetailVOList[1].filePathNm}" alt="${memVO.fileDetailVOList[0].orgnlFileNm}" id="pImg" />
+			                </a>
+			                </li>
+					    </c:if>
+		                </sec:authorize>
+                    </ul>   
+                    <!-- ***** Menu End ***** -->
+                    
+                </nav>
+            </div>
+           
+        </div>
+        <hr style="margin-bottom: 0px;"> 
+    </div>
+    
+ </header>
+  <!-- ***** Header Area End ***** -->
+  
+  <style>
+.row{
+	display: flex;
+	justify-content: center;
+}
+#nav2 li{
+	margin : 10px;
+	margin-left: 50px;
+	display: inline-block; 
+	
+}
+
+#nav2{
+	text-align: center;
+	padding-top : 5px;
+	padding-bottom : 5px;
+	border-top: 1px solid #D6D6D6;
+	border-bottom: 1px solid #D6D6D6;
+}
+
+.logo img{
+	height : 70px;
+}
+
+nav.main-nav, ul {
+    align-items: center; /* 수직 중앙 정렬 */
+}
+
+#nav2 li:last-child{
+	border-left: 2px solid #D6D6D6;
+	padding-left : 55px;
+    color: #24D59E;
+}
+
+.iconSize img{
+	width:30px;
+	height:30px;
+}
+.navGen li{
+	display: flex;
+	justify-content:flex-end;
+}
+#enterMenu{/*기업 헤더 메뉴*/
+	display: flex;
+	justify-content: space-around;
+	width: 600px;
+	
+}
+.menuDetail{
+	width : 110px;
+	height: :65px;
+}
+.top-bar__menu-box-1 > ul ul {
+  display: none;
+}
+
+/* 모든 메뉴를 마우스 인식 시 배경색을 변경 */
+.top-bar__menu-box-1 ul > li > ul > li:hover > a {
+ 	color:#24D59E; !important;
+}
+
+/* 2차 메뉴가 보이도록 만들어 보자 */
+.top-bar__menu-box-1 > ul > li:hover > ul {
+  display: block;
+  background: white;
+  
+}
+/* 1차 메뉴를 제한 구역으로 설정 */
+.top-bar__menu-box-1 > ul > li {
+  position: relative;
+}
+
+/* 2차 메뉴에 absolute 값을 주기 */
+.top-bar__menu-box-1 > ul > li > ul {
+  position: absolute;
+  top: 100%;		/* 2차 메뉴를 1차 메뉴의 아래에 위치시킨다 */
+  left: 0;		/* 2차 메뉴를 1차 메뉴의 왼쪽 벽에 붙인다 */
+  width: 120%;		/* 부모의 너비를 그대로 받아온다 */
+}
+.nav-item.dropdown.no-arrow.d-sm-none:hover {
+    background-color: none; /* 배경색 변경을 방지 */
+    cursor: default; /* 마우스 포인터 변경 방지 */
+    /* 추가로 hover 시 발생하는 효과를 여기서 제거할 수 있습니다 */
+}
+/*
+.header-area .main-nav .navGen li:last-child:hover a{ 
+	background-color: inherit ; /* 부모 요소의 배경색 상속 */
+    color: inherit ; /* 부모 요소의 텍스트 색상 상속 */
+    text-decoration: none ; /* 밑줄 제거 */
+    box-shadow: none ; /* 그림자 제거 */
+    border: none ; /* 테두리 제거 */
+ } 
+ */
+/* .headera:hover{ */
+/* 	background: #24D59E !important; */
+/* } */
+.dropdown-item d-flex align-items-center mess{
+	background-color: inherit ; /* 부모 요소의 배경색 상속 */
+    color: inherit ; /* 부모 요소의 텍스트 색상 상속 */
+    text-decoration: none ; /* 밑줄 제거 */
+    box-shadow: none ; /* 그림자 제거 */
+    border: none ; /* 테두리 제거 */
+}
+.navGen li a{
+	display: block;
+    font-weight: 400;
+    font-size: 12px;
+    text-transform: capitalize;
+    color: #666;
+    -moz-transition: all 0.3s ease 0s;
+    -o-transition: all 0.3s ease 0s;
+    transition: all 0.3s ease 0s;
+    border: transparent;
+    padding: 13px 10px;
+    border-radius: 18px;
+    letter-spacing: .3px;
+}
+.navGen li a:hover{
+  color: #2f2f2f;
+  background-color: none;
+}
+
+.menuDetail a.active {
+    color: #24D59E; /* 활성화된 링크 색상 */
+    font-weight: bold; /* 글꼴 두께 조정 */
+}
+
+</style>
+
+
+

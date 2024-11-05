@@ -1,0 +1,33 @@
+package kr.or.ddit.service.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.mapper.CalendarMapper;
+import kr.or.ddit.service.CalendarService;
+import kr.or.ddit.vo.PbancVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class CalendarServiceImpl implements CalendarService {
+	
+	@Autowired
+	CalendarMapper calendarMapper;
+	
+	//스크랩 목록
+	@Override
+	public List<PbancVO> scrapList(Map<String, Object> map) {
+		return calendarMapper.scrapList(map);
+	}
+	
+	//캘린더 표시정보(스크랩, 일정)
+	@Override
+	public List<PbancVO> calendarList(String mbrId) {
+		return calendarMapper.calendarList(mbrId);
+	}
+
+}

@@ -1,0 +1,23 @@
+package kr.or.ddit.vo;
+
+import java.util.Date;
+
+import lombok.Data;
+
+@Data
+public class ResumeVO {
+	private String mbrId;
+	private String rsmNo;
+	private String rsmTtl;
+	private String rsmRlsscopeCd;
+	private String rsmCareerCd;
+	private String rsmMemo;
+	private String rsmWrtYmd;
+	private String rsmMdfcnYmd;
+	private Date rsmDelYn;
+	private String rsmFile;
+	private String mbrNm;
+	private String mbrAddr;
+	private String mbrAddrDtl;
+	private String mbrZip;
+}

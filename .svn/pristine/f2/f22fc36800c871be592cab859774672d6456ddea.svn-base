@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MemInterViewMapper">
+	<select id="selectInterViewList" parameterType="Map" resultType="interViewVO">
+	WITH T AS
+			(
+			    SELECT ROW_NUMBER() OVER(ORDER BY I.INTRVW_NO DESC) RNUM,
+			           I.INTRVW_NO, I.PBANC_NO, I.MBR_ID, I.ENT_ID, I.PROPSE_NO, I.VCR_NO,
+			           I.INTRVW_STTUS_CD, I.INTRVW_TY_CD, I.INTRVW_YMD, I.INTRVW_START_DATE,
+			           I.INTRVW_END_DATE, P.PBANC_TTL, VR.VCR_STARTDATE, VR.VCR_ENDDATE, VR.VCR_PASSWD, VR.VCR_TITLE,
+			           VR.VCR_ROOMID,
+			           get_common_code_name(INTRVW_TY_CD) AS INTRVW_TY_CD_NM,
+			           (SELECT ENT_NM FROM ENTER E WHERE E.ENT_ID = P.ENT_ID) ENT_NM,
+			           <![CDATA[
+			           CASE
+                       WHEN TRUNC(SYSDATE) < TRUNC(TO_DATE(I.INTRVW_START_DATE, 'YYYY-MM-DD HH24:MI')) THEN '면접진행전'
+                       WHEN TRUNC(SYSDATE) BETWEEN TRUNC(TO_DATE(I.INTRVW_START_DATE, 'YYYY-MM-DD HH24:MI')) AND TRUNC(TO_DATE(I.INTRVW_END_DATE, 'YYYY-MM-DD HH24:MI')) THEN '면접진행중'
+                       ELSE '면접완료'
+                 	   END AS INTRVW_STTUS_CD_NM
+                 	   ]]>
+			      FROM INTERVIEW I, PBANC P, VIDEO_ROOM VR 
+			     WHERE 1 = 1
+			       AND I.MBR_ID = #{mbrId}
+			       AND I.PBANC_NO = P.PBANC_NO
+			       AND I.VCR_NO = VR.VCR_NO
+			       <if test="keywordInput != null and keywordInput != ''">
+			            AND (
+			            LOWER(P.PBANC_TTL) LIKE '%' || LOWER(#{keywordInput}) || '%'
+			            )
+			        </if>
+			        <if test="state != null and state != ''">
+			            AND I.INTRVW_STTUS_CD = #{state}
+			        </if>
+			        <if test="state2 != null and state2 != ''">
+	            		AND I.INTRVW_TY_CD = #{state2}
+			        </if>
+			)
+			SELECT * FROM T
+			WHERE T.RNUM BETWEEN (#{currentPage} - 1) * #{size} + 1 AND #{currentPage} * #{size}
+	</select>
+	<select id="getTotal" parameterType="Map" resultType="int">
+		SELECT COUNT(*)
+		  FROM INTERVIEW I, PBANC P, VIDEO_ROOM VR 
+		 WHERE 1 = 1
+		   AND I.MBR_ID = #{mbrId}
+		   AND I.PBANC_NO = P.PBANC_NO
+		   AND I.VCR_NO = VR.VCR_NO
+			<if test="keywordInput != null and keywordInput != ''">
+	            AND (
+	            LOWER(P.PBANC_TTL) LIKE '%' || LOWER(#{keywordInput}) || '%'
+	            )
+	        </if>
+            <if test="state != null and state != ''">
+	        	AND I.INTRVW_STTUS_CD = #{state}
+	        </if>
+	        <if test="state2 != null and state2 != ''">
+           		AND I.INTRVW_TY_CD = #{state2}
+	        </if>
+	</select>
+	
+	<select id="getInstTotalBefore" parameterType="Map" resultType="int">
+		SELECT COUNT(*)
+		  FROM INTERVIEW
+		 WHERE MBR_ID = #{mbrId}
+		   AND  <![CDATA[ TRUNC(SYSDATE) < TRUNC(TO_DATE(INTRVW_START_DATE, 'YYYY-MM-DD HH24:MI'))  ]]>
+	</select>
+	<select id="getInstTotalNow" parameterType="Map" resultType="int">
+		SELECT COUNT(*)
+		  FROM INTERVIEW
+		 WHERE MBR_ID = #{mbrId}
+		   AND  <![CDATA[ TRUNC(SYSDATE) BETWEEN TRUNC(TO_DATE(INTRVW_START_DATE, 'YYYY-MM-DD HH24:MI')) AND TRUNC(TO_DATE(INTRVW_END_DATE, 'YYYY-MM-DD HH24:MI'))  ]]>
+	</select>
+	<select id="getInstTotalAfter" parameterType="Map" resultType="int">
+		SELECT COUNT(*)
+		  FROM INTERVIEW
+		 WHERE MBR_ID = #{mbrId}
+		   AND  <![CDATA[ TRUNC(SYSDATE) > TRUNC(TO_DATE(INTRVW_END_DATE, 'YYYY-MM-DD HH24:MI'))  ]]>
+	</select>
+	
+	<select id="selectVideoList" parameterType="Map" resultType="interViewVO">
+	WITH T AS
+			(
+			    SELECT ROW_NUMBER() OVER(ORDER BY I.INTRVW_NO DESC) RNUM,
+			           I.INTRVW_NO, I.PBANC_NO, I.MBR_ID, I.ENT_ID, I.PROPSE_NO, I.VCR_NO,
+			           I.INTRVW_STTUS_CD, I.INTRVW_TY_CD, I.INTRVW_YMD, I.INTRVW_START_DATE,
+			           I.INTRVW_END_DATE, P.PBANC_TTL, VR.VCR_STARTDATE, VR.VCR_ENDDATE, VR.VCR_PASSWD, VR.VCR_TITLE,
+			           VR.VCR_ROOMID,
+			           get_common_code_name(INTRVW_TY_CD) AS INTRVW_TY_CD_NM,
+			           (SELECT ENT_NM FROM ENTER E WHERE E.ENT_ID = P.ENT_ID) ENT_NM,
+			           <![CDATA[
+			           CASE
+                       WHEN TRUNC(SYSDATE) < TRUNC(TO_DATE(VR.VCR_STARTDATE_NO, 'YYYY-MM-DD HH24:MI')) THEN '면접진행전'
+                       WHEN TRUNC(SYSDATE) BETWEEN TRUNC(TO_DATE(VR.VCR_STARTDATE_NO, 'YYYY-MM-DD HH24:MI')) AND TRUNC(TO_DATE(VR.VCR_ENDDATE_NO, 'YYYY-MM-DD HH24:MI')) THEN '면접진행중'
+                       ELSE '면접완료'
+                 	   END AS INTRVW_STTUS_CD_NM
+                 	   ]]>
+			      FROM INTERVIEW I, PBANC P, VIDEO_ROOM VR 
+			     WHERE 1 = 1
+			       AND I.MBR_ID = #{mbrId}
+			       AND I.PBANC_NO = P.PBANC_NO
+			       AND I.VCR_NO = VR.VCR_NO
+			       AND I.INTRVW_TY_CD = 'PRPR02'
+			       <if test="keywordInput != null and keywordInput != ''">
+			            AND (
+			            LOWER(P.PBANC_TTL) LIKE '%' || LOWER(#{keywordInput}) || '%'
+			            )
+			        </if>
+			        <if test="state != null and state != ''">
+			            AND I.INTRVW_STTUS_CD = #{state}
+			        </if>
+			)
+			SELECT * FROM T
+			WHERE T.RNUM BETWEEN (#{currentPage} - 1) * #{size} + 1 AND #{currentPage} * #{size}
+	</select>
+	<select id="getVideoTotal" parameterType="Map" resultType="int">
+		SELECT COUNT(*)
+		  FROM INTERVIEW I, PBANC P, VIDEO_ROOM VR 
+		 WHERE 1 = 1
+		   AND I.MBR_ID = #{mbrId}
+		   AND I.PBANC_NO = P.PBANC_NO
+		   AND I.VCR_NO = VR.VCR_NO
+		   AND I.INTRVW_TY_CD = 'PRPR02'
+			<if test="keywordInput != null and keywordInput != ''">
+	            AND (
+	            LOWER(P.PBANC_TTL) LIKE '%' || LOWER(#{keywordInput}) || '%'
+	            )
+	        </if>
+            <if test="state != null and state != ''">
+	        	AND I.INTRVW_STTUS_CD = #{state}
+	        </if>
+	</select>
+	<select id="getInstVideoTotalBefore" parameterType="Map" resultType="int">
+		SELECT COUNT(*)
+		  FROM INTERVIEW I, VIDEO_ROOM VR
+		 WHERE I.MBR_ID = #{mbrId}
+		   AND I.INTRVW_TY_CD = 'PRPR02'
+           AND I.VCR_NO = VR.VCR_NO
+           AND <![CDATA[ TRUNC(SYSDATE) < TRUNC(TO_DATE(VR.VCR_STARTDATE_NO, 'YYYY-MM-DD HH24:MI'))]]>
+	</select>
+	<select id="getInstVideoTotalNow" parameterType="Map" resultType="int">
+		SELECT COUNT(*)
+		  FROM INTERVIEW I, VIDEO_ROOM VR
+		 WHERE I.MBR_ID = #{mbrId}
+		   AND I.INTRVW_TY_CD = 'PRPR02'
+           AND I.VCR_NO = VR.VCR_NO
+           AND <![CDATA[  TRUNC(SYSDATE) BETWEEN TRUNC(TO_DATE(VR.VCR_STARTDATE_NO, 'YYYY-MM-DD HH24:MI')) AND TRUNC(TO_DATE(VR.VCR_ENDDATE_NO, 'YYYY-MM-DD HH24:MI'))]]>
+	</select>
+	<select id="getInstVideoTotalAfter" parameterType="Map" resultType="int">
+		SELECT COUNT(*)
+		  FROM INTERVIEW I, VIDEO_ROOM VR
+		 WHERE I.MBR_ID = #{mbrId}
+		   AND I.INTRVW_TY_CD = 'PRPR02'
+           AND I.VCR_NO = VR.VCR_NO
+           AND <![CDATA[ TRUNC(SYSDATE) > TRUNC(TO_DATE(VR.VCR_ENDDATE_NO, 'YYYY-MM-DD HH24:MI'))]]>
+	</select>
+</mapper>

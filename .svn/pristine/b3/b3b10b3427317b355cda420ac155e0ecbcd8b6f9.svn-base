@@ -1,0 +1,26 @@
+package kr.or.ddit.impl_DO;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.service_DO.FreeBoardService;
+
+@Service
+public class FreeBoardServiceImpl implements FreeBoardService {
+
+	@Override
+	public String list() {
+		return null;
+	}
+
+	@Override
+	public String regist() {
+		return null;
+	}
+
+	//수정해야함
+	@Override
+	public String detail() {
+		return null;
+	}
+
+}

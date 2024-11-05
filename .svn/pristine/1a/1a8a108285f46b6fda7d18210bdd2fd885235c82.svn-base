@@ -1,0 +1,124 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/enter/pbancDetail.css" />
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<body>
+	<div class="pbancDetailContainer">
+	
+          <!-- 채용 정보 헤더 -->
+          <header class="job-header">
+              <h2>채용정보</h2>
+              <div class="up-del-btn">
+              <button type="button" class="btnDel">공고 삭제</button>
+              <button type="button" class="btnUp">공고 수정</button>
+              </div>
+          </header>
+          <!-- 채용 정보 요약 -->
+          <section class="job-summary">
+		  <hr class="hr">
+		  	  <h5>DB그룹</h5>
+              <h4>정보보안 엔지니어</h4>
+              <hr class="hrhr">
+              <div class="summary">
+		        <div class="form-group">
+		            <div class="left-1">
+		            	<p class="left">지원자격</p>
+		            </div>
+		            <div class="left-2">
+		            	<p class="p-size-left">경력</p>
+		            	<p class="p-size-right">신입</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">학력</p>
+			            <p class="p-size-right">학력무관</p>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <div class="left-1">
+		            	<p class="left">근무조건</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">지역</p>
+			            <p class="p-size-right">대전</p>
+		            </div>
+		            <div class="left-2">
+		            	<p class="p-size-left">근무형태</p>
+		            	<p class="p-size-right">어쩌고저쩌고</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">급여</p>
+			            <p class="p-size-right">3000만원 이상</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">근무시간</p>
+			            <p class="p-size-right">오전 9시 ~ 오후 6시</p>
+		            </div>
+		        </div>
+		        <div class="form-group">
+		            <div class="left-1">
+		            	<p class="left">기업정보</p>
+		            </div>
+		            <div class="left-2">
+		            	<p class="p-size-left">업종</p>
+		            	<p class="p-size-right">앱개발</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">사원 수</p>
+			            <p class="p-size-right">500명</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">기업형태</p>
+			            <p class="p-size-right">대기업</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">설립일자</p>
+			            <p class="p-size-right">1999.02.19</p>
+		            </div>
+		            <div class="left-2">
+			            <p class="p-size-left">홈페이지</p>
+			            <p class="p-size-right">www.minjoo.co.kr</p>
+		            </div>
+		        </div>
+		       </div> 
+              <hr class="hr">
+          </section>
+
+          <!-- 지원 버튼 -->
+          <div class="action-buttons">
+              <button type="button" class="btn bookmark-btn">스크랩</button>
+              <button type="button" class="btn apply-btn">입사지원</button>
+          </div>
+
+          <!-- 탭 메뉴 -->
+          <nav class="tab-menu">
+              <button type="button" class="tab-btn">상세정보</button>
+              <button type="button" class="tab-btn">접수기간</button>
+              <button type="button" class="tab-btn">기업정보</button>
+          </nav>
+
+          <!-- 상세 정보 섹션 -->
+          <section class="job-details">
+          	<img class="img-header" src="../resources/images/enter/공고등록헤더이미지.jpg">
+		  	  <h5 class="job-det-h5">기업명</h5>
+              <h4 class="job-det-h4">공고 제목을 넣어줄겁니다.</h4>
+              <div class="detail-content">
+	              <h6 class="job-det-h6">담당업무 및 자격요건</h6>
+	              
+	              <h6 class="job-det-h6">근무조건</h6>
+	              <h6 class="job-det-h6">복지 및 혜택</h6>
+	              <h6 class="job-det-h6">전형절차</h6>
+	              <h6 class="job-det-h6">유의사항</h6>
+	              <p class="detail-p">허위 사실이 발견될 경우 채용이 취소될 수 있습니다.</p>
+	            
+              </div>
+          </section>
+         </div> 
+</body>
+</html>

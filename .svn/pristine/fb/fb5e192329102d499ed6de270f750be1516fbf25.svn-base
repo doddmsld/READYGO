@@ -1,0 +1,163 @@
+package kr.or.ddit.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import kr.or.ddit.mapper.UserMapper;
+import kr.or.ddit.security.CustomUser;
+import kr.or.ddit.service.MemAplctService;
+import kr.or.ddit.util.ArticlePage;
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.PbancVO;
+import kr.or.ddit.vo.ScrapVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Controller
+@Slf4j
+@RequestMapping("/member")
+public class MemAplctController {
+
+    @Inject
+    MemAplctService memAplctService;
+    
+    @Inject
+    UserMapper userMapper;
+
+    // 로그인한 사용자의 mbrId를 가져오는 메서드
+    private String getLoggedInMbrId() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUser userDetails = (CustomUser) authentication.getPrincipal();
+        return userDetails.getUsername(); // CustomUser에 mbrId 필드가 있다고 가정
+    }
+
+    // 입사 지원 목록
+    @GetMapping("/aplctList")
+    public ModelAndView aplctList(ModelAndView mav,
+                                  @RequestParam(value = "currentPage", required = false, defaultValue="1") Integer currentPage) {
+        String mbrId = getLoggedInMbrId(); // 로그인된 사용자 ID
+        Map<String, Object> map = new HashMap<String,Object>();
+        map.put("mbrId", mbrId);
+        map.put("currentPage", currentPage);
+        
+        // 입사 지원 목록
+        List<ApplicantVO> aplctVOList = this.memAplctService.aplctList(map);
+       
+        // 지원 상태 공통 코드
+        List<CodeVO> apstVOList = userMapper.codeSelect("APST");
+        
+        // 전체 행의 수
+        int total = this.memAplctService.getTotal(mbrId);
+        // 상태 미평가 행의 수
+        int getNotTotal = this.memAplctService.getNotTotal(mbrId);
+	    // 상태 서류합격 행의 수
+        int getDocTotal = this.memAplctService.getDocTotal(mbrId);
+	    // 상태 최종합격 행의 수
+        int getFinTotal = this.memAplctService.getFinTotal(mbrId);
+        
+        // 페이지네이션 객체
+        ArticlePage<ApplicantVO> articlePage = new ArticlePage<ApplicantVO>(total, currentPage, 5, aplctVOList, map);
+        
+        mav.addObject("mbrId", mbrId);
+        mav.addObject("articlePage", articlePage);
+        mav.addObject("apstVOList", apstVOList);
+        mav.addObject("getNotTotal", getNotTotal);
+        mav.addObject("getDocTotal", getDocTotal);
+        mav.addObject("getFinTotal", getFinTotal);
+        
+        // 뷰 리졸버
+        mav.setViewName("member/mypage/aplctList");
+        
+        
+        return mav;
+    }
+
+    // 입사 지원 관리
+    @GetMapping("/aplctManage")
+    public ModelAndView aplctManage(ModelAndView mav,
+                                    @RequestParam(value = "currentPage", required = false, defaultValue="1") Integer currentPage) {
+        String mbrId = getLoggedInMbrId(); // 로그인된 사용자 ID
+        Map<String, Object> map = new HashMap<String,Object>();
+        map.put("mbrId", mbrId);
+        map.put("currentPage", currentPage);
+        
+        // 입사 지원 목록
+        List<ApplicantVO> aplctVOList = this.memAplctService.aplctManage(map);
+        // 입사 지원 취소 항목
+        List<CodeVO> cancelList = this.memAplctService.cancelList();
+
+        // 전체 행의 수
+        int total = this.memAplctService.getTotal(mbrId);
+        
+        // 페이지네이션 객체
+        ArticlePage<ApplicantVO> articlePage = new ArticlePage<ApplicantVO>(total, currentPage, 7, aplctVOList, map);
+        
+        
+        mav.addObject("mbrId", mbrId);
+        mav.addObject("cancelList",cancelList);
+        mav.addObject("articlePage", articlePage);
+        // 뷰 리졸버
+        mav.setViewName("member/mypage/aplctManage");
+        
+        return mav;
+    }
+
+    // 특정 공고 입사 지원 취소 사유 update
+    @PostMapping("/aplctDelete")
+    public ModelAndView aplctDelete(ModelAndView mav,
+                                    @RequestParam("pbancNo") String pbancNo,
+                                    @RequestParam("aplctCancelCd") String aplctCancelCd) {
+        String mbrId = getLoggedInMbrId(); // 로그인된 사용자 ID
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("mbrId", mbrId);
+        map.put("pbancNo", pbancNo);
+        map.put("aplctCancelCd", aplctCancelCd);
+        
+        int result = this.memAplctService.aplctDelete(map);
+        log.info("aplctDelete -> result ;" + result);
+        
+        mav.setViewName("redirect:/member/aplctManage");
+
+        return mav;
+    }
+    
+    // 내가 스크랩한 공고 조회
+    @GetMapping("/scrap")
+    public ModelAndView scrap(ModelAndView mav,
+    						@RequestParam(value="currentPage", required=false, defaultValue = "1") Integer currentPage) {
+    	String mbrId = getLoggedInMbrId();
+    	
+        Map<String, Object> map = new HashMap<String,Object>();
+        map.put("mbrId", mbrId);
+        map.put("currentPage", currentPage);
+        
+        List<PbancVO> scrapVOList = this.memAplctService.scrapList(map);
+        int total = this.memAplctService.getScrapTotal(mbrId);
+        
+        // 페이지네이션 객체
+        ArticlePage<PbancVO> articlePage = new ArticlePage<PbancVO>(total, currentPage, 7, scrapVOList, map);
+        
+        mav.addObject("mbrId", mbrId);
+        mav.addObject("articlePage", articlePage);
+        mav.addObject("scrapVOList",scrapVOList);
+        
+        mav.setViewName("member/mypage/scrap");
+        
+        return mav;
+        
+    	
+    }
+    
+}

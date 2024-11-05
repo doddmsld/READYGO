@@ -1,0 +1,177 @@
+package kr.or.ddit.enter.entcontroller;
+
+
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.enter.entservice.EnterService;
+import kr.or.ddit.enter.entservice.EnterServiceS;
+import kr.or.ddit.mapper.UserMapper;
+import kr.or.ddit.util.ArticlePage;
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.NotificationVO;
+import kr.or.ddit.vo.PbancVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Controller
+@Slf4j
+@RequestMapping("/enter")
+public class EnterMainController {
+	
+	@Inject
+	EnterServiceS enterServiceS;
+	
+	@Inject
+	EnterService enterService;
+	
+	@Inject
+	UserMapper userMapper;
+	
+	/*기업 메인*/
+	@GetMapping("/main")
+	public String main(Model model,Principal principal
+			) {
+		if(principal!=null) {
+			String entId = principal.getName();
+			int pbCount = this.enterServiceS.pbCount(entId);
+			int openCount = this.enterServiceS.openCount(entId);
+			int closeCount = this.enterServiceS.closeCount(entId);
+			int ppCount = this.enterServiceS.ppCount(entId);
+			log.info("pbCount : "+pbCount);
+			log.info("openCount : "+openCount);
+			log.info("closeCount : "+closeCount);
+			log.info("ppCount : "+ppCount);
+			model.addAttribute("pbCount",pbCount);
+			model.addAttribute("openCount",openCount);
+			model.addAttribute("closeCount",closeCount);
+			model.addAttribute("ppCount",ppCount);
+			
+			List<PbancVO> pbancList = this.enterServiceS.pbancList(entId);
+			log.info("pbancList : "+pbancList);
+			model.addAttribute("pbancList",pbancList);
+			
+			List<PbancVO> pbancCalendarList = this.enterServiceS.pbancCalendarList(entId);
+			log.info("pbancCalendarList : "+pbancCalendarList);
+			model.addAttribute("pbancCalendarList",pbancCalendarList);
+		}
+		return "enter/main/main";
+	}
+	
+	
+	//알람 목록 컨트롤러
+	@ResponseBody
+	@PostMapping("/alarmList")
+	public List<NotificationVO> alarmList(@RequestBody String entId) {
+		
+		log.info("alarmList -> entId : "+ entId);
+		List<NotificationVO> notificationVOList = this.enterServiceS.alarmList(entId);
+		log.info("alarmList -> notificationVO : " + notificationVOList);
+		return notificationVOList;
+		
+	}
+	
+	/*기업 지원자 관리 - 일반면접*/
+	@GetMapping("/intrvw")
+	public String intrvw(Model model, String entId,
+			@RequestParam(value = "currentPage", required = false, defaultValue="1") Integer currentPage
+		      , @RequestParam(value ="keywordInput", required = false,defaultValue="") String keyword
+	          , @RequestParam(value = "dateInput", required = false,defaultValue="") String date
+	          , @RequestParam(value = "gubun", required = false,defaultValue="") String gubun
+			) {
+		
+		
+		Map<String, Object> map = new HashMap<String, Object>(); 		
+		map.put("currentPage", currentPage);
+		map.put("entId", entId);        
+		map.put("keyword", keyword);
+		map.put("date", date);
+		map.put("gubun", gubun);
+		
+		//밑에 리스트 뽑기
+		//공고별 지원자 조회 
+		List<ApplicantVO> applicantVOList = this.enterServiceS.intrvwList(map);
+		log.info("applicantVOList : " + applicantVOList);
+		model.addAttribute("applicantVOList",applicantVOList);
+		//전체 행의 수
+		int total = this.enterService.getTotal(map);
+		
+		ArticlePage<ApplicantVO> articlePage = new ArticlePage<ApplicantVO>(total, currentPage, 5, applicantVOList,map);
+		model.addAttribute("articlePage",articlePage);
+		//스카우트 제안 - 해당기업 공고 꺼내기
+        List<PbancVO> pbancList = enterService.pbancList(entId);
+        model.addAttribute("pbancList", pbancList);
+		//신입경력 공통코드
+		List<CodeVO> rccaList = this.userMapper.codeSelect("RCCA");
+		log.info("rccaList : " + rccaList);
+		model.addAttribute("rccaList",rccaList);
+		//면접상태 공통코드
+		List<CodeVO> instList = this.userMapper.codeSelect("INST");
+		log.info("instList : " + instList);
+		model.addAttribute("instList",instList);
+		//지원자 상태 공통코드
+		List<CodeVO> proeList = this.userMapper.codeSelect("PROE");
+		log.info("proeList : " + proeList);
+		model.addAttribute("proeList",proeList);
+		
+		return "enter/aplctPage/aplctList/aplctFolder/aplct/intrvw";
+	}
+	
+	
+	/*기업 지원자 관리 - 화상면접방 생성*/
+	@GetMapping("/videointrvw")
+	public String videointrvw(Model model, String entId,
+			@RequestParam(value = "currentPage", required = false, defaultValue="1") Integer currentPage
+		      , @RequestParam(value ="keywordInput", required = false,defaultValue="") String keyword
+			) {
+		
+		Map<String, Object> map = new HashMap<String, Object>(); 		
+		map.put("currentPage", currentPage);
+		map.put("entId", entId);        
+		map.put("keyword", keyword);
+		
+		//밑에 리스트 뽑기
+		//공고별 지원자 조회 
+		List<ApplicantVO> applicantVOList = this.enterServiceS.intrvwList(map);
+		log.info("applicantVOList : " + applicantVOList);
+		model.addAttribute("applicantVOList",applicantVOList);
+		//전체 행의 수
+		int total = this.enterService.getTotal(map);
+		
+		ArticlePage<ApplicantVO> articlePage = new ArticlePage<ApplicantVO>(total, currentPage, 5, applicantVOList,map);
+		model.addAttribute("articlePage",articlePage);
+		
+		return "enter/aplctPage/aplctList/aplctFolder/aplct/videointrvw";
+	}
+	
+//	@GetMapping("/intrvwinst")
+//	public List<ApplicantVO> intrvwinst(String entId,
+//			@RequestParam(value = "currentPage", required = false, defaultValue="1") Integer currentPage
+//			){
+//		//밑에 리스트 뽑기
+//		//공고별 지원자 조회 
+//		List<ApplicantVO> applicantVOList = this.enterServiceS.intrvwList(map);
+//		log.info("applicantVOList : " + applicantVOList);
+//		//전체 행의 수
+//		int total = this.enterService.getTotal();
+//		
+//		ArticlePage<ApplicantVO> articlePage = new ArticlePage<ApplicantVO>(total, currentPage, 5, applicantVOList,map);
+//		model.addAttribute("articlePage",articlePage);
+//		return "";
+//	}
+	
+}

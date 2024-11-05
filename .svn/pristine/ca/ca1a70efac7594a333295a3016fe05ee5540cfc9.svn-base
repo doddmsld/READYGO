@@ -1,0 +1,429 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="sec"%>
+<!-- 외주 css 파일 -->
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/oustou/regist.css" />
+<script type="text/javascript" src="/resources/ckeditor5/ckeditor.js"></script> 
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+
+<script type="text/javascript">
+//2차 카테고리 변경
+$(function() {
+	$('select[name="category1"]').on('change',function() {
+			console.log("개똥이");
+		let arrType = getAgreeType(); //2차 카테고리 가져오기 
+			console.log("arrType : ", arrType);
+		let optionType = $(this).parents('.form-group1').find($('select[name="category2"]'));
+			console.log("optionType : ", optionType);
+		optionType.empty();
+			console.log("$(this).val() : ", $(this).val());
+
+		if ($(this).val() == 'OUCL01') {
+			for (obj in arrType['IT·프로그래밍']) {//16회 반복
+				//optionType : $('select[name="category2"]') 객체
+				optionType.append('<option value='+obj+' >'+ arrType['IT·프로그래밍'][obj] + '</option>');
+			}
+			$(".form-group3").css("display",""); // 개발 서비스 타입 보이기
+			$(".form-group2").css("display","none"); // 자소서 서비스 타입 안보이기
+		} else {
+			for (obj in arrType['취업·입시']) {
+				optionType.append('<option value='+obj+' >'+ arrType['취업·입시'][obj] + '</option>');
+			}
+			$(".form-group2").css("display",""); //자소서 서비스 타입 보이기 
+			$(".form-group3").css("display","none"); // 개발 서비스 타입보이ㅣ 
+		}
+	});
+});
+//2차 카테고리 변경
+function getAgreeType() {
+	var obj = {
+		"IT·프로그래밍" : {
+			'':'선택해주세요',
+			'OULC01-001' : '홈페이지 신규 제작',
+			'OULC01-002' : '쇼핑몰 신규제작',
+			'OULC01-003' : '랜딩페이지',
+			'OULC01-004' : '크롤링·스크래핑',
+			'OULC01-005' : '서버·클라우드',
+			'OULC01-006' : '수익·자동화',
+			'OULC01-007' : '데이터 구매·구축',
+			'OULC01-008' : '데이터 라벨링',
+			'OULC01-009' : '데이터 베이스',
+			'OULC01-010' : 'AI·GPT서비스 개발',
+			'OULC01-011' : 'AI·GPT챗봇',
+			'OULC01-012' : '프롬로트 엔지니어링',
+			'OULC01-013' : 'UI·UX기획',
+			'OULC01-014' : '프론트엔트',
+			'OULC01-015' : '백엔드',
+			'OULC01-016' : '풀스텍'
+		},
+		"취업·입시" : {
+			'':'선택해주세요',
+			'OULC02-001' : '국내 자기소개서',
+			'OULC02-002' : '해외 자기소개서',
+			'OULC02-003' : '대학 입시'
+		}
+
+	}
+	return obj;
+}
+
+
+</script>
+
+
+
+<form name="registForm" id="registForm" action="/oustou/regist/regist1" method="post">
+	<!-- 기본정보 -->
+	<div class="GigFormInput">
+		<div class="form-group">
+			<label class="label1">제목</label>
+			<input type="text" class="title_1"
+				placeholder="서비스를 잘 드러낼 수 있는 제목을 입력해주세요" maxlength="50"
+				required />
+		</div>
+
+
+		<div class="form-group1">
+			<div>
+				<label class="label2">카테고리</label>
+			</div>
+			<div class="form-sub-group">
+				<div class="category">
+					<label class="label2_1">1차 카테고리</label> 
+					<select id="category1" name="category1" class="title_2" required>
+						<option value="" selected disabled>선택해주세요</option>
+						<option value="OUCL01">IT·프로그래밍</option>
+						<option value="OUCL02">취업·입시</option>
+					</select>
+				</div>
+				<div class="category">
+					<label class="label2_1">2차 카테고리</label>
+					<select id="category2" name="category2" class="title_2" required>
+						<option value="" selected disabled>선택해주세요</option>
+						<!-- 2차 카테고리 옵션이 JavaScript로 동적으로 채워질 예정 -->
+					</select>
+				</div>
+			</div>
+		</div>
+		<!-- 자소서 서비스 타입 -->
+		<div class="form-group2" style="display: none">
+			<div>
+				<label class="label2">서비스 타입</label>
+			</div>
+			<div class="form-sub-group">
+				<div class="category">
+					<label class="label2_1">직업분야</label> 
+					<select id="category3" name="category1" class="title_2" required>
+						<option value="" selected disabled>선택해주세요</option>
+						<option value="SRKN01">신입</option>
+						<option value="SRKN02">경력</option>
+						<option value="SRKN03">학업</option>
+					</select>
+				</div>
+				<div class="category">
+					<label class="label2_1">기업종류</label>
+					<select id="category4" name="category1" class="title_2" required>
+						<option value="" selected disabled>선택해주세요</option>
+						<option value="SRKN01">대기업</option>
+						<option value="SRKN02">중견기업</option>
+						<option value="SRKN03">공공기업</option>
+						<option value="SRKN04">기타</option>
+					</select>
+				</div>
+				<div class="category">
+					<label class="label2_1">지원전형</label>
+					<select id="category4" name="category1" class="title_2" required>
+						<option value="" selected disabled>선택해주세요</option>
+						<option value="SRAR01">고졸</option>
+						<option value="SRAR02">전문재</option>
+						<option value="SRAR03">대졸</option>
+						<option value="SRAR04">석/박사</option>
+						<option value="SRAR05">해외대 출신</option>
+						<option value="SRAR06">검정고시</option>
+					</select>
+				</div>
+			</div>
+		</div>
+		<!-- 개발자 서비스 타입 -->
+		<div class="form-group3" style="display: none">
+			<div>
+				<label class="label2">서비스 타입</label>
+			</div>
+			<div class="form-sub-group">
+				<div class="category">
+					<label class="label2_1">기술수준</label> 
+					<select id="category3" name="category1" class="title_2" required>
+						<option value="" selected disabled>선택해주세요</option>
+						<c:forEach var="CodeVO" items="${SRLEcodeVOList}">
+							<option value="${CodeVO.comCodeNm}">${CodeVO.comCodeNm}</option>
+						</c:forEach>
+					</select>
+				</div>
+				<div class="category">
+					<label class="label2_1">팀 규모</label>
+					<select id="category4" name="category1" class="title_2" required>
+						<option value="" selected disabled>선택해주세요</option>
+						<c:forEach var="CodeVO" items="${SRTEcodeVOList}">
+							<option value="${CodeVO.comCodeNm}">${CodeVO.comCodeNm}</option>
+						</c:forEach>
+					</select>
+				</div>
+				<div class="category">
+					<label class="label2_1">개발언어</label>
+					<select id="category5" name="category1" class="title_2">
+						<option value="" selected disabled>선택해주세요</option>
+						<c:forEach var="CodeVO" items="${SRLAcodeVOList}">
+							<option value="${CodeVO.comCodeNm}">${CodeVO.comCodeNm}</option>
+						</c:forEach>
+					</select>
+				</div>
+				<div class="category">
+					<label class="label2_1">데이터베이스</label>
+					<select id="category7" name="category1" class="title_2">
+						<option value="" selected disabled>선택해주세요</option>
+						<c:forEach var="CodeVO" items="${SRDBcodeVOList}">
+							<option value="${CodeVO.comCodeNm}">${CodeVO.comCodeNm}</option>
+						</c:forEach>
+					</select>
+				</div>
+				<div class="category">
+					<label class="label2_1">클라우드</label>
+					<select id="category8" name="category1" class="title_2">
+						<option value="" selected disabled>선택해주세요</option>
+						<c:forEach var="CodeVO" items="${SRCLcodeVOList}">
+							<option value="${CodeVO.comCodeNm}">${CodeVO.comCodeNm}</option>
+						</c:forEach>
+					</select>
+				</div>
+				<div class="category1">
+					<label class="label2_1">카테고리</label>
+					<input type="text" class="title_1"
+							placeholder="업종과 유형을 작성해주세요." required/>
+				</div>
+				<div class="category1">
+					<label class="label2_1">기타</label>
+					<input type="text" class="title_1"
+							placeholder="추가적인 항목은 수기로 작성해주세요." />
+				</div>
+			</div>
+		</div>
+	</div>
+			<input type="submit" id="save" value="다음" />
+	<!-- 가격정보 -->	
+	<div class="GigFormInput2">
+		<div class="form-group2_1">
+			<div>
+				<label class="label2">가격정보</label>
+			</div>
+			<div class="form-sub-group2_1">
+				<div class="category2_1">
+					<label class="label2_1">금액(VAT포함)</label> 
+					<input type="text" class="title_2"
+							placeholder="최소 10,000원 이상 입력해주세요"/>
+				</div>
+				<div class="category2_1">
+					<label class="label2_1">금액 설명</label> 
+					<input type="text" class="title_2"
+							placeholder="금액에 대한 상세설명을 입력해주세요" maxlength="60"/>
+				</div>
+				<div class="category">
+					<label class="label2_1">작업 기간</label> 
+					<select id="category1" name="category1" class="title_2" required>
+						<option value="" selected disabled>선택해주세요</option>
+						<c:forEach var="CodeVO" items="${SRJPcodeVOList}">
+							<option value="${CodeVO.comCodeNm}">${CodeVO.comCodeNm}</option>
+						</c:forEach>
+					</select>
+				</div>
+				<div class="category">
+					<label class="label2_1">수정 횟수</label> 
+					<select id="category1" name="category1" class="title_2" required>
+						<option value="" selected disabled>선택해주세요</option>
+						<c:forEach var="CodeVO" items="${SRUMcodeVOList}">
+							<option value="${CodeVO.comCodeNm}">${CodeVO.comCodeNm}</option>
+						</c:forEach>
+					</select>
+				</div>
+				<div class="category2_2">
+					<label class="label2_2">수정가능 파일 제공</label>
+					<p>의뢰인에게 소스파일을 제공할 경우 체크해주세요</p>
+					<input type="checkbox" class="title_3"/>
+				</div>
+				<div class="category2_1">
+					<label class="label2_1">기능 추가</label> 
+					<input type="text" class="title_2"
+							placeholder="추가하고 싶은 기능의 수량을 작성해주세요"/>
+				</div>
+			</div>
+		</div>
+
+
+		
+	</div>
+			<input type="submit" id="save" value="다음" />
+	
+	<!--  서비스 설명 -->
+	<div class="GigFormInput">
+		<div class="form-group_5">
+			<div>
+				<label class="label_5">서비스 설명</label>
+			</div>
+			<div class="form-sub-group">
+				<div class="content-group">
+					<div id="pstCnTemp" name="pstCnTemp">
+						<textarea id="pstCn" name="pstCn"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="GigFormInput">
+		<div class="form-group_5">
+			<div>
+				<label class="label_5">서비스 제공절차</label>
+			</div>
+			<div class="form-sub-group">
+				<div class="content-group">
+					<div id="pstCnTemp1" name="pstCnTemp">
+						<textarea id="pstCn1" name="pstCn"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="GigFormInput">
+		<div class="form-group_5">
+			<div>
+				<label class="label_5">환불 규정</label>
+			</div>
+			<div class="form-sub-group">
+				<div class="content-group">
+					<div id="pstCnTemp2" name="pstCnTemp">
+						<textarea id="pstCn2" name="pstCn"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+		<!-- 저장 버튼 -->
+		<input type="submit" id="save" value="저장" />
+	<!--  이미지 등록  -->
+	<div class="GigFormInput">
+        <!-- 메인 이미지 등록 -->
+        <div class="form-group4">
+            <div>
+                <label class="label4">메인 이미지 등록(필수)</label>
+            </div>
+            <div class="form-sub-group">
+                <div class="category4">
+                    <!-- 이미지 클릭 시 파일 업로드 -->
+                   	<div class="imgupload">
+	                   <label for="mainImageUpload">
+	                       <img id="mainImagePreview" src="../resources/images/이미지 등록.png" alt="메인 이미지" >
+	                   </label>
+                   	</div>
+                    <input type="file" id="mainImageUpload" class="real-upload" accept="image/*" required >
+                    <div class="upload">652 x 488px (4:3 비율)</div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 상세 이미지 등록 -->
+        <div class="form-group4">
+            <div>
+                <label class="label4">상세 이미지 등록(선택)</label>
+            </div>
+            <div class="form-sub-group">
+                <div class="category4">
+                    <!-- 이미지 클릭 시 파일 업로드 -->
+                    <div class="imgupload">
+	                   <label for="mainImageUpload">
+	                       <img id="mainImagePreview" src="../resources/images/이미지 등록.png" alt="메인 이미지" >
+	                   </label>
+                   	</div>
+                    <input type="file" id="mainImageUpload" class="real-upload" accept="image/*" required >
+                    <div class="upload">652 x 488px (4:3 비율)</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    	<input type="submit" id="save" value="저장" />
+    <!-- 요청사항 -->
+    <div class="GigFormInput">
+		<div class="form-group_5">
+			<div>
+				<label class="label_5">작업 전 요청사항</label>
+			</div>
+			<div class="form-sub-group">
+				<div class="content-group">
+					<div id="pstCnTemp3" name="pstCnTemp">
+						<textarea id="pstCn3" name="pstCn"></textarea>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+		<!-- 저장 버튼 -->
+		<input type="submit" id="save" value="저장" />
+			
+</form>
+
+<!-- 서비스 설명 부분에 해당하는 스크립트 -->
+<script type="text/javascript">
+// 서비스 설명 CKEditor5 적용 및 데이터 넣기
+ClassicEditor.create(document.querySelector('#pstCnTemp'), { 
+    ckfinder: { uploadUrl: '/image/upload?${_csrf.parameterName}=${_csrf.token}' }})
+.then(editor => { 
+    window.editor = editor;
+    
+    // 폼 제출 전 CKEditor의 내용을 textarea에 동기화
+    document.querySelector('#registForm').addEventListener('submit', function(event) {
+        document.querySelector('#pstCn').value = editor.getData();
+    });
+})
+.catch(err => { console.error(err.stack); });
+
+// 서비스 제공 절차 CKEditor5 적용 및 데이터 넣기
+ClassicEditor.create(document.querySelector('#pstCnTemp1'), { 
+    ckfinder: { uploadUrl: '/image/upload?${_csrf.parameterName}=${_csrf.token}' }})
+.then(editor => { 
+    window.editor = editor;
+    
+    // 폼 제출 전 CKEditor의 내용을 textarea에 동기화
+    document.querySelector('#registForm').addEventListener('submit', function(event) {
+        document.querySelector('#pstCn1').value = editor.getData();
+    });
+})
+.catch(err => { console.error(err.stack); });
+
+// 환불 규정CKEditor5 적용 및 데이터 넣기
+ClassicEditor.create(document.querySelector('#pstCnTemp2'), { 
+    ckfinder: { uploadUrl: '/image/upload?${_csrf.parameterName}=${_csrf.token}' }})
+.then(editor => { 
+    window.editor = editor;
+    
+    // 폼 제출 전 CKEditor의 내용을 textarea에 동기화
+    document.querySelector('#registForm').addEventListener('submit', function(event) {
+        document.querySelector('#pstCn2').value = editor.getData();
+    });
+})
+.catch(err => { console.error(err.stack); });
+
+//요청사항
+ClassicEditor.create(document.querySelector('#pstCnTemp3'), { 
+    ckfinder: { uploadUrl: '/image/upload?${_csrf.parameterName}=${_csrf.token}' }})
+.then(editor => { 
+    window.editor = editor;
+    
+    // 폼 제출 전 CKEditor의 내용을 textarea에 동기화
+    document.querySelector('#registForm').addEventListener('submit', function(event) {
+        document.querySelector('#pstCn3').value = editor.getData();
+    });
+})
+.catch(err => { console.error(err.stack); });
+</script>

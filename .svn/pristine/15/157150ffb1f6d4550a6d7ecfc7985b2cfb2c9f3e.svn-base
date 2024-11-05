@@ -1,0 +1,5 @@
+package kr.or.ddit.service_DO;
+
+public interface NoticeService {
+	public String list();
+}

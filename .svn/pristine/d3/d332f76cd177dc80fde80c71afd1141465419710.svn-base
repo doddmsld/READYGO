@@ -1,0 +1,338 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://www.springframework.org/security/tags"
+	prefix="sec"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<sec:authorize access="isAuthenticated()">
+	<sec:authentication property="principal.memVO" var="priVO" />
+</sec:authorize>
+<link rel="stylesheet"
+	href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+<link rel="stylesheet"
+	href="<%=request.getContextPath()%>/resources/css/member/calendar.css" />
+<script
+	src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="/resources/js/sweetalert2.js"></script>
+ <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+
+<script>
+let YrModal, calendarEl, mySchStart, mySchEnd, mySchTitle, mySchAllday, mySchBColor, mySchFColor;
+let calendar;
+
+function fCalAdd() {
+    if (!mySchTitle.value) {
+        alert("제목을 입력해주세요.");
+        mySchTitle.focus();
+        return;
+    }
+    let bColor = mySchBColor.value;
+    let fColor = mySchFColor.value;
+    if (fColor == bColor) {
+        bColor = "black";
+        fColor = "yellow";
+    }
+    let event = {
+        start: mySchStart.value,
+        end: mySchEnd.value,
+        title: mySchTitle.value,
+        allDay: mySchAllday.checked,
+        backgroundColor: bColor,
+        textColor: fColor
+    };
+    
+ 	// AJAX 요청으로 서버에 일정 저장
+    $.ajax({
+        url: '/member/saveEvent', // 서버의 URL
+        type: 'POST',
+         contentType: 'application/json',
+        data: JSON.stringify(event),
+        beforeSend:function(xhr){
+			xhr.setRequestHeader("${_csrf.headerName}","${_csrf.token}");
+		},
+        success: function(response) {
+            calendar.addEvent({
+            	title: response.title,
+            	start: response.start,
+            	end: response.end,
+            	allDay: response.allDay,
+            	backgroundColor: response.backgroundColor,
+            	textColor: response.textColor 
+            });
+            fMClose();
+            console.log("Event added:", event);
+        },
+        error: function(xhr, status, error) {
+            console.error("Error saving event:", xhr.status, xhr.responseText);
+        }
+    });
+//     calendar.addEvent(event);
+    fMClose();
+    console.log("Event added:", event);
+}
+
+function fMClose() {
+    yrModal.style.display = "none";
+    mySchStart.value = "";
+    mySchEnd.value = "";
+    mySchTitle.value = "";
+    mySchAllday.checked = false;
+    mySchBColor.value = "#000000";
+    mySchFColor.value = "#ffffff";
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+	YrModal = document.querySelector("#yrModal");
+    calendarEl = document.querySelector('#calendar');
+    mySchStart = document.querySelector("#schStart");
+    mySchEnd = document.querySelector("#schEnd");
+    mySchTitle = document.querySelector("#schTitle");
+    mySchAllday = document.querySelector("#allDay");
+    mySchBColor = document.querySelector("#schBColor");
+    mySchFColor = document.querySelector("#schFColor");
+    
+    const headerToolbar = {
+        left: 'prevYear,prev,next,nextYear today',
+        center: 'title',
+        right: 'dayGridMonth,dayGridWeek,timeGridDay'
+    }
+
+//     서버에서 전달된 이벤트 데이터를 JS에서 사용할 수 있도록 변환
+   let eventsFromServer = [
+	   <c:forEach items="${calendarList}" var="PbancVO">
+        	{
+            	title: "${PbancVO.pbancTtl}",
+			    start: "${PbancVO.pbancDdlnDt}",
+			    end: "${PbancVO.pbancDdlnDt}",
+			    allDay: true,
+			    backgroundColor: "#24D59E",
+			    textColor: "black" 
+            },
+        </c:forEach>
+        <c:forEach items="${calendarList2}" var="scheduleVO">
+        	{
+            	title: "${scheduleVO.schdlTtl}",
+			    start: "${scheduleVO.schdlBgndes}",
+			    end: "${scheduleVO.schdlEnddes}",
+			    allDay: true,
+			    backgroundColor: "${scheduleVO.schdlBackColor}",
+			    textColor: "${scheduleVO.schdlTextColor}" 
+            },
+        </c:forEach>
+    ];
+
+    const today = new Date();
+    const firstDayOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1); // 현재 월의 첫 번째 날
+
+    const calendarOption = {
+        width : '900px',
+        height: '600px',
+        expandRows: true,
+        slotMinTime: '09:00',
+        slotMaxTime: '18:00',
+        headerToolbar: headerToolbar,
+        initialView: 'dayGridMonth',
+        initialDate: firstDayOfCurrentMonth, // 현재 월의 첫 번째 날을 초기 날짜로 설정
+        locale: 'ko',
+        selectable: true,
+        selectMirror: true,
+        navLinks: true,
+//         weekNumbers: true,
+        editable: true,
+        dayMaxEventRows: true,
+        nowIndicator: true,
+        events: eventsFromServer,  // 서버에서 가져온 이벤트 리스트 사용
+        eventSources: [
+            './commonEvents.json',  // Ajax 요청 URL임에 유의!
+            './KYREvents.json',
+            './SYREvents.json'
+        ]
+    }
+
+    calendar = new FullCalendar.Calendar(calendarEl, calendarOption);
+    calendar.render();
+	
+ 	// 캘린더 이벤트 등록
+    calendar.on("eventAdd", info => console.log("Add:", info));
+    calendar.on("eventChange", info => console.log("Change:", info));
+    calendar.on("eventRemove", info => console.log("Remove:", info));
+    calendar.on("eventClick", info => {
+    	console.log("eClick:", info);
+        if (confirm("이 일정을 삭제하시겠습니까?")) {
+            calendar.getEventById(info.event.id)?.remove();
+            console.log("Event removed:", info.event);
+        }
+    });
+    
+    calendar.on("eventMouseEnter", info => console.log("eEnter:", info));
+    calendar.on("eventMouseLeave", info => console.log("eLeave:", info));
+    calendar.on("dateClick", info => console.log("dateClick:", info));
+    
+    calendar.on("select", info => {
+        mySchStart.value = info.startStr;
+        mySchEnd.value = info.endStr;
+        YrModal.style.display = "block";
+    });
+    
+});
+
+$(function(){
+
+});
+function alerttext(){
+	alert("로그인 후 이용하세요.");
+	location.href="/security/login";
+}
+</script>
+<body>
+ <sec:authentication property="principal" var="prc" />
+ <!-- 모달 창 -->
+			<div id="yrModal">
+				<div id="cont" style="text-align: center;">
+					<div id="closeModal">
+						<button onclick="fMClose()" class="close"></button>
+					</div>
+					<h4>일정 등록하기</h4>
+					<br>
+					<div id="ModalContent">
+
+						<label id="Caltitle">제목</label><br> 
+						<input type="text" id="schTitle" value="">
+
+						<div class="flexDiv">
+							<div class="blockDiv">
+								<label id="start">시작일</label>
+								<input type="date" id="schStart" value="">
+							</div>
+							<div class="blockDiv">
+								<label id="end">종료일</label>
+								<input type="date" id="schEnd" value="">
+							</div>
+						</div>
+						<label style="margin-right:5px;">하루종일</label> <input type="checkbox" id="allDay"><br>
+						<div class="flexDiv">
+								<label id="back">배경색</label>
+								<input type="color" id="schBColor" class="colorCss" value="">
+								<label id="font">글자색</label>
+								<input type="color" id="schFColor" class="colorCss" value="">
+
+						</div>
+					</div>
+					<button id="add" onclick="fCalAdd()">등록</button>
+					<br>
+				</div>
+			</div>
+	<!-- 달력시작 -->
+	<div class="container" style="position: relative; bottom: 35px;">
+		<p id="h3">스크랩/일정 캘린더</p>
+		<!-- 캘린더 영역 -->
+		<div id="Wrapper">
+			<div id='calendar'></div>
+		</div>
+		<div id="flexDiv">
+		<div id="pbancmenu">
+			<div id="pbanctitle">
+				<h5>내가 스크랩한 공고</h5>
+				<c:if test="${prc ne 'anonymousUser'}">
+					<a href="/member/scrap?mbrId=${memVO.mbrId}"
+						style="text-decoration: underline;">더보기 ></a>
+				</c:if>
+				<c:if test="${prc eq 'anonymousUser'}">
+					<a onClick="alerttext()" style="text-decoration: underline;">더보기
+						></a>
+				</c:if>
+			</div>
+			<div id="pbancex">
+				<div id="pbanclist">
+					<c:if test="${prc eq 'anonymousUser'}">
+						<p id="notlogin">로그인 후 이용 가능합니다.</p>
+					</c:if>
+					<c:if test="${prc ne 'anonymousUser'}">
+						<c:if test="${not empty scrapList}">
+							<c:forEach var="pbancVO" varStatus="stat" items="${scrapList}">
+								<div id="pblist">
+									<div class="pblso">
+										<div class="fbig">${pbancVO.entNm}</div>
+									</div>
+
+									<div class="pblso1">
+										<div>
+											<p class="fbigtt">
+												<a href="/enter/pbancDetail?pbancNo=${pbancVO.pbancNo}">${pbancVO.pbancTtl}</a>
+											</p>
+										</div>
+									</div>
+
+									<div class="pblso2">
+										<div class="fsmall">
+											<c:if test="${pbancVO.pbancRprsrgnNm != '세종' && pbancVO.pbancRprsrgnNm != '전국'}">
+	                   				 			${pbancVO.pbancRprsrgnNm}
+	                						</c:if>
+												${pbancVO.pbancCityNm}</div>
+										<div class="fsmall">${pbancVO.pbancWorkstleNm}</div>
+										<div class="fsmall">${pbancVO.pbancAplctEduCdNm}↑</div>
+									</div>
+
+									<div class="pbl">
+										<div class="fsmall">${pbancVO.pbancDlnDt}까지</div>
+										<div class="fsmall">${pbancVO.pbancBeforeWrt}일전등록</div>
+									</div>
+								</div>
+							</c:forEach>
+						</c:if>
+						<c:if test="${empty scrapList}">
+							<p>스크랩한 공고가 없습니다.</p>
+						</c:if>
+					</c:if>
+				</div>
+			</div>
+		</div>
+		<!-- 나의 일정 시작 -->
+		<div id="scheduleBox">
+			<div id="scheduleTitle">
+				<h5>나의 일정</h5>
+				<c:if test="${prc ne 'anonymousUser'}">
+					<a href="/enter/pbanc?entId=test01"
+						style="text-decoration: underline;">추가 ></a>
+				</c:if>
+				<c:if test="${prc eq 'anonymousUser'}">
+					<a onClick="alerttext()" style="text-decoration: underline;">추가
+						></a>
+				</c:if>
+			</div>
+			<div id="scheduleEx">
+				<div id="scheduleList">
+					<c:if test="${prc eq 'anonymousUser'}">
+						<p id="notlogin">로그인 후 이용 가능합니다.</p>
+					</c:if>
+					<c:if test="${prc ne 'anonymousUser'}">
+						<c:if test="${not empty scheduleList}">
+							<c:forEach var="scheduleVO" varStatus="stat" items="${scheduleList}">
+								<div id="sdlist">
+									<div class="pblso1">
+									<input type="color" class="colorCss" value="" style="color:${scheduleVO.schdlBackColor};">
+									</div>
+									<div class="pblso2">
+										<div>
+											<p class="fbigtt">
+												${scheduleVO.schdlTtl}
+											<p>
+										</div>
+									</div>
+
+									<div class="pbl">
+										<div class="fsmall">${scheduleVO.schdlBgndes}부터</div>
+										<div class="fsmall">${scheduleVO.schdlEnddes}까지</div>
+									</div>
+								</div>
+							</c:forEach>
+						</c:if>
+						<c:if test="${empty scheduleList}">
+							<p>등록한 일정이 없습니다.</p>
+						</c:if>
+					</c:if>
+				</div>
+			</div>
+		</div>
+		</div><!-- flexDiv -->
+	</div>

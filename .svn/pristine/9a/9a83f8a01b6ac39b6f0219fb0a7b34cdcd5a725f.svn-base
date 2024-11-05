@@ -1,0 +1,173 @@
+package kr.or.ddit.enter.entcontroller;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.ddit.enter.entservice.*;
+import kr.or.ddit.service.PbancService;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.EnterEmpYcntVO;
+import kr.or.ddit.vo.EnterRevenueVO;
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.IndutyVO;
+import kr.or.ddit.vo.PbancVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Controller
+@Slf4j
+@RequestMapping("/enter")
+public class EnterController {
+	
+	@Inject
+	EnterService enterService;
+	
+	@Inject
+    PbancService pbancService; // 채용 공고 관련 서비스
+	
+	@Inject
+	EnterRevenueService enterRevenueService;
+	
+    @Autowired
+    private ServletContext servletContext;
+
+	
+	/*기업프로필*/
+	@GetMapping("/profile")
+	public String profile(@RequestParam("entId") String entId, Model model) {
+		// 서비스로부터 기업 프로필 정보를 가져옴
+		EnterVO enterVO = this.enterService.profile(entId);
+		
+		// 기업 프로필 정보를 모델에 추가
+		model.addAttribute(enterVO);
+
+		// 서비스로부터 채용 공고 리스트를 가져옴
+        List<PbancVO> pbancList = pbancService.getPbancList(entId);
+        log.info("pbancList: " + pbancList);
+        
+        // 모델에 채용 공고 리스트 추가
+        model.addAttribute("PbancVOList", pbancList);
+        
+        // 매출액 리스트
+        List<EnterRevenueVO> revenueList = enterRevenueService.revenue(entId);
+        log.info("revenueList : " + revenueList);
+        
+        List revenueYearList = new ArrayList(); // 연도
+        List revenueAmountList = new ArrayList(); // 매출액
+        
+        for(int i=0; i<revenueList.size(); i++) {
+        	revenueYearList.add(revenueList.get(i).getRevenueYear());
+        	revenueAmountList.add(revenueList.get(i).getRevenueAmount());
+        }
+        // 모델에 매출연도, 매출액 추가
+        model.addAttribute("revenueYearList", revenueYearList);
+        model.addAttribute("revenueAmountList", revenueAmountList);
+      
+        //연도별 입사자수 
+       List<EnterEmpYcntVO> empYcntList = enterService.empYcnt(entId);
+       log.info("empYcntList", empYcntList);
+        
+       List entYmList = new ArrayList(); // 연월
+       List entEmpYcntList = new ArrayList(); // 해당연도 전체사원수
+       List entNewEmpList = new ArrayList(); // 입사자
+       List entOutEmpList = new ArrayList(); // 퇴사자
+       log.info("entYmList",entYmList);
+       
+       for(int i=0; i<empYcntList.size(); i++) {
+    	   entYmList.add(empYcntList.get(i).getEntYm());
+    	   entEmpYcntList.add(empYcntList.get(i).getEntEmpYcnt());
+    	   entNewEmpList.add(empYcntList.get(i).getEntNewemp());
+    	   entOutEmpList.add(empYcntList.get(i).getEntOutemp());
+       }
+       //모델에 연도별 입사자수(연월, 해당연도 전체 사원수, 입사자, 퇴사자) 추가 
+       model.addAttribute("entYmList",entYmList);
+       model.addAttribute("entEmpYcntList",entEmpYcntList);
+       model.addAttribute("entNewEmpList",entNewEmpList);
+       model.addAttribute("entOutEmpList",entOutEmpList);
+
+       return "enter/info/mypage/profile";
+	}
+	
+	
+	/*기업정보수정폼*/
+	@GetMapping("/edit")
+	public String edit(@RequestParam("entId") String entId, Model model) {
+		
+		EnterVO enterVO = this.enterService.edit(entId);
+		model.addAttribute(enterVO);
+		return "enter/info/mypage/edit";
+	}
+	
+    /*기업정보수정실행*/
+    @PostMapping("/editPost")
+    public String editPost(EnterVO enterVO, 
+            @RequestParam("entLogoFile") MultipartFile entLogoFile, 
+            HttpServletRequest request, Model model) {
+        MultipartFile logoFile = enterVO.getEntLogoFile();
+        
+        // 기업 로고 업로드 하는 부분
+        if (!logoFile.isEmpty()) {
+            try {
+                // 파일 저장 경로를 ServletContext에서 얻음
+                String filePath = servletContext.getRealPath("/resources/images/enter/");
+                File directory = new File(filePath);
+
+                // 디렉토리가 없으면 생성
+                if (!directory.exists()) {
+                    directory.mkdirs();
+                }
+
+                // 파일 저장
+                String fileName = logoFile.getOriginalFilename();
+                File destinationFile = new File(directory, fileName);
+                logoFile.transferTo(destinationFile);
+
+                // 파일명을 VO에 설정
+                enterVO.setEntLogo(fileName);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "redirect:/enter/edit?entId=" + enterVO.getEntId() + "&error=upload";
+            }
+        }
+        // 업종
+        List<CodeVO> indutyList = enterService.getIndutyList();
+        log.info("indutyList : " + indutyList);
+        model.addAttribute("indutyList", indutyList);
+        
+        int result = this.enterService.editPost(enterVO);
+        return "redirect:/enter/edit?entId=" + enterVO.getEntId();
+    }
+	
+	
+	/*기업탈퇴*/
+	@ResponseBody
+	@PostMapping("/deleteAjax")
+	public int deleteAjax(@RequestBody String entId) {
+		log.info("deleteAjax -> entId : " + entId);
+		
+		int result = this.enterService.deleteAjax(entId);
+		
+		return result;
+	}
+	
+	
+}

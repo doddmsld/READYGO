@@ -1,0 +1,11 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+// 프로필 스킬
+@Data
+public class PrfSkillVO {
+	private String skCd;	// 스킬 번호
+	private String mbrId;	// 회원 아이디
+
+}

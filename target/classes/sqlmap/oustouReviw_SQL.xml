@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.OutsouReviewMapper">
+	
+	
+	<resultMap type="outsouVO" id="outsouMap">
+		<result property="outordNo" column="OUTORD_NO"/>
+		<result property="outordTtl" column="OUTORD_TTL"/>
+		<result property="outordLclsf" column="OUTORD_LCLSF"/>
+		<result property="outordLclsfNm" column="OUTORD_LCLSF_NM"/>
+		<result property="outordMlsfc" column="OUTORD_MLSFC"/>
+		<result property="outordMlsfcNm" column="OUTORD_MLSFC_NM"/>
+		<result property="outordAmt" column="OUTORD_AMT"/>
+		<result property="outordAmtExpln" column="OUTORD_AMT_EXPLN"/>
+		<result property="outordExpln" column="OUTORD_EXPLN"/>
+		<result property="outordProvdprocss" column="OUTORD_PROVDPROCSS"/>
+		<result property="outordRefndregltn" column="OUTORD_REFNDREGLTN"/>
+		<result property="outordMainFile" column="OUTORD_MAIN_FILE"/>
+		<result property="outordDetailFile" column="OUTORD_DETAIL_FILE"/>
+		<result property="outordDmndmatter" column="OUTORD_DMNDMATTER"/>
+		<result property="outordWrtde" column="OUTORD_WRTDE"/>
+		<result property="outordUpdde" column="OUTORD_UPDDE"/>
+		<result property="outordDelYn" column="OUTORD_DEL_YN"/>
+		<result property="outordRdcnt" column="OUTORD_RDCNT"/>
+		<result property="mbrId" column="MBR_ID"/>
+	    <collection property="osAplyVOList" resultMap="osAplyMap"></collection>
+	</resultMap>
+	
+	
+	<resultMap type="osAplyVO" id="osAplyMap">
+		<result property="outordNo" column="OUTORD_NO"/>
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="osAplyYmd" column="OS_APLY_YMD"/>
+		<result property="osSmptnYmd" column="OS_SMPTN_YMD"/>
+		<result property="outordAgryn" column="OUTORD_AGRYN"/>
+		<result property="outordStlmAmt" column="OUTORD_STLM_AMT"/>
+	</resultMap>
+	
+	<!-- 전체 게시글  -->
+	<select id="getReviewList" parameterType="hashMap" resultType="boardVO">
+	    WITH T AS (
+	        SELECT ROW_NUMBER() OVER(
+	        	<if test="order == null or order == ''">
+	        		ORDER BY B.PST_SN DESC
+	        	</if>
+	        	<if test="order != null and order != ''">
+					<choose>
+						<when test="order == 'rnum'">
+							ORDER BY B.PST_SN DESC
+						</when>
+						<otherwise>
+							ORDER BY B.PST_INQ_CNT DESC
+						</otherwise>
+					</choose>
+				</if>
+				) RNUM,
+	              B.PST_SN, B.SE_NO, B.MBR_ID, B.PST_TTL,
+                   TO_CHAR(B.PST_WRT_DT, 'YYYY.MM.DD') AS PST_WRT_DT, 
+                   B.PST_DEL_YN, B.PST_INQ_CNT, B.ETYMANMTTR_SN,
+                   BO.OUTORD_NO,B.PST_FILE,
+                   F.FILE_GROUP_SN, F.FILE_PATH_NM AS OUTORD_MAIN_FILE
+            FROM BOARD B
+            LEFT JOIN BOARD_TYPE BT ON (B.SE_NO = BT.SE_NO) 
+            LEFT JOIN BOARD_OS BO ON BO.PST_SN = B.PST_SN
+            LEFT JOIN OUTSOU OU ON OU.OUTORD_NO = BO.OUTORD_NO
+            LEFT JOIN FILE_DT F ON F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+            WHERE B.SE_NO = '5'
+		    AND B.PST_DEL_YN = '1'
+	    )
+	    SELECT * FROM T
+	    WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 10 + 1 AND #{currentPage} * 10
+	</select>
+
+
+	<!-- 전체 게시글 수 조회 -->
+	<select id="getTotal" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	     FROM BOARD B
+            LEFT JOIN BOARD_TYPE BT ON (B.SE_NO = BT.SE_NO) 
+            LEFT JOIN BOARD_OS BO ON BO.PST_SN = B.PST_SN
+            LEFT JOIN OUTSOU OU ON OU.OUTORD_NO = BO.OUTORD_NO
+            LEFT JOIN FILE_DT F ON F.FILE_GROUP_SN = OU.OUTORD_MAIN_FILE
+            WHERE B.SE_NO = '5'
+		    AND B.PST_DEL_YN = '1'
+	</select>
+	
+	<!-- 회원이 구입한 상품 -->
+	<select id="getProduct" parameterType="String" resultMap="outsouMap">
+		SELECT OU.OUTORD_NO, OU.OUTORD_TTL, 
+		       TO_CHAR(TO_DATE(OSA.OS_APLY_YMD, 'YYYY/MM/DD'), 'YYYY.MM.DD') AS OS_APLY_YMD, 
+		       OSA.MBR_ID, OSA.OUTORD_STLM_AMT
+		FROM OS_APLY OSA
+		INNER JOIN OUTSOU OU ON (OU.OUTORD_NO = OSA.OUTORD_NO)
+		WHERE OSA.MBR_ID = #{mbrId}
+	</select>
+	
+	<!-- 회원이 구입한 상품 중 리뷰를 작성하지 않은 상품 -->
+	<select id="getProductNotReview" parameterType="String" resultMap="outsouMap">
+		SELECT OU.OUTORD_NO, 
+		       OU.OUTORD_TTL, 
+		       TO_CHAR(TO_DATE(OSA.OS_APLY_YMD, 'YYYY/MM/DD'), 'YYYY.MM.DD') AS OS_APLY_YMD, 
+		       OSA.MBR_ID, 
+		       OSA.OUTORD_STLM_AMT
+		FROM OS_APLY OSA
+		INNER JOIN OUTSOU OU ON (OU.OUTORD_NO = OSA.OUTORD_NO)
+		LEFT JOIN BOARD_OS BO ON BO.OUTORD_NO = OSA.OUTORD_NO 
+		LEFT JOIN BOARD B ON B.PST_SN = BO.PST_SN 
+		WHERE OSA.MBR_ID = #{mbrId}
+		AND B.PST_SN IS NULL
+	</select>
+	
+	
+	
+	<!-- 게시글 등록 -->
+	
+	<insert id="insertReviewRegist" parameterType="boardVO">
+	    <selectKey resultType="String" order="BEFORE" keyProperty="pstSn">
+	        SELECT LPAD(NVL(MAX(PST_SN), '0') + 1, 4, '0') AS PST_SN
+	        FROM BOARD
+	    </selectKey>
+	
+	    INSERT INTO BOARD(
+	    	PST_SN, SE_NO, MBR_ID, PST_TTL, PST_CN 
+	    	<if test="pstFile != null">, PST_FILE</if>,
+	    	PST_WRT_DT, ETYMANMTTR_SN)
+	    VALUES (
+	    	#{pstSn}, 5, #{mbrId}, #{pstTtl}, #{pstCn}
+	    	<if test="pstFile != null">, #{pstFile}</if>,
+	    	 SYSDATE
+	    	 <if test="mbrId != 'admin'">
+	            ,0
+       		 </if>
+       		 <if test="mbrId == 'admin'">
+       		     ,1
+       		 </if>)
+	</insert>
+	
+	<!-- 게시글의 외주 번호 등록  -->
+	<insert id="insertoutsouNo" parameterType="boardOsVO">
+	    INSERT INTO BOARD_OS(PST_SN, OUTORD_NO)
+		VALUES(#{pstSn}, #{outordNo})
+	</insert>
+	
+	
+	
+	<resultMap type="boardVO" id="boardMap">
+		<result property="rnum" column="RNUM" />
+		<result property="pstSn" column="PST_SN"/>
+		<result property="seNo" column="SE_NO"/>
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="pstTtl" column="PST_TTL"/>
+		<result property="pstOthbcscope" column="PST_OTHBCSCOPE"/>
+		<result property="pstCn" column="PST_CN"/>
+		<result property="pstWrtDt" column="PST_WRT_DT"/>
+		<result property="pstMdfcnDt" column="PST_MDFCN_DT"/>
+		<result property="pstDelYn" column="PST_DEL_YN"/>
+		<result property="pstInqCnt" column="PST_INQ_CNT"/>
+		<result property="pstFile" column="PST_FILE"/>
+		<result property="etymanmttrSn" column="ETYMANMTTR_SN"/>
+		<result property="pstGood" column="PST_GOOD"/>
+		<result property="pstBad" column="PST_BAD"/>
+		<result property="outordTtl" column="OUTORD_TTL"/>
+		<result property="outordNo" column="OUTORD_NO"/>
+		<result property="outordMainFile" column="OUTORD_MAIN_FILE"/>
+		<association property="boardOsVO" resultMap="boardOsMap"></association>
+		<collection property="fileDetailVOList" resultMap="fileDetailMap"></collection>
+	</resultMap>
+	
+	<resultMap type="boardOsVO" id="boardOsMap">
+		<result property="pstSn" column="PST_SN"/>
+		<result property="outordNo" column="OUTORD_NO"/>
+	</resultMap>
+	
+	<resultMap type="BoardTypeVO" id="boardTypeMap">
+		<result property="seNo" column="SE_NO"/>
+		<result property="bbsNm" column="BBS_NM"/>
+	</resultMap>
+	
+	<resultMap type="fileDetailVO" id="fileDetailMap">
+		<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+		<result property="gubun" column="GUBUN" />
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="orgnlFileNm" column="ORGNL_FILE_NM"/>
+		<result property="strgFileNm" column="STRG_FILE_NM"/>
+		<result property="filePathNm" column="FILE_PATH_NM"/>
+		<result property="fileSz" column="FILE_SZ"/>
+		<result property="fileExtnNm" column="FILE_EXTN_NM"/>
+		<result property="fileMime" column="FILE_MIME"/>
+		<result property="fileFancysize" column="FILE_FANCYSIZE"/>
+		<result property="fileStrgYmd" column="FILE_STRG_YMD"/>
+		<result property="fileDwnldCnt" column="FILE_DWNLD_CNT"/>
+	</resultMap>
+	
+	<!-- 게시글상세 -->
+	<select id="getReviewDetail" parameterType="String" resultMap="boardMap">
+	    SELECT B.PST_SN, B.SE_NO, B.MBR_ID,
+		       B.PST_TTL, B.PST_CN, TO_CHAR(B.PST_WRT_DT, 'YYYY.MM.DD') AS PST_WRT_DT, PST_MDFCN_DT,
+		       B.PST_INQ_CNT, 
+		       PST_FILE ,FILE_GROUP_SN,
+		       BO.OUTORD_NO,
+		       O.OUTORD_TTL,O.OUTORD_NO
+		FROM BOARD B 
+		    INNER JOIN BOARD_OS BO ON(B.PST_SN = BO.PST_SN)
+		    INNER JOIN OUTSOU O ON (BO.OUTORD_NO = O.OUTORD_NO)
+		WHERE SE_NO='5' AND B.PST_SN = #{pstSn}
+	</select>
+	<!-- 파일 정보 꺼내오기  -->
+	<select id="getFileDetailsByPstSn" resultType="fileDetailVO">
+    SELECT FILE_GROUP_SN, FILE_SN, ORGNL_FILE_NM, STRG_FILE_NM, FILE_PATH_NM, 
+           FILE_SZ, FILE_EXTN_NM, FILE_MIME, FILE_FANCYSIZE, 
+           FILE_STRG_YMD, FILE_DWNLD_CNT
+    FROM FILE_DT
+    WHERE FILE_GROUP_SN = (
+        SELECT PST_FILE
+        FROM BOARD
+        WHERE PST_SN = #{pstSn}
+	    )
+	</select>
+	
+	 <!-- 조회수증가 -->
+	<update id="InqCnt" parameterType="String">
+	    UPDATE BOARD
+	    SET PST_INQ_CNT = PST_INQ_CNT + 1
+	    WHERE PST_SN = #{pstSn} AND SE_NO = '5'
+	</update>	
+	
+	<!-- 게시글 신고 -->
+	<insert id="boardReport" parameterType="declarationVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="dclrNo">
+	        SELECT LPAD(NVL(MAX(DCLR_NO), '0') + 1, 4, '0') AS DCLR_NO
+			FROM DECLARATION
+		</selectKey>
+        INSERT INTO DECLARATION(DCLR_NO, DCLR_CN, DCLR_URL, DCLR_DT, DCLR_PRCS_STTUS, PST_SN, DCLR_TP, MBR_ID, DCLR_FIELD)
+        VALUES (#{dclrNo}, #{dclrCn}, #{dclrUrl}, SYSDATE, '0', #{pstSn}, #{dclrTp}, #{mbrId}, '게시판')
+	</insert>
+	
+	
+	<!-- 게시글 삭제 -->
+	<update id="reviewDeletePost" parameterType="String">
+		UPDATE BOARD
+		SET PST_DEL_YN = '0'
+		WHERE SE_NO = '5' AND PST_SN = #{pstSn}
+	</update>
+	
+	
+	<!-- 게시글 수정 -->
+	<update id="reviewUpdate" parameterType="boardVO">
+		UPDATE BOARD
+		SET 
+		    PST_TTL =  #{pstTtl},
+		    PST_CN =  #{pstCn}, 
+		    PST_MDFCN_DT = SYSDATE
+		    <if test="pstFile != null and pstFile != '' ">
+		    	,PST_FILE =  #{pstFile}
+		    </if>
+		WHERE PST_SN = #{pstSn}
+	</update>
+	
+	
+	<!-- 댓글 관련  -->
+	
+	<resultMap id="commentResultMap" type="commentVO">
+	    <id property="cmntNo" column="CMNT_NO"/>
+	    <result property="cmntCn" column="CMNT_CN"/>
+	    <result property="cmntDelYn" column="CMNT_DEL_YN"/>
+	    <result property="cmntRegDt" column="CMNT_REG_DT"/>
+	    <result property="pstSn" column="PST_SN"/>
+	    <result property="mbrId" column="MBR_ID"/>
+	</resultMap>
+		
+	<!-- 댓글 등록 -->
+	<insert id="insertComment" parameterType="commentVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="cmntNo">
+		    SELECT  LPAD(NVL(MAX(CMNT_NO), '0') + 1, 4, '0') AS CMNT_NO
+		    FROM "COMMENT"
+		</selectKey>
+	    INSERT INTO "COMMENT" (CMNT_NO, CMNT_CN, CMNT_DEL_YN, CMNT_REG_DT, PST_SN, MBR_ID)
+	    VALUES (#{cmntNo}, #{cmntCn}, '1', SYSDATE, #{pstSn}, #{mbrId})
+	</insert>
+	<!-- 댓글 리스트 -->
+	<select id="replyList" parameterType="String" resultMap="commentResultMap">
+   		SELECT CMNT_NO, CMNT_CN, CMNT_DEL_YN, 
+		       TO_CHAR(CMNT_REG_DT, 'YYYY.MM.DD HH24:MI:SS') AS CMNT_REG_DT, 
+		       PST_SN, MBR_ID
+		FROM "COMMENT" 
+		WHERE PST_SN = #{pstSn} AND CMNT_DEL_YN = '1'
+		ORDER BY CMNT_REG_DT DESC
+	</select>
+	
+	<!-- 댓글 삭제 -->
+	<update id="commentDelete" parameterType="commentVO">
+	    UPDATE "COMMENT"
+	    SET CMNT_DEL_YN = '0'
+	    WHERE CMNT_NO = #{cmntNo} AND PST_SN = #{pstSn} AND MBR_ID=#{mbrId}
+	</update>
+
+	
+	<!-- 댓글 수정 -->
+	<update id="commentEdit" parameterType="commentVO">
+	    UPDATE "COMMENT"
+	    SET CMNT_CN = #{cmntCn}
+	    WHERE CMNT_NO = #{cmntNo} AND PST_SN = #{pstSn} AND MBR_ID=#{mbrId}
+	</update>
+	
+	<!--관리자 댓글 삭제 -->
+	<update id="deleteCommentAdm" parameterType="commentVO">
+	    UPDATE "COMMENT"
+	    SET CMNT_DEL_YN = '0'
+	    WHERE CMNT_NO = #{cmntNo} AND PST_SN = #{pstSn}
+	</update>	
+</mapper>

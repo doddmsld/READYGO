@@ -1,0 +1,79 @@
+package kr.or.ddit.oustou.controller;
+
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import kr.or.ddit.mapper.UserMapper;
+import kr.or.ddit.oustou.service.OutsouMainService;
+import kr.or.ddit.oustou.service.OutsouService;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.OutsouVO;
+import lombok.extern.slf4j.Slf4j;
+
+
+@Slf4j
+@Controller
+@RequestMapping("/outsou")
+public class OutsouMainController {
+
+	@Inject
+	OutsouMainService oustouMainService;
+	
+	//공통코드를 위한 
+	@Autowired
+	UserMapper userMapper;
+
+	/*외주 메인*/
+	@GetMapping("/main")
+	public String main(Model model) {
+		
+		//공통 코드에서 중분류카테고리 가져오기
+		List<OutsouVO> BestCategory = this.oustouMainService.getCategory();
+		log.info("BestCategory -> " + BestCategory);
+
+
+		
+		//외주 목록에서 최신글 가져오기 (컴퓨터 현재날짜에서 최신 순 5개 )
+		List<OutsouVO> NewList = this.oustouMainService.getnewList();
+		log.info("NewList -> " + NewList);
+		
+		//외주목록에서 조회수높은거 가져오기(5개)
+		List<OutsouVO> BestList = this.oustouMainService.getBestList();
+		log.info("BestList -> " + BestList);
+		
+		//게시판에서 리뷰 목록 가져오기 3~5개 정보 (좋아요 많은 순 )
+		
+		model.addAttribute("BestCategory",BestCategory); // 카테고리  
+		model.addAttribute("NewList",NewList); // 메인 게시글  new
+		model.addAttribute("BestList",BestList); // 메인 게시글 Best
+		
+		return "outsou/main";
+	}
+
+	/**
+	 * 외주 게시판 목록
+	 * 
+	 * 
+	 */
+	@GetMapping("/list")
+	public String list(Model model, OutsouVO outsouVO) {	
+		
+		// 각 카테고리별 리스트 
+		List<OutsouVO> getDetailList = this.oustouMainService.getDetailList(outsouVO);
+		log.info("getDetailList -> " + getDetailList);
+		
+		model.addAttribute("getDetailList",getDetailList); //각 카테고리별 리스트
+		return "outsou/list";
+	}
+	
+	
+
+}

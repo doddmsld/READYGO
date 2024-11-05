@@ -1,0 +1,97 @@
+package kr.or.ddit.impl_DO;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.mapper.FreeBoardMapper;
+import kr.or.ddit.service_DO.FreeBoardService;
+import kr.or.ddit.vo.BoardVO;
+import kr.or.ddit.vo.CommentVO;
+
+@Service
+public class FreeBoardServiceImpl implements FreeBoardService {
+
+	@Inject
+	FreeBoardMapper freeBoardMapper;
+	
+	@Override
+	public String admRegist() {
+		return this.freeBoardMapper.admRegist();
+	}
+	
+	@Override
+	public int admRegistPost(BoardVO boardVO) {
+		int result=0;
+		return this.freeBoardMapper.admRegistPost(boardVO);
+	}
+
+	@Override
+	public List<BoardVO> admList(Map<String, Object> map) {
+		return this.freeBoardMapper.admList(map);
+	}
+
+	@Override
+	public int getTotal() {
+		return this.freeBoardMapper.getTotal();
+	}
+
+	@Override
+	public BoardVO admDetail(String pstSn) {
+		return this.freeBoardMapper.admDetail(pstSn);
+	}
+
+
+	@Override
+	public void InqCnt(String pstSn) {
+		this.freeBoardMapper.InqCnt(pstSn);
+	}
+
+    @Override
+    public List<CommentVO> getComments(String pstSn) {
+        return freeBoardMapper.replyList(pstSn);
+    }
+
+	@Override
+	public int registComment(CommentVO commentVO) {
+		return this.freeBoardMapper.insertComment(commentVO);
+	}
+	
+    @Override
+    public int updateComment(CommentVO commentVO) {
+        return freeBoardMapper.commentEdit(commentVO);
+    }
+
+	@Override
+	public int deleteComment(String cmntNo, String pstSn, String mbrId) {
+        CommentVO commentVO = new CommentVO();
+        commentVO.setCmntNo(cmntNo);
+        commentVO.setPstSn(pstSn);
+        commentVO.setMbrId(mbrId);
+		return freeBoardMapper.commentDelete(commentVO);
+	}
+
+	@Override
+	public int deletePost(String pstSn) {
+		return this.freeBoardMapper.deletePost(pstSn);
+	}
+
+	@Override
+	public BoardVO getPostDetails(String pstSn) {
+		return this.freeBoardMapper.getPostDetails(pstSn);
+	}
+
+	@Override
+	public int updatePost(BoardVO boardVO) {
+		return this.freeBoardMapper.updatePost(boardVO);
+	}
+
+	@Override
+	public String update(String pstSn) {
+		return this.freeBoardMapper.update(pstSn);
+	}
+
+}

@@ -1,0 +1,20 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.UserVO;
+
+public interface UserMapper {
+	public UserVO userLogin(String username);
+	
+	public int idChk(String username);
+	
+	public List<CodeVO> codeSelect(String comCodeGrp);
+	
+	public int insertMember(MemberVO memVO);
+	
+	public int insertEnter(EnterVO entVO);
+}

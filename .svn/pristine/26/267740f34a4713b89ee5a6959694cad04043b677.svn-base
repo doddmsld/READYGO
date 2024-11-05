@@ -1,0 +1,126 @@
+package kr.or.ddit.controller_DO;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import kr.or.ddit.service.MemberService;
+import kr.or.ddit.service_DO.InquiryBoardService;
+import kr.or.ddit.util.ArticlePage2;
+import kr.or.ddit.vo.BoardVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PbancVO;
+import lombok.extern.slf4j.Slf4j;
+
+@RequestMapping("/board/inquiryBoard")
+@Slf4j
+@Controller
+public class InquiryBoardController {
+
+	@Inject
+	InquiryBoardService inquiryBoardService;
+	
+	@RequestMapping(value="/inquiryList",method=RequestMethod.GET)
+	public ModelAndView list(ModelAndView mav,
+			@RequestParam(value="currentPage",required=false,defaultValue="1") int currentPage) {
+        
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("currentPage", currentPage);
+		log.info("list->map : " + map);
+		
+		
+		List<BoardVO> boardVOList = this.inquiryBoardService.list(map);
+        
+		int total = this.inquiryBoardService.getTotal();
+		
+        // JSP로 전달하기 위해 Model 객체에 boardVOList 저장
+        mav.addObject("boardVOList", boardVOList);
+		
+		//페이지네이션 객체
+		ArticlePage2<BoardVO> articlePage = 
+			new ArticlePage2<BoardVO>(total, currentPage, 10, boardVOList);
+		log.info("articlePage : " + articlePage);
+		
+		mav.addObject("articlePage", articlePage);
+		
+		mav.setViewName("board/inquiryBoard/inquiryList");
+		
+		return mav;
+	}	
+	
+	@GetMapping("/inquiryRegist")
+	public String regist(Model model) {
+		
+		//공개범위 목록 넣어야함
+		
+		
+		return "board/inquiryBoard/inquiryRegist";
+	}
+	
+	@PostMapping("/registPost")
+	public String registPost(@ModelAttribute BoardVO boardVO) {
+	    // 로그인한 사용자 정보 가져오기
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String mbrId = authentication.getName();  // 로그인한 사용자 이름 (id)
+	    
+	    // boardVO의 작성자(writer) 필드에 로그인한 사용자 설정
+	    boardVO.setMbrId(mbrId);
+	    
+	    log.info("registPost->boardVO : " + boardVO);
+	    int result = this.inquiryBoardService.registPost(boardVO);
+	    log.info("registPost->result : " + result);
+	    
+	    return "redirect:/board/inquiryBoard/inquiryDetail?seNo=" + boardVO.getSeNo() + "&pstSn=" + boardVO.getPstSn();
+	}
+	
+	@GetMapping("/inquiryDetail")
+	public String detail(@RequestParam("pstSn") String pstSn,
+						Model model) {
+		log.info("detail=> getpstSn : "+pstSn);
+		
+		log.info("Received pstSn: " + pstSn);
+		//상세
+		BoardVO boardVO = this.inquiryBoardService.detail(pstSn);
+		
+		model.addAttribute("boardVO", boardVO);
+		return "board/inquiryBoard/inquiryDetail";	
+	}
+	
+	@GetMapping("/inquiryUpdate")
+	public String update(@RequestParam("pstSn") String pstSn, Model model) {
+	    log.info("update => get pstSn : " + pstSn);
+
+	    // 게시글 상세 정보 가져오기
+	    BoardVO boardVO = this.inquiryBoardService.getPostDetails(pstSn);
+	    model.addAttribute("boardVO", boardVO);
+
+	    return "board/inquiryBoard/inquiryUpdate";  // 수정 페이지로 이동
+	}
+
+	@PostMapping("/updatePost")
+	public String updatePost(@ModelAttribute BoardVO boardVO) {
+	    log.info("updatePost -> boardVO : " + boardVO);
+
+	    // 수정된 데이터 업데이트
+	    int result = this.inquiryBoardService.updatePost(boardVO);
+	    
+	    // 수정된 게시글의 세부정보 페이지로 리디렉션
+	    return "redirect:/board/inquiryBoard/inquiryDetail?seNo=" + boardVO.getSeNo() + "&pstSn=" + boardVO.getPstSn();
+
+	}
+
+}

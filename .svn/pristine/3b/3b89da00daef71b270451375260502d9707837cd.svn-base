@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MemResumeMapper">
+	<resultMap type="resumeVO" id="resumeMap">
+		<result property="rsmNo" column="RSM_NO"/>
+		<result property="rsmTtl" column="RSM_TTL"/>
+		<result property="rsmRlsscopeCd" column="RSM_RLSSCOPE_CD"/>
+		<result property="rsmCareerCd" column="RSM_CAREER_CD"/>
+		<result property="rsmMemo" column="RSM_MEMO"/>
+		<result property="rsmWrtYmd" column="RSM_WRT_YMD"/>
+		<result property="rsmMdfcnYmd" column="RSM_MDFCN_YMD"/>
+		<result property="rsmDelYn" column="RSM_DEL_YN"/>
+		<result property="rsmFile" column="RSM_FILE"/>
+		<result property="mbrNm" column="MBR_NM"/>
+		<result property="mbrAddr" column="MBR_ADDR"/>
+		<result property="mbrAddrDtl" column="MBR_ADDR_DTL"/>
+		<result property="mbrZip" column="MBR_ZIP"/>
+		<result property="mbrTelno" column="MBR_TELNO"/>
+		<result property="mbrBrdt" column="MBR_BRDT"/>
+		<result property="mbrEml" column="MBR_EML"/>
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="rsmCrdtCd" column="RSM_CRDT_CD"/>
+		<result property="rsmSalCd" column="RSM_SAL_CD"/>
+		<result property="rsmSn" column="RSM_SN"/>
+		<result property="rsmRsmFile" column="RSM_RSM_FILE"/>
+		<result property="mbrSexdstncd" column="MBR_SEXDSTNCD"/>
+		<result property="mbrPhone" column="MBR_PHONE"/>
+		<result property="rsmRlsscopeCdNm" column="RSM_RLSSCOPE_CD_NM"/>
+		<result property="rsmCareerCdNm" column="RSM_CAREER_CD_NM"/>
+		<result property="rsmCrdtCdNm" column="RSM_CRDT_CD_NM"/>
+		<result property="rsmSalCdNm" column="RSM_SAL_CD_NM"/>
+		<result property="mbrSexdstncdNm" column="MBR_SEXDSTNCD_NM"/>
+		<collection property="fileDetailVOList" resultMap="fileDetailMap"></collection>
+		<collection property="rsmAcademicVOList" resultMap="rsmAcademicMap"></collection>
+		<collection property="rsmCareerVOList" resultMap="rsmCareerMap"></collection>
+		<collection property="rsmSkillVOList" resultMap="rsmSkillMap"></collection>
+		<collection property="rsmExpactEDCVOList" resultMap="rsmExpactEDCMap"></collection>
+		<collection property="rsmCertificateVOList" resultMap="rsmCertificateMap"></collection>
+		<collection property="rsmPortfolioVOList" resultMap="rsmPortfolioMap"></collection>
+		<collection property="rsmClVOList" resultMap="rsmClMap"></collection>
+	</resultMap>
+	<resultMap type="rsmAcademicVO" id="rsmAcademicMap">
+		<result property="acbgNo" column="ACBG_NO"/>
+		<result property="acbgPnt" column="ACBG_PNT"/>
+		<result property="rsmNo" column="RSM_NO"/>
+		<result property="acbgSeCd" column="ACBG_SE_CD"/>
+		<result property="acbgRcognacbgCd" column="ACBG_RCOGNACBG_CD"/>
+		<result property="acbgSchlNm" column="ACBG_SCHL_NM"/>
+		<result property="acbgMjrNm" column="ACBG_MJR_NM"/>
+		<result property="acdmcrGrdtnSeCd" column="ACDMCR_GRDTN_SE_CD"/>
+		<result property="acbgMtcltnym" column="ACBG_MTCLTNYM"/>
+		<result property="acbgGrdtnym" column="ACBG_GRDTNYM"/>
+		<result property="acbgPntCd" column="ACBG_PNT_CD"/>
+		<result property="acbgSeCdNm" column="ACBG_SE_CD_NM"/>
+		<result property="acbgRcognacbgCdNm" column="ACBG_RCOGNACBG_CD_NM"/>
+		<result property="acdmcrGrdtnSeCdNm" column="ACDMCR_GRDTN_SE_CD_NM"/>
+		<result property="acbgPntCdNm" column="ACBG_PNT_CD_NM"/>
+	</resultMap>
+	<resultMap type="rsmCareerVO" id="rsmCareerMap">
+		<result property="careerNo" column="CAREER_NO"/>
+		<result property="rsmNo" column="RSM_NO"/>
+		<result property="careerEntNm" column="CAREER_ENT_NM"/>
+		<result property="careerJncmpYmd" column="CAREER_JNCMP_YMD"/>
+		<result property="careerRetireYmd" column="CAREER_RETIRE_YMD"/>
+		<result property="careerDtyCd" column="CAREER_DTY_CD"/>
+		<result property="careerDept" column="CAREER_DEPT"/>
+		<result property="careerJbgdCd" column="CAREER_JBGD_CD"/>
+		<result property="careerTask" column="CAREER_TASK"/>
+		<result property="careerAnslry" column="CAREER_ANSLRY"/>
+		<result property="careerWorkRgnCd" column="CAREER_WORK_RGN_CD"/>
+		<result property="careerDtyCdNm" column="CAREER_DTY_CD_NM"/>
+		<result property="careerJbgdCdNm" column="CAREER_JBGD_CD_NM"/>
+		<result property="careerWorkRgnCdNm" column="CAREER_WORK_RGN_CD_NM"/>
+	</resultMap>
+	<resultMap type="rsmSkillVO" id="rsmSkillMap">
+		<result property="skCd" column="SK_CD"/>
+		<result property="rsmNo" column="RSM_NO"/>
+		<result property="skCdNm" column="SK_CD_NM"/>
+	</resultMap>
+	<resultMap type="rsmExpactEDCVO" id="rsmExpactEDCMap">
+		<result property="actNo" column="ACT_NO"/>
+		<result property="rsmNo" column="RSM_NO"/>
+		<result property="actSeCd" column="ACT_SE_CD"/>
+		<result property="actNm" column="ACT_NM"/>
+		<result property="actEngn" column="ACT_ENGN"/>
+		<result property="actBeginYmd" column="ACT_BEGIN_YMD"/>
+		<result property="actEndYmd" column="ACT_END_YMD"/>
+		<result property="actCn" column="ACT_CN"/>
+		<result property="actSeCdNm" column="ACT_SE_CD_NM"/>
+	</resultMap>
+	<resultMap type="rsmCertificateVO" id="rsmCertificateMap">
+		<result property="crtfctNo" column="CRTFCT_NO"/>
+		<result property="crtfctLangCd" column="CRTFCT_LANG_CD"/>
+		<result property="crtfctAcqsYn" column="CRTFCT_ACQS_YN"/>
+		<result property="crtfctAcqsSe" column="CRTFCT_ACQS_SE"/>
+		<result property="rsmNo" column="RSM_NO"/>
+		<result property="crtfctNm" column="CRTFCT_NM"/>
+		<result property="crtfctPblcnoffic" column="CRTFCT_PBLCNOFFIC"/>
+		<result property="crtfctAcqsSeCd" column="CRTFCT_ACQS_SE_CD"/>
+		<result property="crtfctAcqsYm" column="CRTFCT_ACQS_YM"/>
+		<result property="crtfctScr" column="CRTFCT_SCR"/>
+		<result property="crtfctAcqsSeCdNm" column="CRTFCT_ACQS_SE_CD_NM"/>
+		<result property="crtfctAcqsSeNm" column="CRTFCT_ACQS_SE_NM"/>
+		<result property="crtfctLangCdNm" column="CRTFCT_LANG_CD_NM"/>
+		<result property="crtfctAcqsYnNm" column="CRTFCT_ACQS_YN_NM"/>
+	</resultMap>
+	<resultMap type="rsmPortfolioVO" id="rsmPortfolioMap">
+		<result property="prtNo" column="PRT_NO"/>
+		<result property="rsmNo" column="RSM_NO"/>
+		<result property="prtFile" column="PRT_FILE"/>
+		<result property="prtUrl" column="PRT_URL"/>
+		<result property="prtTtl" column="PRT_TTL"/>
+		<result property="prtSeCd" column="PRT_SE_CD"/>
+		<result property="prtSeCdNm" column="PRT_SE_CD_NM"/>
+		<collection property="fileDetailVOList" resultMap="fileDetailMap"></collection>
+	</resultMap>
+	<resultMap type="rsmClVO" id="rsmClMap">
+		<result property="clNo" column="CL_NO"/>
+		<result property="rsmNo" column="RSM_NO"/>
+		<result property="clTtl" column="CL_TTL"/>
+		<result property="clCn" column="CL_CN"/>
+		<result property="clWritngYmd" column="CL_WRITNG_YMD"/>
+		<result property="clSn" column="CL_SN"/>
+	</resultMap>
+
+	<resultMap type="fileDetailVO" id="fileDetailMap">
+		<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+		<result property="fileSn" column="FILE_SN"/>
+		<result property="orgnlFileNm" column="ORGNL_FILE_NM"/>
+		<result property="strgFileNm" column="STRG_FILE_NM"/>
+		<result property="filePathNm" column="FILE_PATH_NM"/>
+		<result property="fileSz" column="FILE_SZ"/>
+		<result property="fileExtnNm" column="FILE_EXTN_NM"/>
+		<result property="fileMime" column="FILE_MIME"/>
+		<result property="fileFancysize" column="FILE_FANCYSIZE"/>
+		<result property="fileStrgYmd" column="FILE_STRG_YMD"/>
+		<result property="fileDwnldCnt" column="FILE_DWNLD_CNT"/>
+	</resultMap>
+<!-- 	<select id="selectOneResume" parameterType="Map" resultMap="resumeMap"> -->
+<!-- 		SELECT  -->
+<!-- 		    r.RSM_NO, r.RSM_TTL, r.RSM_RLSSCOPE_CD, r.RSM_CAREER_CD, r.RSM_MEMO, -->
+<!-- 		    r.RSM_WRT_YMD, r.RSM_MDFCN_YMD, r.RSM_DEL_YN, r.RSM_FILE, -->
+<!-- 		    r.MBR_NM, r.MBR_ADDR, r.MBR_ADDR_DTL, r.MBR_ZIP, r.MBR_TELNO, -->
+<!-- 		    r.MBR_BRDT, r.MBR_EML, r.MBR_ID, r.RSM_CRDT_CD, r.RSM_SAL_CD, -->
+<!-- 		    r.RSM_SN, r.MBR_SEXDSTNCD, r.MBR_PHONE, -->
+		    
+<!-- 		    a.ACBG_PNT, a.ACBG_NO, a.ACBG_SE_CD, a.ACBG_RCOGNACBG_CD,  -->
+<!-- 		    a.ACDMCR_GRDTN_SE_CD, a.ACBG_PNT_CD, a.ACBG_SCHL_NM,  -->
+<!-- 		    a.ACBG_MJR_NM, a.ACBG_MTCLTNYM, a.ACBG_GRDTNYM,  -->
+<!--     		get_common_code_name(a.ACBG_PNT_CD) AS ACBG_PNT_CD_NM, -->
+<!--     	    get_common_code_name(a.ACBG_RCOGNACBG_CD) AS ACBG_RCOGNACBG_CD_NM, -->
+<!--     		get_common_code_name(a.ACDMCR_GRDTN_SE_CD) AS ACDMCR_GRDTN_SE_CD_NM, -->
+<!-- 		    get_common_code_name(a.ACBG_SE_CD) AS ACBG_SE_CD_NM,  -->
+		    
+<!-- 		    c.CAREER_NO, c.CAREER_ENT_NM, c.CAREER_JNCMP_YMD, c.CAREER_RETIRE_YMD, -->
+<!-- 		    c.CAREER_DTY_CD, c.CAREER_DEPT, c.CAREER_JBGD_CD, c.CAREER_TASK, -->
+<!-- 		    c.CAREER_ANSLRY, c.CAREER_WORK_RGN_CD, -->
+<!-- 		    get_common_code_name(c.CAREER_DTY_CD) AS CAREER_DTY_CD_NM, -->
+<!--     		get_common_code_name(c.CAREER_JBGD_CD) AS CAREER_JBGD_CD_NM, -->
+<!-- 		    get_common_code_name(c.CAREER_WORK_RGN_CD) AS CAREER_WORK_RGN_CD_NM,  -->
+		    
+<!-- 		    s.SK_CD, -->
+<!-- 		    get_common_code_name(s.SK_CD) AS SK_CD_NM, -->
+		    
+<!-- 		    e.ACT_NO, e.ACT_SE_CD, e.ACT_NM, e.ACT_ENGN, e.ACT_BEGIN_YMD, -->
+<!-- 		    e.ACT_END_YMD, e.ACT_CN, -->
+<!-- 		    get_common_code_name(e.ACT_SE_CD) AS ACT_SE_CD_NM, -->
+		    
+<!-- 		    ct.CRTFCT_NO, ct.CRTFCT_NM, ct.CRTFCT_PBLCNOFFIC, ct.CRTFCT_ACQS_SE_CD, -->
+<!-- 		    ct.CRTFCT_ACQS_YM, ct.CRTFCT_SCR, ct.CRTFCT_LANG_CD, ct.CRTFCT_ACQS_YN, -->
+<!-- 		    ct.CRTFCT_ACQS_SE, -->
+<!-- 		    get_common_code_name(ct.CRTFCT_ACQS_SE_CD) AS CRTFCT_ACQS_SE_CD_NM, -->
+<!-- 		    get_common_code_name(ct.CRTFCT_LANG_CD) AS CRTFCT_LANG_CD_NM, -->
+<!-- 		    get_common_code_name(ct.CRTFCT_ACQS_YN) AS CRTFCT_ACQS_YN_NM, -->
+<!-- 		    get_common_code_name(ct.CRTFCT_ACQS_SE) AS CRTFCT_ACQS_SE_NM, -->
+		    
+<!-- 		    cl.CL_NO, cl.CL_TTL, cl.CL_CN, cl.CL_WRITNG_YMD, cl.CL_SN -->
+		    
+<!-- 		FROM RESUME r -->
+<!-- 		LEFT OUTER JOIN RSM_ACADEMIC a ON (r.RSM_NO = a.RSM_NO) -->
+<!-- 		LEFT OUTER JOIN RSM_CARE ER c ON (r.RSM_NO = c.RSM_NO) -->
+<!-- 		LEFT OUTER JOIN RSM_SKILL s ON (r.RSM_NO = s.RSM_NO) -->
+<!-- 		LEFT OUTER JOIN RSM_EXPACTEDC e ON (r.RSM_NO = e.RSM_NO) -->
+<!-- 		LEFT OUTER JOIN RSM_CERTIFICATE ct ON (r.RSM_NO = ct.RSM_NO) -->
+<!-- 		LEFT OUTER JOIN RSM_PORTFOLIO p ON (r.RSM_NO = p.RSM_NO) -->
+<!-- 		LEFT OUTER JOIN RSM_CL cl ON (r.RSM_NO = cl.RSM_NO) -->
+		
+<!-- 		WHERE r.RSM_NO = #{rsmNo} -->
+<!-- 		  AND r.MBR_ID = #{mbrId} -->
+		  
+<!-- 		ORDER BY  -->
+<!-- 		    r.RSM_NO, a.ACBG_NO, c.CAREER_NO, e.ACT_NO,  -->
+<!-- 		    ct.CRTFCT_NO, cl.CL_NO -->
+
+<!-- 	</select> -->
+	<select id="selectOneResume" parameterType="Map" resultMap="resumeMap">
+		SELECT r.RSM_NO, r.RSM_TTL, r.RSM_RLSSCOPE_CD, r.RSM_CAREER_CD, r.RSM_MEMO, 
+			   r.RSM_WRT_YMD, r.RSM_MDFCN_YMD, r.RSM_DEL_YN, r.RSM_FILE, r.MBR_NM, r.MBR_ADDR, 
+			   r.MBR_ADDR_DTL, r.MBR_ZIP, r.MBR_TELNO, r.MBR_BRDT, r.MBR_EML, r.MBR_ID, r.RSM_CRDT_CD, 
+			   r.RSM_SAL_CD, r.RSM_SN, r.MBR_SEXDSTNCD, r.MBR_PHONE, r.RSM_RSM_FILE,
+			   get_common_code_name(r.RSM_RLSSCOPE_CD) AS RSM_RLSSCOPE_CD_NM,
+			   get_common_code_name(r.RSM_CAREER_CD) AS RSM_CAREER_CD_NM,
+			   get_common_code_name(r.RSM_CRDT_CD) AS RSM_CRDT_CD_NM,
+			   get_common_code_name(r.RSM_SAL_CD) AS RSM_SAL_CD_NM,
+			   get_common_code_name(r.MBR_SEXDSTNCD) AS MBR_SEXDSTNCD_NM,
+			   ft.FILE_GROUP_SN, ft.FILE_SN, ft.ORGNL_FILE_NM, ft.STRG_FILE_NM, ft.FILE_PATH_NM, 
+			   ft.FILE_SZ, ft.FILE_EXTN_NM, ft.FILE_MIME, ft.FILE_FANCYSIZE, ft.FILE_STRG_YMD, ft. FILE_DWNLD_CNT
+		  FROM RESUME r
+		  	   LEFT OUTER JOIN FILE_DT ft ON (r.RSM_FILE = ft.FILE_GROUP_SN)
+		 WHERE RSM_NO = #{rsmNo}
+	</select>
+	<select id="selectResumeList" parameterType="String" resultType="resumeVO">
+		SELECT RSM_NO, RSM_TTL, RSM_RLSSCOPE_CD, RSM_CAREER_CD, RSM_MEMO, 
+			   RSM_WRT_YMD, RSM_MDFCN_YMD, RSM_DEL_YN, RSM_FILE, MBR_NM, MBR_ADDR, 
+			   MBR_ADDR_DTL, MBR_ZIP, MBR_TELNO, MBR_BRDT, MBR_EML, MBR_ID, RSM_CRDT_CD, 
+			   RSM_SAL_CD, RSM_SN, MBR_SEXDSTNCD, MBR_PHONE
+		  FROM RESUME
+		 WHERE MBR_ID = #{mbrId}
+	</select>
+	<select id="openResume" parameterType="String" resultType="resumeVO">
+		SELECT  RSM_NO, RSM_TTL, get_common_code_name(RSM_RLSSCOPE_CD) AS RSM_RLSSCOPE_CD_NM, get_common_code_name(RSM_CAREER_CD) AS RSM_CAREER_CD_NM, RSM_MEMO, 
+		        RSM_WRT_YMD, RSM_MDFCN_YMD, RSM_DEL_YN, RSM_FILE, MBR_NM, 
+		        MBR_ADDR, MBR_ADDR_DTL, MBR_ZIP, MBR_TELNO, MBR_BRDT, MBR_EML, 
+		        MBR_ID, get_common_code_name(RSM_CRDT_CD) AS RSM_CRDT_CD_NM, get_common_code_name(RSM_SAL_CD) AS RSM_SAL_CD_NM
+		  FROM  RESUME 
+		 WHERE  1 = 1
+		   AND  MBR_ID = #{mbrId}
+		   AND  RSM_DEL_YN IS NULL
+		   AND  RSM_RLSSCOPE_CD = 'RERE01'
+	</select>
+
+	<update id="updateResumeRere" parameterType="Map">
+		UPDATE RESUME
+		   SET RSM_RLSSCOPE_CD = #{rere}
+		 WHERE RSM_NO = #{rsmNo}
+		   AND MBR_ID = #{mbrId}
+	</update>
+	<update id="updateResumeRere2" parameterType="Map">
+		UPDATE RESUME
+		   SET RSM_RLSSCOPE_CD = 'RERE02'
+		 WHERE MBR_ID = #{mbrId}
+		   AND RSM_RLSSCOPE_CD = 'RERE01'
+	</update>
+	<select id="selectRERE" resultType="int">
+		SELECT COUNT(RSM_NO)
+		  FROM RESUME
+		 WHERE RSM_RLSSCOPE_CD = 'RERE01'
+	</select>
+	<select id="resumeList" parameterType="Map" resultType="resumeVO">
+		WITH T AS
+			(
+				SELECT  ROW_NUMBER() OVER(ORDER BY RSM_SN ASC) RNUM,
+						RSM_NO, RSM_TTL, get_common_code_name(RSM_RLSSCOPE_CD) AS RSM_RLSSCOPE_CD_NM, 
+					    get_common_code_name(RSM_CAREER_CD) AS RSM_CAREER_CD_NM, RSM_MEMO, 
+				        RSM_WRT_YMD, RSM_MDFCN_YMD, RSM_DEL_YN, RSM_FILE, MBR_NM, 
+				        MBR_ADDR, MBR_ADDR_DTL, MBR_ZIP, MBR_TELNO, MBR_BRDT, MBR_EML, 
+				        MBR_ID, get_common_code_name(RSM_CRDT_CD) AS RSM_CRDT_CD_NM, 
+				        get_common_code_name(RSM_SAL_CD) AS RSM_SAL_CD_NM,
+				        RSM_RLSSCOPE_CD, RSM_CAREER_CD, RSM_CRDT_CD, RSM_SAL_CD, RSM_SN
+				  FROM  RESUME 
+				 WHERE  1 = 1
+				   AND  MBR_ID = #{mbrId}
+				   AND  RSM_DEL_YN IS NULL
+			)
+			SELECT * FROM T
+			WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 3 + 1 AND #{currentPage} * 3
+	</select>
+	<select id="resumeListTotal" resultType="int" parameterType="String">
+		SELECT NVL(COUNT(*),0)
+		  FROM RESUME
+		 WHERE MBR_ID=#{mbrId}
+		   AND  RSM_DEL_YN IS NULL
+	</select>
+	<insert id="insertResumebasInfo" parameterType="resumeVO" >
+		<selectKey resultType="String" order="BEFORE" keyProperty="rsmNo">
+			SELECT NVL(MAX(TO_NUMBER(RSM_NO)), 0)+1
+  			  FROM RESUME
+		</selectKey>
+			INSERT INTO RESUME(RSM_NO, MBR_ID, RSM_TTL,RSM_CAREER_CD, MBR_NM, 
+							MBR_ADDR, MBR_ADDR_DTL, MBR_ZIP, MBR_TELNO, MBR_BRDT, 
+							MBR_EML, MBR_SEXDSTNCD, MBR_PHONE, RSM_SN, RSM_FILE, 
+							RSM_CRDT_CD, RSM_SAL_CD, RSM_MEMO)
+			VALUES(#{rsmNo}, #{mbrId}, #{rsmTtl}, #{rsmCareerCd}, #{mbrNm}, #{mbrAddr}, #{mbrAddrDtl}, #{mbrZip},
+				   #{mbrTelno, jdbcType=VARCHAR}, #{mbrBrdt},
+				   #{mbrEml}, #{mbrSexdstncd}, #{mbrPhone}, (SELECT NVL(MAX(TO_NUMBER(RSM_NO)), 0)+1
+  			  FROM RESUME WHERE MBR_ID = #{mbrId}), #{rsmFile, jdbcType=VARCHAR},
+  			   #{rsmCrdtCd, jdbcType=VARCHAR},#{rsmSalCd, jdbcType=VARCHAR},#{rsmMemo, jdbcType=VARCHAR})
+	</insert>
+	<update id="updateResumebasInfo" parameterType="resumeVO">
+		UPDATE RESUME
+		   SET RSM_TTL = #{rsmTtl},
+		       RSM_CAREER_CD = #{rsmCareerCd},
+		       MBR_NM = #{mbrNm},
+			   MBR_ADDR = #{mbrAddr},
+			   MBR_ADDR_DTL = #{mbrAddrDtl},
+			   MBR_ZIP = #{mbrZip},
+			   MBR_TELNO = #{mbrTelno, jdbcType=VARCHAR},
+			   MBR_BRDT = #{mbrBrdt},
+			   MBR_EML = #{mbrEml},
+			   MBR_SEXDSTNCD = #{mbrSexdstncd},
+			   MBR_PHONE = #{mbrPhone},
+			   RSM_FILE = #{rsmFile}
+		 WHERE RSM_NO = #{rsmNo}
+		   AND MBR_ID = #{mbrId}
+	</update>
+	<delete id="deleteResume" parameterType="Map">
+		DELETE 
+		  FROM RESUME
+		 WHERE MBR_ID = #{mbrId}
+		   AND RSM_NO = #{rsmNo}
+	</delete>
+	
+	<insert id="insertRsmTtl" parameterType="resumeVO" >
+		UPDATE RESUME
+		   SET RSM_TTL = #{rsmTtl}
+		 WHERE RSM_NO = #{rsmNo}
+		   AND MBR_ID = #{mbrId}
+	</insert>
+	<update id="updateHope" parameterType="resumeVO">
+		UPDATE RESUME
+		   SET RSM_CRDT_CD = #{rsmCrdtCd},
+			   RSM_SAL_CD = #{rsmSalCd},
+			   RSM_MEMO = #{rsmMemo, jdbcType=VARCHAR}
+		 WHERE RSM_NO = #{rsmNo}
+		   AND MBR_ID = #{mbrId}
+	</update>
+<!-- 	학력 sql -->
+	<select id="selectAcdgList" parameterType="Map" resultType="rsmAcademicVO">
+		SELECT ACBG_NO, RSM_NO, ACBG_SE_CD, ACBG_RCOGNACBG_CD, ACBG_SCHL_NM, 
+			   ACBG_MJR_NM, ACDMCR_GRDTN_SE_CD, ACBG_MTCLTNYM, ACBG_GRDTNYM, 
+			   ACBG_PNT_CD, ACBG_PNT,
+			   get_common_code_name(ACBG_PNT_CD) AS ACBG_PNT_CD_NM,
+	    	   get_common_code_name(ACBG_RCOGNACBG_CD) AS ACBG_RCOGNACBG_CD_NM,
+	    	   get_common_code_name(ACDMCR_GRDTN_SE_CD) AS ACDMCR_GRDTN_SE_CD_NM,
+			   get_common_code_name(ACBG_SE_CD) AS ACBG_SE_CD_NM
+		  FROM RSM_ACADEMIC
+		 WHERE RSM_NO = #{rsmNo}
+	</select>
+	<select id="selectOneAcdg" parameterType="Map" resultType="rsmAcademicVO">
+		SELECT ACBG_NO, RSM_NO, ACBG_SE_CD, ACBG_RCOGNACBG_CD, ACBG_SCHL_NM, 
+			   ACBG_MJR_NM, ACDMCR_GRDTN_SE_CD, ACBG_MTCLTNYM, ACBG_GRDTNYM, 
+			   ACBG_PNT_CD, ACBG_PNT,
+			   get_common_code_name(ACBG_PNT_CD) AS ACBG_PNT_CD_NM,
+	    	   get_common_code_name(ACBG_RCOGNACBG_CD) AS ACBG_RCOGNACBG_CD_NM,
+	    	   get_common_code_name(ACDMCR_GRDTN_SE_CD) AS ACDMCR_GRDTN_SE_CD_NM,
+			   get_common_code_name(ACBG_SE_CD) AS ACBG_SE_CD_NM
+		  FROM RSM_ACADEMIC
+		 WHERE RSM_NO = #{rsmNo}
+		   AND ACBG_NO = #{acbgNo}
+	</select>
+
+	<insert id="insertAcdg" parameterType="rsmAcademicVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="acbgNo">
+			SELECT NVL(MAX(TO_NUMBER(ACBG_NO)), 0)+1
+  			  FROM RSM_ACADEMIC
+  			 WHERE RSM_NO = #{rsmNo} 
+		</selectKey>
+		INSERT INTO RSM_ACADEMIC(ACBG_NO, RSM_NO, ACBG_SE_CD, ACBG_RCOGNACBG_CD, ACBG_SCHL_NM, 
+		ACBG_MJR_NM, ACDMCR_GRDTN_SE_CD, ACBG_MTCLTNYM, ACBG_GRDTNYM, ACBG_PNT_CD, ACBG_PNT)
+		VALUES(#{acbgNo}, #{rsmNo}, #{acbgSeCd}, #{acbgRcognacbgCd, jdbcType=VARCHAR}, #{acbgSchlNm}, 
+		#{acbgMjrNm}, #{acdmcrGrdtnSeCd, jdbcType=VARCHAR}, #{acbgMtcltnym, jdbcType=CHAR}, 
+		#{acbgGrdtnym, jdbcType=CHAR}, #{acbgPntCd, jdbcType=VARCHAR},#{acbgPnt, jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="updateAcdg" parameterType="rsmAcademicVO">
+		UPDATE RSM_ACADEMIC
+		   SET ACBG_SE_CD = #{acbgSeCd},
+			   ACBG_RCOGNACBG_CD = #{acbgRcognacbgCd},
+			   ACBG_SCHL_NM = #{acbgSchlNm},
+			   ACBG_MJR_NM = #{acbgMjrNm},
+			   ACDMCR_GRDTN_SE_CD = #{acdmcrGrdtnSeCd},
+			   ACBG_MTCLTNYM = #{acbgMtcltnym},
+			   ACBG_GRDTNYM = #{acbgGrdtnym},
+			   ACBG_PNT_CD = #{acbgPntCd},
+			   ACBG_PNT = #{acbgPnt}
+		 WHERE ACBG_NO = #{acbgNo}
+		   AND RSM_NO = #{rsmNo}
+	</update>
+	<delete id="deleteAcbg" parameterType="Map">
+		DELETE 
+		  FROM RSM_ACADEMIC
+		 WHERE RSM_NO = #{rsmNo}
+		   AND ACBG_NO = #{AcbgNo}
+	</delete>
+<!-- 	경력 sql	 -->
+	<select id="selectCareerList" parameterType="Map" resultType="rsmCareerVO">
+		SELECT CAREER_NO, RSM_NO, CAREER_ENT_NM, CAREER_JNCMP_YMD, CAREER_RETIRE_YMD,
+			   CAREER_DTY_CD, CAREER_DEPT, CAREER_JBGD_CD, CAREER_TASK, CAREER_ANSLRY, CAREER_WORK_RGN_CD,
+			   get_common_code_name(CAREER_DTY_CD) AS CAREER_DTY_CD_NM,
+    		   get_common_code_name(CAREER_JBGD_CD) AS CAREER_JBGD_CD_NM,
+		       get_common_code_name(CAREER_WORK_RGN_CD) AS CAREER_WORK_RGN_CD_NM
+		  FROM RSM_CAREER
+		 WHERE RSM_NO = #{rsmNo}
+	</select>
+	<insert id="insertCareer" parameterType="rsmCareerVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="careerNo">
+			SELECT NVL(MAX(TO_NUMBER(CAREER_NO)), 0)+1
+  			  FROM RSM_CAREER
+  			 WHERE RSM_NO = #{rsmNo} 
+		</selectKey>
+		INSERT INTO RSM_CAREER(CAREER_NO, RSM_NO, CAREER_ENT_NM, CAREER_JNCMP_YMD, CAREER_RETIRE_YMD,
+			 CAREER_DTY_CD, CAREER_DEPT, CAREER_JBGD_CD, CAREER_TASK, CAREER_ANSLRY, CAREER_WORK_RGN_CD)
+		VALUES(#{careerNo}, #{rsmNo}, #{careerEntNm}, #{careerJncmpYmd}, #{careerRetireYmd, jdbcType=VARCHAR}, #{careerDtyCd},
+			   #{careerDept, jdbcType=VARCHAR}, #{careerJbgdCd, jdbcType=VARCHAR}, #{careerTask}, #{careerAnslry, jdbcType=VARCHAR},
+			    #{careerWorkRgnCd, jdbcType=VARCHAR}) 
+	</insert>
+	
+	<update id="updateCareer" parameterType="rsmCareerVO">
+		UPDATE RSM_CAREER
+		   SET CAREER_ENT_NM = #{careerEntNm}, 
+		   	   CAREER_JNCMP_YMD = #{careerJncmpYmd}, 
+		   	   CAREER_RETIRE_YMD = #{careerRetireYmd}, 
+		   	   CAREER_DTY_CD = #{careerDtyCd}, 
+		   	   CAREER_DEPT = #{careerDept}, 
+		   	   CAREER_JBGD_CD = #{careerJbgdCd}, 
+		   	   CAREER_TASK = #{careerTask}, 
+		   	   CAREER_ANSLRY = #{careerAnslry}, 
+		   	   CAREER_WORK_RGN_CD = #{careerWorkRgnCd}
+		 WHERE CAREER_NO = #{careerNo}
+		   AND RSM_NO = #{rsmNo}
+	</update>
+	<delete id="deleteCareer" parameterType="Map">
+		DELETE 
+		  FROM RSM_CAREER
+		 WHERE RSM_NO = #{rsmNo}
+		   AND CAREER_NO = #{careerNo}
+	</delete>	
+<!-- 	스킬 sql -->
+	<select id="selectSkillList" parameterType="Map" resultType="rsmSkillVO">
+		SELECT SK_CD, RSM_NO,
+		       get_common_code_name(SK_CD) AS SK_CD_NM
+		  FROM RSM_SKILL
+		 WHERE RSM_NO = #{rsmNo}
+	</select>
+	<insert id="insertSkill" parameterType="Map">
+		INSERT INTO RSM_SKILL(RSM_NO, SK_CD)
+		VALUES(#{rsmNo}, #{skCd})  
+	</insert>
+	<insert id="insertSkill2" parameterType="rsmSkillVO">
+		INSERT INTO RSM_SKILL(RSM_NO, SK_CD)
+		VALUES(#{rsmNo}, #{skCd})  
+	</insert>
+	
+	<delete id="deleteSkill" parameterType="String">
+		DELETE 
+		  FROM RSM_SKILL
+		 WHERE RSM_NO = #{rsmNo}
+	</delete>	
+<!-- 	활동/경험/교육 sql -->
+	<select id="selectActList" parameterType="Map" resultType="rsmExpactEDCVO">
+		SELECT ACT_NO, RSM_NO, ACT_SE_CD, ACT_NM, ACT_ENGN, ACT_BEGIN_YMD, ACT_END_YMD, ACT_CN,
+			   get_common_code_name(ACT_SE_CD) AS ACT_SE_CD_NM
+		  FROM RSM_EXPACTEDC
+		 WHERE RSM_NO = #{rsmNo}
+	</select>
+	<insert id="insertAct" parameterType="rsmExpactEDCVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="actNo">
+			SELECT NVL(MAX(TO_NUMBER(ACT_NO)), 0)+1
+  			  FROM RSM_EXPACTEDC
+  			 WHERE RSM_NO = #{rsmNo} 
+		</selectKey>
+		INSERT INTO RSM_EXPACTEDC(ACT_NO, RSM_NO, ACT_SE_CD, ACT_NM, ACT_ENGN, ACT_BEGIN_YMD, ACT_END_YMD, ACT_CN)
+		VALUES(#{actNo}, #{rsmNo},#{actSeCd}, #{actNm}, #{actEngn}, #{actBeginYmd}, #{actEndYmd}, #{actCn, jdbcType=VARCHAR}) 
+	</insert>
+	
+	<update id="updateAct" parameterType="rsmExpactEDCVO">
+		UPDATE RSM_EXPACTEDC
+		   SET ACT_SE_CD = #{actSeCd}, 
+		   	   ACT_NM = #{actNm}, 
+		   	   ACT_ENGN = #{actEngn}, 
+		   	   ACT_BEGIN_YMD = #{actBeginYmd}, 
+		   	   ACT_END_YMD = #{actEndYmd}, 
+		   	   ACT_CN = #{actCn}
+		 WHERE ACT_NO = #{actNo}
+		   AND RSM_NO = #{rsmNo}
+	</update>
+	<delete id="deleteAct" parameterType="Map">
+		DELETE 
+		  FROM RSM_EXPACTEDC
+		 WHERE RSM_NO = #{rsmNo}
+		   AND ACT_NO = #{actNo}
+	</delete>	
+<!-- 	자격증 sql -->
+	<select id="selectCrtfctList" parameterType="Map" resultType="rsmCertificateVO">
+		SELECT CRTFCT_NO, RSM_NO, CRTFCT_NM, CRTFCT_PBLCNOFFIC, CRTFCT_ACQS_SE_CD,
+		 	   CRTFCT_ACQS_YM, CRTFCT_SCR, CRTFCT_LANG_CD, CRTFCT_ACQS_YN, CRTFCT_ACQS_SE,
+		 	   get_common_code_name(CRTFCT_ACQS_SE_CD) AS CRTFCT_ACQS_SE_CD_NM,
+		       get_common_code_name(CRTFCT_LANG_CD) AS CRTFCT_LANG_CD_NM,
+		       get_common_code_name(CRTFCT_ACQS_YN) AS CRTFCT_ACQS_YN_NM,
+		       get_common_code_name(CRTFCT_ACQS_SE) AS CRTFCT_ACQS_SE_NM
+		  FROM RSM_CERTIFICATE
+		 WHERE RSM_NO = #{rsmNo}
+	</select>
+	<insert id="insertCrtfct" parameterType="rsmCertificateVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="crtfctNo">
+			SELECT NVL(MAX(TO_NUMBER(CRTFCT_NO)), 0)+1
+  			  FROM RSM_CERTIFICATE
+  			 WHERE RSM_NO = #{rsmNo} 
+		</selectKey>
+		INSERT INTO RSM_CERTIFICATE(CRTFCT_NO, RSM_NO, CRTFCT_NM, CRTFCT_PBLCNOFFIC, CRTFCT_ACQS_SE_CD,
+		 				 CRTFCT_ACQS_YM, CRTFCT_SCR, CRTFCT_LANG_CD, CRTFCT_ACQS_YN, CRTFCT_ACQS_SE)
+		VALUES(#{crtfctNo}, #{rsmNo}, #{crtfctNm}, #{crtfctPblcnoffic, jdbcType=VARCHAR}, #{crtfctAcqsSeCd}, 
+		#{crtfctAcqsYm, jdbcType=VARCHAR}, #{crtfctScr, jdbcType=VARCHAR}, #{crtfctLangCd, jdbcType=VARCHAR}, #{crtfctAcqsYn, jdbcType=VARCHAR}, #{crtfctAcqsSe, jdbcType=VARCHAR}) 
+	</insert>
+	
+	<update id="updateCrtfct" parameterType="rsmCertificateVO">
+		UPDATE RSM_CERTIFICATE
+		   SET CRTFCT_NM = #{crtfctNm}, 
+		   	   CRTFCT_PBLCNOFFIC = #{crtfctPblcnoffic}, 
+		   	   CRTFCT_ACQS_SE_CD = #{crtfctAcqsSeCd}, 
+		   	   CRTFCT_ACQS_YM = #{crtfctAcqsYm}, 
+		   	   CRTFCT_SCR = #{crtfctScr}, 
+		   	   CRTFCT_LANG_CD = #{crtfctLangCd},
+		   	   CRTFCT_ACQS_YN = #{crtfctAcqsYn},
+		   	   CRTFCT_ACQS_SE = #{crtfctAcqsSe}
+		 WHERE CRTFCT_NO = #{crtfctNo}
+		   AND RSM_NO = #{rsmNo}
+	</update>
+	<delete id="deleteCrtfct" parameterType="Map">
+		DELETE 
+		  FROM RSM_CERTIFICATE
+		 WHERE RSM_NO = #{rsmNo}
+		   AND CRTFCT_NO = #{crtfctNo}
+	</delete>	
+	
+<!-- 	포트폴리오 sql -->
+	<select id="selectPrtList" parameterType="Map" resultMap="rsmPortfolioMap">
+		SELECT PRT_NO, RSM_NO, PRT_FILE, PRT_URL, PRT_TTL, 
+			   	   	   PRT_SE_CD, get_common_code_name(PRT_SE_CD) AS PRT_SE_CD_NM, 
+			   	   	   ft.FILE_SN, ft.ORGNL_FILE_NM, ft.STRG_FILE_NM, ft.FILE_PATH_NM, 
+					   ft.FILE_SZ, ft.FILE_EXTN_NM, ft.FILE_MIME, ft.FILE_FANCYSIZE, 
+					   ft.FILE_STRG_YMD, ft. FILE_DWNLD_CNT 
+		  FROM RSM_PORTFOLIO p LEFT OUTER JOIN FILE_DT ft ON (p.PRT_FILE = ft.FILE_GROUP_SN) 
+		 WHERE RSM_NO = #{rsmNo}
+	</select>
+	<select id="selectOnePrt" parameterType="Map" resultType="rsmPortfolioVO">
+		SELECT PRT_NO,
+			   RSM_NO,
+			   PRT_FILE,
+			   PRT_URL,
+			   PRT_TTL,
+			   PRT_SE_CD,
+			   get_common_code_name(PRT_SE_CD) AS PRT_SE_CD_NM
+		  FROM RSM_PORTFOLIO
+		 WHERE RSM_NO = #{rsmNo}
+		   AND PRT_NO = #{prtNo}
+	</select>
+	<insert id="insertPrt" parameterType="rsmPortfolioVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="prtNo">
+			SELECT NVL(MAX(TO_NUMBER(PRT_NO)), 0)+1
+  			  FROM RSM_PORTFOLIO
+  			 WHERE RSM_NO = #{rsmNo} 
+		</selectKey>
+		INSERT INTO RSM_PORTFOLIO(PRT_NO, RSM_NO, PRT_FILE, PRT_URL, PRT_TTL, PRT_SE_CD)
+		VALUES(#{prtNo}, #{rsmNo}, #{prtFile, jdbcType=VARCHAR}, #{prtUrl, jdbcType=VARCHAR}, #{prtTtl}, #{prtSeCd}) 
+	</insert>
+	
+	<update id="updatePrt" parameterType="rsmPortfolioVO">
+		UPDATE RSM_PORTFOLIO
+		   SET PRT_FILE = #{prtFile}, 
+		   	   PRT_URL = #{prtUrl}, 
+		   	   PRT_TTL = #{prtTtl}, 
+		   	   PRT_SE_CD = #{prtSeCd}
+		 WHERE PRT_NO = #{prtNo}
+		   AND RSM_NO = #{rsmNo}
+	</update>
+	<delete id="deletePrt" parameterType="Map">
+		DELETE 
+		  FROM RSM_PORTFOLIO
+		 WHERE RSM_NO = #{rsmNo}
+		   AND PRT_NO = #{prtNo}
+	</delete>	
+	
+	<!-- 	자소서 sql	 -->
+	<select id="selectCLList" parameterType="Map" resultType="rsmClVO">
+		SELECT CL_NO, CL_TTL, CL_CN, CL_WRITNG_YMD, CL_SN
+		  FROM RSM_CL
+		 WHERE RSM_NO = #{rsmNo}
+	</select>
+	<insert id="insertCL" parameterType="rsmClVO">
+		<selectKey resultType="String" order="BEFORE" keyProperty="clNo">
+			SELECT NVL(MAX(TO_NUMBER(CL_NO)), 0)+1
+  			  FROM RSM_CL
+  			 WHERE RSM_NO = #{rsmNo} 
+		</selectKey>
+		INSERT INTO RSM_CL(CL_NO, RSM_NO, CL_TTL, CL_CN, CL_WRITNG_YMD, CL_SN)
+		VALUES(#{clNo}, #{rsmNo}, #{clTtl}, #{clCn}, #{clWritngYmd}, #{clSn}) 
+	</insert>
+	
+	<update id="updateCL" parameterType="rsmClVO">
+		UPDATE RSM_CL
+		   SET CL_TTL = #{clTtl}, 
+		   	   CL_CN = #{clCn}, 
+		   	   CL_WRITNG_YMD = #{clWritngYmd}, 
+		   	   CL_SN = #{clSn}
+		 WHERE CL_NO = #{clNo}
+		   AND RSM_NO = #{rsmNo}
+	</update>
+	<delete id="deleteCL" parameterType="Map">
+		DELETE 
+		  FROM RSM_CL
+		 WHERE RSM_NO = #{rsmNo}
+		   AND CL_NO = #{clNo}
+	</delete>
+</mapper>

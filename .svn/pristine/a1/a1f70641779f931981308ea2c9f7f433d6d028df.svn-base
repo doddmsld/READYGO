@@ -1,0 +1,61 @@
+package kr.or.ddit.oustou.service.impl;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.mapper.OutsouMapper;
+import kr.or.ddit.mapper.UserMapper;
+import kr.or.ddit.oustou.service.OutsouService;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.OsClVO;
+import kr.or.ddit.vo.OsDevalVO;
+import kr.or.ddit.vo.OutsouVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class OutsouServiceImpl implements OutsouService {
+	
+	@Inject
+	OutsouMapper oustouMapper;
+	
+	
+	@Override
+	//<!--  외주 등록  -->
+	public int  registPostAjax(OutsouVO outsouVO) {
+		/*
+		 [1.IT프로그래밍]->OUTSOU, OS_DEVAL, OS_KEYWOED
+		 OutsouVO(outordNo=null, outordLclsf=OULC01, outordMlsfc=OULC01-002, outordTtl=1, ..., 
+		 	osDevalVO=OsDevalVO(srvcNo=null, outordNo=null, srvcLevelCd=SRLE01, srvcTeamscaleCd=SRTE01, srvcLangCd=SRLA16, srvcDatabaseCd=SRDB16, srvcCludCd=SRCL14, srvcEtc=b, ..), 
+		 	osClVO=OsClVO(srvcNo=null, ..), 
+		 	osKeywordVO=OsKeywordVO(kwrdNo=null, outordNo=null, kwrdNm=a))
+		 */
+		String outordLclsf = outsouVO.getOutordLclsf();
+		
+		int result = 0;
+		
+		if(outordLclsf.equals("OULC01")) {//1.IT프로그래밍->mapper호출을 3회
+			result += this.oustouMapper.insertOutsou(outsouVO);
+			result += this.oustouMapper.insertOsDeval(outsouVO.getOsDevalVO());
+			result += this.oustouMapper.insertOsKeywoed(outsouVO.getOsKeywordVO());
+		}else {//2.자기소개서->mapper호출을 2회
+			result += this.oustouMapper.insertOutsou(outsouVO);
+			result += this.oustouMapper.insertOsCl(outsouVO.getOsClVO());
+		}
+		/*
+		 [2.자기소개서]->OUTSOU, OS_CL 이 두 개의 테이블에 insert
+		 OutsouVO(outordNo=null, outordLclsf=OULC02, outordMlsfc=OULC02-001, outordTtl=1, ...,
+		  	osDevalVO=OsDevalVO(srvcNo=null, outordNo=null, srvcLevelCd=null, srvcTeamscaleCd=null, srvcLangCd=null, srvcDatabaseCd=null, srvcCludCd=null, srvcEtc=, srvcJobpd=null, srvcUpdtnmtm=null, srvcFileprovdyn=null, srvcSklladit=null), 
+		  	osClVO=OsClVO(srvcNo=null, outordNo=null, srvcFld=SRFL02, srvcKnd=SRKN03, srvcArctype=SRAR02), 
+		  	osKeywordVO=OsKeywordVO(kwrdNo=null, outordNo=null, kwrdNm=))
+		 */
+		return result;
+	};
+	
+	
+
+}

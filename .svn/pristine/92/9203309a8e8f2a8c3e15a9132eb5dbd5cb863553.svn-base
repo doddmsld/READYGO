@@ -1,0 +1,11 @@
+package kr.or.ddit.mapper;
+
+public interface FreeBoardMapper {
+
+	public String list();
+	
+	public String regist();
+
+//	수정해야함(임시)
+	public String detail();
+}

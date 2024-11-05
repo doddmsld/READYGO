@@ -1,0 +1,13 @@
+package kr.or.ddit.vo;
+
+import java.util.List;
+
+import lombok.Data;
+
+// 스크랩
+@Data
+public class ScrapVO {
+	private int rnum;     
+	private String pbancNo;
+	private String mbrId;
+}

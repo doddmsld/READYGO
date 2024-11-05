@@ -1,0 +1,60 @@
+package kr.or.ddit.controller;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import kr.or.ddit.service.PbancService;
+import kr.or.ddit.util.ArticlePage2;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.PbancVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Controller
+@Slf4j
+@RequestMapping("/member")
+public class PbancController {
+	
+	@Autowired
+	PbancService pbancService;
+	
+	@RequestMapping(value="/pbancList",method=RequestMethod.GET)
+	public ModelAndView list(ModelAndView mav,
+			@RequestParam(value="currentPage",required=false,defaultValue="1") int currentPage
+			) {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("currentPage", currentPage);
+		log.info("list->map : " + map);
+		
+		List<PbancVO> pbancVOList = this.pbancService.list(map);
+		List<CodeVO> regionList = this.pbancService.regionList();
+		log.info("pbancList : " + pbancVOList);
+		log.info("regionList : " + regionList);
+
+		//�쟾泥� �뻾�쓽 �닔 아아아
+		int total = this.pbancService.getTotal();
+		log.info("list->total : " + total);
+		
+		//�럹�씠吏��꽕�씠�뀡 媛앹껜
+		ArticlePage2<PbancVO> articlePage = 
+			new ArticlePage2<PbancVO>(total, currentPage, 10, pbancVOList);
+		log.info("articlePage : " + articlePage);
+		
+		mav.addObject("articlePage", articlePage);
+		mav.addObject("regionList", regionList);
+		
+		// 酉� 由ъ「踰�
+		// /WEB-INF/view/member/pbancList.jsp
+		mav.setViewName("member/pbancList");
+		
+		return mav;
+	}
+	
+}

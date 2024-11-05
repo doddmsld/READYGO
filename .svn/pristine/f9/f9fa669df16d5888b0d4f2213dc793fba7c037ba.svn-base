@@ -1,0 +1,21 @@
+package kr.or.ddit.service.impl;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import kr.or.ddit.service.EnterRevenueService;
+import kr.or.ddit.vo.EnterRevenueVO;
+
+@Service
+public class EnterRevenueServiceImpl implements EnterRevenueService {
+
+	@Override
+	public List<EnterRevenueVO> revenue(String entId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+}

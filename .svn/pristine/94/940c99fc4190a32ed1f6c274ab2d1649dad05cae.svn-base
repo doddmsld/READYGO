@@ -1,0 +1,483 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.EnterMapperS">
+	
+	<sql id="aplct">
+		<!-- 지원자관리 -->
+		<if test="keyword!=null and keyword!=''">
+			AND C.MBR_NM LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="date!=null and date!=''">
+			AND I.INTRVW_YMD = TO_DATE(#{date})
+		</if>
+		<if test="gubun!=null and gubun!=''">
+			AND R.RSM_CAREER_CD = #{gubun}
+		</if>
+		<if test="gubunSt!=null and gubunSt!=''">
+			AND I.INTRVW_STTUS_CD = #{gubunSt}
+		</if>
+		<if test="gubunPbanc!=null and gubunPbanc!=''">
+			AND B.PBANC_TTL LIKE #{gubunPbanc} || '%'
+		</if>
+	</sql>
+	
+	<sql id="videointrvw">
+		<if test="keyword!=null and keyword!=''">
+			AND V.VCR_TITLE LIKE '%' || #{keyword} || '%'
+		</if>
+		<if test="gubun!=null and gubun!=''">
+			<if test="gubun=='complete'">
+				AND TRUNC(TO_DATE(V.VCR_DATE)) <![CDATA[<]]> TRUNC(SYSDATE)
+			</if>
+			<if test="gubun== 'inProgress'">
+				AND TRUNC(TO_DATE(V.VCR_DATE)) = TRUNC(SYSDATE)
+			</if>
+			<if test="gubun=='inComplete'">
+				AND TRUNC(TO_DATE(V.VCR_DATE)) <![CDATA[>]]> TRUNC(SYSDATE)
+			</if>
+		</if>
+		<if test="dateInput!=null and dateInput!=''">
+				AND V.VCR_DATE = #{dateInput}
+		</if>
+	</sql>
+	
+	
+	<resultMap type="PbancVO" id="pbancMap">
+		<result property="pbancSttus" column="PBANC_STTUS"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="pbancPicNm" column="PBANC_PIC_NM"/>
+		<result property="pbancPicTelno" column="PBANC_PIC_TELNO"/>
+		<result property="pbancPicEml" column="PBANC_PIC_EML"/>
+		<result property="pbancAplctEduCd" column="PBANC_APLCT_EDU_CD"/>
+		<result property="pbancRprsrgn" column="PBANC_RPRSRGN"/>
+		<result property="pbancTtl" column="PBANC_TTL"/>
+		<result property="pbancWorkstleCd" column="PBANC_WORKSTLE_CD"/>
+		<result property="pbancApntcpd" column="PBANC_APNTCPD"/>
+		<result property="pbancSalary" column="PBANC_SALARY"/>
+		<result property="pbancWorkHrCd" column="PBANC_WORK_HR_CD"/>
+		<result property="pbancWorkDayCd" column="PBANC_WORK_DAY_CD"/>
+		<result property="pbancRcptMthdCd" column="PBANC_RCPT_MTHD_CD"/>
+		<result property="pbancRprsDty" column="PBANC_RPRS_DTY"/>
+		<result property="pbancRcptPd" column="PBANC_RCPT_PD"/>
+		<result property="pbancBgngDt" column="PBANC_BGNG_DT"/>
+		<result property="pbancBgngDts" column="PBANC_BGNG_DTS"/>
+		<result property="pbancDdlnDt" column="PBANC_DDLN_DT"/>
+		<result property="pbancDdlnDts" column="PBANC_DDLN_DTS"/>
+		<result property="pbancDlnDt" column="PBANC_DLN_DT"/>
+		<result property="pbancWrtDt" column="PBANC_WRT_DT"/>
+		<result property="pbancMdfcnDt" column="PBANC_MDFCN_DT"/>
+		<result property="pbancDelDt" column="PBANC_DEL_DT"/>
+		<result property="pbancScrapCo" column="PBANC_SCRAP_CO"/>
+		<result property="pbancDelYn" column="PBANC_DEL_YN"/>
+		<result property="pbancRdcnt" column="PBANC_RDCNT"/>
+		<result property="pbancBeforeWrt" column="PBANC_BEFORE_WRT"/>
+		
+		<result property="entNm" column="ENT_NM"/>
+		<result property="entStleNm" column="ENT_STLE_NM"/>
+		<result property="pbancRprsrgnNm" column="PBANC_RPRSRGN_NM"/>
+		<result property="pbancAplctEdu" column="PBANC_APLCT_EDU"/>
+		<result property="rcritCareerNm" column="RCRIT_CAREER_NM"/>
+		<result property="pbancTpbizNm" column="PBANC_TPBIZ_NM"/>
+		
+<!-- 		<association property="enterVO" resultMap="enterMap"/> -->
+<!-- 		<association property="codeVO" resultMap="codeMap"/> -->
+<!-- 		<association property="tbcRecruitmentVO" resultMap="tbcRecruitmentMap"/> -->
+<!-- 		<association property="tbcIndutyVO" resultMap="tbcIndutyMap"/> -->
+	</resultMap>
+	
+	<resultMap type="tbcIndutyVO" id="tbcIndutyMap">
+		<result property="tpbizCd" column="TPBIZ_CD"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+	</resultMap>
+	
+	<resultMap type="tbcRecruitmentVO" id="tbcRecruitmentMap">
+		<result property="rcritNo" column="RCRIT_NO"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="rcritNm" column="RCRIT_NM"/>
+		<result property="rcritCareerCd" column="RCRIT_CAREER_CD"/>
+		<result property="rcritTask" column="RCRIT_TASK"/>
+		<result property="rcritDept" column="RCRIT_DEPT"/>
+		<result property="rcritJbttlCd" column="RCRIT_JBTTL_CD"/>
+	</resultMap>
+	
+	<resultMap type="enterVO" id="enterMap">
+		<result property="userType" column="USER_TYPE"/>
+		<result property="entMail" column="ENT_MAIL"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="entPswd" column="ENT_PSWD"/>
+		<result property="entNm" column="ENT_NM"/>
+		<result property="entManagerTelno" column="ENT_MANAGER_TELNO"/>
+		<result property="entFxnum" column="ENT_FXNUM"/>
+		<result property="entAddr" column="ENT_ADDR"/>
+		<result property="entAddrDetail" column="ENT_ADDR_DETAIL"/>
+		<result property="entZip" column="ENT_ZIP"/>
+		<result property="entLogo" column="ENT_LOGO"/>
+		<result property="entRprsntvNm" column="ENT_RPRSNTV_NM"/>
+		<result property="entIntrcnsntnc" column="ENT_INTRCNSNTNC"/>
+		<result property="entStleCd" column="ENT_STLE_CD"/>
+		<result property="entEmpCnt" column="ENT_EMP_CNT"/>
+		<result property="entFndnYmd" column="ENT_FNDN_YMD"/>
+		<result property="entHmpgUrl" column="ENT_HMPG_URL"/>
+		<result property="entBrno" column="ENT_BRNO"/>
+		<result property="entBrFile" column="ENT_BR_FILE"/>
+		<result property="enabled" column="ENABLED"/>
+	</resultMap>
+	
+	<resultMap type="codeVO" id="codeMap">
+	<result property="comCode" column="COM_CODE"/>
+	<result property="comCodeGrp" column="COM_CODE_GRP"/>
+	<result property="comCodeNm" column="COM_CODE_NM"/>
+	<result property="comCodeDesc" column="COM_CODE_DESC"/>
+	<result property="useYn" column="USE_YN"/>
+	<result property="upperComCode" column="UPPER_COM_CODE"/>
+	<result property="upperComCodeGrp" column="UPPER_COM_CODE_GRP"/>
+	</resultMap>
+	
+	<resultMap type="applicantVO" id="applicantMap">
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="rsmFile" column="RSM_FILE"/>
+		<result property="aplctAppymd" column="APLCT_APPYMD"/>
+		<result property="aplctAppymds" column="APLCT_APPYMDS"/>
+		<result property="aplctPrcsStatCd" column="APLCT_PRCS_STAT_CD"/>
+		<result property="aplctFile" column="APLCT_FILE"/>
+		<result property="aplctCancelCd" column="APLCT_CANCEL_CD"/>
+		<result property="intrvwTyCd" column="INTRVW_TY_CD"/>
+		
+		
+		<result property="entNm" column="ENT_NM"/>
+		<result property="pbancTtl" column="PBANC_TTL"/>
+		<result property="pbancDdlnDt" column="PBANC_DDLN_DT"/>
+		<result property="rsmCareerCd" column="RSM_CAREER_CD"/>
+		<result property="mbrNm" column="MBR_NM"/>
+		<result property="intrvwYmd" column="INTRVW_YMD"/>
+		<result property="skCd" column="SK_CD"/>
+		<result property="intrvwSttusCd" column="INTRVW_STTUS_CD"/>
+		<result property="intrvwNo" column="INTRVW_NO"/>
+		
+	</resultMap>
+	
+	<resultMap type="memberVO" id="memberMap">
+		<result property="mbrId" column="MBR_ID"/>
+		<result property="mbrPswd" column="MBR_PSWD"/>
+		<result property="mbrNm" column="MBR_NM"/>
+		<result property="mbrBrdt" column="MBR_BRDT"/>
+		<result property="mbrSexdstnCd" column="MBR_SEXDSTN_CD"/>
+		<result property="mbrEml" column="MBR_EML"/>
+		<result property="mbrTelno" column="MBR_TELNO"/>
+		<result property="mbrZip" column="MBR_ZIP"/>
+		<result property="mbrAddr" column="MBR_ADDR"/>
+		<result property="mbrAddrDtl" column="MBR_ADDR_DTL"/>
+		<result property="mbrJoinYmd" column="MBR_JOIN_YMD"/>
+		<result property="mbrWhdwlYmd" column="MBR_WHDWL_YMD"/>
+		<result property="enabled" column="ENABLED"/>
+		<result property="mbrWarnCo" column="MBR_WARN_CO"/>
+		<result property="mbrAcnutno" column="MBR_ACNUTNO"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="userType" column="USER_TYPE"/>
+		<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+		
+		<result property="tpbizSeNm" column="TPBIZ_SE_NM"/>
+		<result property="skCd" column="SK_CD"/>
+		<result property="career" column="CAREER"/>
+	</resultMap>
+	
+	<resultMap type="videoRoomVO" id="videoRoomMap">
+		<result property="vcrNo" column="VCR_NO"/>
+		<result property="vcrTitle" column="VCR_TITLE"/>
+		<result property="vcrRoomurlid" column="VCR_ROOMURLID"/>
+		<result property="vcrCalltype" column="VCR_CALLTYPE"/>
+		<result property="vcrLivemode" column="VCR_LIVEMODE"/>
+		<result property="vcrMaxjoincount" column="VCR_MAXJOINCOUNT"/>
+		<result property="vcrLivemaxjoincount" column="VCR_LIVEMAXJOINCOUNT"/>
+		<result property="vcrPasswd" column="VCR_PASSWD"/>
+		<result property="vcrStartdate" column="VCR_STARTDATE"/>
+		<result property="vcrEnddate" column="VCR_ENDDATE"/>
+		<result property="vcrLayouttype" column="VCR_LAYOUTTYPE"/>
+		<result property="vcrSfuincludeall" column="VCR_SFUINCLUDEALL"/>
+		<result property="vcrDate" column="VCR_DATE"/>
+		<result property="vcrYn" column="VCR_YN"/>
+		<result property="pbancNo" column="PBANC_NO"/>
+		<result property="vcrRoomid" column="VCR_ROOMID"/>
+		<result property="entId" column="ENT_ID"/>
+		<result property="status" column="STATUS"/>
+		<result property="rnum" column="RNUM"/>
+	</resultMap>
+	
+	
+	<!-- 진행중 공고 카운트 -->
+	<select id="pbCount" parameterType="String" resultType="int">
+		SELECT  count(*) FROM PBANC WHERE PBANC_DDLN_DT  <![CDATA[>]]> SYSDATE-1 and ent_id=#{entId}
+	</select>
+	
+	<!--  열람 지원자 카운트 -->
+	<select id="openCount" parameterType="String" resultType="int">
+	select count(*)
+	from pbanc a,enter b, applicant c
+	where a.ent_id = b.ent_id
+	and c.pbanc_no = a.pbanc_no
+	and b.ent_id = #{entId}
+	</select>
+	
+	<!--  미열람 지원자 카운트 -->
+	<select id="closeCount" parameterType="String" resultType="int">
+	select count(*)
+	from pbanc a,enter b, applicant c
+	where a.ent_id = b.ent_id
+	and c.pbanc_no = a.pbanc_no
+	and b.ent_id = #{entId}
+	and c.APLCT_VIEWSTTUS=1
+	</select>
+	
+	<!-- 스카우트제안 카운트 -->
+	<select id="ppCount" parameterType="String" resultType="int">
+	SELECT count(*) FROM proposal where ent_id=#{entId}
+	</select>
+	
+	<!-- 기업이 등록한 공고 -->
+	<select id="pbancList" parameterType="String" resultMap="pbancMap">
+	SELECT B.ENT_NM,(SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE=B.ENT_STLE_CD)AS ENT_STLE_NM,CONCAT(SUBSTR(A.PBANC_TTL,0,7),'...')AS PBANC_TTL,
+            CONCAT((SELECT C.COM_CODE_NM||' ' FROM CODE C WHERE C.COM_CODE=substr(A.PBANC_RPRSRGN,0,6)),(SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = A.PBANC_RPRSRGN))AS PBANC_RPRSRGN_NM,
+            (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE=A.PBANC_APLCT_EDU_CD) AS PBANC_APLCT_EDU,
+            TO_CHAR(A.PBANC_DDLN_DT,'MM.DD(DY)') as PBANC_DLN_DT,TRUNC(SYSDATE-A.PBANC_WRT_DT)as PBANC_BEFORE_WRT,
+            (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = D.RCRIT_CAREER_CD)AS RCRIT_CAREER_NM,
+           (SELECT C.COM_CODE_NM FROM CODE C WHERE C.COM_CODE = TPBIZ_CD) AS PBANC_TPBIZ_NM
+		FROM PBANC A, enter B, TBC_RECRUITMENT D,TBC_INDUTY E
+		WHERE A.ent_id=b.ent_id
+		AND A.PBANC_NO = D.PBANC_NO
+		AND A.PBANC_NO = E.PBANC_NO
+		and A.ENT_ID = #{entId}
+		and A.PBANC_DDLN_DT  <![CDATA[>]]> SYSDATE-1
+		order by A.pbanc_wrt_dt desc
+	</select>
+	
+	<!-- 캘린더 공고 조회 -->
+	<select id="pbancCalendarList" parameterType="String" resultType="pbancVO">
+	SELECT  PBANC_NO, ENT_ID, PBANC_PIC_NM, PBANC_PIC_TELNO, PBANC_PIC_EML, PBANC_APLCT_EDU_CD,
+        PBANC_RPRSRGN, PBANC_TTL, PBANC_WORKSTLE_CD, PBANC_APNTCPD, PBANC_SALARY, PBANC_WORK_HR_CD, PBANC_WORK_DAY_CD,
+        PBANC_RCPT_MTHD_CD, PBANC_RPRS_DTY, PBANC_RCPT_PD, TO_CHAR(PBANC_BGNG_DT,'YYYY-MM-DD') as PBANC_BGNG_DTS , TO_CHAR(PBANC_DDLN_DT,'YYYY-MM-DD') as PBANC_DDLN_DTS,
+        PBANC_WRT_DT, PBANC_MDFCN_DT, PBANC_DEL_DT, PBANC_SCRAP_CO, PBANC_DEL_YN, PBANC_RDCNT, PBANC_STTUS FROM PBANC WHERE PBANC_DDLN_DT> SYSDATE-1 and ent_id=#{entId}
+	</select>
+	
+	<!-- 알람 목록 조회 -->
+	<select id="alarmList" parameterType="String" resultType="notificationVO">
+		SELECT  * FROM NOTIFICATION WHERE COMMON_ID = #{entId} and NTCN_IDNTY_YN='1' order by NTCN_NO desc
+	</select>
+	<!-- 알람 목록 조회 -->
+	<select id="alarmCount" parameterType="String" resultType="int">
+		SELECT  count(*) FROM NOTIFICATION WHERE COMMON_ID = #{entId} and NTCN_IDNTY_YN='1' order by NTCN_NO desc
+	</select>
+	
+	<!-- 메인 인재 신입 추천 -->
+	<select id="injaeNewList" resultMap="memberMap">
+		SELECT *
+		FROM (
+		    SELECT SUBSTR(A.MBR_NM, 1, 1) || '○' || SUBSTR(A.MBR_NM, 3) AS MBR_NM
+		         , A.MBR_ID
+		         , (SELECT MAX(F.FILE_PATH_NM) 
+		            FROM FILE_DT F 
+		            WHERE A.FILE_GROUP_SN = F.FILE_GROUP_SN) AS FILE_GROUP_SN
+		         , SUBSTR((SELECT LISTAGG(C.COM_CODE_NM, ', ') WITHIN GROUP (ORDER BY C.COM_CODE)
+		            FROM PRF_BUSINESS B 
+		            JOIN CODE C ON C.COM_CODE = B.TPBIZ_SE_CD
+		            WHERE A.MBR_ID = B.MBR_ID),0,10)||'..' AS TPBIZ_SE_NM
+		         , substr((SELECT LISTAGG(D.COM_CODE_NM, ', ') WITHIN GROUP (ORDER BY D.COM_CODE)
+		            FROM PRF_SKILL S
+		            JOIN CODE D ON D.COM_CODE = S.SK_CD
+		            WHERE S.MBR_ID = A.MBR_ID),0,20)||'..' AS SK_CD
+		         , (SELECT DECODE(MAX(PC.CAREER_NO), NULL, '신입', '경력') 
+		             FROM PRF_CAREER PC 
+		             WHERE A.MBR_ID = PC.MBR_ID) AS CAREER
+		    FROM MEMBER A
+		    JOIN PRF P ON A.MBR_ID = P.MBR_ID
+		    WHERE (SELECT DECODE(MAX(PC.CAREER_NO), NULL, '신입', '경력') 
+		             FROM PRF_CAREER PC 
+		             WHERE A.MBR_ID = PC.MBR_ID) = '신입'
+		    ORDER BY DBMS_RANDOM.VALUE
+		) 
+		WHERE ROWNUM <![CDATA[<=]]> 3
+	</select>
+	<!-- 메인 인재 경력 추천 -->
+	<select id="injaeOldList" resultMap="memberMap">
+		SELECT *
+		FROM (
+		    SELECT SUBSTR(A.MBR_NM, 1, 1) || '○' || SUBSTR(A.MBR_NM, 3) AS MBR_NM
+		         , A.MBR_ID
+		         , (SELECT MAX(F.FILE_PATH_NM) 
+		            FROM FILE_DT F 
+		            WHERE A.FILE_GROUP_SN = F.FILE_GROUP_SN) AS FILE_GROUP_SN
+		         , SUBSTR((SELECT LISTAGG(C.COM_CODE_NM, ', ') WITHIN GROUP (ORDER BY C.COM_CODE)
+		            FROM PRF_BUSINESS B 
+		            JOIN CODE C ON C.COM_CODE = B.TPBIZ_SE_CD
+		            WHERE A.MBR_ID = B.MBR_ID),0,10)||'..' AS TPBIZ_SE_NM
+		         , substr((SELECT LISTAGG(D.COM_CODE_NM, ', ') WITHIN GROUP (ORDER BY D.COM_CODE)
+		            FROM PRF_SKILL S
+		            JOIN CODE D ON D.COM_CODE = S.SK_CD
+		            WHERE S.MBR_ID = A.MBR_ID),0,20)||'..' AS SK_CD
+		         , (SELECT DECODE(MAX(PC.CAREER_NO), NULL, '신입', '경력') 
+		             FROM PRF_CAREER PC 
+		             WHERE A.MBR_ID = PC.MBR_ID) AS CAREER
+		    FROM MEMBER A
+		    JOIN PRF P ON A.MBR_ID = P.MBR_ID
+		    WHERE (SELECT DECODE(MAX(PC.CAREER_NO), NULL, '신입', '경력') 
+		             FROM PRF_CAREER PC 
+		             WHERE A.MBR_ID = PC.MBR_ID) = '경력'
+		    ORDER BY DBMS_RANDOM.VALUE
+		) 
+		WHERE ROWNUM <![CDATA[<=]]> 3
+	</select>
+	
+	<!-- 메인 쿼리 끝 -->
+	<!-- ///////////////////////////////////////////////////////////////////////// -->
+	
+	<!-- 면접관리 쿼리 -->
+	<!-- 일반면접 사람 조회 -->
+	<select id="intrvwList" parameterType="map" resultMap="applicantMap">
+		WITH T AS (
+	    SELECT ROW_NUMBER() OVER (ORDER BY INTRVW_YMD desc) AS RNUM
+	    , A.MBR_ID
+	    , A.PBANC_NO, A.RSM_FILE, A.APLCT_APPYMD
+	    , A.APLCT_FILE, A.APLCT_VIEWSTTUS
+	    , C.MBR_NM
+	    , A.APLCT_PRCS_STAT_CD
+	    , I.INTRVW_STTUS_CD
+	    , (SELECT D.COM_CODE_NM FROM CODE D WHERE D.COM_CODE = R.RSM_CAREER_CD) RSM_CAREER_CD
+	    , NVL(TO_CHAR(TO_DATE(intrvw_ymd, 'YYYY-MM-DDHH24MISS'), 'YYYY.MM.DD'),'-') AS INTRVW_YMD
+	    , (SELECT D.COM_CODE_NM FROM CODE D WHERE D.COM_CODE = B.PBANC_INTRVW_TY_CD)INTRVW_TY_CD
+	    , SUBSTR((SELECT LISTAGG(D.COM_CODE_NM, ', ') WITHIN GROUP (ORDER BY D.COM_CODE)
+			          FROM PRF_SKILL S
+			          JOIN CODE D ON D.COM_CODE = S.SK_CD
+			         WHERE S.MBR_ID = A.MBR_ID),0,40)||'..'  AS SK_CD
+		, I.INTRVW_NO
+			FROM APPLICANT A, PBANC B, MEMBER C,RESUME R,INTERVIEW I
+			WHERE A.PBANC_NO = B.PBANC_NO
+			  AND A.MBR_ID = C.MBR_ID
+			  AND C.MBR_ID = R.MBR_ID
+			  AND I.MBR_ID = C.MBR_ID
+			  AND B.ENT_ID = #{entId}
+			  AND A.APLCT_PRCS_STAT_CD IN ('APST02', 'APST03', 'APST04')
+			  <include refid="aplct"></include>
+		 )
+	       SELECT * 
+	       FROM T
+	       WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 5 + 1 AND #{currentPage} * 5
+	</select>
+	
+	<!-- 면접관리 엑셀파일 저장 리스트 -->
+	<select id="AplctListExcel" parameterType="hashMap" resultMap="applicantMap">
+		SELECT ROW_NUMBER() OVER (ORDER BY INTRVW_YMD desc) AS RNUM
+	    , A.MBR_ID
+	    , A.PBANC_NO, A.RSM_FILE, A.APLCT_APPYMD
+	    , A.APLCT_FILE, A.APLCT_VIEWSTTUS
+	    , C.MBR_NM
+	    , A.APLCT_PRCS_STAT_CD
+	    , I.INTRVW_STTUS_CD
+	    , (SELECT D.COM_CODE_NM FROM CODE D WHERE D.COM_CODE = R.RSM_CAREER_CD) RSM_CAREER_CD
+	    , NVL(TO_CHAR(TO_DATE(intrvw_ymd, 'YYYY-MM-DDHH24MISS'), 'YYYY.MM.DD'),'-') AS INTRVW_YMD
+	    , (SELECT D.COM_CODE_NM FROM CODE D WHERE D.COM_CODE = B.PBANC_INTRVW_TY_CD)INTRVW_TY_CD
+	    , SUBSTR((SELECT LISTAGG(D.COM_CODE_NM, ', ') WITHIN GROUP (ORDER BY D.COM_CODE)
+			          FROM PRF_SKILL S
+			          JOIN CODE D ON D.COM_CODE = S.SK_CD
+			         WHERE S.MBR_ID = A.MBR_ID),0,40)||'..'  AS SK_CD
+		, I.INTRVW_NO
+			FROM APPLICANT A, PBANC B, MEMBER C,RESUME R,INTERVIEW I
+			WHERE A.PBANC_NO = B.PBANC_NO
+			  AND A.MBR_ID = C.MBR_ID
+			  AND C.MBR_ID = R.MBR_ID
+			  AND I.MBR_ID = C.MBR_ID
+			  AND B.ENT_ID = #{entId}
+			  AND A.APLCT_PRCS_STAT_CD IN ('APST02', 'APST03', 'APST04')
+	</select>	
+	
+	<!-- 페이징 총 페이지(일반면접) -->
+	<select id="getIntrvwTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		FROM APPLICANT A, PBANC B, MEMBER C,RESUME R,INTERVIEW I
+		WHERE A.PBANC_NO = B.PBANC_NO
+		  AND A.MBR_ID = C.MBR_ID
+		  AND C.MBR_ID = R.MBR_ID
+		  AND I.MBR_ID = C.MBR_ID
+		  AND B.ENT_ID = #{entId}
+		  AND A.APLCT_PRCS_STAT_CD IN ('APST02', 'APST03', 'APST04')
+		  <include refid="aplct"></include>
+	</select>
+	
+	<!-- 공고 조회 -->
+	<select id="pbancsList" parameterType="String" resultType="pbancVO">
+		SELECT CONCAT(SUBSTR(PBANC_TTL,0,20),'...') AS PBANC_TTL,PBANC_NO
+		FROM PBANC
+		WHERE ENT_ID = #{entId}
+	</select>
+	
+	<!-- 면접 모달 안 화상면접방 조회-->
+	<select id="videointrvwPost" parameterType="String" resultType="videoRoomVO">
+		SELECT * FROM VIDEO_ROOM WHERE PBANC_NO = #{job}
+	</select>
+	
+	<!-- 면접 관리 면접상태 업데이트 -->
+	<update id="updateIntrvw" parameterType="hashMap">
+		UPDATE INTERVIEW SET INTRVW_STTUS_CD = #{intrvwSttus}
+			WHERE INTRVW_NO = #{intrvwNo}
+	</update>
+	<!-- 면접 관리 지원자상태 업데이트 -->
+	<update id="updateIntrvwPrcsStat" parameterType="hashMap">
+		UPDATE APPLICANT A SET A.APLCT_PRCS_STAT_CD = #{intrvwSttus}
+		WHERE A.MBR_ID = #{mbrId}
+		  AND A.PBANC_NO = #{pbancNo}
+		  AND EXISTS (SELECT 1 
+		                FROM PBANC P 
+		               WHERE A.PBANC_NO = P.PBANC_NO)		
+	</update>
+	<!-- 면접일자(화상) 모달 업데이트 -->
+	<update id="intrvwFormPost" parameterType="hashMap">
+		UPDATE INTERVIEW
+		SET INTRVW_YMD = (SELECT VCR_DATE FROM VIDEO_ROOM WHERE VCR_NO = #{videoPost})
+			, INTRVW_START_DATE = (SELECT VCR_STARTDATE FROM VIDEO_ROOM WHERE VCR_NO=#{videoPost})
+			, INTRVW_END_DATE = (SELECT VCR_ENDDATE FROM VIDEO_ROOM WHERE VCR_NO= #{videoPost})
+		WHERE INTRVW_NO = #{intrvwNum}
+	</update>
+	
+	<!-- 면접일자(일반) 모달 업데이트 -->
+	<update id="intrvwFormPost2" parameterType="hashMap">
+		UPDATE INTERVIEW
+		SET INTRVW_YMD = #{date}
+			, INTRVW_START_DATE = #{startdate}
+			, INTRVW_END_DATE = #{enddate}
+		WHERE INTRVW_NO = #{intrvwNum}
+	</update>
+	
+	
+	<!-- 화상면접방 리스트 -->
+	<select id="videoRoomList" parameterType="hashMap" resultMap="videoRoomMap">
+		SELECT * 
+	    FROM (
+	         SELECT ROW_NUMBER() OVER (ORDER BY VCR_DATE DESC) AS RNUM
+		           , V.VCR_NO, V.VCR_TITLE, V.VCR_ROOMURLID, V.VCR_CALLTYPE, V.VCR_LIVEMODE
+		           , V.VCR_MAXJOINCOUNT, V.VCR_LIVEMAXJOINCOUNT, V.VCR_PASSWD, V.VCR_STARTDATE
+		           , V.VCR_ENDDATE, V.VCR_LAYOUTTYPE, V.VCR_SFUINCLUDEALL
+		           , V.VCR_DATE
+		           , V.VCR_YN, V.VCR_ROOMID, V.PBANC_NO
+		           , CASE 
+		                WHEN TRUNC(TO_DATE(V.VCR_DATE)) > TRUNC(SYSDATE) THEN '면접진행전'
+		                WHEN TRUNC(TO_DATE(V.VCR_DATE)) = TRUNC(SYSDATE) THEN '면접진행중'
+		                ELSE '면접완료'
+		             END AS STATUS
+		    FROM VIDEO_ROOM V
+		    JOIN PBANC P ON V.PBANC_NO = P.PBANC_NO
+		    JOIN ENTER E ON P.ENT_ID = E.ENT_ID
+	        WHERE P.ENT_ID = #{entId}
+	    	<include refid="videointrvw"></include>
+	    ) T
+	    WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 5 + 1 AND #{currentPage} * 5
+	</select>
+	<!--  화상면접방 총 페이지(일반면접) -->
+	<select id="getvideoIntrvwTotal" parameterType="hashMap" resultType="int">
+		SELECT COUNT(*)
+		 FROM VIDEO_ROOM V
+        JOIN PBANC P ON V.PBANC_NO = P.PBANC_NO
+        JOIN ENTER E ON P.ENT_ID = E.ENT_ID
+        WHERE P.ENT_ID = #{entId}
+        <include refid="videointrvw"></include>
+	</select>
+</mapper>

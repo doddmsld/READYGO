@@ -1,0 +1,41 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.EnterEmpYcntVO;
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.IndutyVO;
+import kr.or.ddit.vo.PbancVO;
+
+public interface EnterMapper {
+	public EnterVO selectOne(String enterVO);
+	
+	//기업프로필
+	public EnterVO profile(String entId);
+	
+	//기업 프로필 연도별 입사자수
+	public List<EnterEmpYcntVO> empYcnt(String entId);
+	
+	//기업프로필 - 업종
+	public List<CodeVO> getIndutyList();
+	
+	//기업정보수정 폼
+	public EnterVO edit(String entId);
+
+	//기업정보수정 - 기업형태
+	public List<CodeVO> getEntStleCdList();
+
+	//기업정보수정 실행
+	public int editPost1(EnterVO enterVO);
+	public int editPost2(EnterVO enterVO);
+
+	//기업탈퇴
+	public int deleteAjax(String entId);
+
+	//인재-스킬
+	public List<CodeVO> getSkillList();
+
+
+	
+}

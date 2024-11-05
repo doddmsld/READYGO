@@ -1,0 +1,16 @@
+package kr.or.ddit.mapper;
+
+import kr.or.ddit.vo.SettlementVO;
+
+public interface OutsouPayMapper {
+
+	//결제 정보 저장 
+	public int insertSettlement(SettlementVO settlementVO );
+	
+	//날짜 갯수 구하기
+	public int getOrderCountForToday( );
+	
+
+
+	
+}

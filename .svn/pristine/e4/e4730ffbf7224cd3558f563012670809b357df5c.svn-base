@@ -1,0 +1,29 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.OutsouVO;
+
+
+public interface OutsouMainMapper {
+	
+	/* 메인 */
+	public List<OutsouVO> getCategory(); //조회수가 많은 카테고리 5개 
+	
+	public List<OutsouVO> getnewList();	//메인 새로운 게시글 5개 
+	
+	public List<OutsouVO> getBestList(); //메인 조회수 높은글  게시글 5개 
+
+	
+	/* 카테고라별 목록 */
+	public List<OutsouVO> geCategoryist(Map<String, Object> map); //카테고리별 목록 + 페이지네이션
+	
+	public int getTotal(Map<String, Object> map); //전체 행의 수
+
+	public List<CodeVO> getSrleList(); //기술 수준 코드
+
+	public List<CodeVO> getSrteList(); // 팀 규모 수준 코드
+	
+}

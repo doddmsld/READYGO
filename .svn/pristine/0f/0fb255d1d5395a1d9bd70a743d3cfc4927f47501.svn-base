@@ -1,0 +1,48 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.NotificationVO;
+import kr.or.ddit.vo.PbancVO;
+import kr.or.ddit.vo.VideoRoomVO;
+
+public interface EnterMapperS {
+
+	// 기업 진행중 공고 카운트
+	int pbCount(String entId);
+
+	// 기업 열람 지원자 카운트
+	int openCount(String entId);
+
+	// 기업 미열람 지원자 카운트
+	int closeCount(String entId);
+
+	// 기업 스카우트 제안한 카운트
+	int ppCount(String entId);
+
+	List<PbancVO> pbancList(String entId);
+
+	List<PbancVO> pbancCalendarList(String entId);
+
+	List<NotificationVO> alarmList(String entId);
+
+	List<ApplicantVO> intrvwList(Map<String, Object> map);
+
+	List<PbancVO> pbancsList(String entId);
+
+	List<MemberVO> injaeNewList();
+
+	List<MemberVO> injaeOldList();
+
+	int getIntrvwTotal(Map<String, Object> map);
+
+	List<VideoRoomVO> videointrvwPost(String job);
+
+	void intrvwFormPost(Map<String, Object> map);
+
+	void intrvwFormPost2(Map<String, Object> map);
+
+}

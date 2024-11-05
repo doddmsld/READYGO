@@ -1,0 +1,14 @@
+package kr.or.ddit.mapper;
+
+import java.util.List;
+import java.util.Map;
+
+import kr.or.ddit.vo.InterViewVO;
+
+public interface MemInterViewMapper {
+
+	List<InterViewVO> selectInterViewList(Map<String, Object> map);
+
+	int getTotal(Map<String, Object> map);
+
+}

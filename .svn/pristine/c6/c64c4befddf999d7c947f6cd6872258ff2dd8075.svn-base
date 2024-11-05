@@ -1,0 +1,9 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+@Data
+public class IndutyVO {
+	private String tpbizSeCd;
+	private String entId;
+}

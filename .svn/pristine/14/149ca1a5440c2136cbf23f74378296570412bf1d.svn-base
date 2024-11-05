@@ -1,0 +1,80 @@
+package kr.or.ddit.enter.entcontroller;
+
+
+import java.security.Principal;
+import java.util.List;
+
+import javax.inject.Inject;
+
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import kr.or.ddit.enter.entservice.EnterService;
+import kr.or.ddit.enter.entservice.EnterServiceS;
+import kr.or.ddit.vo.NotificationVO;
+import kr.or.ddit.vo.PbancVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Controller
+@Slf4j
+@RequestMapping("/enter")
+public class EnterMainController {
+	
+	@Inject
+	EnterServiceS enterServiceS;
+	
+	/*기업 메인*/
+	@GetMapping("/main")
+	public String main(Model model,Principal principal
+			) {
+		if(principal!=null) {
+			String entId = principal.getName();
+			int pbCount = this.enterServiceS.pbCount(entId);
+			int openCount = this.enterServiceS.openCount(entId);
+			int closeCount = this.enterServiceS.closeCount(entId);
+			int ppCount = this.enterServiceS.ppCount(entId);
+			log.info("pbCount : "+pbCount);
+			log.info("openCount : "+openCount);
+			log.info("closeCount : "+closeCount);
+			log.info("ppCount : "+ppCount);
+			model.addAttribute("pbCount",pbCount);
+			model.addAttribute("openCount",openCount);
+			model.addAttribute("closeCount",closeCount);
+			model.addAttribute("ppCount",ppCount);
+			
+			List<PbancVO> pbancList = this.enterServiceS.pbancList(entId);
+			log.info("pbancList : "+pbancList);
+			model.addAttribute("pbancList",pbancList);
+			
+			List<PbancVO> pbancCalendarList = this.enterServiceS.pbancCalendarList(entId);
+			log.info("pbancCalendarList : "+pbancCalendarList);
+			model.addAttribute("pbancCalendarList",pbancCalendarList);
+		}
+		return "enter/main/main";
+	}
+	
+	
+	//알람 목록 컨트롤러
+	@ResponseBody
+	@PostMapping("/alarmList")
+	public List<NotificationVO> alarmList(@RequestBody String entId) {
+		
+		log.info("alarmList -> entId : "+ entId);
+		List<NotificationVO> notificationVOList = this.enterServiceS.alarmList(entId);
+		log.info("alarmList -> notificationVO : " + notificationVOList);
+		return notificationVOList;
+		
+	}
+	
+	/*기업 지원자 관리 - 일반면접*/
+	@GetMapping("/intrvw")
+	public String intrvw(Model model, String entId) {
+		return "enter/aplctPage/aplctList/aplctFolder/aplct/intrvw";
+	}
+}

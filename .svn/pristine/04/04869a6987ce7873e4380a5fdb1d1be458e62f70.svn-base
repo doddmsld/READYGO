@@ -1,0 +1,304 @@
+@charset "UTF-8";
+* {
+    font-family: pretendard;
+}
+
+.main{
+	width: 100%;
+	height: auto;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-around;
+}
+.frame{
+	width: 600px;
+    height: 700px;
+    background-color: #00bc8c6e;
+    padding: 25px 25px;
+    margin-right: 100px;
+    border-radius: 15px;
+}
+.subframe{
+	background-color: white;
+	border-radius: 20px;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	padding: 10px;
+}
+.room{
+	width: 100%;
+    height: 60px;
+    background-color: #00bc8c6e;
+    border-radius: 15px;
+    margin-bottom: 15px;	
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px 30px;
+    cursor: pointer;
+}
+.room:hover{
+	background-color: #00bc8cc9;
+}
+.row {
+    flex-wrap: nowrap;
+}
+#topbox {
+    width: 1250px;
+    margin-left: 50px;
+}
+.box {
+    padding: 15px;
+    padding-left: 20px;
+    border: none;
+    margin: 10px;
+    width: 700px;
+    height: 72px;
+    border-radius: 12px;
+    font-size: 16px;
+}
+/* 페이징 css 끝*/
+.middleTitle{
+	margin-left: 68px;
+	margin-top: 40px;
+    font-weight: 700;
+    font-size: 20px;
+}
+#h3 {
+    margin-left: -40px;
+    font-weight: 700;
+    font-size: 30px;
+    color: #212529;
+}
+/* 전체 카운트 */
+#count {
+    font-size: 20px;
+    margin-left: 68px;
+    font-weight: 700;
+    color: #232323;
+    border-bottom: 5px solid #24D59E;
+    padding-bottom: 5px;
+    width: 90px;
+}
+#total {
+    background: #24D59E;
+    color: white;
+    padding: 7px 8px;
+    border-radius: 999px;
+    font-size: 20px;
+}
+.num, .num2 {
+    font-size: 34px;
+    font-weight: 700;
+    text-align: right;
+    margin-top: -17px;
+    color: #666363;
+}
+.num2 {
+    color: #2CCFC3;
+}
+#fir, #fin {
+    color: #666363;
+    background: #F4F4F4;
+    font-weight: 600;
+}
+#ing {
+    color: #2CCFC3;
+    background: #E8FAF8;
+    font-weight: 600;
+}
+.table th {
+    padding: 15px;
+}
+th {
+    text-align: center;
+    font-size: 16px;
+    width: 150px;
+}
+thead {
+    border-top: 1px solid #666363;
+    border-bottom: 1px solid #666363;
+}
+.card-body.table-responsive.p-0 {
+    margin-left: 61px;
+    width: 1230px;
+}
+tbody {
+    text-align: center;
+    font-size: 14px;
+    color: #232323;
+}
+th.aplct, td.aplct {
+    text-align: left;
+    padding-left: 110px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+}
+td.aplct:hover {
+    text-decoration: underline;
+}
+td.appymd {
+    font-size: 14px;
+    font-weight: 500;
+    padding-top: 23px;
+}
+#btnCancel, .AllDel, .selectDel {
+    width: 100px;
+    height: 35px;
+    background: none;
+    border-radius: 5px;
+    border: 1px solid #24D59E;
+    color: #24D59E;
+    font-weight: 500;
+    font-size: 14px;
+    margin-top: 2.5px;
+}
+#btnCancel:hover, .AllDel:hover, .selectDel:hover {
+    background: #24D59E;
+    color: #ffffff;
+    font-weight: 600;
+}
+#cancelSuc {
+    width: 100px;
+    height: 35px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    background: #ECECEC;
+    border: 1px solid #A7A7A7;
+}
+/* Modal CSS */
+select {
+    word-wrap: normal;
+    width: 500px;
+    height: 53px;
+    border: 1px solid #A7A7A7;
+    border-radius: 5px;
+    font-size: 16px;
+    padding-left: 15px;
+    margin-right: 9px;
+}
+.modal-content {
+    width: 790px;
+    height: 700px;
+    border-radius: 8px;
+    border: none;
+    position: fixed;  
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);  
+}
+
+.modal-body {
+    text-align: center;
+    padding: 8px 10px 0;
+}
+label {
+    margin-right: 30px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #232323;
+}
+option {
+    font-size: 16px;
+}
+.modal-header {
+    font-size: 26px;
+    font-weight: 500;
+}
+#close, #submit {
+    width: 120px;
+    height: 40px;
+    font-size: 18px;
+    margin: 0px 6px;
+}
+#close {
+    border-radius: 5px;
+    font-size: 18px;
+    color: #666363;
+}
+#submit {
+    background: white;
+    font-weight: 600;
+    border-radius: 5px;
+    margin-right: 25px;
+    color: #24D59E;
+    border: 1px solid #24D59E;
+}
+#submit:hover {
+    background: #24D59E;
+    color: #ffffff;
+    border: none;
+    font-weight: 600;
+}
+/* 채팅 박스 스타일 */
+#chatContent {
+    height: 500px; /* 높이를 500px로 설정 */
+    max-height: none; /* max-height 제한 제거 */
+    overflow-y: auto; /* 스크롤을 유지 */
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.chat-message {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 10px;
+    max-width: 70%;
+    word-wrap: break-word;
+    display: block;
+}
+.chat-message.right {
+    background-color: #daf8cb;
+    text-align: right;
+    margin-left: auto;
+    margin-right: 10px;
+}
+.chat-message.left {
+    background-color: #f1f0f0;
+    text-align: left;
+    margin-right: auto;
+    margin-left: 10px;
+}
+.message-meta {
+    font-size: 12px;
+    color: gray;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+.username-right, .username-left {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 3px;
+}
+.username-right {
+    text-align: right;
+}
+.username-left {
+    text-align: left;
+}
+
+.search-input { 
+    margin-top: 20px; 
+}
+
+.unread-badge {
+    background-color: #FD5D6C; 
+    color: white; 
+    border-radius: 50%; 
+    width: 20px; 
+    height: 20px; 
+    display: inline-flex; 
+    align-items: center; 
+    justify-content: center;
+    font-size: 12px; 
+    font-weight: bold; 
+}

@@ -1,0 +1,17 @@
+package kr.or.ddit.vo;
+
+import lombok.Data;
+
+@Data
+public class NotificationVO {
+	private String ntcnNo;
+	private String commonId;
+	private String ntcnCn;
+	private String ntcnUrl;
+	private String ntcnIdntyYn;
+	private String ntcnYmd;
+	private String ntcnTrgettblNm;
+	private String ntcnTrgettblPk;
+	private String ntcnTrgettblAsstnfrmlasprgrp;
+	private String ntcnRsvtYmday;
+}

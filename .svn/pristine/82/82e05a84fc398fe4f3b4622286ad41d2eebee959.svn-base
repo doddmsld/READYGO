@@ -1,0 +1,91 @@
+@charset "UTF-8";
+
+* {
+	font-family: pretendard;
+}
+
+<
+style
+>
+ @charset "UTF-8";
+
+* {
+    font-family: pretendard;
+}
+
+.payokPage{
+	border-top: 1px solid #e0e0e0;
+	display: inline-flex;
+	flex-direction: column;
+	justify-content: center;
+	margin: 0px auto;
+	width: 100%; 
+	height : auto;
+	margin-top:20px;
+}
+.okimg{
+	display:flex;
+	flex-direction : column;
+	border: 5px solid #e0e0e0;
+	width:1000px;
+	height : 650px;
+	border-radius : 20px;
+	margin: 50px auto;;
+}
+
+.prodOk{
+	margin: 0px auto;
+}
+.prodOk p{
+	font-size: 20px;
+	color: #666;
+}
+.oktext{
+	text-align: center;
+	color: #666;
+
+}
+
+
+.imgBox{
+	margin: 50px auto;
+}
+.text{
+	margin: 10px;
+	color: #232323;
+}
+
+.hr{
+	border: 3px solid #f3f3f3;
+	margin: 40px;
+}
+.hr2{
+	margin:5px;
+	border: 3px solid #0000;
+	}
+
+/*버튼*/
+#editBox{
+	display: flex;
+    align-items: flex-end;
+    margin: 0px auto ;
+    margin-bottom: 20px;
+    margin-top: 50px;
+}
+
+.okbtn{
+	margin: 0px 50px;
+	width : 150px;
+	height : 60px;
+	border: 1px solid #24D59E;
+	color: #24D59E;
+	background:white;
+	border-radius : 7px;	
+	font-size : 16px;
+	font-weight : 400;
+	transition: all 0.3s ease 0s;
+}
+.okbtn:hover {
+	background-color: #24D59E;
+color: white;
+}

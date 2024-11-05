@@ -1,0 +1,9 @@
+package kr.or.ddit.service_DO;
+
+public interface FreeBoardService {
+	public String list();
+	
+	public String regist();
+	
+	public String detail();
+}

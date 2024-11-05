@@ -1,0 +1,53 @@
+package kr.or.ddit.oustou.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Controller
+@RequestMapping("/outsou")
+public class OutsouReviewContriller {
+	
+	@GetMapping("/reviewmain")
+	public String reviewmain() {
+		return "/outsou/reviewmain";
+	}
+	
+	
+	//리뷰 리스트 페이지
+//	@RequestMapping(value="/reviewmain",method=RequestMethod.GET)
+//	public ModelAndView WebList(ModelAndView mav,
+//			@RequestParam(value = "currentPage", required = false, defaultValue = "1") Integer currentPage) {
+//		
+//		
+//		
+//		Map<String, Object> map = new HashMap<String, Object>();
+//		map.put("currentPage", currentPage);
+//
+//		
+//		List<CodeVO> SrleList = oustouMainService.getSrleList(); // 기술수준 가져오기 
+//		List<CodeVO> SrteList = oustouMainService.getSrteList(); // 팀 규모 가져오기
+//		List<OutsouVO> getWebList = this.oustouMainService.getWebList(map); // 각 카테고리별 리스트 
+//		log.info("SrleList -> " + SrleList);
+//		log.info("SrteList -> " + SrteList);
+//		log.info("getWebList -> " + getWebList);
+//		
+//		
+//		int total = this.oustouMainService.getWebTotal(map); // 페이지네이션 전체 행의수
+//
+//		// 페이지네이션 객체
+//		ArticlePage<OutsouVO> articlePage = new ArticlePage<OutsouVO>(total, currentPage, 10, getWebList, map);
+//		mav.addObject("SrleList", SrleList);// 기술수준 목록 가져오기
+//		mav.addObject("SrteList", SrteList);// 기술수준 목록 가져오기
+//		
+//		
+//		mav.addObject("articlePage", articlePage); //페이지네이션 + 언니거
+//		// 뷰 리졸버
+//		mav.setViewName("outsou/List/WebList");
+//		return mav;
+//	}
+
+}

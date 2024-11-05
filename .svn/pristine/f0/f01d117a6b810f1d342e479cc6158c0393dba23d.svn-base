@@ -1,0 +1,131 @@
+package kr.or.ddit.enter.entservice.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
+
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import kr.or.ddit.mapper.EnterMapper;
+import kr.or.ddit.util.UploadController;
+import kr.or.ddit.enter.entservice.*;
+import kr.or.ddit.vo.ApplicantVO;
+import kr.or.ddit.vo.CodeVO;
+import kr.or.ddit.vo.EnterEmpYcntVO;
+import kr.or.ddit.vo.EnterVO;
+import kr.or.ddit.vo.IndutyVO;
+import kr.or.ddit.vo.MemberVO;
+import kr.or.ddit.vo.PbancVO;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Service
+public class EnterServiceImpl implements EnterService {
+    //파일 처리
+    @Inject
+    private UploadController uploadController;
+   
+	@Inject
+	private EnterMapper enterMapper;
+	
+	//기업프로필
+	@Override
+	public EnterVO profile(String entId) {
+		return this.enterMapper.profile(entId);
+	}
+	
+	// 기업 프로필 연도별 입사자수
+	@Override
+	public List<EnterEmpYcntVO> empYcnt(String entId) {
+		return this.enterMapper.empYcnt(entId);
+	}
+	// 기업프로필- 업종리스트
+	@Override
+	public List<CodeVO> getIndutyList() {
+		return this.enterMapper.getIndutyList();
+	}
+	
+	// 기업정보수정폼
+	@Override
+	public EnterVO edit(String entId) {
+		return this.enterMapper.edit(entId);
+	}
+	// 기업정보수정 - 기업형태리스트
+	@Override
+	public List<CodeVO> getEntStleCdList() {
+		return this.enterMapper.getEntStleCdList();
+	}
+	// 기업정보수정실행 합친거
+	@Override
+	public int editPost(EnterVO enterVO) {
+		log.info("EnterServiceImpl->editPost->enterVO : " + enterVO);
+		
+		int result = 0;
+		
+		  // 0) 파일 업로드 처리
+		  MultipartFile[] multipartFiles = enterVO.getUploadFile();
+		  
+		  //공통 멀티이미지업로드 메소드 호출
+	      //return값 : FILE_GROUP.FILE_GROUP_NO의 값
+		  String fileGroupNo = this.uploadController.multiImageUpload(multipartFiles);
+		  log.info("registPost -> fileGroupNo " + fileGroupNo);
+		  
+		  //perSerVO의 fileGroupNo의 값을 세팅
+		  enterVO.setFileGroupNo(fileGroupNo);
+		  
+		  // 1) 수리 서비스 등록
+		  result += this.enterMapper.editPost1(enterVO);
+		  result += this.enterMapper.editPost2(enterVO);
+		
+		return result;
+	}
+	
+	// 기업탈퇴
+	@Override
+	public int deleteAjax(String entId) {
+		return this.enterMapper.deleteAjax(entId);
+	}
+	
+	//인재-스킬
+	@Override
+	public List<CodeVO> getSkillList() {
+		return this.enterMapper.getSkillList();
+	}
+	// 인재 리스트
+	@Override
+	public List<MemberVO> getInjaeList(Map<String, Object> map) {
+		return this.enterMapper.getInjaeList(map);
+	}
+	// 전체 행의수
+	@Override
+	public int getTotal() {
+	    return enterMapper.getTotal();
+	}
+	// 기업추천인재
+	@Override
+	public List<MemberVO> getRecommendList() {
+		return this.enterMapper.getRecommendList();
+	}
+	//스카우트 제안 - 공고
+	@Override
+	public List<PbancVO> pbancList(String entId) {
+		return this.enterMapper.pbancList(entId);
+	}
+	// 기업공고관리
+	@Override
+	public List<PbancVO> getPbancList(String entId) {
+		return this.enterMapper.getPbancList(entId);
+	}
+
+
+
+
+
+
+
+
+
+
+}

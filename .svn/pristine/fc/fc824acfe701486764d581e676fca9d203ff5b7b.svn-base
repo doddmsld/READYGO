@@ -1,0 +1,296 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags"%>
+<link rel="stylesheet" href="<%=request.getContextPath() %>/resources/css/enter/entaddmem.css" />
+<script type="text/javascript" src="/resources/js/jquery.min.js"></script>
+<script type="text/javascript" src="/resources/js/sweetalert2.js"></script>
+<script type="text/javascript">
+//전역함수
+//e : onchange 이벤트
+var Toast = Swal.mixin({
+	toast : true,
+	position : 'center-center',
+	showConfirmButton : false,
+	timer : 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+    	toast.addEventListener('mouseenter', Swal.stopTimer)
+        toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+});
+$(function() {
+$("#detailChkBtn").on("click",function() {
+	let formData = new FormData();
+	let entId = $("#entId").val();
+	let entPswds = $("#entPswds").val();
+	console.log("entId : " + entId);
+	console.log("entPswds : " + entPswds);
+	formData.append("entId", entId);
+	formData.append("entPswd", entPswds);
+	$.ajax({
+		url : "/enter/editChk",
+		processData : false,
+		contentType : false,
+		data : formData,
+		type : "post",
+		dataType : "text",
+		beforeSend : function(xhr) {
+			xhr.setRequestHeader("${_csrf.headerName}",
+					"${_csrf.token}");
+		},
+		success : function(result) {
+			console.log("result : " + result);
+			// success, error, warning, info, question
+			if (result == "false") {
+				Toast.fire({
+					icon : 'error',
+					title : '비밀번호를 다시 입력해주세요!'
+				});
+				return;
+			}
+			Toast.fire({
+				icon : 'success',
+				title : '비밀번호 일치!',
+					 // 커스텀 클래스 추가
+				    customClass: {
+				        popup: 'my-custom-popup'  // CSS에서 정의한 클래스 이름
+				    }    
+				
+			}).then(() => {
+			    // 다음 작업 실행
+			    console.log("SweetAlert가 끝났습니다. 다음 동작을 수행합니다.");
+			$("#chkchk").attr("hidden", true);
+			$(".all").attr("hidden", false);
+			});
+		}
+	})
+});
+});
+
+
+document.addEventListener("DOMContentLoaded", function() {
+// 스카우트 폼 제출 처리
+	document.getElementById('submit-btn').addEventListener('click', function(e) {
+	    e.preventDefault();
+		let mbrId = $('#mbrId').val();
+		let mbrNm = $("#mbrNm").val();
+		let mbrEml = $("#mbrEml").val();
+		let mbrTelno = $("#mbrTelno").val();
+		let entId = $("#entId").val();
+	    var obj = {mbrId:mbrId,mbrNm:mbrNm,mbrEml:mbrEml,mbrTelno:mbrTelno,entId:entId}
+		var jsonformData = JSON.stringify(obj);
+		console.log(jsonformData);
+	    $.ajax({
+	        url: '/enter/sendMemAddEmail',
+	        type: 'POST',
+	        data: jsonformData,
+	        processData: false,
+	        contentType: "application/json; charset=UTF-8",
+	        beforeSend: function(xhr) {
+	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	        },
+	        success: function(response) {
+	        	if(response.status==='fail'){
+	        		alert(response.message);
+	        	}else if(response.status==='success'){
+	        		alert('이메일이 성공적으로 전송되었습니다.');
+	        	}else{
+	        		 alert('이메일 전송에 실패했습니다. 다시 시도해주세요.');
+	        	}
+	        	location.reload();
+	        },
+	        error: function() {
+	            alert('이메일 전송에 실패했습니다. 다시 시도해주세요.');
+	        }
+	    });
+	});
+	$(".resendbtn").on('click',function(){
+		let mbrId = $(this).closest('tr').find('.mbrIdList').text();
+		let mbrNm = $(this).closest('tr').find('.mbrNmList').text();
+		let mbrEml = $(this).closest('tr').find('.mbrEmlList').text();
+		let mbrTelno = $(this).closest('tr').find('.mbrTelnoList').text();
+		let entId = $("#entId").val();
+		var obj = {mbrId:mbrId,mbrNm:mbrNm,mbrEml:mbrEml,mbrTelno:mbrTelno,entId:entId}
+		var jsonformData = JSON.stringify(obj);
+		$.ajax({
+	        url: '/enter/resendMemAddEmail',
+	        type: 'POST',
+	        data: jsonformData,
+	        processData: false,
+	        contentType: "application/json; charset=UTF-8",
+	        beforeSend: function(xhr) {
+	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	        },
+	        success: function(response) {
+	        	if(response.status==='fail'){
+	        		alert(response.message);
+	        	}else if(response.status==='success'){
+	        		alert('이메일이 성공적으로 전송되었습니다.');
+	        	}else{
+	        		 alert('이메일 전송에 실패했습니다. 다시 시도해주세요.');
+	        	}
+	        	location.reload();
+	        },
+	        error: function() {
+	            alert('이메일 전송에 실패했습니다. 다시 시도해주세요.');
+	        }
+	    });
+	})
+	$(".delbtn").on('click',function(){
+		confirm("정말로 삭제하시겠습니까?");
+		let mbrId = $(this).closest('tr').find('.mbrIdList').text();
+		let entId = $("#entId").val();
+		$.ajax({
+	        url: '/enter/entaddmemDel',
+	        type: 'POST',
+	        data: {mbrId : mbrId,entId:entId},
+	        beforeSend: function(xhr) {
+	            xhr.setRequestHeader("${_csrf.headerName}", "${_csrf.token}");
+	        },
+	        success: function(response) {
+	        	console.log(response);
+	        	alert("삭제 되었습니다.")
+	        	location.reload();
+	        },
+	        error: function() {
+	            alert('삭제에 실패하였습니다.');
+	        }
+	    });
+	})
+});
+
+</script>
+<sec:authentication property="principal" var="prc" />
+
+<div id="chkchk">
+	<form action="/enter/editChk" method="post">
+		<div>
+			<div>
+				<img class="chkImg" src="../resources/images/logo.png" />
+				<p class="chkP">
+					&nbsp;&nbsp;기업의 정보를 안전하게 보호하기 위해 <br>다시 한 번 인증을 진행해 주시기 바랍니다.
+				</p>
+			</div>
+			<div>
+				<input type="password" placeholder="비밀번호를 입력해주세요." id="entPswds" class="entPswds"
+					name="entPswd" />
+			</div>
+			<div>
+				<button type="button" class="chkbtn" id="detailChkBtn">확인</button>
+			</div>
+		</div>
+		<sec:csrfInput />
+	</form>
+</div>
+<br>
+<div class="all" hidden="hidden">
+<input type="hidden" id="entId" value="${param.entId}" />
+	<h2>기업회원 조회</h2>
+    <div class="container1">
+    	<div class="memAdd">
+	    		<div>
+	    			<h4 class="addTitle">기업회원 초대</h4>
+	    		</div>
+    		<form id="addMemForm">
+		    	<div class="member-form">
+		    		<div class="form-div" id="idTitle">
+			            <div class="form-label">
+			            	<img class="iconImg" src="../resources/icon/check.png" alt="check"/>
+			                <label for="name">아이디<b class="required">필수</b></label>
+			            </div>
+			            <div>
+				            <input type="text" id="mbrId" name="mbrId" class="form-input" placeholder="아이디 입력" />
+				            <input type="hidden" id="entId" name="entId" value="${prc.username}">
+			            </div>
+			        </div>
+			        <div class="form-div">
+			            <div class="form-label">
+			            	<img class="iconImg" src="../resources/icon/person.png" alt="person"/>
+			                <label for="name">이름<b class="required">필수</b></label>
+			            </div>
+			            <div>
+				            <input type="text" id="mbrNm" name="mbrNm"class="form-input" placeholder="이름 입력" />
+			            </div>
+			        </div>
+					
+			        <div class="form-div">
+			            <div class="form-label">
+			            	<img class="iconImg" src="../resources/icon/email.png" alt="email"/>
+			                <label for="email">이메일<b class="required">필수</b></label>
+			            </div>
+			            <div>
+			            	<input type="email" id="mbrEml" name="mbrEml" class="form-input" placeholder="이메일 입력" />
+			            </div>
+			        </div>
+			
+			        <div class="form-div">
+			            <div class="form-label">
+			                <img class="iconImg" src="../resources/icon/phone.png" alt="phone"/>
+			                <label for="phone">휴대폰</label>
+			            </div>
+			            <div>
+			            	<input type="tel" id="mbrTelno" name="mbrTelno" class="form-input" placeholder="휴대폰번호 입력" />
+			            </div>
+			        </div>
+			        <div class="form-row">
+					    <button type="submit" id="submit-btn" class="submit-button">
+					    <img class="plus-icon" src="../resources/icon/personadd.png" alt="personadd"/>기업회원 추가</button>
+					</div>
+		        </div>
+
+	        </form>
+        </div>
+        <div>
+        <div class="search">
+	        <div>
+    		    <p class="total">전체  <b>${total}</b></p>
+    	    </div>
+	  		<div>
+		  		<input type="text" id="keyword" name="" placeholder="검색어를 입력하세요."/>
+	  			<button type="submit">검색</button>
+	  		</div>
+        </div>
+       		 <div class="alltable" style="overflow-y:scroll; height: 350px;">
+        	<table>
+				<thead>
+					<tr class="trtr">
+						<th class="th-center" id="id">아이디</th>
+						<th class="th-center" id="name">이름</th>
+						<th id="email">이메일</th>
+						<th class="th-center">휴대폰</th>
+						<th class="th-center">가입일</th>
+						<th class="th-center">삭제/재발송</th>
+					</tr>
+				</thead>
+				<tbody>
+					<c:forEach var="memberVO" items="${memberList}">
+						<tr>
+							<td class="th-center"><p class="mbrIdList">${memberVO.mbrId}</p></td>
+							<td class="th-center"><p class="mbrNmList">${memberVO.mbrNm}</p></td>
+							<td><p class="mbrEmlList">${memberVO.mbrEml}</p></td>
+							<td class="th-center"><p class="mbrTelnoList">${memberVO.mbrTelno}</p></td>
+							<td class="th-center"><p class="mbrJoinList">${memberVO.mbrJoinYmd}</p></td>
+							<td class="th-center">
+								 <button class="delbtn "type="button">
+								 	<img class="iconImgbtn" src="../resources/icon/personremove.png" alt="remove"/>삭제
+								 </button>
+								 <button class="resendbtn "type="button">
+								 	<img class="iconImgbtn" src="../resources/icon/sendemail.png" alt="mail"/>재발송
+								 </button>
+							 </td>
+						</tr>
+					</c:forEach>
+				</tbody>
+	           <tfoot>
+	           		<tr>
+	           		</tr>
+				</tfoot>
+			</table>
+				</div>
+        </div>
+    </div>
+    <div>
+    </div>
+</div>

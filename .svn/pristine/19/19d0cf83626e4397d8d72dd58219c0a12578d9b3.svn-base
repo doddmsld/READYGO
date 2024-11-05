@@ -1,0 +1,465 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.or.ddit.mapper.MemAplctMapper">
+
+<!-- APPLICANT : PBANC = 1 : N -->
+<!-- APPLICANT : FILE_DT = 1 : N -->
+<resultMap type="applicantVO" id="applicantMap">
+	<result property="rnum" column="RNUM"/>
+	<result property="mbrId" column="MBR_ID"/>
+	<result property="pbancNo" column="PBANC_NO"/>
+	<result property="rsmTtl" column="RSM_TTL"/>
+	<result property="rsmNo" column="RSM_NO"/>
+	<result property="aplctAppymd" column="APLCT_APPYMD"/>
+	<result property="aplctPrcsStatCd" column="APLCT_PRCS_STAT_CD"/>
+	<result property="fileGroupSn" column="APLCT_FILE"/>
+	<result property="aplctCancelCd" column="APLCT_CANCEL_CD"/>		<!-- 입사 지원취소 코드 -->
+	<result property="entNm" column="ENT_NM"/>
+	<result property="pbancTtl" column="PBANC_TTL"/>
+	<result property="rcritNm" column="RCRIT_NM"/>
+	<result property="aplctPrcsNm" column="APLCT_PRCS_NM"/>	<!-- 지원 상태 코드명 -->
+	<collection property="pbancVOList" resultMap="pbancMap" ></collection>
+	<collection property="fileDetailVOList" resultMap="fileDetailMap" ></collection>
+</resultMap>
+
+<resultMap type="fileDetailVO" id="fileDetailMap">
+	<result property="fileGroupSn" column="FILE_GROUP_SN"/>
+	<result property="fileSn" column="FILE_SN"/>
+	<result property="orgnlFileNm" column="ORGNL_FILE_NM"/>
+	<result property="strgFileNm" column="STRG_FILE_NM"/>
+	<result property="filePathNm" column="FILE_PATH_NM"/>
+	<result property="fileSz" column="FILE_SZ"/>
+	<result property="fileExtnNm" column="FILE_EXTN_NM"/>
+	<result property="fileMime" column="FILE_MIME"/>
+	<result property="fileFancysize" column="FILE_FANCYSIZE"/>
+	<result property="fileStrgYmd" column="FILE_STRG_YMD"/>
+	<result property="fileDwnldCnt" column="FILE_DWNLD_CNT"/>
+</resultMap>
+
+<!-- ENTER : PBANC = 1 : N -->
+<resultMap type="enterVO" id="enterMap">
+	<result property="userType" column="USER_TYPE"/>
+	<result property="entMail" column="ENT_MAIL"/>
+	<result property="entId" column="ENT_ID"/>
+	<result property="entPswd" column="ENT_PSWD"/>
+	<result property="entNm" column="ENT_NM"/>
+	<result property="entManagerTelno" column="ENT_MANAGER_TELNO"/>
+	<result property="entFxnum" column="ENT_FXNUM"/>
+	<result property="entAddr" column="ENT_ADDR"/>
+	<result property="entAddrDetail" column="ENT_ADDR_DETAIL"/>
+	<result property="entZip" column="ENT_ZIP"/>
+	<result property="entLogo" column="ENT_LOGO"/>
+	<result property="entRprsntvNm" column="ENT_RPRSNTV_NM"/>
+	<result property="entIntrcnsntnc" column="ENT_INTRCNSNTNC"/>
+	<result property="entStleCd" column="ENT_STLE_CD"/>
+	<result property="entEmpCnt" column="ENT_EMP_CNT"/>
+	<result property="entFndnYmd" column="ENT_FNDN_YMD"/>
+	<result property="entHmpgUrl" column="ENT_HMPG_URL"/>
+	<result property="entBrno" column="ENT_BRNO"/>
+	<result property="entBrFile" column="ENT_BR_FILE"/>
+	
+	<collection property="pbancVOList" resultMap="pbancMap"></collection>
+</resultMap>
+
+<!-- PBANC : SCRAP = 1 : N -->
+<!-- PBANC : TBC_ADDR = 1 : N -->
+<resultMap type="pbancVO" id="pbancMap">
+	<result property="rnum" column="RNUM"/>
+	<result property="pbancNo" column="PBANC_NO"/>
+	<result property="pbancSttus" column="PBANC_STTUS"/>
+	<result property="pbancIntrvwTyCd" column="PBANC_INTRVW_TY_CD"/>
+	<result property="pbancCareerCd" column="PBANC_CAREER_CD"/>
+	<result property="pbancCareerCdNm" column="PBANC_CAREER_CD_NM"/>
+	<result property="pbancCn" column="PBANC_CN"/>
+	<result property="powkNm" column="POWK_NM"/>
+	<result property="powkCd" column="POWK_CD"/>
+	<result property="pbancGenCd" column="PBANC_GEN_CD"/>
+	<result property="pbancAppofeFormCd" column="PBANC_APPOFE_FORM_CD"/>
+	<result property="pbancImgFile" column="PBANC_IMG_FILE"/>
+	<result property="pbancAgeCd" column="PBANC_AGE_CD"/>
+	<result property="entId" column="ENT_ID"/>
+	<result property="pbancPicNm" column="PBANC_PIC_NM"/>
+	<result property="pbancPicTelno" column="PBANC_PIC_TELNO"/>
+	<result property="pbancPicEml" column="PBANC_PIC_EML"/>
+	<result property="pbancAplctEduCd" column="PBANC_APLCT_EDU_CD"/>
+	<result property="pbancAplctEduCdNm" column="PBANC_APLCT_EDU_CD_NM"/>
+	<result property="pbancRprsrgn" column="PBANC_RPRSRGN"/>
+	<result property="pbancRprsrgnNm" column="PBANC_RPRSRGN_NM"/>
+	<result property="pbancTtl" column="PBANC_TTL"/>
+	<result property="pbancWorkstleCd" column="PBANC_WORKSTLE_CD"/>
+	<result property="pbancWorkstleNm" column="PBANC_WRKSTLE_CD_NM"/>
+	<result property="pbancApntcpd" column="PBANC_APNTCPD"/>
+	<result property="pbancSalary" column="PBANC_SALARY"/>
+	<result property="pbancWorkHrCd" column="PBANC_WORK_HR_CD"/>
+	<result property="pbancWorkDayCd" column="PBANC_WORK_DAY_CD"/>
+	<result property="pbancRcptMthdCd" column="PBANC_RCPT_MTHD_CD"/>
+	<result property="pbancRprsDty" column="PBANC_RPRS_DTY"/>
+	<result property="pbancRprsDtyNm" column="PBANC_RPRS_DTY_NM"/>
+	<result property="pbancRcptPd" column="PBANC_RCPT_PD"/>
+	<result property="pbancBgngDt" column="PBANC_BGNG_DT"/>
+	<result property="pbancDdlnDt" column="PBANC_DDLN_DT"/>
+	<result property="pbancWrtDt" column="PBANC_WRT_DT"/>
+	<result property="pbancMdfcnDt" column="PBANC_MDFCN_DT"/>
+	<result property="pbancDelDt" column="PBANC_DEL_DT"/>
+	<result property="pbancScrapCo" column="PBANC_SCRAP_CO"/>
+	<result property="pbancDelYn" column="PBANC_DEL_YN"/>
+	<result property="entNm" column="ENT_NM"/>
+	<result property="entLogo" column="ENT_LOGO"/>
+	
+	<collection property="scrapVOList" resultMap="scrapMap"></collection>
+	<collection property="tbcAddrVOList" resultMap="tbcAddrMap"></collection>
+</resultMap>
+
+<resultMap type="scrapVO" id="scrapMap">
+	<result property="rnum" column="RNUM"/>
+	<result property="pbancNo" column="PBANC_NO"/>
+	<result property="mbrId" column="MBR_ID"/>
+</resultMap>
+
+<resultMap type="tbcAddrVO" id="tbcAddrMap">
+	<result property="powkCd" column="POWK_CD"/>
+	<result property="pbancNo" column="PBANC_NO"/>
+</resultMap>
+
+
+
+<!-- 입사 지원 현황 조회 -->
+<select id="aplctList" parameterType="hashMap" resultMap="applicantMap">
+		WITH T AS
+		  (
+	    SELECT ROW_NUMBER() OVER(ORDER BY A.PBANC_NO DESC) RNUM
+	         ,A.MBR_ID, A.PBANC_NO, A.RSM_TTL, A.APLCT_APPYMD, A.APLCT_PRCS_STAT_CD
+	         ,get_common_code_name(A.APLCT_PRCS_STAT_CD) APLCT_PRCS_NM
+	         ,A.APLCT_FILE, A.APLCT_CANCEL_CD, A.RSM_NO
+	         ,P.PBANC_TTL, P.PBANC_DDLN_DT
+	         ,E.ENT_NM
+	         ,R.RCRIT_NM
+	         ,F.FILE_SN, F.ORGNL_FILE_NM, F.STRG_FILE_NM, F.FILE_PATH_NM, FILE_SZ, F.FILE_EXTN_NM
+	         ,F.FILE_MIME, F.FILE_FANCYSIZE, F.FILE_STRG_YMD, F.FILE_DWNLD_CNT
+	    FROM APPLICANT A 
+	    LEFT OUTER JOIN FILE_DT F ON (A.APLCT_FILE = F.FILE_GROUP_SN)
+	    LEFT OUTER JOIN PBANC P ON (A.PBANC_NO = P.PBANC_NO)
+	    LEFT OUTER JOIN ENTER E ON (E.ENT_ID = P.ENT_ID)
+	    LEFT OUTER JOIN TBC_RECRUITMENT R ON(P.PBANC_NO = R.PBANC_NO)
+	    WHERE 1 = 1
+	      AND (A.MBR_ID = #{mbrId})
+	      AND (P.PBANC_STTUS='1')
+	      AND (P.PBANC_DEL_YN = '1')
+	      AND (A.APLCT_CANCEL_CD IS NULL)
+	      <if test="keywordInput != null and keywordInput != ''">
+	    		AND (
+	    		P.PBANC_TTL LIKE '%' || #{keywordInput} || '%' OR
+	    		E.ENT_NM LIKE '%' || #{keywordInput} || '%'
+	    		)
+			</if>
+			<if test="dateInput1 != '' and dateInput2 != ''">
+	    		<![CDATA[
+	            AND A.APLCT_APPYMD >= TO_DATE(#{dateInput1})
+	            AND A.APLCT_APPYMD <= TO_DATE(#{dateInput2})
+	            ]]>
+	        </if>
+	        <if test="state != null and state != ''">
+              AND A.APLCT_PRCS_STAT_CD = #{state}
+          	</if>
+		  )
+		  SELECT * FROM T
+	  WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 5 + 1 AND #{currentPage} * 5
+</select>
+
+<!-- 입사 지원 중복 체크  -->
+<select id="aplctChk" parameterType="hashMap" resultType="applicantVO">
+SELECT MBR_ID, PBANC_NO, RSM_TTL, APLCT_APPYMD, APLCT_PRCS_STAT_CD, APLCT_FILE, APLCT_VIEWSTTUS, APLCT_CANCEL_CD, RSM_NO
+  FROM APPLICANT
+ WHERE MBR_ID=#{mbrId}
+   AND PBANC_NO=#{pbancNo}
+</select>
+
+<!-- 입사 지원한 전체 행의 수 -->
+<select id="getTotal" parameterType="String" resultType="int">
+	SELECT COUNT(*)
+	  FROM APPLICANT A
+	  LEFT OUTER JOIN PBANC P ON (A.PBANC_NO = P.PBANC_NO)
+	  LEFT OUTER JOIN ENTER E ON (E.ENT_ID = P.ENT_ID)
+	  WHERE 1 = 1
+	      AND (A.MBR_ID = #{mbrId})
+	      AND (P.PBANC_STTUS='1')
+	      AND (P.PBANC_DEL_YN = '1')
+	      AND (A.APLCT_CANCEL_CD IS NULL)
+	      <if test="keywordInput != null and keywordInput != ''">
+	    		AND (
+	    		P.PBANC_TTL LIKE '%' || #{keywordInput} || '%' OR
+	    		E.ENT_NM LIKE '%' || #{keywordInput} || '%'
+	    		)
+			</if>
+			<if test="dateInput1 != '' and dateInput2 != ''">
+	    		<![CDATA[
+	            AND A.APLCT_APPYMD >= TO_DATE(#{dateInput1})
+	            AND A.APLCT_APPYMD <= TO_DATE(#{dateInput2})
+	            ]]>
+	        </if>
+	        <if test="state != null and state != ''">
+              AND A.APLCT_PRCS_STAT_CD = #{state}
+          	</if>
+</select>
+
+<!-- 상태 미평가 행의 수 -->
+<select id="getNotTotal" parameterType="String" resultType="int">
+SELECT COUNT(*)
+  FROM APPLICANT A
+       JOIN PBANC P ON A.PBANC_NO = P.PBANC_NO
+ WHERE A.APLCT_PRCS_STAT_CD = 'APST01'
+   AND A.MBR_ID = #{mbrId}
+   AND A.APLCT_CANCEL_CD IS NULL
+   AND P.PBANC_DEL_YN = '1'
+   AND (P.PBANC_STTUS='1')
+</select>
+
+<!-- 상태 서류 합격 행의 수 -->
+<select id="getDocTotal" parameterType="String" resultType="int">
+SELECT COUNT(*)
+  FROM APPLICANT A
+       JOIN PBANC P ON A.PBANC_NO = P.PBANC_NO
+ WHERE A.APLCT_PRCS_STAT_CD = 'APST02'
+   AND A.MBR_ID = #{mbrId}
+   AND A.APLCT_CANCEL_CD IS NULL
+   AND P.PBANC_DEL_YN = '1'
+   AND (P.PBANC_STTUS='1')
+</select>
+
+<!-- 상태 최종합격 행의 수 -->
+<select id="getFinTotal" parameterType="String" resultType="int">
+SELECT COUNT(*)
+  FROM APPLICANT A
+       JOIN PBANC P ON A.PBANC_NO = P.PBANC_NO
+ WHERE A.APLCT_PRCS_STAT_CD = 'APST03'
+   AND A.MBR_ID = #{mbrId}
+   AND A.APLCT_CANCEL_CD IS NULL
+   AND P.PBANC_DEL_YN = '1'
+   AND (P.PBANC_STTUS='1')
+</select>
+
+<!-- 상태 불합격 행의 수 -->
+<select id="getBadTotal" parameterType="String" resultType="int">
+SELECT COUNT(*)
+  FROM APPLICANT A
+       JOIN PBANC P ON A.PBANC_NO = P.PBANC_NO
+ WHERE A.APLCT_PRCS_STAT_CD = 'APST04'
+   AND A.MBR_ID = #{mbrId}
+   AND A.APLCT_CANCEL_CD IS NULL
+   AND P.PBANC_DEL_YN = '1'
+   AND (P.PBANC_STTUS='1')
+</select>
+
+
+<!-- 입사 지원 관리 목록 조회 -->
+<select id="aplctManage" parameterType="hashMap" resultMap="applicantMap">
+	WITH T AS
+	  (
+	    SELECT ROW_NUMBER() OVER(ORDER BY A.PBANC_NO DESC) RNUM
+	         ,A.MBR_ID, A.PBANC_NO, A.RSM_TTL, A.APLCT_APPYMD, A.APLCT_PRCS_STAT_CD
+	         ,A.APLCT_FILE, A.APLCT_CANCEL_CD, A.RSM_NO
+	         ,P.PBANC_TTL, P.PBANC_DDLN_DT
+	         ,E.ENT_NM
+	         ,R.RCRIT_NM
+	         ,F.FILE_SN, F.ORGNL_FILE_NM, F.STRG_FILE_NM, F.FILE_PATH_NM, FILE_SZ, F.FILE_EXTN_NM
+	         ,F.FILE_MIME, F.FILE_FANCYSIZE, F.FILE_STRG_YMD, F.FILE_DWNLD_CNT
+	    FROM APPLICANT A 
+	    LEFT OUTER JOIN FILE_DT F ON (A.APLCT_FILE = F.FILE_GROUP_SN)
+	    LEFT OUTER JOIN PBANC P ON (A.PBANC_NO = P.PBANC_NO)
+	    LEFT OUTER JOIN ENTER E ON (E.ENT_ID = P.ENT_ID)
+	    LEFT OUTER JOIN TBC_RECRUITMENT R ON(P.PBANC_NO = R.PBANC_NO)
+	    WHERE 1 = 1
+	      AND (A.MBR_ID = #{mbrId})
+	      AND (P.PBANC_DEL_YN = '1')
+	      AND (P.PBANC_STTUS='1')
+	      AND (A.APLCT_PRCS_STAT_CD='APST01')
+	      <if test="keywordInput != null and keywordInput != ''">
+	    		AND (
+	    		P.PBANC_TTL LIKE '%' || #{keywordInput} || '%' OR
+	    		E.ENT_NM LIKE '%' || #{keywordInput} || '%'
+	    		)
+			</if>
+			<if test="dateInput1 != '' and dateInput2 != ''">
+	    		<![CDATA[
+	            AND A.APLCT_APPYMD >= TO_DATE(#{dateInput1})
+	            AND A.APLCT_APPYMD <= TO_DATE(#{dateInput2})
+	            ]]>
+	        </if>
+	  )
+	  SELECT * FROM T
+	  WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 7 + 1 AND #{currentPage} * 7
+</select>
+
+<!-- 입사 지원 관리 전체 행의 수 -->
+<select id="getManTotal" parameterType="String" resultType="int">
+	SELECT COUNT(*)
+	  FROM APPLICANT A
+	  LEFT OUTER JOIN PBANC P ON (A.PBANC_NO = P.PBANC_NO)
+	  LEFT OUTER JOIN ENTER E ON (E.ENT_ID = P.ENT_ID)
+	 WHERE 1 = 1
+	      AND (A.MBR_ID = #{mbrId})
+	      AND (P.PBANC_DEL_YN = '1')
+	      AND (P.PBANC_STTUS='1')
+	      AND (A.APLCT_PRCS_STAT_CD='APST01')
+	      <if test="keywordInput != null and keywordInput != ''">
+	    		AND (
+	    		P.PBANC_TTL LIKE '%' || #{keywordInput} || '%' OR
+	    		E.ENT_NM LIKE '%' || #{keywordInput} || '%'
+	    		)
+			</if>
+			<if test="dateInput1 != '' and dateInput2 != ''">
+	    		<![CDATA[
+	            AND A.APLCT_APPYMD >= TO_DATE(#{dateInput1})
+	            AND A.APLCT_APPYMD <= TO_DATE(#{dateInput2})
+	            ]]>
+	        </if>
+</select>
+
+<!-- 입사 지원 -->
+<insert id="aplctAdd" parameterType="applicantVO">
+INSERT INTO APPLICANT (MBR_ID, PBANC_NO, RSM_TTL, RSM_NO, APLCT_APPYMD, APLCT_PRCS_STAT_CD, APLCT_FILE, APLCT_VIEWSTTUS, APLCT_CANCEL_CD)
+		         VALUES (#{mbrId}, #{pbancNo}, #{rsmTtl}, #{rsmNo}, SYSDATE, 'APST01', #{fileGroupSn, jdbcType=VARCHAR}, '1', null)
+</insert>
+
+<!-- 입사 지원 취소 사유(APCN) 항목 리스트 -->
+<select id="cancelList" resultType="codeVO">
+	SELECT COM_CODE, COM_CODE_GRP, COM_CODE_NM, COM_CODE_DESC, USE_YN
+          ,UPPER_COM_CODE, UPPER_COM_CODE_GRP
+	  FROM CODE
+	 WHERE COM_CODE_GRP='APCN'
+</select>
+
+<!-- 특정 공고 입사 지원 취소 사유 UPDATE -->
+<update id="aplctDelete" parameterType="hashMap">
+    UPDATE APPLICANT A
+       SET A.APLCT_CANCEL_CD = #{aplctCancelCd}
+     WHERE A.PBANC_NO = #{pbancNo}
+       AND A.MBR_ID = #{mbrId}
+</update>
+
+<!-- 스크랩한 공고 조회 -->
+<select id="scrapList" parameterType="hashMap" resultMap="pbancMap">
+WITH T AS (
+	SELECT DISTINCT ROW_NUMBER() OVER(ORDER BY S.PBANC_NO DESC) AS RNUM
+		       , S.MBR_ID
+		       , P.ENT_ID
+		       , P.PBANC_NO
+	           ,(SELECT F.FILE_PATH_NM
+		           FROM FILE_DT F
+		          WHERE F.FILE_GROUP_SN = E.ENT_LOGO
+		            AND ROWNUM = 1) AS ENT_LOGO
+		       , E.ENT_NM
+		       , P.PBANC_TTL
+		       , get_common_code_name(P.PBANC_CAREER_CD) AS PBANC_CAREER_CD_NM
+		       , NVL(
+		           (SELECT LISTAGG(D.COM_CODE_NM, ', ') WITHIN GROUP (ORDER BY D.COM_CODE)
+		              FROM TBC_ADDR R
+		              JOIN CODE D ON D.COM_CODE = R.POWK_CD
+		             WHERE R.PBANC_NO = S.PBANC_NO),
+		           '지역 없음') AS POWK_CD
+		       , get_common_code_name(P.PBANC_APLCT_EDU_CD) AS PBANC_APLCT_EDU_CD_NM
+		       , get_common_code_name(P.PBANC_RPRSRGN) AS PBANC_RPRSRGN_NM
+		       , get_common_code_name(P.PBANC_WORKSTLE_CD) AS PBANC_WRKSTLE_CD_NM
+		       , get_common_code_name(P.PBANC_RPRS_DTY) AS PBANC_RPRS_DTY_NM
+		       , P.PBANC_RCPT_PD
+		       , P.PBANC_BGNG_DT
+		       , P.PBANC_DDLN_DT
+		       , P.PBANC_DEL_DT
+		       , P.PBANC_DEL_YN
+		FROM SCRAP S
+		JOIN PBANC P ON P.PBANC_NO = S.PBANC_NO
+		LEFT JOIN (
+		    SELECT PBANC_NO, LISTAGG(POWK_CD, ', ') WITHIN GROUP (ORDER BY POWK_CD) AS POWK_CD
+		    FROM TBC_ADDR
+		    GROUP BY PBANC_NO
+		) T ON T.PBANC_NO = S.PBANC_NO
+		JOIN ENTER E ON E.ENT_ID = P.ENT_ID
+		WHERE 1 = 1
+		  AND (S.MBR_ID = #{mbrId})
+		  AND (P.PBANC_DEL_YN='1')
+       	<if test="keywordInput != null and keywordInput != ''">
+    		AND (
+    		P.PBANC_TTL LIKE '%' || #{keywordInput} || '%' OR
+    		E.ENT_NM LIKE '%' || #{keywordInput} || '%'
+    		)
+		</if>
+		<if test="state != null and state != ''">
+                AND (
+	                <choose>
+			            <when test="state=='start'">
+			                <![CDATA[
+			                P.PBANC_DDLN_DT >= SYSDATE
+			                ]]>
+			            </when>
+			            <when test="state=='finish'">
+			                <![CDATA[
+			                P.PBANC_DDLN_DT < SYSDATE
+			                ]]>
+			            </when>
+			        </choose>
+                	)
+        </if>
+)
+SELECT * FROM T
+	  WHERE T.RNUM BETWEEN (#{currentPage} - 1) * 5 + 1 AND #{currentPage} * 5
+
+</select>
+
+
+<!-- 스크랩한 전체 행의 수 -->
+<select id="getScrapTotal" parameterType="hashMap" resultType="int">
+	SELECT COUNT(*)
+	  FROM SCRAP S
+	  LEFT JOIN PBANC P ON P.PBANC_NO = S.PBANC_NO
+	  LEFT JOIN ENTER E ON E.ENT_ID = P.ENT_ID
+	  WHERE 1 = 1
+     		AND (S.MBR_ID = #{mbrId})
+       		AND (P.PBANC_DEL_YN='1')
+       		AND (P.PBANC_STTUS='1')
+       	<if test="keywordInput != null and keywordInput != ''">
+    		AND (
+                P.PBANC_TTL LIKE '%' || #{keywordInput} || '%' OR
+                E.ENT_NM LIKE '%' || #{keywordInput} || '%'  <!-- LIKE 조건 수정 -->
+            )
+		</if>
+		<if test="state != null and state != ''">
+                AND (
+	                <choose>
+			            <when test="state=='start'">
+			                <![CDATA[
+			                P.PBANC_DDLN_DT >= SYSDATE
+			                ]]>
+			            </when>
+			            <when test="state=='finish'">
+			                <![CDATA[
+			                P.PBANC_DDLN_DT < SYSDATE
+			                ]]>
+			            </when>
+			        </choose>
+                	)
+        </if>
+</select>
+
+<!-- 공고 스크랩 추가 -->
+<insert id="addScrap" parameterType="scrapVO">
+	INSERT INTO SCRAP (PBANC_NO, MBR_ID)
+	  VALUES(#{pbancNo},#{mbrId})
+</insert>
+
+<!-- 스크랩한 공고 삭제 -->
+<delete id="delScrap" parameterType="map">
+	DELETE 
+	  FROM SCRAP
+	 WHERE MBR_ID=#{mbrId}
+	   AND PBANC_NO=#{pbancNo}
+</delete>
+
+<!-- 스크랩 여부 확인 -->
+<select id="scrapYN" parameterType="map" resultType="int">
+	SELECT PBANC_NO, MBR_ID
+	  FROM SCRAP
+	 WHERE MBR_ID=#{mbrId}
+	   AND PBANC_NO=#{pbancNo}
+</select>
+
+</mapper>

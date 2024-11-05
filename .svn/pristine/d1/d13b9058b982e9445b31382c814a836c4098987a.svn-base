@@ -1,0 +1,52 @@
+package kr.or.ddit.security;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@Controller
+@RequestMapping("/security")
+public class LoginController {
+	
+	//<security:form-login login-page="/login" />
+	//요청URI : /login
+	//요청방식 : get
+	//오류 메시지와 로그아웃 메시지를 파라미터로 사용해보자(없을 수도 있음)
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
+	
+	@GetMapping("/login")
+	public String loginForm(String error, String logout, Model model) {
+		log.info("error : " + error);
+		log.info("logout : " + logout);
+		log.info("logout : " + model);
+		
+		if(error != null) {
+			model.addAttribute("error", "Login Error");
+		}
+		
+		if(logout != null) {
+			model.addAttribute("logout", "Logout!!");
+		}
+		//forwarding
+		return "security/loginForm";
+	}
+	
+	@GetMapping("/memSignIn")
+	public String memSignIn() {
+		log.info("회원가입 페이지에 왔다");
+	
+		//forwarding
+		return "security/memSignIn";
+	}
+	
+	
+}
